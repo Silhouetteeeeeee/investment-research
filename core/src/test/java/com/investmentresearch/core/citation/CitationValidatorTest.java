@@ -173,12 +173,31 @@ class CitationValidatorTest {
     @Test
     void known_id_with_regex_replacement_characters_is_kept_verbatim() {
         Source dollar = new Source("a$b", "L", "d", "x", "t");
-        Map<String, Source> registry = Map.of(dollar.id(), dollar);
+        // 用 (char) 92 拼，避免写成转义序列变成退格符
+        String slashId = "a" + (char) 92 + "b";
+        Source backslash = new Source(slashId, "L", "d", "x", "t");
+        Map<String, Source> registry = Map.of(dollar.id(), dollar, backslash.id(), backslash);
 
         CitationCheck check = validator.validate("x[[a$b]]y", registry);
-
         assertEquals("x[[a$b]]y", check.text());
         assertEquals(List.of(dollar), check.citations());
+
+        // 不 quoteReplacement 会抛 IllegalArgumentException（非法组引用）
+        String quoted = "x[[" + slashId + "]]y";
+        CitationCheck slashed = validator.validate(quoted, registry);
+        assertEquals(quoted, slashed.text());
+        assertEquals(List.of(backslash), slashed.citations());
+    }
+
+    @Test
+    void same_id_in_two_spellings_is_counted_once() {
+        CitationCheck check =
+                validator.validate(
+                        "a[[ finance:605499:2026-06-30 ]]b[[finance:605499:2026-06-30]]c",
+                        REGISTRY);
+
+        assertEquals(List.of(FIN), check.citations());
+        assertEquals(List.of(), check.issues());
     }
 
     @Test
