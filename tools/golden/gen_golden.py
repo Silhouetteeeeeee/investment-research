@@ -31,6 +31,10 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
+# Date-relative tools (announcements) are frozen here so the goldens never move;
+# bump it deliberately when regenerating, together with the Java clock the tests pin.
+GOLDEN_AS_OF = "2026-10-30"
+
 COMPANIES = (
     ("000858", "五粮液"),
     ("600600", "青岛啤酒"),
@@ -279,8 +283,11 @@ def main() -> int:
     )
     parser.add_argument(
         "--as-of",
-        default=None,
-        help="frozen date (YYYY-MM-DD) for date-relative tools; defaults to today",
+        default=GOLDEN_AS_OF,
+        help=(
+            "frozen date (YYYY-MM-DD) for date-relative tools; defaults to the date the"
+            " goldens were generated for, so a rerun never silently moves the window"
+        ),
     )
     options = parser.parse_args()
 
@@ -288,7 +295,7 @@ def main() -> int:
     out = Path(options.out).resolve()
     snapshot = Path(options.snapshot).resolve()
     schemas_path = Path(options.schemas).resolve()
-    as_of = date.fromisoformat(options.as_of) if options.as_of else date.today()
+    as_of = date.fromisoformat(options.as_of)
     source_db = python_repo / "data" / "stock.db"
     if not source_db.is_file():
         raise SystemExit(f"missing Python DB: {source_db}")

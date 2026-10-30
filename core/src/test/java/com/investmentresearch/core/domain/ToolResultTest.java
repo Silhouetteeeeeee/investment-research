@@ -121,7 +121,7 @@ class ToolResultTest {
             Map<String, Object> golden =
                     MAPPER.readValue(Files.readString(file), new TypeReference<>() {});
             assertNotNull(messages.get(name), name);
-            assertNotNull(golden.get("generated_on"), name);
+            assertEquals("2026-10-30", golden.get("generated_on"), name);
             assertEquals(messages.get(name), toToolResult(golden).toMessageJson(), name);
         }
     }
