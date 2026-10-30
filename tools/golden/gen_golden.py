@@ -2,7 +2,8 @@
 
 Outputs (all deterministic, no network):
 
-* ``<out>/tools/<tool>__<code>__<args-hash>.json`` — 34 tool cases
+* ``<out>/tools/<tool>__<code>__<args-hash>.json`` — 34 tool cases, each carrying
+  ``generated_on`` so later tests can pin a Clock
 * ``<out>/rows/<table>__<code>.json`` — every snapshot table, per company
 * ``<out>/tool-messages.json`` — the exact Python ``ToolResult.to_message()`` string per case
 * ``--schemas`` — 33 OpenAI function schemas keyed by tool name
@@ -25,8 +26,10 @@ import shutil
 import sqlite3
 import sys
 import tempfile
-from datetime import timedelta
+from datetime import date, timedelta
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 COMPANIES = (
     ("000858", "五粮液"),
@@ -80,8 +83,8 @@ def install_network_guard() -> None:
     socket.getaddrinfo = blocked
 
 
-def patch_modules(db_path: Path) -> None:
-    """Point the tool modules at the temp DB copy and force cache hits."""
+def patch_modules(db_path: Path, as_of: date) -> None:
+    """Point the tool modules at the temp DB copy, force cache hits, pin today."""
     import assistant.company_profile as company_profile
     import stock.announcements as announcements
     import stock.db_service as db_service
@@ -106,6 +109,16 @@ def patch_modules(db_path: Path) -> None:
     for module in (segments, peers, announcements, valuation, company_profile):
         module._age_hours = lambda *_args, **_kwargs: 0.0
     finance_service._cache_age = lambda _history: timedelta(0)
+
+    # The tool call path has no `today` parameter, so inject the frozen date at the
+    # pure-function boundary instead of faking the clock.
+    original = announcements.announcements_from_rows
+
+    def pinned(rows, *args, **kwargs):
+        kwargs.setdefault("today", as_of)
+        return original(rows, *args, **kwargs)
+
+    announcements.announcements_from_rows = pinned
 
 
 def connect(path: Path) -> sqlite3.Connection:
@@ -199,7 +212,8 @@ def rows_for(connection: sqlite3.Connection, table: str, code: str) -> list[dict
             )
         ]
         board_code = connection.execute(
-            "select board_code from val_history where code = ? limit 1", (code,)
+            "select board_code from val_history where code = ? order by board_code limit 1",
+            (code,),
         ).fetchone()[0]
         assert board_code in boards
         params: tuple = (board_code,)
@@ -255,17 +269,26 @@ def clear_json(directory: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--python-repo", default="D:/Programming/PythonProject")
-    parser.add_argument("--out", default="core/src/test/resources/golden")
+    parser.add_argument("--out", default=str(REPO_ROOT / "core/src/test/resources/golden"))
     parser.add_argument(
-        "--snapshot", default="core/src/test/resources/fixtures/stock-snapshot.db"
+        "--snapshot",
+        default=str(REPO_ROOT / "core/src/test/resources/fixtures/stock-snapshot.db"),
     )
-    parser.add_argument("--schemas", default="core/src/main/resources/tool-schemas.json")
+    parser.add_argument(
+        "--schemas", default=str(REPO_ROOT / "core/src/main/resources/tool-schemas.json")
+    )
+    parser.add_argument(
+        "--as-of",
+        default=None,
+        help="frozen date (YYYY-MM-DD) for date-relative tools; defaults to today",
+    )
     options = parser.parse_args()
 
     python_repo = Path(options.python_repo).resolve()
     out = Path(options.out).resolve()
     snapshot = Path(options.snapshot).resolve()
     schemas_path = Path(options.schemas).resolve()
+    as_of = date.fromisoformat(options.as_of) if options.as_of else date.today()
     source_db = python_repo / "data" / "stock.db"
     if not source_db.is_file():
         raise SystemExit(f"missing Python DB: {source_db}")
@@ -278,7 +301,7 @@ def main() -> int:
     work_db = workdir / "stock.db"
     shutil.copy2(source_db, work_db)
     try:
-        patch_modules(work_db)
+        patch_modules(work_db, as_of)
 
         import assistant.tools as tools
         from assistant.models import ToolResult
@@ -322,6 +345,7 @@ def main() -> int:
                     "tool": tool,
                     "arguments": arguments,
                     "default_company": default_company,
+                    "generated_on": as_of.isoformat(),
                     "result": dataclasses.asdict(result),
                 },
             )

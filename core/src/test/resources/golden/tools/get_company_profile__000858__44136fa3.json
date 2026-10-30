@@ -2,6 +2,7 @@
   "tool": "get_company_profile",
   "arguments": {},
   "default_company": "000858",
+  "generated_on": "2026-10-30",
   "result": {
     "ok": true,
     "company": "000858",
