@@ -46,6 +46,7 @@ public class SecurityConfig {
                                         (request, response, exception) -> {
                                             response.setStatus(
                                                     HttpServletResponse.SC_UNAUTHORIZED);
+                                            response.setCharacterEncoding("UTF-8");
                                             response.setContentType(
                                                     MediaType.APPLICATION_JSON_VALUE);
                                             response.getWriter().write("{\"error\":\"unauthorized\"}");

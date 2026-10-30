@@ -8,12 +8,16 @@ import com.investmentresearch.app.api.HealthController;
 import com.investmentresearch.app.security.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(controllers = HealthController.class, properties = "app.api-token=test-token")
+@WebMvcTest(
+        controllers = HealthController.class,
+        properties = "app.api-token=test-token",
+        excludeAutoConfiguration = UserDetailsServiceAutoConfiguration.class)
 @Import(SecurityConfig.class)
 class HealthControllerTest {
     @Autowired MockMvc mvc;
