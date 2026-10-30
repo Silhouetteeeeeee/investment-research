@@ -1,13 +1,14 @@
 package com.investmentresearch.core.agent;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.investmentresearch.core.citation.CitationCheck;
 import com.investmentresearch.core.citation.CitationValidator;
 import com.investmentresearch.core.domain.Source;
 import com.investmentresearch.core.domain.ToolResult;
 import com.investmentresearch.core.domain.ToolSchema;
 import com.investmentresearch.core.domain.TraceStep;
+import com.investmentresearch.core.run.RunRecorder;
 import com.investmentresearch.core.run.RunRecord;
 import com.investmentresearch.core.tool.ToolRegistry;
 import io.agentscope.core.agent.Agent;
@@ -16,6 +17,8 @@ import io.agentscope.core.event.AgentEvent;
 import io.agentscope.core.event.AgentEventType;
 import io.agentscope.core.event.AgentResultEvent;
 import io.agentscope.core.event.ExceedMaxItersEvent;
+import io.agentscope.core.event.ModelCallEndEvent;
+import io.agentscope.core.event.ModelCallStartEvent;
 import io.agentscope.core.event.TextBlockDeltaEvent;
 import io.agentscope.core.event.ToolCallStartEvent;
 import io.agentscope.core.event.ToolResultEndEvent;
@@ -25,6 +28,7 @@ import io.agentscope.core.message.TextBlock;
 import io.agentscope.core.message.ToolResultBlock;
 import io.agentscope.core.message.ToolResultState;
 import io.agentscope.core.middleware.MiddlewareBase;
+import io.agentscope.core.model.ChatUsage;
 import io.agentscope.core.model.GenerateOptions;
 import io.agentscope.core.model.Model;
 import io.agentscope.core.skill.repository.FileSystemSkillRepository;
@@ -38,20 +42,22 @@ import io.agentscope.harness.agent.skill.runtime.SkillLoadTool;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.Clock;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -64,8 +70,29 @@ public final class AgentEngine implements AssistantEngine {
     private static final String COMPANY_KEY = "defaultCompany";
     private static final String SYSTEM_PROMPT = loadSystemPrompt();
     private static final ObjectMapper JSON = new ObjectMapper();
-    private static final DateTimeFormatter RUN_STAMP =
-            DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
+    private static final ObjectMapper CANONICAL_JSON =
+            new ObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+
+    /** Python {@code UNCACHED_TOOLS}：时效性或一次性的数据不能跨问题复用。 */
+    private static final Set<String> UNCACHED_TOOLS =
+            Set.of(
+                    "load_skill",
+                    "resolve_company",
+                    "get_valuation",
+                    "get_announcements",
+                    "get_earnings_forecasts",
+                    "get_market_overview",
+                    "get_news_events",
+                    "get_sector_rotation",
+                    "screen_candidates",
+                    "build_strategy_plan",
+                    "save_daily_judgment",
+                    "review_research_reports",
+                    "list_research_memory",
+                    "read_research_memory",
+                    "append_research_record",
+                    "update_research_record",
+                    "record_conclusion_change");
 
     private final ToolRegistry tools;
     private final AgentProperties properties;
@@ -73,6 +100,7 @@ public final class AgentEngine implements AssistantEngine {
     private final CitationValidator citations = new CitationValidator();
     private final JsonFileAgentStateStore stateStore;
     private final Set<String> toolNames;
+    private final Map<String, Object> toolSchemas;
     private final HarnessAgent agent;
 
     public AgentEngine(
@@ -84,6 +112,7 @@ public final class AgentEngine implements AssistantEngine {
                 tools.schemas().stream()
                         .map(ToolSchema::name)
                         .collect(java.util.stream.Collectors.toUnmodifiableSet());
+        this.toolSchemas = toolSchemasPayload();
         this.agent = buildAgent(modelSupplier.get());
     }
 
@@ -94,9 +123,14 @@ public final class AgentEngine implements AssistantEngine {
             String name,
             String question,
             StreamListener listener) {
-        String startedAt = Instant.now().toString();
-        long startedNanos = System.nanoTime();
-        RunState state = new RunState(conversationId, code, listener);
+        RunRecorder recorder =
+                new RunRecorder(
+                        Clock.systemUTC(),
+                        properties.model(),
+                        properties.maxTurns(),
+                        toolSchemas);
+        recorder.start(conversationId, question);
+        RunState state = new RunState(conversationId, code, listener, recorder);
         RuntimeContext context =
                 RuntimeContext.builder()
                         .userId(USER_ID)
@@ -105,56 +139,76 @@ public final class AgentEngine implements AssistantEngine {
                         .put(RunState.class, state)
                         .build();
 
-        AtomicReference<Msg> finalMessage = new AtomicReference<>();
-        AtomicReference<String> streamed = new AtomicReference<>("");
-        Map<String, Long> toolStartedAt = new ConcurrentHashMap<>();
         List<String> issues = new ArrayList<>();
+        try {
+            AtomicReference<Msg> finalMessage = new AtomicReference<>();
+            AtomicReference<String> streamed = new AtomicReference<>("");
+            Map<String, Long> toolStartedAt = new ConcurrentHashMap<>();
 
-        Msg userMessage =
-                Msg.builder().role(MsgRole.USER).name("user").textContent(question).build();
+            Msg userMessage =
+                    Msg.builder().role(MsgRole.USER).name("user").textContent(question).build();
 
-        agent.streamEvents(userMessage, context)
-                .doOnNext(
-                        event ->
-                                handleEvent(
-                                        event,
-                                        state,
-                                        listener,
-                                        finalMessage,
-                                        streamed,
-                                        toolStartedAt,
-                                        issues))
-                .blockLast();
+            agent.streamEvents(userMessage, context)
+                    .doOnNext(
+                            event ->
+                                    handleEvent(
+                                            event,
+                                            state,
+                                            listener,
+                                            finalMessage,
+                                            streamed,
+                                            toolStartedAt,
+                                            issues))
+                    .blockLast();
 
-        Msg result = finalMessage.get();
-        String text = result == null ? "" : textOf(result);
-        if (text.isEmpty() && !streamed.get().isEmpty()) {
-            // 模型没给最终消息时，至少保住已经推给页面的正文
-            text = streamed.get();
+            Msg result = finalMessage.get();
+            String text = result == null ? "" : textOf(result);
+            if (text.isEmpty() && !streamed.get().isEmpty()) {
+                // 模型没给最终消息时，至少保住已经推给页面的正文
+                text = streamed.get();
+            }
+
+            String stopReason =
+                    result == null || text.isBlank() ? "rounds_exhausted" : "answered";
+            if (state.exceeded.get()) {
+                if (!text.isBlank()) {
+                    issues.add("工具轮次用尽后直接基于已有资料作答");
+                } else {
+                    issues.add("研究轮次用尽（" + state.maxIters.get() + " 轮）");
+                    stopReason = "rounds_exhausted";
+                }
+            }
+
+            CitationCheck check = citations.validate(text, state.sources);
+            issues.addAll(check.issues());
+            recorder.finish(stopReason, null);
+            return new AskResult(
+                    check.text(),
+                    check.citations(),
+                    List.copyOf(state.trace),
+                    List.copyOf(issues),
+                    recordedRun(recorder, issues),
+                    List.copyOf(state.raw));
+        } catch (RuntimeException error) {
+            if (error instanceof EngineFailure failure) {
+                throw failure;
+            }
+            String message = error.getMessage();
+            if (message == null || message.isBlank()) {
+                message = error.getClass().getSimpleName();
+            }
+            // 运行记录先收尾再抛，前端失败消息也能展开时间线（agent.py:720-723）
+            recorder.finish("error", message);
+            throw new EngineFailure("回答生成失败：" + message, recordedRun(recorder, issues), error);
         }
+    }
 
-        CitationCheck check = citations.validate(text, state.sources);
-        issues.addAll(check.issues());
-        String stopReason = result == null ? "rounds_exhausted" : "answered";
-        long totalMs = Duration.ofNanos(System.nanoTime() - startedNanos).toMillis();
-        RunRecord run =
-                new RunRecord(
-                        runId(),
-                        runPayload(
-                                conversationId,
-                                question,
-                                stopReason,
-                                state,
-                                issues,
-                                startedAt,
-                                totalMs));
-        return new AskResult(
-                check.text(),
-                check.citations(),
-                List.copyOf(state.trace),
-                List.copyOf(issues),
-                run,
-                List.copyOf(state.raw));
+    private static RunRecord recordedRun(RunRecorder recorder, List<String> issues) {
+        Map<String, Object> payload = recorder.payload();
+        @SuppressWarnings("unchecked")
+        List<Object> runIssues = (List<Object>) payload.get("issues");
+        runIssues.addAll(issues);
+        return new RunRecord((String) payload.get("run_id"), payload);
     }
 
     @Override
@@ -175,7 +229,32 @@ public final class AgentEngine implements AssistantEngine {
             List<String> issues) {
         AgentEventType type = event.getType();
         switch (type) {
-            case MODEL_CALL_START -> state.round.incrementAndGet();
+            case MODEL_CALL_START -> {
+                ModelCallStartEvent call = (ModelCallStartEvent) event;
+                boolean forced = state.forcedNext.getAndSet(false);
+                if (!forced) {
+                    state.round.incrementAndGet();
+                }
+                state.modelCalls.put(
+                        call.getReplyId(),
+                        new ModelCall(state.round.get(), forced, System.nanoTime()));
+            }
+            case MODEL_CALL_END -> {
+                ModelCallEndEvent end = (ModelCallEndEvent) event;
+                ModelCall call = state.modelCalls.remove(end.getReplyId());
+                if (call != null) {
+                    ChatUsage usage = end.getUsage();
+                    state.recorder.modelStage(
+                            call.round(),
+                            elapsed(call.startedNanos()),
+                            null,
+                            usage == null ? null : usage.getInputTokens(),
+                            usage == null ? null : usage.getOutputTokens(),
+                            null,
+                            usage == null ? "estimate" : "api",
+                            call.forced());
+                }
+            }
             case TEXT_BLOCK_DELTA -> {
                 TextBlockDeltaEvent delta = (TextBlockDeltaEvent) event;
                 String text = delta.getDelta();
@@ -187,39 +266,82 @@ public final class AgentEngine implements AssistantEngine {
             case TOOL_CALL_START -> {
                 ToolCallStartEvent call = (ToolCallStartEvent) event;
                 listener.discard();
-                toolStartedAt.put(toolKey(call.getToolCallId(), call.getToolCallName()), System.nanoTime());
+                toolStartedAt.put(
+                        toolKey(call.getToolCallId(), call.getToolCallName()), System.nanoTime());
             }
             case TOOL_RESULT_END -> {
                 ToolResultEndEvent result = (ToolResultEndEvent) event;
                 String name = result.getToolCallName();
-                if (name != null && !toolNames.contains(name)) {
+                String key = toolKey(result.getToolCallId(), name);
+                boolean ok = result.getState() == ToolResultState.SUCCESS;
+                long durationMs = elapsed(toolStartedAt.remove(key));
+                if (name != null && toolNames.contains(name)) {
+                    // 参数校验失败时 ToolRegistry 不会执行，补一条失败记录留在时间线上
+                    if (!state.recordedToolCalls.remove(key)) {
+                        String error = ok ? null : "工具调用失败：参数校验未通过或工具未执行";
+                        state.addTrace(
+                                name,
+                                Map.of(),
+                                ok,
+                                null,
+                                null,
+                                error,
+                                List.of(),
+                                false,
+                                durationMs);
+                        state.recorder.toolStage(
+                                Math.max(1, state.round.get()),
+                                name,
+                                Map.of(),
+                                durationMs,
+                                ok,
+                                false,
+                                error,
+                                null,
+                                null,
+                                List.of(),
+                                0);
+                        listener.tool(new ToolEvent(name, null, ok, false, durationMs));
+                    }
+                } else if (name != null) {
                     // skill 加载和未知工具不经过 ToolRegistry，事件里也只有成败没有参数
-                    long durationMs = elapsed(toolStartedAt.remove(toolKey(result.getToolCallId(), name)));
-                    boolean ok = result.getState() == ToolResultState.SUCCESS;
                     String error =
                             ok || SkillLoadTool.TOOL_NAME.equals(name) ? null : "未知工具：" + name;
-                    state.trace.add(
-                            new TraceStep(
-                                    Math.max(1, state.round.get()),
-                                    name,
-                                    Map.of(),
-                                    ok,
-                                    null,
-                                    null,
-                                    error,
-                                    List.of(),
-                                    false,
-                                    durationMs));
+                    state.addTrace(
+                            name,
+                            Map.of(),
+                            ok,
+                            null,
+                            null,
+                            error,
+                            List.of(),
+                            false,
+                            durationMs);
+                    state.recorder.toolStage(
+                            Math.max(1, state.round.get()),
+                            name,
+                            Map.of(),
+                            durationMs,
+                            ok,
+                            false,
+                            error,
+                            null,
+                            null,
+                            List.of(),
+                            0);
                     listener.tool(new ToolEvent(name, null, ok, false, durationMs));
                 }
             }
             case AGENT_RESULT -> finalMessage.set(((AgentResultEvent) event).getResult());
             case EXCEED_MAX_ITERS -> {
                 ExceedMaxItersEvent exceeded = (ExceedMaxItersEvent) event;
-                issues.add("研究轮次用尽（" + exceeded.getMaxIters() + " 轮）");
+                state.exceeded.set(true);
+                state.maxIters.set(exceeded.getMaxIters());
+                // 下一轮模型调用是 AgentScope 的强制作答，不算研究轮次
+                state.forcedNext.set(true);
             }
             default -> {
-                // AGENT_START/END、model/tool 的 start/end 等事件不需要转给页面
+                // AGENT_START/END、文本块边界等事件不需要转给页面
             }
         }
     }
@@ -256,6 +378,7 @@ public final class AgentEngine implements AssistantEngine {
                         .disableDefaultWorkspaceSkills()
                         .disableDynamicSkills()
                         .disableToolsConfig()
+                        .enableAgentTracingLog(false)
                         .middleware(new CompanyPromptMiddleware(properties.maxTurns()))
                         .build();
 
@@ -285,32 +408,42 @@ public final class AgentEngine implements AssistantEngine {
         return toolCallId == null || toolCallId.isEmpty() ? String.valueOf(name) : toolCallId;
     }
 
-    private static String runId() {
-        return RUN_STAMP.format(java.time.LocalDateTime.now())
-                + "-"
-                + UUID.randomUUID().toString().substring(0, 8);
+    /** Python {@code _new_run()} 的 tool_schemas：整份 schema 加一个稳定哈希。 */
+    private Map<String, Object> toolSchemasPayload() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (ToolSchema schema : tools.schemas()) {
+            Map<String, Object> function = new LinkedHashMap<>();
+            function.put("name", schema.name());
+            function.put("description", schema.description());
+            function.put("parameters", schema.parameters() == null ? Map.of() : schema.parameters());
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("type", "function");
+            item.put("function", function);
+            list.add(item);
+        }
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("hash", textHash(toCanonicalJson(list)));
+        payload.put("tools", list);
+        return payload;
     }
 
-    private static Map<String, Object> runPayload(
-            long conversationId,
-            String question,
-            String stopReason,
-            RunState state,
-            List<String> issues,
-            String startedAt,
-            long totalMs) {
-        Map<String, Object> payload = new LinkedHashMap<>();
-        payload.put("version", 1);
-        payload.put("conversation_id", conversationId);
-        payload.put("question", question);
-        payload.put("rounds", state.round.get());
-        payload.put("stop_reason", stopReason);
-        payload.put("trace", List.copyOf(state.trace));
-        payload.put("issues", List.copyOf(issues));
-        payload.put("started_at", startedAt);
-        payload.put("finished_at", Instant.now().toString());
-        payload.put("total_ms", totalMs);
-        return payload;
+    private static String toCanonicalJson(Object value) {
+        try {
+            return CANONICAL_JSON.writeValueAsString(value);
+        } catch (IOException error) {
+            throw new IllegalStateException("工具 schema 序列化失败", error);
+        }
+    }
+
+    private static String textHash(String text) {
+        try {
+            byte[] digest =
+                    MessageDigest.getInstance("SHA-256")
+                            .digest(text.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digest).substring(0, 12);
+        } catch (NoSuchAlgorithmException error) {
+            throw new IllegalStateException("当前 JDK 不支持 SHA-256", error);
+        }
     }
 
     private static String loadSystemPrompt() {
@@ -322,14 +455,6 @@ public final class AgentEngine implements AssistantEngine {
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException error) {
             throw new IllegalStateException("读取 prompts/system.md 失败", error);
-        }
-    }
-
-    private static Map<String, Object> parsePayload(ToolResult result) {
-        try {
-            return JSON.readValue(result.toMessageJson(), new TypeReference<Map<String, Object>>() {});
-        } catch (IOException error) {
-            return Map.of("ok", result.ok());
         }
     }
 
@@ -371,15 +496,18 @@ public final class AgentEngine implements AssistantEngine {
 
             String company = state.companyOf(arguments);
             long startedNanos = System.nanoTime();
+            boolean cacheable = !UNCACHED_TOOLS.contains(getName());
             Optional<ToolResult> hit =
-                    cache.get(state.conversationId, getName(), arguments, company);
+                    cacheable
+                            ? cache.get(state.conversationId, getName(), arguments, company)
+                            : Optional.empty();
 
             ToolResult result;
             if (hit.isPresent()) {
                 result = hit.get().asCached();
             } else {
                 result = tools.run(getName(), arguments, state.defaultCompany);
-                if (result.ok()) {
+                if (cacheable && result.ok()) {
                     cache.put(state.conversationId, getName(), arguments, company, result);
                     String normalized = result.company() == null ? "" : result.company();
                     if (!normalized.equals(company)) {
@@ -395,9 +523,11 @@ public final class AgentEngine implements AssistantEngine {
 
             long durationMs =
                     Math.max(0, Duration.ofNanos(System.nanoTime() - startedNanos).toMillis());
-            state.record(getName(), arguments, result, durationMs);
+            String callId = param.getToolUseBlock().getId();
+            state.recordedToolCalls.add(toolKey(callId, getName()));
+            state.record(callId, getName(), arguments, result, durationMs);
             return ToolResultBlock.of(
-                            param.getToolUseBlock().getId(),
+                            callId,
                             getName(),
                             TextBlock.builder().text(result.toMessageJson()).build())
                     // 默认状态是 RUNNING，必须显式收尾，否则 ReAct 循环会等下去
@@ -405,19 +535,32 @@ public final class AgentEngine implements AssistantEngine {
         }
     }
 
+    private record ModelCall(int round, boolean forced, long startedNanos) {}
+
     private static final class RunState {
         private final long conversationId;
         private final String defaultCompany;
         private final StreamListener listener;
+        private final RunRecorder recorder;
         private final AtomicInteger round = new AtomicInteger();
+        private final AtomicBoolean forcedNext = new AtomicBoolean();
+        private final AtomicBoolean exceeded = new AtomicBoolean();
+        private final AtomicInteger maxIters = new AtomicInteger();
+        private final Map<String, ModelCall> modelCalls = new ConcurrentHashMap<>();
+        private final Set<String> recordedToolCalls = ConcurrentHashMap.newKeySet();
         private final Map<String, Source> sources = Collections.synchronizedMap(new LinkedHashMap<>());
         private final List<TraceStep> trace = new CopyOnWriteArrayList<>();
         private final List<Map<String, Object>> raw = new CopyOnWriteArrayList<>();
 
-        private RunState(long conversationId, String defaultCompany, StreamListener listener) {
+        private RunState(
+                long conversationId,
+                String defaultCompany,
+                StreamListener listener,
+                RunRecorder recorder) {
             this.conversationId = conversationId;
             this.defaultCompany = defaultCompany == null ? "" : defaultCompany;
             this.listener = listener;
+            this.recorder = recorder;
         }
 
         private String companyOf(Map<String, Object> arguments) {
@@ -429,23 +572,42 @@ public final class AgentEngine implements AssistantEngine {
         }
 
         private void record(
-                String name, Map<String, Object> arguments, ToolResult result, long durationMs) {
+                String callId,
+                String name,
+                Map<String, Object> arguments,
+                ToolResult result,
+                long durationMs) {
             for (Source source : result.sources()) {
                 sources.putIfAbsent(source.id(), source);
             }
-            trace.add(
-                    new TraceStep(
-                            Math.max(1, round.get()),
-                            name,
-                            new LinkedHashMap<>(arguments),
-                            result.ok(),
-                            result.company(),
-                            result.asOf(),
-                            result.error(),
-                            result.sources().stream().map(Source::id).toList(),
-                            result.cached(),
-                            durationMs));
-            raw.add(parsePayload(result));
+            List<String> sourceIds = result.sources().stream().map(Source::id).toList();
+            addTrace(
+                    name,
+                    arguments,
+                    result.ok(),
+                    result.company(),
+                    result.asOf(),
+                    result.error(),
+                    sourceIds,
+                    result.cached(),
+                    durationMs);
+            Map<String, Object> message = new LinkedHashMap<>();
+            message.put("role", "tool");
+            message.put("tool_call_id", callId == null ? "" : callId);
+            message.put("content", result.toMessageJson());
+            raw.add(message);
+            recorder.toolStage(
+                    Math.max(1, round.get()),
+                    name,
+                    new LinkedHashMap<>(arguments),
+                    durationMs,
+                    result.ok(),
+                    result.cached(),
+                    result.error(),
+                    result.company(),
+                    result.asOf(),
+                    sourceIds,
+                    dataChars(result));
             listener.tool(
                     new ToolEvent(
                             name,
@@ -453,6 +615,41 @@ public final class AgentEngine implements AssistantEngine {
                             result.ok(),
                             result.cached(),
                             durationMs));
+        }
+
+        private void addTrace(
+                String name,
+                Map<String, Object> arguments,
+                boolean ok,
+                String company,
+                String asOf,
+                String error,
+                List<String> sourceIds,
+                boolean cached,
+                long durationMs) {
+            trace.add(
+                    new TraceStep(
+                            Math.max(1, round.get()),
+                            name,
+                            new LinkedHashMap<>(arguments),
+                            ok,
+                            company,
+                            asOf,
+                            error,
+                            sourceIds,
+                            cached,
+                            durationMs));
+        }
+
+        private static int dataChars(ToolResult result) {
+            if (result.data() == null) {
+                return 0;
+            }
+            try {
+                return JSON.writeValueAsString(result.data()).length();
+            } catch (IOException error) {
+                return 0;
+            }
         }
     }
 

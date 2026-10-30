@@ -58,6 +58,19 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 ./mvnw -q spotless:check
 ```
 
+## 阶段 1 已知差异
+
+迁移阶段只保证核心问答链路；以下与 Python 版仍有差距，先记录在这里：
+
+- 上下文压缩只配置了 `triggerTokens(80_000)`，没有移植 Python 的完整压缩策略。
+- 运行记录缺少 `stream`、`message_count`、`input_chars`、`system_share`、`tool_share`、
+  `system_prompt_hash`、`tools_hash`；详情页因此不显示流式标记，并会出现
+  “消息 0 条 · system 0%”。`prompts`、`skills`、`calls` 目前也只保留空数组。
+- 系统提示词保留了 `research_memory` 以及行情、新闻、选股等工具的描述，但这些工具
+  在阶段 1 尚未注册；真实模型可能先尝试加载失败的工具，浪费一轮。
+- `get_valuation`、`get_announcements`、`resolve_company` 等时效性工具不进入会话缓存，
+  与 Python 的 `UNCACHED_TOOLS` 一致。
+
 ## 容器部署（Docker Compose）
 
 ```bash

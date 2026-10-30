@@ -84,7 +84,7 @@ class ConversationControllerTest {
                 List.of(
                         Map.of("round", 1, "name", "get_finance"),
                         Map.of("round", 2, "name", "get_segments")));
-        assistant.put("issues", List.of("缺少现金流"));
+        assistant.put("issues", List.of("缺少现金流", "引用编号无法对应", "第三条不应出现"));
         assistant.put("run", Map.of("id", RUN_A, "file_bytes", 123));
         assistant.put("raw", List.of(Map.of("secret", "工具原文不应出现")));
 
@@ -118,7 +118,9 @@ class ConversationControllerTest {
                 .andExpect(jsonPath("$.messages[1].trace.length()").value(2))
                 .andExpect(jsonPath("$.messages[1].trace_count").value(2))
                 .andExpect(jsonPath("$.messages[1].sources[0].id").value("finance:605499"))
+                .andExpect(jsonPath("$.messages[1].issues.length()").value(2))
                 .andExpect(jsonPath("$.messages[1].issues[0]").value("缺少现金流"))
+                .andExpect(jsonPath("$.messages[1].issues[1]").value("引用编号无法对应"))
                 .andExpect(jsonPath("$.messages[1].run.id").value(RUN_A))
                 .andExpect(jsonPath("$.messages[1].raw").doesNotExist());
     }

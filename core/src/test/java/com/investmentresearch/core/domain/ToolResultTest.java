@@ -47,8 +47,8 @@ class ToolResultTest {
                 "{\"ok\": true, \"sources\": [{\"id\": \"profile:605499\", \"label\": \"公司概况\","
                         + " \"detail\": \"东鹏饮料 · 饮料\", \"as_of\": \"2026-10-30\","
                         + " \"fetched_at\": \"2026-10-28 10:00:00\", \"url\": \"\"}],"
-                        + " \"cached\": true, \"note\": \"本次会话已取过相同参数的数据，未重新请求；"
-                        + "此前那份已从上下文移除\", \"company\": \"605499\","
+                        + " \"cached\": true, \"note\": \"本次会话已取过相同参数的数据，未重新请求\","
+                        + " \"company\": \"605499\","
                         + " \"as_of\": \"2026-10-30\", \"data\": {\"name\": \"东鹏饮料\","
                         + " \"employees\": 1234}}",
                 result.toMessageJson());

@@ -176,7 +176,8 @@ public class ConversationController {
                 out.put("trace", List.of());
                 out.put("trace_count", traceCount(trace));
             }
-            out.put("issues", listOrEmpty(payload.get("issues")));
+            // 页面只显示前两条问题（assistant/api.py:197-200）
+            out.put("issues", firstTwo(payload.get("issues")));
         }
         return out;
     }
@@ -272,6 +273,13 @@ public class ConversationController {
 
     private static Object listOrEmpty(Object value) {
         return value instanceof List<?> list ? list : List.of();
+    }
+
+    private static Object firstTwo(Object value) {
+        if (!(value instanceof List<?> list)) {
+            return List.of();
+        }
+        return list.size() <= 2 ? list : list.subList(0, 2);
     }
 
     private static int traceCount(Object trace) {

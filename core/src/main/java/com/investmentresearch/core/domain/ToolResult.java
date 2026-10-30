@@ -15,8 +15,7 @@ public record ToolResult(
         String error,
         boolean cached) {
 
-    public static final String CACHED_NOTE =
-            "本次会话已取过相同参数的数据，未重新请求；此前那份已从上下文移除";
+    public static final String CACHED_NOTE = "本次会话已取过相同参数的数据，未重新请求";
 
     public static ToolResult ok(
             String company, String asOf, List<Source> sources, Map<String, Object> data) {
