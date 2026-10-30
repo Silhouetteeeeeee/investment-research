@@ -14,7 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 // The @WebMvcTest cannot see the security chain. This boots the real context so a
-// 401-after-async regression (DispatcherType.ASYNC) would fail here.
+// 401-after-async regression (DispatcherType.ASYNC) fails here — verified by removing
+// the ASYNC permit: the stream is cut and the body read throws, not a clean status.
 @SpringBootTest(
         classes = Application.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,

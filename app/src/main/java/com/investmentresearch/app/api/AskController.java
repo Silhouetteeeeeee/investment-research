@@ -1,7 +1,6 @@
 package com.investmentresearch.app.api;
 
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -52,9 +51,19 @@ public class AskController {
             event.put("type", "error");
             event.put("text", "助手尚未接入模型");
             writer.send(event);
+        } catch (Throwable failure) {
+            // Anything escaping this task would leave the client hanging until the
+            // 10-minute timeout, so end the stream with an error frame instead.
+            try {
+                Map<String, Object> event = new LinkedHashMap<>();
+                event.put("type", "error");
+                event.put("text", "服务出错，请重试");
+                writer.send(event);
+            } catch (Throwable clientGone) {
+                // Disconnected client: stop silently, never log the token or the question.
+            }
+        } finally {
             writer.complete();
-        } catch (IllegalStateException | IOException clientGone) {
-            // Disconnected client: stop silently, never log the token or the question body.
         }
     }
 
