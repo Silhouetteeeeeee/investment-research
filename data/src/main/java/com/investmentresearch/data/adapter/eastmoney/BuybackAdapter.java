@@ -11,7 +11,6 @@ import com.investmentresearch.data.persistence.ResearchCacheStore;
 import com.investmentresearch.data.persistence.StockMapper;
 import com.investmentresearch.data.upstream.UpstreamClient;
 import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;

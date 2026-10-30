@@ -17,12 +17,19 @@ import com.investmentresearch.core.agent.ScriptedModel;
 import com.investmentresearch.core.agent.StreamListener;
 import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.data.persistence.StockEntity;
+import com.investmentresearch.data.persistence.ResearchCache;
+import com.investmentresearch.data.persistence.ResearchCacheStore;
 import com.investmentresearch.data.persistence.StockMapper;
+import io.agentscope.core.skill.repository.FileSystemSkillRepository;
+import io.agentscope.harness.agent.skill.runtime.HarnessSkillEntry;
+import io.agentscope.harness.agent.skill.runtime.SkillCatalog;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +76,13 @@ import org.springframework.test.context.DynamicPropertySource;
 @Import(AskFlowTest.ScriptedEngineConfig.class)
 class AskFlowTest {
     private static final String QUESTION = "东鹏饮料靠什么赚钱";
+    private static final String MANAGEMENT_QUESTION = "东鹏饮料管理层怎么样";
+    private static final String MANAGEMENT_SOURCE = "management:605499";
+    private static final String MANAGEMENT_CACHE =
+            "{\"as_of\":\"2026-06-30\",\"salary_year\":2025,\"count\":1,"
+                    + "\"groups\":{\"directors\":{\"label\":\"董事会\",\"count\":1,"
+                    + "\"members\":[{\"name\":\"林木勤\",\"duties\":[\"董事长\"],\"tenure\":\"2019\","
+                    + "\"age\":59,\"education\":\"硕士\",\"is_control\":true}]}}}";
     private static final String PROFILE_SOURCE = "profile:605499";
     private static final String FINANCE_SOURCE = "finance:605499:2026-09-30";
     private static final String SEGMENTS_SOURCE = "segments:605499:2026-06-30:product";
@@ -105,6 +119,7 @@ class AskFlowTest {
     @Autowired TestRestTemplate rest;
     @Autowired ObjectMapper json;
     @Autowired StockMapper stocks;
+    @Autowired ResearchCacheStore cache;
 
     @AfterAll
     static void stopUpstream() {
@@ -122,6 +137,12 @@ class AskFlowTest {
             row.setRefreshedAt("2026-10-30 00:00:00");
             stocks.insert(row);
         }
+        // 同花顺高管接口没有录制文件，直接写一份新鲜缓存，让 get_management 不出网。
+        cache.write(
+                ResearchCache.MANAGEMENT,
+                "605499",
+                MANAGEMENT_CACHE,
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 
     @Test
@@ -251,6 +272,31 @@ class AskFlowTest {
         assertThat(modelStages).isEqualTo(4);
     }
 
+    @Test
+    void management_question_loads_the_skill_then_the_tool() throws Exception {
+        List<JsonNode> events = ask(MANAGEMENT_QUESTION);
+        assertThat(toolNames(events))
+                .containsExactly("load_skill_through_path", "get_management");
+        assertThat(events.stream().filter(event -> "tool".equals(type(event))))
+                .allSatisfy(event -> assertThat(event.get("ok").asBoolean()).isTrue());
+
+        long id = eventsConversationId(events);
+        String runId = events.get(events.size() - 1).get("message").get("run").get("id").asText();
+        JsonNode assistant = getJson("/api/conversations/" + id).get("messages").get(1);
+        assertThat(traceNames(assistant.get("trace"))).contains("get_management");
+        assertThat(sourceIds(assistant.get("sources"))).contains(MANAGEMENT_SOURCE);
+
+        JsonNode run = getJson("/api/conversations/" + id + "/runs/" + runId);
+        boolean managementStage = false;
+        for (JsonNode stage : run.get("stages")) {
+            if ("tool".equals(stage.get("kind").asText())
+                    && "get_management".equals(stage.get("name").asText())) {
+                managementStage = stage.get("ok").asBoolean();
+            }
+        }
+        assertThat(managementStage).isTrue();
+    }
+
     private List<JsonNode> ask(String question) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth("test-token");
@@ -311,6 +357,12 @@ class AskFlowTest {
 
     private static long eventsConversationId(List<JsonNode> events) {
         return events.get(0).get("conversation_id").asLong();
+    }
+
+    private static List<String> traceNames(JsonNode trace) {
+        List<String> names = new ArrayList<>();
+        trace.forEach(step -> names.add(step.get("name").asText()));
+        return names;
     }
 
     private static List<String> sourceIds(JsonNode sources) {
@@ -386,6 +438,20 @@ class AskFlowTest {
             this.properties = properties;
         }
 
+        /** 模型从 &lt;available_skills&gt; 里读到的是 {@code <name>_<source>}，这里照抄同一个 id。 */
+        private String skillId(String name) {
+            SkillCatalog catalog =
+                    SkillCatalog.of(
+                            new FileSystemSkillRepository(properties.skillsDir())
+                                    .getAllSkills().stream()
+                                            .map(skill -> HarnessSkillEntry.of(skill, null))
+                                            .toList());
+            return catalog.ids().stream()
+                    .filter(id -> id.startsWith(name + "_"))
+                    .findFirst()
+                    .orElse(name);
+        }
+
         @Override
         public AskResult ask(
                 long conversationId,
@@ -394,11 +460,19 @@ class AskFlowTest {
                 String question,
                 StreamListener listener) {
             ScriptedModel model =
-                    new ScriptedModel(
-                            ScriptedModel.toolCall("get_company_profile", Map.of()),
-                            ScriptedModel.toolCall("get_finance", Map.of()),
-                            ScriptedModel.toolCall("get_segments", Map.of()),
-                            ScriptedModel.text(ANSWER));
+                    MANAGEMENT_QUESTION.equals(question)
+                            ? new ScriptedModel(
+                                    ScriptedModel.toolCall(
+                                            "load_skill_through_path",
+                                            Map.of("skillId", skillId("management"), "path", "SKILL.md")),
+                                    ScriptedModel.toolCall("get_management", Map.of()),
+                                    ScriptedModel.text(
+                                            "管理层信息见 [[" + MANAGEMENT_SOURCE + "]]。"))
+                            : new ScriptedModel(
+                                    ScriptedModel.toolCall("get_company_profile", Map.of()),
+                                    ScriptedModel.toolCall("get_finance", Map.of()),
+                                    ScriptedModel.toolCall("get_segments", Map.of()),
+                                    ScriptedModel.text(ANSWER));
             return new AgentEngine(tools, properties, () -> model)
                     .ask(conversationId, code, name, question, listener);
         }

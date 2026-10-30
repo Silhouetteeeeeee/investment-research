@@ -61,6 +61,21 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 ./mvnw -q spotless:check
 ```
 
+## 工具
+
+注册顺序与 Python `assistant.tools.schemas()` 一致，共 20 个：
+
+`resolve_company`、`get_company_profile`、`get_finance`、`get_financial_history`、
+`get_segments`、`get_management`、`get_shareholders`、`get_peers`、`get_dividends`、
+`get_insider_trades`、`get_buybacks`、`get_lockup_expiries`、`get_pledges`、
+`get_earnings_forecasts`、`get_institutional_research`、`get_research_notes`、
+`get_analyst_views`、`get_announcements`、`get_valuation`、`calc_valuation`。
+
+`calc_valuation` 有 `check` / `scenario` / `terminal` 三种 `mode`；`skills/` 下
+`business_model` 之外的七个公司研究 skill（`moat`、`operating_history`、
+`financial_safety`、`growth_outlook`、`management`、`valuation`、`margin_of_safety`）
+正文与 Python 逐字一致。
+
 ## 阶段 1 已知差异
 
 迁移阶段只保证核心问答链路；以下与 Python 版仍有差距，先记录在这里：
@@ -80,8 +95,11 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
   `system_prompt_hash`、`tools_hash`；详情页因此不显示流式标记，并会出现
   “消息 0 条 · system 0%”。`prompts`、`skills`、`calls` 目前也只保留空数组。
 - 系统提示词保留了 `research_memory` 以及行情、新闻、选股等工具的描述，但这些工具
-  在阶段 1 尚未注册；真实模型可能先尝试加载失败的工具，浪费一轮。同理，`get_dividends`、
-  `get_shareholders`、`get_management` 等公司研究工具也还没注册——阶段 1 只有 7 个工具真正可用。
+  尚未注册（阶段 3 补齐），真实模型可能先尝试加载失败的工具，浪费一轮；`stock_screening`
+  skill 同样延到阶段 3。公司研究的 20 个工具已全部注册。
+- 金标准与快照库的覆盖面并不完整：`get_research_notes` 只有 2 家公司的用例；`601318`
+  在 8 张缓存表里没有数据；`600600`/`601606` 缺回购，`600600`/`601318` 缺限售解禁，
+  `601606` 缺内部人交易。换一家公司回放时可能取不到数据，这是快照缺口，不是取数错误。
 - `get_valuation`、`get_announcements`、`resolve_company` 等时效性工具不进入会话缓存，
   与 Python 的 `UNCACHED_TOOLS` 一致。
 

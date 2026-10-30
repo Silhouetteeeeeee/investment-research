@@ -5,26 +5,52 @@ import com.investmentresearch.core.agent.AgentProperties;
 import com.investmentresearch.core.agent.AskResult;
 import com.investmentresearch.core.agent.AssistantEngine;
 import com.investmentresearch.core.agent.StreamListener;
+import com.investmentresearch.core.port.AnalystViewPort;
 import com.investmentresearch.core.port.AnnouncementPort;
+import com.investmentresearch.core.port.BuybackPort;
 import com.investmentresearch.core.port.CompanyDirectory;
 import com.investmentresearch.core.port.CompanyProfilePort;
 import com.investmentresearch.core.port.ConversationRepository;
+import com.investmentresearch.core.port.DividendPort;
 import com.investmentresearch.core.port.FinancePort;
+import com.investmentresearch.core.port.FinancialHistoryPort;
+import com.investmentresearch.core.port.ForecastPort;
+import com.investmentresearch.core.port.InsiderTradePort;
+import com.investmentresearch.core.port.LockupPort;
+import com.investmentresearch.core.port.ManagementPort;
 import com.investmentresearch.core.port.PeerPort;
 import com.investmentresearch.core.port.RunStore;
+import com.investmentresearch.core.port.PledgePort;
+import com.investmentresearch.core.port.ResearchNotesPort;
+import com.investmentresearch.core.port.ResearchPort;
 import com.investmentresearch.core.port.SegmentPort;
+import com.investmentresearch.core.port.ShareholderPort;
+import com.investmentresearch.core.port.ValuationCheckPort;
 import com.investmentresearch.core.port.ValuationPort;
 import com.investmentresearch.core.run.FileRunStore;
 import com.investmentresearch.core.service.AskService;
 import com.investmentresearch.core.service.CompanyResolver;
 import com.investmentresearch.core.service.ContextMeter;
 import com.investmentresearch.core.service.QuestionRouter;
+import com.investmentresearch.core.tool.AnalystViewsTool;
 import com.investmentresearch.core.tool.AnnouncementsTool;
+import com.investmentresearch.core.tool.BuybacksTool;
+import com.investmentresearch.core.tool.CalcValuationTool;
 import com.investmentresearch.core.tool.CompanyProfileTool;
+import com.investmentresearch.core.tool.DividendsTool;
+import com.investmentresearch.core.tool.EarningsForecastsTool;
 import com.investmentresearch.core.tool.FinanceTool;
+import com.investmentresearch.core.tool.FinancialHistoryTool;
+import com.investmentresearch.core.tool.InsiderTradesTool;
+import com.investmentresearch.core.tool.InstitutionalResearchTool;
+import com.investmentresearch.core.tool.LockupExpiriesTool;
+import com.investmentresearch.core.tool.ManagementTool;
 import com.investmentresearch.core.tool.PeersTool;
+import com.investmentresearch.core.tool.PledgesTool;
+import com.investmentresearch.core.tool.ResearchNotesTool;
 import com.investmentresearch.core.tool.ResolveCompanyTool;
 import com.investmentresearch.core.tool.SegmentsTool;
+import com.investmentresearch.core.tool.ShareholdersTool;
 import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.core.tool.ToolSchemas;
 import com.investmentresearch.core.tool.ValuationTool;
@@ -57,19 +83,45 @@ public class AssistantConfig {
             ToolSchemas schemas,
             CompanyProfilePort profiles,
             FinancePort finance,
+            FinancialHistoryPort history,
             SegmentPort segments,
+            ManagementPort management,
+            ShareholderPort shareholders,
             PeerPort peers,
+            DividendPort dividends,
+            InsiderTradePort insiderTrades,
+            BuybackPort buybacks,
+            LockupPort lockups,
+            PledgePort pledges,
+            ForecastPort forecasts,
+            ResearchPort research,
+            ResearchNotesPort researchNotes,
+            AnalystViewPort analystViews,
             AnnouncementPort announcements,
-            ValuationPort valuation) {
+            ValuationPort valuation,
+            ValuationCheckPort valuationCheck) {
         return new ToolRegistry(
                 List.of(
                         new ResolveCompanyTool(directory, resolver, schemas),
                         new CompanyProfileTool(profiles, resolver, schemas),
                         new FinanceTool(finance, resolver, schemas),
+                        new FinancialHistoryTool(history, resolver, schemas),
                         new SegmentsTool(segments, resolver, schemas),
+                        new ManagementTool(management, resolver, schemas),
+                        new ShareholdersTool(shareholders, resolver, schemas),
                         new PeersTool(peers, resolver, schemas),
+                        new DividendsTool(dividends, resolver, schemas),
+                        new InsiderTradesTool(insiderTrades, resolver, schemas),
+                        new BuybacksTool(buybacks, resolver, schemas),
+                        new LockupExpiriesTool(lockups, resolver, schemas),
+                        new PledgesTool(pledges, resolver, schemas),
+                        new EarningsForecastsTool(forecasts, resolver, schemas),
+                        new InstitutionalResearchTool(research, resolver, schemas),
+                        new ResearchNotesTool(researchNotes, resolver, schemas),
+                        new AnalystViewsTool(analystViews, resolver, schemas),
                         new AnnouncementsTool(announcements, resolver, schemas),
-                        new ValuationTool(valuation, resolver, schemas)));
+                        new ValuationTool(valuation, resolver, schemas),
+                        new CalcValuationTool(valuation, valuationCheck, resolver, schemas)));
     }
 
     @Bean

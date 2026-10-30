@@ -1,7 +1,6 @@
 package com.investmentresearch.data.adapter.eastmoney;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.investmentresearch.data.persistence.ResearchCache;
 import com.investmentresearch.data.persistence.ResearchCacheStore;
 import java.time.Clock;

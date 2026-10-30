@@ -90,10 +90,23 @@ class AssistantWiringTest {
                         "resolve_company",
                         "get_company_profile",
                         "get_finance",
+                        "get_financial_history",
                         "get_segments",
+                        "get_management",
+                        "get_shareholders",
                         "get_peers",
+                        "get_dividends",
+                        "get_insider_trades",
+                        "get_buybacks",
+                        "get_lockup_expiries",
+                        "get_pledges",
+                        "get_earnings_forecasts",
+                        "get_institutional_research",
+                        "get_research_notes",
+                        "get_analyst_views",
                         "get_announcements",
-                        "get_valuation");
+                        "get_valuation",
+                        "calc_valuation");
         assertThat(context.getBean(AskService.class)).isNotNull();
         assertThat(context.getBean(QuestionRouter.class)).isNotNull();
         assertThat(context.getBean(ContextMeter.class)).isNotNull();
