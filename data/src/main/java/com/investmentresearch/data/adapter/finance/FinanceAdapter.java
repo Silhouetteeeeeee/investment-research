@@ -288,9 +288,10 @@ public class FinanceAdapter implements FinancePort {
      * 已出现比本地更新的报告期时重抓；30 分钟内抓过则先等上游跟上。
      */
     private boolean stale(String code, List<Map<String, Object>> history) {
-        if (history.isEmpty() || anyRequiredTableEmpty(code)) {
+        if (history.isEmpty()) {
             return true;
         }
+        boolean empty = anyRequiredTableEmpty(code);
         String latest = null;
         for (Map<String, Object> row : history) {
             Object value = row.get("fetched_at");
@@ -307,6 +308,10 @@ public class FinanceAdapter implements FinancePort {
             age = Duration.between(fetched, LocalDateTime.now(clock));
         } catch (DateTimeParseException error) {
             return true;
+        }
+        // 空表也走 30 分钟重试间隔，避免上游真没有该表时每次调用都打三次接口
+        if (empty) {
+            return age.compareTo(Duration.ofMinutes(30)) >= 0;
         }
         if (age.compareTo(Duration.ofDays(DEFAULT_CACHE_DAYS)) > 0) {
             return true;

@@ -3,6 +3,7 @@ package com.investmentresearch.data.adapter.finance;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -201,6 +202,19 @@ class FinanceAdapterTest {
     }
 
     @Test
+    void empty_table_retries_only_after_thirty_minutes() throws Exception {
+        cashflowMapper.delete(Wrappers.<FinCashflowEntity>query().eq("code", "600600"));
+
+        setFetchedAt("2026-10-29 23:55:00"); // 距固定时钟 5 分钟
+        assertThat(adapter.finance("600600").ok()).isTrue();
+        server.verify(0, getRequestedFor(urlPathEqualTo(SINCE_PATH)));
+
+        setFetchedAt("2026-10-29 23:29:00"); // 31 分钟
+        assertThat(adapter.finance("600600").ok()).isTrue();
+        server.verify(3, getRequestedFor(urlPathEqualTo(SINCE_PATH)));
+    }
+
+    @Test
     void migrations_create_the_same_fin_columns_as_python() throws Exception {
         String fresh =
                 "jdbc:sqlite:"
@@ -208,14 +222,20 @@ class FinanceAdapterTest {
         Flyway.configure()
                 .dataSource(fresh, null, null)
                 .locations("classpath:db/migration/sqlite")
-                .target("5")
+                .target("8")
                 .load()
                 .migrate();
 
         String python =
                 "jdbc:sqlite:"
                         + SNAPSHOT.toAbsolutePath().toString().replace('\\', '/');
-        for (String table : List.of("fin_balance", "fin_income", "fin_cashflow", "fin_metrics")) {
+        for (String table :
+                List.of(
+                        "fin_balance",
+                        "fin_income",
+                        "fin_cashflow",
+                        "fin_metrics",
+                        "fin_disclosure")) {
             assertThat(columnSpecs(fresh, table)).as(table).isEqualTo(columnSpecs(python, table));
         }
     }
@@ -403,6 +423,16 @@ class FinanceAdapterTest {
         try (Connection connection = DriverManager.getConnection(jdbcUrl);
                 Statement statement = connection.createStatement()) {
             statement.executeUpdate("delete from fin_disclosure");
+        }
+    }
+
+    private void setFetchedAt(String stamp) throws Exception {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl);
+                Statement statement = connection.createStatement()) {
+            statement.executeUpdate(
+                    "update fin_balance set fetched_at = '" + stamp + "' where code = '600600'");
+            statement.executeUpdate(
+                    "update fin_income set fetched_at = '" + stamp + "' where code = '600600'");
         }
     }
 
