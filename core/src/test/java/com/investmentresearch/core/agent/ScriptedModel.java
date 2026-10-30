@@ -19,23 +19,23 @@ import java.util.UUID;
 import reactor.core.publisher.Flux;
 
 /** Fake model: returns pre-scripted replies in order and records the messages it was given. */
-final class ScriptedModel implements Model {
+public final class ScriptedModel implements Model {
 
     private static final ObjectMapper JSON = new ObjectMapper();
     private final Deque<ChatResponse> replies = new ArrayDeque<>();
     private final List<List<Msg>> calls = new ArrayList<>();
 
-    ScriptedModel(ChatResponse... replies) {
+    public ScriptedModel(ChatResponse... replies) {
         for (ChatResponse reply : replies) {
             this.replies.add(reply);
         }
     }
 
-    static ChatResponse text(String text) {
+    public static ChatResponse text(String text) {
         return reply(TextBlock.builder().text(text).build(), "stop");
     }
 
-    static ChatResponse toolCall(String name, Map<String, Object> arguments) {
+    public static ChatResponse toolCall(String name, Map<String, Object> arguments) {
         Map<String, Object> input = arguments == null ? Map.of() : arguments;
         String content;
         try {

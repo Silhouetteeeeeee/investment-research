@@ -65,6 +65,16 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 
 迁移阶段只保证核心问答链路；以下与 Python 版仍有差距，先记录在这里：
 
+- **大盘问题**：`/api/ask` 直接返回 `{"type":"warning","text":"暂时不支持大盘问题，请指定公司。"}`，
+  不建会话、不落库、不调用模型；大盘工具在阶段 3 补齐。
+- **研究档案页**：`/api/research/*` 仍是占位实现——`GET /api/research/companies` 恒返回空列表，
+  `GET /api/research/companies/{code}` 恒 404；页面可打开但没有真实记忆数据，阶段 3 接通。
+- **token 用量估算**：没有真实模型用量时，运行记录与页面占用都按字符估算
+  （`usage_source: "estimate"`），只适合看趋势，不能当作计费依据；上游返回 usage 时才标 `"api"`。
+- **缺 key 时的问题不落历史**：未设置 `DEEPSEEK_API_KEY` 时应用照常启动，`/api/ask` 返回
+  `{"type":"error","text":"助手不可用：请先设置环境变量 DEEPSEEK_API_KEY"}` 且没有
+  `conversation_id`。与 Python 版不同，Java 不预先建会话、不保存这条用户消息，
+  所以刷新页面后该问题不在历史里。
 - 上下文压缩只配置了 `triggerTokens(80_000)`，没有移植 Python 的完整压缩策略。
 - 运行记录缺少 `stream`、`message_count`、`input_chars`、`system_share`、`tool_share`、
   `system_prompt_hash`、`tools_hash`；详情页因此不显示流式标记，并会出现
@@ -103,6 +113,22 @@ curl -s http://127.0.0.1/health   # ok
   `stop_grace_period: 35s` 给进行中的 SSE 请求留出收尾时间。
 - `redis`、`rabbitmq`、`otel-collector` 只在 `--profile future` 下定义，
   本阶段不启动，应用也不依赖它们（`docker compose --profile future up -d`）。
+
+### 部署冒烟
+
+`scripts/smoke.sh` 检查四项并失败非零退出：`/health` 返回 `ok`、无令牌访问
+`/api/conversations` 返回 401、带 `APP_API_TOKEN` 能读到 JSON 数组、`/` 返回 HTML。
+
+```bash
+docker compose up -d --build
+APP_API_TOKEN="<与 .env 相同>" bash scripts/smoke.sh
+# 或指定地址：BASE_URL=http://127.0.0.1:8080 APP_API_TOKEN=... bash scripts/smoke.sh
+```
+
+冒烟脚本不调用模型，因此不需要 `DEEPSEEK_API_KEY`。真实模型链路仍需要一次人工检查
+（离线环境无法代跑）：浏览器打开 `/`，输入令牌，提问「东鹏饮料靠什么赚钱」，
+确认回答带 `[[profile:605499]]`、`[[finance:605499:…]]`、`[[segments:605499:…]]`
+引用，点开运行详情能看到模型与工具时间线，刷新后回放正常。
 
 ## 管理端口
 
