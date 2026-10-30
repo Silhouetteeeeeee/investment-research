@@ -4,3 +4,7 @@ target/
 !core/src/test/resources/fixtures/*.db
 var/
 .idea/
+
+# AgentScope 会话状态与工具缓存（运行时数据）
+.agentscope/
+core/.agentscope/
