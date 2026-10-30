@@ -27,27 +27,46 @@ abstract class CompanyTool implements ResearchTool {
     @Override
     public final ToolResult execute(Map<String, Object> arguments, String defaultCompany) {
         Map<String, Object> args = arguments == null ? Map.of() : arguments;
-        Object raw = args.get("company");
-        String company;
-        if (raw == null || raw instanceof String text) {
-            company = (String) raw;
-        } else if (isPythonInt(raw)) {
-            company = raw.toString();
-        } else {
-            return ToolResult.failure(
-                    null, "company 参数必须是字符串（收到 " + pythonType(raw) + "）");
+        CompanyText company = companyText(args.get("company"));
+        if (company.error() != null) {
+            return ToolResult.failure(null, company.error());
         }
 
+        String code = null;
         try {
-            ResolvedCompany resolved = resolver.resolve(company, defaultCompany);
+            ResolvedCompany resolved = resolver.resolve(company.text(), defaultCompany);
             if (resolved.code() == null) {
                 return ToolResult.failure(null, resolved.error());
             }
-            return run(resolved.code(), args);
+            code = resolved.code();
+            return run(code, args);
         } catch (RuntimeException error) {
-            return ToolResult.failure(null, error.getMessage());
+            // Python run_tool 在解析成功后同样把已解析的代码带回失败结果
+            return ToolResult.failure(code, message(error));
         }
     }
+
+    /** Python {@code assistant/tools.py:_company_text}, including its exact type names. */
+    static CompanyText companyText(Object raw) {
+        if (raw == null) {
+            return new CompanyText(null, null);
+        }
+        if (raw instanceof String text) {
+            return new CompanyText(text, null);
+        }
+        if (isPythonInt(raw)) {
+            return new CompanyText(raw.toString(), null);
+        }
+        return new CompanyText(
+                null, "company 参数必须是字符串（收到 " + pythonType(raw) + "）");
+    }
+
+    /** Python {@code str(error)}; an exception without a message renders as the empty string. */
+    static String message(RuntimeException error) {
+        return error.getMessage() == null ? "" : error.getMessage();
+    }
+
+    record CompanyText(String text, String error) {}
 
     protected abstract ToolResult run(String code, Map<String, Object> arguments);
 
@@ -94,10 +113,18 @@ abstract class CompanyTool implements ResearchTool {
             if (!Double.isFinite(decimal)) {
                 throw new NumberFormatException("cannot convert " + value + " to int");
             }
-            return (int) (long) decimal;
+            // clamp before narrowing: 3e9 must reach the caller's clamp as "too large", not overflow
+            if (decimal >= Integer.MAX_VALUE) {
+                return Integer.MAX_VALUE;
+            }
+            if (decimal <= Integer.MIN_VALUE) {
+                return Integer.MIN_VALUE;
+            }
+            return (int) decimal;
         }
         if (value instanceof String text) {
-            return Integer.parseInt(text.trim());
+            long parsed = Long.parseLong(text.trim());
+            return (int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, parsed));
         }
         throw new NumberFormatException("cannot convert " + value + " to int");
     }

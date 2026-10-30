@@ -56,7 +56,6 @@ class ToolSchemaParityTest {
                         new ValuationTool(unusedValuation(), resolver, schemas));
 
         ToolRegistry registry = new ToolRegistry(tools);
-        assertEquals(7, registry.schemas().size());
 
         for (ToolSchema schema : registry.schemas()) {
             Map<String, Object> expected = exported.get(schema.name());

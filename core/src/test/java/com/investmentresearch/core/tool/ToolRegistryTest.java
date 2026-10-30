@@ -1,6 +1,7 @@
 package com.investmentresearch.core.tool;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.investmentresearch.core.domain.StockRef;
 import com.investmentresearch.core.domain.ToolResult;
@@ -127,7 +128,7 @@ class ToolRegistryTest {
     }
 
     @Test
-    void when_port_throws_registry_returns_failure() {
+    void when_port_throws_registry_returns_failure_with_resolved_code() {
         CompanyProfilePort broken =
                 code -> {
                     throw new IllegalStateException("上游挂了");
@@ -138,8 +139,97 @@ class ToolRegistryTest {
         ToolResult result = registry.run("get_company_profile", Map.of("company", "605499"), null);
 
         assertThat(result.ok()).isFalse();
-        assertThat(result.company()).isNull();
+        // Python run_tool 在解析成功后失败的路径同样带回 code
+        assertThat(result.company()).isEqualTo("605499");
         assertThat(result.error()).isEqualTo("上游挂了");
+    }
+
+    @Test
+    void port_exception_without_message_renders_empty_error_like_python_str() {
+        CompanyProfilePort broken =
+                code -> {
+                    throw new IllegalStateException();
+                };
+        ToolRegistry registry =
+                new ToolRegistry(List.of(new CompanyProfileTool(broken, resolver, SCHEMAS)));
+
+        ToolResult result = registry.run("get_company_profile", Map.of("company", "605499"), null);
+
+        assertThat(result.company()).isEqualTo("605499");
+        assertThat(result.error()).isEmpty();
+    }
+
+    @Test
+    void unknown_tool_with_non_string_company_returns_company_error_first() {
+        ToolRegistry registry = new ToolRegistry(List.of());
+
+        ToolResult result = registry.run("no_such_tool", Map.of("company", true), null);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.company()).isNull();
+        assertThat(result.error()).isEqualTo("company 参数必须是字符串（收到 bool）");
+    }
+
+    @Test
+    void non_string_company_returns_python_type_error() {
+        ToolRegistry registry =
+                new ToolRegistry(
+                        List.of(new CompanyProfileTool(profilePort(null), resolver, SCHEMAS)));
+
+        assertCompanyTypeError(registry, true, "bool");
+        assertCompanyTypeError(registry, 1.5d, "float");
+        assertCompanyTypeError(registry, Map.of("a", 1), "dict");
+        assertCompanyTypeError(registry, List.of("605499"), "list");
+    }
+
+    private static void assertCompanyTypeError(
+            ToolRegistry registry, Object company, String pythonType) {
+        ToolResult result =
+                registry.run("get_company_profile", Map.of("company", company), null);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.error())
+                .isEqualTo("company 参数必须是字符串（收到 " + pythonType + "）");
+    }
+
+    @Test
+    void null_arguments_map_falls_back_to_default_company() {
+        AtomicReference<String> seen = new AtomicReference<>();
+        ToolRegistry registry =
+                new ToolRegistry(
+                        List.of(new CompanyProfileTool(profilePort(seen), resolver, SCHEMAS)));
+
+        ToolResult result = registry.run("get_company_profile", null, "605499");
+
+        assertThat(result.ok()).isTrue();
+        assertThat(seen.get()).isEqualTo("605499");
+    }
+
+    @Test
+    void duplicate_tool_names_are_rejected() {
+        assertThatThrownBy(
+                        () ->
+                                new ToolRegistry(
+                                        List.of(
+                                                new CompanyProfileTool(
+                                                        profilePort(null), resolver, SCHEMAS),
+                                                new CompanyProfileTool(
+                                                        profilePort(null), resolver, SCHEMAS))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("duplicate tool: get_company_profile");
+    }
+
+    @Test
+    void null_tool_element_is_rejected() {
+        assertThatThrownBy(
+                        () ->
+                                new ToolRegistry(
+                                        java.util.Arrays.asList(
+                                                new CompanyProfileTool(
+                                                        profilePort(null), resolver, SCHEMAS),
+                                                null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("tool must not be null");
     }
 
     @Test
@@ -151,6 +241,9 @@ class ToolRegistryTest {
         assertThat(segmentsYears(42)).isEqualTo(10);
         assertThat(segmentsYears("7")).isEqualTo(7);
         assertThat(segmentsYears("abc")).isEqualTo(5);
+        assertThat(segmentsYears(3_000_000_000L)).isEqualTo(10);
+        assertThat(segmentsYears(-3_000_000_000L)).isEqualTo(1);
+        assertThat(segmentsYears("3000000000")).isEqualTo(10);
     }
 
     private int segmentsYears(Object value) {

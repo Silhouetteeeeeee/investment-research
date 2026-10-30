@@ -16,7 +16,13 @@ public final class ToolRegistry {
         Map<String, ResearchTool> byName = new LinkedHashMap<>();
         List<ToolSchema> ordered = new ArrayList<>();
         for (ResearchTool tool : tools) {
-            byName.put(tool.schema().name(), tool);
+            if (tool == null) {
+                throw new IllegalArgumentException("tool must not be null");
+            }
+            String name = tool.schema().name();
+            if (byName.putIfAbsent(name, tool) != null) {
+                throw new IllegalArgumentException("duplicate tool: " + name);
+            }
             ordered.add(tool.schema());
         }
         this.tools = Map.copyOf(byName);
@@ -28,15 +34,23 @@ public final class ToolRegistry {
     }
 
     public ToolResult run(String name, Map<String, Object> arguments, String defaultCompany) {
+        Map<String, Object> args = arguments == null ? Map.of() : arguments;
+        // Python 先校验 company 参数再进未知工具分支；其余解析仍交给各工具
+        CompanyTool.CompanyText company = CompanyTool.companyText(args.get("company"));
+        if (company.error() != null) {
+            return ToolResult.failure(null, company.error());
+        }
+
         ResearchTool tool = tools.get(name);
         if (tool == null) {
             // Python 在此还会回填已解析出的代码；这里按 Task 14 的约定不回填
             return ToolResult.failure(null, "未知工具：" + name);
         }
         try {
-            return tool.execute(arguments == null ? Map.of() : arguments, defaultCompany);
+            return tool.execute(args, defaultCompany);
         } catch (RuntimeException error) {
-            return ToolResult.failure(null, error.getMessage());
+            // 工具自己已兜底；走到这里说明在解析出代码之前就失败了（Python 此时 code 也是 None）
+            return ToolResult.failure(null, CompanyTool.message(error));
         }
     }
 }
