@@ -23,5 +23,7 @@ sqlite3 -cmd ".timeout 5000" "$DB" ".backup '$tmp'"
 mv -f -- "$tmp" "$target"
 
 # Names sort by day (app-YYYYMMDD.db); drop everything past the newest KEEP files.
-ls -1 "$BACKUP_DIR"/app-*.db | sort -r | tail -n +$((KEEP + 1)) | xargs -r rm -f --
+# -print0/-z keep a DATA_DIR containing spaces from being word-split into a wrong rm.
+find "$BACKUP_DIR" -maxdepth 1 -name 'app-*.db' -print0 \
+  | sort -zr | tail -z -n +$((KEEP + 1)) | xargs -r0 rm -f --
 echo "backup: $target"

@@ -105,4 +105,7 @@ DATA_DIR=/srv/investment-research/var bash scripts/backup.sh
 0 3 * * * cd /srv/investment-research && DATA_DIR=./var bash scripts/backup.sh >> /var/log/investment-research-backup.log 2>&1
 ```
 
+容器部署后 `./var` 归 UID 10001 所有，`var/backups` 也只有它能写：cron 必须以 root
+或以 10001 身份运行，否则脚本会以 `Permission denied` 直接退出（不会留下半份备份）。
+
 快照是普通 SQLite 文件，恢复时停掉应用、把它复制回 `$DATA_DIR/app.db` 即可。
