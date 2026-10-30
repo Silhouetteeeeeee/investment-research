@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>投资助手</title>
+<!-- 改样式或脚本后把 v 加一，避免浏览器继续用旧缓存 -->
+<link rel="stylesheet" href="/styles.css?v=20261029c" />
+</head>
+<body>
+<div class="boot" id="boot" role="dialog" aria-label="启动动画">
+  <video class="boot-video" id="boot-video" muted playsinline preload="auto"></video>
+  <div class="boot-veil"></div>
+  <div class="boot-ui">
+    <div class="boot-title">Investment Research</div>
+    <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
+    <div class="boot-hint" id="boot-hint">正在准备界面…</div>
+  </div>
+  <button class="boot-sound" id="boot-sound" type="button" title="点一下打开声音" aria-label="打开影片声音">🔇</button>
+</div>
+<div id="app" v-cloak>
+<div
+  class="app"
+  :class="{ 'has-source': sourceView, 'resizing-source': sourceResizing, 'resizing-side': sideResizing }"
+  :style="{ '--source-w': sourceWidth + 'px', '--side-w': sideWidth + 'px' }"
+>
+  <aside class="side">
+    <div class="side-resizer" :class="{ active: sideResizing }" @mousedown.prevent="startSideResize" title="拖动调整侧栏宽度"></div>
+    <div class="brand"><span class="logo">研</span><span>投资助手</span></div>
+    <button class="new-btn" @click="newChat"><span class="plus">+</span>新对话</button>
+    <button class="archive-entry" @click="openArchive()">
+      <span>研究档案</span><span class="count">{{ archiveList.length }}</span>
+    </button>
+
+    <div class="side-sec">
+      <div class="side-head"><span>最近对话</span><span class="count">{{ filteredConversations.length }}</span></div>
+      <input class="search" v-model="search" placeholder="搜索公司、代码或标题" autocomplete="off" />
+      <div class="recent">
+        <div class="side-empty" v-if="!conversations.length">还没有保存的对话</div>
+        <div class="side-empty" v-else-if="!filteredConversations.length">没有匹配的对话</div>
+        <div
+          v-for="item in filteredConversations"
+          :key="item.id"
+          class="recent-item"
+          :class="{ current: item.id === leftCid, split: item.id === rightCid }"
+          draggable="true"
+          tabindex="0"
+          @click="openLeft(item.id)"
+          @keydown.enter="openLeft(item.id)"
+          @dragstart="onDragStart($event, item)"
+          @dragend="onDragEnd"
+        >
+          <span class="title">{{ item.title || item.name || `对话 ${item.id}` }}</span>
+          <span class="meta">{{ metaLine(item) }}</span>
+          <button class="split-btn" title="在右侧分屏打开" @click.stop="openInRight(item.id)">分屏</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-foot">
+      <p>回答里的 <span class="inline-cite">[n]</span> 对应来源角标，悬停看明细，点击看完整来源。</p>
+      <p>拖动最近对话到右侧，或点「分屏」，两边各自滚动、互不影响。</p>
+      <p class="proto"><a href="http://127.0.0.1:8501" target="_blank" rel="noreferrer">Streamlit 版</a> · Vue 3 · 8502</p>
+    </div>
+  </aside>
+
+  <main class="main" @dragover.prevent @drop.prevent="onDrop">
+    <div class="panes" ref="panes" v-show="!archiveOpen">
+      <chat-pane
+        ref="leftPane"
+        :style="leftStyle"
+        :archive-codes="archiveCodes"
+        @state="onLeftState"
+        @changed="refresh"
+        @open-source="openSource"
+        @close-source="closeSource"
+        @open-archive="openArchive"
+      ></chat-pane>
+      <div class="divider" v-if="splitOpen" :class="{ active: resizing }" @mousedown="startResize"></div>
+      <chat-pane
+        v-if="splitOpen"
+        ref="rightPane"
+        secondary
+        :style="rightStyle"
+        :archive-codes="archiveCodes"
+        @state="onRightState"
+        @changed="refresh"
+        @close="closeSplit"
+        @open-source="openSource"
+        @close-source="closeSource"
+        @open-archive="openArchive"
+      ></chat-pane>
+    </div>
+
+    <section class="archive-view" v-if="archiveOpen">
+      <p class="archive-status" v-if="archiveLoading">正在读取档案…</p>
+      <p class="archive-status archive-error" v-else-if="archiveError">{{ archiveError }}</p>
+      <template v-if="!archiveDetail">
+        <header class="archive-head">
+          <button class="archive-back" @click="closeArchive">← 返回对话</button>
+          <span class="archive-title">研究档案</span>
+          <input class="archive-search" v-model="archiveQuery" placeholder="搜索公司或代码" />
+        </header>
+        <div class="archive-list">
+          <button class="archive-item" v-for="item in filteredArchives" :key="item.code" @click="openArchive(item.code)">
+            <span class="archive-name">{{ item.name }}</span>
+            <span class="archive-code">{{ item.code }}</span>
+            <span class="archive-conclusion">{{ item.conclusion || "尚无结论" }}</span>
+            <span class="archive-date">{{ shortDate(item.last_reviewed_at) || shortDate(item.updated_at) }}</span>
+          </button>
+          <div class="side-empty" v-if="!filteredArchives.length">还没有研究档案</div>
+        </div>
+      </template>
+
+      <template v-else>
+        <header class="archive-head archive-detail-head">
+          <button class="archive-list-back" @click="showArchiveList">← 公司列表</button>
+          <span class="archive-title">
+            {{ archiveDetail.company.name }}
+            <span class="archive-code">{{ archiveDetail.company.code }}</span>
+          </span>
+          <span class="archive-meta">最后复核 {{ shortDate(archiveDetail.company.last_reviewed_at) || "尚未复核" }}</span>
+          <span class="archive-meta">最后写入 {{ shortDate(archiveDetail.company.updated_at) }}</span>
+          <button class="archive-back" @click="closeArchive">返回对话</button>
+        </header>
+
+        <nav class="archive-tabs">
+          <button
+            class="archive-tab"
+            v-for="tab in archiveTabs"
+            :key="tab.key"
+            :class="{ active: archiveSection === tab.key }"
+            @click="archiveSection = tab.key"
+          >{{ tab.label }}<span class="count">{{ tab.count }}</span></button>
+        </nav>
+
+        <div class="archive-body">
+          <template v-if="!archiveLoading && !archiveError">
+            <section class="archive-section" v-show="archiveSection === 'conclusions'">
+              <div class="archive-card" v-for="item in archiveConclusions" :key="item.conclusion_id">
+                <div class="archive-card-head">
+                  <span class="archive-id">{{ item.conclusion_id }}</span>
+                  <span class="archive-card-title">{{ item.title }}</span>
+                  <span class="archive-badge" :class="badgeClass(item.status)">{{ item.status }}</span>
+                  <span class="archive-meta" v-if="item.confidence">置信度 {{ item.confidence }}</span>
+                  <span class="archive-meta" v-if="item.last_change_id">最近变化 {{ item.last_change_id }}</span>
+                </div>
+                <p class="archive-text">{{ item.statement }}</p>
+                <div class="archive-meta" v-if="refLabels(item)">依据：{{ refLabels(item) }}</div>
+              </div>
+              <p class="archive-empty" v-if="!archiveConclusions.length">暂无记录</p>
+            </section>
+
+            <section class="archive-section" v-show="archiveSection === 'facts'">
+              <div class="archive-fact-group" v-for="group in archiveFactGroups" :key="group.type">
+                <h3 class="archive-group-title">{{ group.type }}</h3>
+                <div class="archive-card" v-for="fact in group.items" :key="fact.fact_id">
+                  <div class="archive-card-head">
+                    <span class="archive-id">{{ fact.fact_id }}</span>
+                    <span class="archive-badge" :class="badgeClass(fact.verification_status)">{{ fact.verification_status }}</span>
+                    <span class="archive-meta" v-if="fact.report_period">{{ fact.report_period }}</span>
+                    <a
+                      class="archive-fact-link"
+                      v-if="fact.source_url"
+                      :href="fact.source_url"
+                      target="_blank"
+                      rel="noreferrer"
+                    >来源 ↗</a>
+                  </div>
+                  <p class="archive-text">{{ fact.content }}</p>
+                  <table class="metrics" v-if="fact.metrics && fact.metrics.length">
+                    <thead><tr><th>指标</th><th>数值</th><th>单位</th><th>同比</th></tr></thead>
+                    <tbody>
+                      <tr v-for="(metric, metricIndex) in fact.metrics" :key="metricIndex">
+                        <td>{{ metric.name }}</td>
+                        <td>{{ metric.value }}</td>
+                        <td>{{ metric.unit }}</td>
+                        <td>{{ metric.yoy }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="archive-meta" v-if="fact.source_locator">位置：{{ fact.source_locator }}</div>
+                </div>
+              </div>
+              <p class="archive-empty" v-if="!archiveFactGroups.length">暂无记录</p>
+            </section>
+
+            <section class="archive-section" v-show="archiveSection === 'hypotheses'">
+              <div class="archive-card" v-for="item in archiveDetail.hypotheses" :key="item.hypothesis_id">
+                <div class="archive-card-head">
+                  <span class="archive-id">{{ item.hypothesis_id }}</span>
+                  <span class="archive-badge" :class="badgeClass(item.status)">{{ item.status }}</span>
+                  <span class="archive-badge" :class="badgeClass(item.confidence)">{{ item.confidence }}</span>
+                  <span class="archive-meta" v-if="item.next_review_date">复核 {{ item.next_review_date }}</span>
+                </div>
+                <p class="archive-text">{{ item.statement }}</p>
+                <dl class="archive-fields">
+                  <div><dt>验证方法</dt><dd>{{ item.verification_method }}</dd></div>
+                  <div><dt>证伪条件</dt><dd>{{ item.falsification_condition }}</dd></div>
+                </dl>
+              </div>
+              <p class="archive-empty" v-if="!archiveDetail.hypotheses.length">暂无记录</p>
+            </section>
+
+            <section class="archive-section" v-show="archiveSection === 'changes'">
+              <div class="archive-card archive-change" v-for="item in archiveDetail.changes" :key="item.change_id">
+                <div class="archive-card-head">
+                  <span class="archive-id">{{ item.change_id }}</span>
+                  <span class="archive-badge" :class="badgeClass(item.operation)">{{ item.operation }}</span>
+                  <span class="archive-meta">{{ item.trigger_date }}</span>
+                  <span class="archive-change-line">{{ item.from_conclusion_id }} → {{ item.to_conclusion_id }}</span>
+                </div>
+                <p class="archive-text">{{ item.old_conclusion }} → {{ item.new_conclusion }}</p>
+                <div class="archive-meta">触发：{{ item.trigger_event }}</div>
+                <div class="archive-meta" v-if="item.evidence_ids && item.evidence_ids.length">依据：{{ item.evidence_ids.join("、") }}</div>
+                <div class="archive-meta">原因：{{ item.reason }} · 影响：{{ item.impact }}</div>
+                <div class="archive-meta" v-if="item.review_status">
+                  <span class="archive-badge" :class="badgeClass(item.review_status)">{{ item.review_status }}</span>
+                </div>
+              </div>
+              <p class="archive-empty" v-if="!archiveDetail.changes.length">暂无记录</p>
+            </section>
+
+            <section class="archive-section" v-show="archiveSection === 'questions'">
+              <div class="archive-question-group" v-for="group in archiveQuestionGroups" :key="group.importance">
+                <h3 class="archive-group-title">{{ group.importance }}优先级</h3>
+                <div class="archive-card" v-for="item in group.items" :key="item.question_id">
+                  <div class="archive-card-head">
+                    <span class="archive-id">{{ item.question_id }}</span>
+                    <span class="archive-badge" :class="badgeClass(item.status)">{{ item.status }}</span>
+                    <span class="archive-badge" :class="badgeClass(item.importance)">{{ item.importance }}</span>
+                    <span class="archive-meta" v-if="item.last_checked_at">上次检查 {{ item.last_checked_at }}</span>
+                  </div>
+                  <p class="archive-text">{{ item.question }}</p>
+                  <dl class="archive-fields">
+                    <div v-if="item.known_facts && item.known_facts.length"><dt>已知事实</dt><dd>{{ item.known_facts.join("、") }}</dd></div>
+                    <div><dt>缺的证据</dt><dd>{{ item.missing_evidence }}</dd></div>
+                    <div><dt>下一步</dt><dd>{{ item.next_action }}</dd></div>
+                    <div><dt>解决标准</dt><dd>{{ item.resolution_criteria }}</dd></div>
+                    <div v-if="item.resolution_note"><dt>解决说明</dt><dd>{{ item.resolution_note }}</dd></div>
+                  </dl>
+                </div>
+              </div>
+              <p class="archive-empty" v-if="!archiveQuestionGroups.length">暂无记录</p>
+            </section>
+          </template>
+        </div>
+      </template>
+    </section>
+    <div class="drop-hint" v-if="dragging">
+      <div class="drop-card">松开 → 在右侧打开这段对话</div>
+    </div>
+  </main>
+
+  <aside class="source-side" v-if="sourceView" role="dialog" aria-label="来源详情">
+    <div class="source-resizer" :class="{ active: sourceResizing }" @mousedown.prevent="startSourceResize" title="拖动调整侧栏宽度"></div>
+    <header class="source-side-head">
+      <span class="source-side-title">来源详情</span>
+      <div class="source-side-nav" v-if="sourceView.total > 1">
+        <button class="nav-btn" :disabled="sourceView.index <= 0" @click="stepSource(-1)" title="上一条">‹</button>
+        <span class="nav-count">{{ sourceView.index + 1 }} / {{ sourceView.total }}</span>
+        <button class="nav-btn" :disabled="sourceView.index >= sourceView.total - 1" @click="stepSource(1)" title="下一条">›</button>
+      </div>
+      <button class="icon-btn close" @click="closeSource" title="关闭（Esc）">✕</button>
+    </header>
+    <div class="source-side-body">
+      <div class="sp-head">
+        <span class="src-num">{{ sourceView.n }}</span>
+        <span class="sp-label">{{ sourceView.label }}</span>
+      </div>
+      <p class="sp-detail" v-if="sourceView.detail">{{ sourceView.detail }}</p>
+      <dl class="sp-meta">
+        <div><dt>数据日期</dt><dd>{{ sourceView.asof || "未标注" }}</dd></div>
+        <div><dt>抓取时间</dt><dd>{{ sourceView.fetched || "未知" }}</dd></div>
+        <div><dt>来源编号</dt><dd class="mono">{{ sourceView.id || "--" }}</dd></div>
+      </dl>
+      <a class="sp-link" v-if="sourceView.url" :href="sourceView.url" target="_blank" rel="noreferrer">打开原文 ↗</a>
+
+      <section class="sp-sec">
+        <h3>数据依据</h3>
+        <p class="sp-empty" v-if="evidenceState === 'loading'"><span class="pulse"></span>正在读取取数结果…</p>
+        <p class="sp-empty" v-else-if="evidenceState === 'error'">依据读取失败，稍后再试。</p>
+        <p class="sp-empty" v-else-if="evidenceState === 'missing'">这段对话里没找到这条来源的取数结果（旧对话可能没有保存明细）。</p>
+        <template v-else-if="evidence">
+          <div class="ev-error" v-if="evidence.ok === false">{{ evidence.error || "这次取数失败了" }}</div>
+          <evidence-view v-if="hasEvidenceData" :value="evidence.data"></evidence-view>
+          <p class="sp-empty" v-else-if="evidence.ok !== false">这次取数没有返回数据。</p>
+          <details class="ev-raw" v-if="evidenceJson">
+            <summary>原始 JSON</summary>
+            <pre>{{ evidenceJson }}</pre>
+          </details>
+        </template>
+      </section>
+
+      <section class="sp-sec">
+        <h3>取数记录</h3>
+        <p class="sp-empty" v-if="!sourceView.steps.length">没有对应的工具记录（旧对话可能没有明细）。</p>
+        <div class="sp-step" v-for="(step, stepIndex) in sourceView.steps" :key="stepIndex">
+          <div class="sp-step-line">
+            <span class="sp-step-name">{{ step.name }}</span>
+            <span class="sp-step-out" :class="{ cached: step.cached, failed: !step.ok }">{{ step.ok ? (step.cached ? "复用缓存" : "成功") : "失败" }}</span>
+          </div>
+          <div class="sp-step-meta">{{ step.meta }}</div>
+          <div class="sp-step-error" v-if="step.error">{{ step.error }}</div>
+        </div>
+      </section>
+    </div>
+  </aside>
+</div>
+</div>
+
+<template id="pane-template">
+  <section class="pane" :class="{ secondary: secondary, single: !secondary }">
+    <header class="pane-head">
+      <div class="co" v-if="activeName">
+        <span class="co-dot"></span>
+        <span class="co-name">{{ activeName }}</span>
+        <span class="co-code" v-if="activeCode && /^\d{6}$/.test(activeCode)">{{ activeCode }}</span>
+      </div>
+      <div class="co muted" v-else>{{ secondary ? '分屏 · 未选择对话' : '未选择公司 · 直接在下面提问' }}</div>
+      <div class="pane-tools">
+        <button
+          class="icon-btn"
+          v-if="activeCode && archiveCodes.includes(activeCode)"
+          title="研究档案"
+          @click="$emit('open-archive', activeCode)"
+        >档案</button>
+        <button class="icon-btn" v-if="cid !== null" @click="deleteConversation" title="删除这个对话">删除</button>
+        <button class="icon-btn close" v-if="secondary" @click="$emit('close')" title="关闭分屏">✕</button>
+      </div>
+    </header>
+
+    <div class="scroll" ref="scrollEl" @scroll.passive="hideTip">
+      <div class="col">
+        <div class="notice" v-if="notice">{{ notice }}</div>
+
+        <section class="empty" v-if="!messages.length && phase !== 'streaming'">
+          <h1>{{ secondary ? '分屏对话' : '投资助手' }}</h1>
+          <p class="lede" v-if="secondary">直接在下面提问，会在这里开一段新对话；也可以从左边拖一个最近对话过来。两边各自滚动、各自提问，互不影响。</p>
+          <p class="lede" v-else>提到哪家公司就聊哪家。回答里的 <span class="inline-cite">[1]</span> 是来源角标，悬停可看类型、明细和数据日期，点击会在侧栏展开完整来源；也可以直接问大盘。</p>
+          <div class="examples">
+            <button v-for="example in examples" :key="example" class="example" @click="useExample(example)">
+              <span>{{ example }}</span><span class="arrow">→</span>
+            </button>
+          </div>
+        </section>
+
+        <div class="messages" @mouseover="showTip" @mouseout="onTipOut" @click="onCiteClick">
+          <div
+            v-for="(message, index) in messages"
+            :key="index"
+            class="msg"
+            :data-msg-index="index"
+            :class="[message.role === 'user' ? 'user' : 'assistant', { error: message.role === 'error', warning: message.warning }]"
+          >
+            <div class="who">
+              <span v-if="message.role !== 'user'" class="who-dot"></span>
+              <span>{{ message.role === 'user' ? '你' : '助手' }}</span>
+            </div>
+            <div class="bubble">
+              <template v-if="message.role === 'user' || message.role === 'error' || message.warning">
+                {{ message.text }}
+              </template>
+              <template v-else>
+                <div class="body" v-html="message.html || ''"></div>
+                <div class="sources" v-if="message.sources && message.sources.length">
+                  <div class="sources-title">来源</div>
+                  <div
+                    class="source-row"
+                    v-for="row in sourceRows(message)"
+                    :key="row.n"
+                    role="button"
+                    tabindex="0"
+                    title="查看这条来源的完整信息"
+                    @click.stop="requestSource(message, row.index)"
+                    @keydown.enter.stop="requestSource(message, row.index)"
+                  >
+                    <span class="src-num">{{ row.n }}</span>
+                    <span class="src-label">{{ row.label }}</span>
+                    <span class="src-detail" v-if="row.detail">{{ row.detail }}</span>
+                    <span class="src-asof" v-if="row.asof">{{ row.asof }}</span>
+                    <a class="src-link" v-if="row.url" :href="row.url" target="_blank" rel="noreferrer" title="打开原文" @click.stop>↗</a>
+                  </div>
+                  <button class="src-note src-more" v-if="message.sources.length > 6" @click.stop="requestSource(message, 6)">
+                    另有 {{ message.sources.length - 6 }} 条来源，查看全部 →
+                  </button>
+                </div>
+                <details class="trace" v-if="traceOf(message).count && !message.run">
+                  <summary>研究过程 · {{ traceOf(message).count }} 次取数</summary>
+                  <div class="trace-row" v-for="(line, lineIndex) in traceOf(message).lines" :key="lineIndex">{{ line }}</div>
+                </details>
+                <div class="issue" v-for="(issue, issueIndex) in (message.issues || [])" :key="issueIndex">
+                  <span class="issue-mark">!</span><span>{{ issue }}</span>
+                </div>
+                <button class="copy" @click="copyMessage($event, index)">{{ copied === index ? '已复制' : '复制' }}</button>
+              </template>
+
+              <!-- 单次运行的完整时间线：对话库里只存摘要，原文按需向本地文件取 -->
+              <div class="run" v-if="message.run">
+                <button class="run-toggle" :class="{ open: runOpen === index }" @click.stop="toggleRun(message, index)">
+                  <span class="run-caret">▸</span>
+                  <span>运行详情</span>
+                  <span class="run-size" v-if="message.run.file_bytes">{{ fileSize(message.run.file_bytes) }}</span>
+                </button>
+                <div class="run-panel" v-if="runOpen === index">
+                  <div class="run-loading" v-if="runState === 'loading'">读取运行原文…</div>
+                  <div class="run-error" v-else-if="runState === 'error'">{{ runError }}</div>
+                  <template v-else-if="run">
+                    <div class="run-head">
+                      <span class="run-kpi" :class="{ bad: item.bad }" v-for="item in runHead" :key="item.label">
+                        <b>{{ item.value }}</b>{{ item.label }}
+                      </span>
+                    </div>
+                    <div class="run-issues" v-if="run.issues && run.issues.length">
+                      <div class="run-issue" v-for="(issue, issueIndex) in run.issues" :key="issueIndex">
+                        {{ issue.message || issue.type }}
+                      </div>
+                    </div>
+                    <div class="run-tabs">
+                      <button
+                        v-for="tab in runTabs"
+                        :key="tab.key"
+                        class="run-tab"
+                        :class="{ active: runTab === tab.key }"
+                        @click="runTab = tab.key"
+                      >{{ tab.label }}</button>
+                    </div>
+
+                    <template v-if="runTab === 'timeline'">
+                      <div class="run-empty" v-if="!runTimeline.length">这次运行没有记录阶段。</div>
+                      <div
+                        class="run-row"
+                        v-for="(row, rowIndex) in runTimeline"
+                        :key="rowIndex"
+                        :class="{ nested: row.nested, bad: row.bad }"
+                      >
+                        <span class="run-at">{{ row.at }}</span>
+                        <span class="run-ms">{{ row.duration }}</span>
+                        <span class="run-title">{{ row.title }}</span>
+                        <span class="run-meta">{{ row.meta }}</span>
+                      </div>
+                    </template>
+
+                    <template v-else-if="runTab === 'prompt'">
+                      <section class="run-block" v-for="prompt in (run.prompts || [])" :key="'p' + prompt.hash">
+                        <div class="run-block-head">
+                          <span>System Prompt</span>
+                          <span class="run-hash">{{ prompt.hash }}</span>
+                          <span class="run-chars">{{ prompt.chars }} 字</span>
+                        </div>
+                        <pre class="run-pre">{{ prompt.text }}</pre>
+                      </section>
+                      <div class="run-empty" v-if="!run.prompts || !run.prompts.length">这次运行没有记录 System Prompt。</div>
+                      <section class="run-block" v-for="skill in (run.skills || [])" :key="'s' + skill.hash">
+                        <div class="run-block-head">
+                          <span>Skill · {{ skill.title || skill.name }}</span>
+                          <span class="run-hash">{{ skill.hash }}</span>
+                          <span class="run-chars">{{ skill.chars }} 字</span>
+                        </div>
+                        <pre class="run-pre">{{ skill.text }}</pre>
+                      </section>
+                      <section class="run-block" v-for="call in (run.calls || [])" :key="'c' + call.round">
+                        <div class="run-block-head">
+                          <span>第 {{ call.round }} 次调用</span>
+                          <span class="run-chars">参数 {{ paramsText(call.params) }}</span>
+                        </div>
+                        <pre class="run-pre">{{ messagesText(call.messages) }}</pre>
+                      </section>
+                      <section class="run-block" v-if="run.tool_schemas && run.tool_schemas.tools">
+                        <div class="run-block-head">
+                          <span>工具定义</span>
+                          <span class="run-hash">{{ run.tool_schemas.hash }}</span>
+                          <span class="run-chars">{{ run.tool_schemas.tools.length }} 个</span>
+                        </div>
+                        <pre class="run-pre">{{ messagesText(run.tool_schemas.tools) }}</pre>
+                      </section>
+                    </template>
+
+                    <template v-else>
+                      <div class="run-empty" v-if="!runContext.length">这次运行没有记录上下文数据。</div>
+                      <div class="run-kv" v-for="row in runContext" :key="row.label">
+                        <span class="run-kv-label">{{ row.label }}</span>
+                        <span class="run-kv-value">{{ row.value }}</span>
+                      </div>
+                    </template>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg assistant" v-if="phase === 'streaming'">
+            <div class="who"><span class="who-dot"></span><span>助手</span></div>
+            <div class="bubble">
+              <div class="body" v-if="streamText" v-html="streamHtml"></div>
+              <div class="thinking" v-else><span class="pulse"></span>{{ streamEmpty }}</div>
+              <div class="toolchip" v-if="statusLine">{{ statusLine }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="composer-wrap">
+      <div class="composer">
+        <div class="input-wrap">
+          <textarea
+            class="composer-input"
+            ref="inputEl"
+            v-model="input"
+            rows="1"
+            :disabled="busy"
+            placeholder="问一句，如：紫金矿业靠什么赚钱？"
+            @input="grow"
+            @keydown="onKeydown"
+          ></textarea>
+        </div>
+        <button class="send" :disabled="busy || !input.trim()" @click="send" title="发送">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 13V3M8 3L3.5 7.5M8 3l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="meter" v-if="usage" :style="meterStyle" :title="meterTitle"><span>{{ meterText }}</span></div>
+      </div>
+      <div class="composer-hint">
+        <span>Enter 发送 · Shift + Enter 换行</span>
+        <span v-if="usage">上下文 {{ formatTokens(usage.tokens) }} / {{ formatTokens(usage.budget_tokens) }}</span>
+      </div>
+    </div>
+
+    <div
+      class="tip"
+      v-if="tip"
+      ref="tipEl"
+      :style="{ left: tip.left + 'px', top: tip.top + 'px', opacity: tip.ready ? 1 : 0 }"
+      @mouseenter="cancelHide"
+      @mouseleave="scheduleHide"
+    >
+      <div class="tip-head">
+        <span class="tip-num">{{ tip.n }}</span>
+        <span class="tip-label">{{ tip.label }}</span>
+      </div>
+      <div class="tip-detail" v-if="tip.detail">{{ tip.detail }}</div>
+      <div class="tip-asof" v-if="tip.asof">数据日期 {{ tip.asof }}</div>
+      <a class="tip-url" v-if="tip.url" :href="tip.url" target="_blank" rel="noreferrer">打开原文 ↗</a>
+      <div class="tip-more">点击角标查看完整来源</div>
+    </div>
+  </section>
+</template>
+
+<script src="/assets/vue.global.prod.js"></script>
+<script src="/assets/marked.umd.js"></script>
+<script src="/assets/purify.min.js"></script>
+<script src="/boot.js?v=20261029c"></script>
+<script src="/app.js?v=20261030a"></script>
+</body>
+</html>

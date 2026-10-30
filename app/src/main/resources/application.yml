@@ -6,6 +6,9 @@ spring:
       maximum-pool-size: 4
   flyway:
     locations: classpath:db/migration/sqlite
+  web:
+    resources:
+      static-locations: file:./frontend/
 
 app:
   # 静态访问令牌；未设置时启动失败（ApiTokenProperties 校验）
