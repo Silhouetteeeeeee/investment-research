@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "url": "https://push2test.eastmoney.com/api/qt/clist/get?pn=23&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m%3A0%2Bt%3A6%2Cm%3A0%2Bt%3A80%2Cm%3A1%2Bt%3A2%2Cm%3A1%2Bt%3A23&fields=f12%2Cf14",
+    "charset": "utf-8",
+    "bytes": 3873,
+    "recorded_at": "2026-10-30T13:59:07+00:00"
+  },
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/qt/clist/get",
+    "queryParameters": {
+      "pn": {
+        "equalTo": "23"
+      },
+      "pz": {
+        "equalTo": "100"
+      },
+      "po": {
+        "equalTo": "1"
+      },
+      "np": {
+        "equalTo": "1"
+      },
+      "fltt": {
+        "equalTo": "2"
+      },
+      "invt": {
+        "equalTo": "2"
+      },
+      "fid": {
+        "equalTo": "f3"
+      },
+      "fs": {
+        "equalTo": "m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23"
+      },
+      "fields": {
+        "equalTo": "f12,f14"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=UTF-8"
+    },
+    "base64Body": "eyJyYyI6MCwicnQiOjYsInN2ciI6MTc2MDY4Mzk0LCJsdCI6MSwiZnVsbCI6MSwiZGxta3RzIjoiIiwiZHNjIjoiMCIsImRhdGEiOnsidG90YWwiOjU1NjMsImRpZmYiOlt7ImYxMiI6IjYwMDYwNCIsImYxNCI6IuW4guWMl+mrmOaWsCJ9LHsiZjEyIjoiNjAwODY4IiwiZjE0Ijoi5qKF6ZuB5ZCJ56WlIn0seyJmMTIiOiIwMDI4OTAiLCJmMTQiOiLlvJjlrofogqHku70ifSx7ImYxMiI6IjYwMDExMCIsImYxNCI6IuivuuW+t+iCoeS7vSJ9LHsiZjEyIjoiNjAwMTA4IiwiZjE0Ijoi5Lqa55ub6ZuG5ZuiIn0seyJmMTIiOiI2MDM0MDYiLCJmMTQiOiLlpKnlr4zpvpkifSx7ImYxMiI6IjMwMDMxMCIsImYxNCI6IuWunOmAmuS4lue6qiJ9LHsiZjEyIjoiMDAwNjg4IiwiZjE0Ijoi5Zu95Z+O55+/5LiaIn0seyJmMTIiOiIwMDI1MjEiLCJmMTQiOiLpvZDls7DmlrDmnZAifSx7ImYxMiI6IjMwMDQ5NyIsImYxNCI6IuWvjOelpeiCoeS7vSJ9LHsiZjEyIjoiMzAwOTQ2IiwiZjE0Ijoi5oGS6ICM6L6+In0seyJmMTIiOiI2MDA2MDMiLCJmMTQiOiLlub/msYfnianmtYEifSx7ImYxMiI6IjAwMzAyNyIsImYxNCI6IuWQjOWFtOenkeaKgCJ9LHsiZjEyIjoiMDAzMDM5IiwiZjE0Ijoi6aG65o6n5Y+R5bGVIn0seyJmMTIiOiIwMDI1NzkiLCJmMTQiOiLkuK3kuqznlLXlrZAifSx7ImYxMiI6IjYwMDY1MyIsImYxNCI6IueUs+WNjuaOp+iCoSJ9LHsiZjEyIjoiNjAzMDgwIiwiZjE0Ijoi5paw55aG54Gr54KsIn0seyJmMTIiOiIwMDA1NTciLCJmMTQiOiLopb/pg6jliJvkuJoifSx7ImYxMiI6IjYwMDk1OCIsImYxNCI6IuS4nOaWueivgeWIuCJ9LHsiZjEyIjoiMDAyNjg4IiwiZjE0Ijoi6YeR5rKz55Sf54mpIn0seyJmMTIiOiIwMDIyMTQiLCJmMTQiOiLlpKfnq4vnp5HmioAifSx7ImYxMiI6IjY4ODMyNSIsImYxNCI6Iui1m+W+ruW+rueUtSJ9LHsiZjEyIjoiMzAxNTg1IiwiZjE0Ijoi6JOd5a6H6IKh5Lu9In0seyJmMTIiOiIwMDI0NDUiLCJmMTQiOiLkuK3ljZfmlofljJYifSx7ImYxMiI6IjY4ODA5MSIsImYxNCI6IuS4iua1t+iwiuS8lyJ9LHsiZjEyIjoiNjAzNzMzIiwiZjE0Ijoi5LuZ6bmk6IKh5Lu9In0seyJmMTIiOiIwMDA5ODUiLCJmMTQiOiLlpKfluobljY7np5EifSx7ImYxMiI6IjYwMDc0MCIsImYxNCI6IuWxseilv+eEpuWMliJ9LHsiZjEyIjoiMDAyMTYyIiwiZjE0Ijoi5oKm5b+D5YGl5bq3In0seyJmMTIiOiIzMDA5MTMiLCJmMTQiOiLlhYbpvpnkupLov54ifSx7ImYxMiI6IjMwMDc0MyIsImYxNCI6IuWkqeWcsOaVsOeggSJ9LHsiZjEyIjoiMzAwMDgxIiwiZjE0IjoiU1TmgZLkv6EifSx7ImYxMiI6IjAwMjY2MyIsImYxNCI6IuaZrumCpuiCoeS7vSJ9LHsiZjEyIjoiMzAxMDI2IiwiZjE0Ijoi5rWp6YCa56eR5oqAIn0seyJmMTIiOiIwMDEyMDEiLCJmMTQiOiLkuJznkZ7ogqHku70ifSx7ImYxMiI6IjMwMTIyMyIsImYxNCI6IuS4reiNo+iCoeS7vSJ9LHsiZjEyIjoiMzAwMTY3IiwiZjE0IjoiU1Tov6rlqIHov4UifSx7ImYxMiI6IjYwMDY1NyIsImYxNCI6IuS/oei+vuWcsOS6pyJ9LHsiZjEyIjoiMzAwNzA4IiwiZjE0Ijoi6IGa54G/5YWJ55S1In0seyJmMTIiOiIwMDI5MDYiLCJmMTQiOiLljY7pmLPpm4blm6IifSx7ImYxMiI6IjAwMTMxMyIsImYxNCI6IueypOa1t+mlsuaWmSJ9LHsiZjEyIjoiMDAyNzg4IiwiZjE0Ijoi6bmt54eV5Yy76I2vIn0seyJmMTIiOiIzMDAwMzciLCJmMTQiOiLmlrDlrpnpgqYifSx7ImYxMiI6IjYwNTA3NyIsImYxNCI6IuWNjuW6t+iCoeS7vSJ9LHsiZjEyIjoiNjAzMjI1IiwiZjE0Ijoi5paw5Yek6bijIn0seyJmMTIiOiI2MDA2MjYiLCJmMTQiOiLnlLPovr7ogqHku70ifSx7ImYxMiI6IjAwMjg3MyIsImYxNCI6IuaWsOWkqeiNr+S4miJ9LHsiZjEyIjoiNjg4MjQ3IiwiZjE0Ijoi5a6j5rOw5Yy76I2vIn0seyJmMTIiOiI2MDA3NzUiLCJmMTQiOiLljZfkuqznhornjKsifSx7ImYxMiI6IjY4ODI1MyIsImYxNCI6IuiLseivuueJuSJ9LHsiZjEyIjoiMzAxNjYyIiwiZjE0Ijoi5a6P5bel56eR5oqAIn0seyJmMTIiOiIzMDAwNTkiLCJmMTQiOiLkuJzmlrnotKLlr4wifSx7ImYxMiI6IjYwMDc0OCIsImYxNCI6IuS4iuWunuWPkeWxlSJ9LHsiZjEyIjoiMDAyNTUxIiwiZjE0Ijoi5bCa6I2j5Yy755aXIn0seyJmMTIiOiI2MDMzMTgiLCJmMTQiOiLmsLTlj5Hnh4PmsJQifSx7ImYxMiI6IjYwMTAxNiIsImYxNCI6IuiKguiDvemjjueUtSJ9LHsiZjEyIjoiMDAwNDIxIiwiZjE0Ijoi5Y2X5Lqs5YWs55SoIn0seyJmMTIiOiIzMDAxOTkiLCJmMTQiOiLnv7Dlrofoja/kuJoifSx7ImYxMiI6IjYwMDE5MSIsImYxNCI6IuWNjui1hOWunuS4miJ9LHsiZjEyIjoiNjg4Njg3IiwiZjE0Ijoi5Yev5Zug56eR5oqAIn0seyJmMTIiOiI2MDAyODQiLCJmMTQiOiLmtabkuJzlu7rorr4ifSx7ImYxMiI6IjMwMDg4OSIsImYxNCI6IueIseWFi+iCoeS7vSJ9LHsiZjEyIjoiNjAzMjEwIiwiZjE0Ijoi5rOw6bi/5LiH56uLIn0seyJmMTIiOiIwMDA1MDUiLCJmMTQiOiLkuqznsq7mjqfogqEifSx7ImYxMiI6IjMwMDE0OCIsImYxNCI6IuWkqeiIn+aWh+WMliJ9LHsiZjEyIjoiNjAzNTE5IiwiZjE0Ijoi56uL6Zy46IKh5Lu9In0seyJmMTIiOiI2MDM4ODAiLCJmMTQiOiLljZfljavogqHku70ifSx7ImYxMiI6IjMwMDI0NiIsImYxNCI6IuWuneiOseeJuSJ9LHsiZjEyIjoiNjAwNTA5IiwiZjE0Ijoi5aSp5a+M6IO95rqQIn0seyJmMTIiOiIzMDExMjIiLCJmMTQiOiLph4fnurPogqHku70ifSx7ImYxMiI6IjAwMzAzNSIsImYxNCI6IuWNl+e9keiDvea6kCJ9LHsiZjEyIjoiNjg4MzUwIiwiZjE0Ijoi5a+M5re856eR5oqAIn0seyJmMTIiOiIwMDI0OTciLCJmMTQiOiLpm4XljJbpm4blm6IifSx7ImYxMiI6IjMwMDIzMSIsImYxNCI6IumTtuS/oeenkeaKgCJ9LHsiZjEyIjoiNjAzNzM4IiwiZjE0Ijoi5rOw5pm256eR5oqAIn0seyJmMTIiOiI2MDA3MjQiLCJmMTQiOiLlroHms6Llr4zovr4ifSx7ImYxMiI6IjYwMDczOCIsImYxNCI6IuS4veWwmuWbvea9riJ9LHsiZjEyIjoiMDAyOTUzIiwiZjE0Ijoi5pel5Liw6IKh5Lu9In0seyJmMTIiOiIwMDI5NDUiLCJmMTQiOiLljY7mnpfor4HliLgifSx7ImYxMiI6IjY4ODU1MyIsImYxNCI6Iuaxh+Wuh+WItuiNry1XIn0seyJmMTIiOiI2MDAzODIiLCJmMTQiOiLlub/kuJzmmI7nj6AifSx7ImYxMiI6IjYwMDE3OSIsImYxNCI6IuWuiemAmuaOp+iCoSJ9LHsiZjEyIjoiMzAwNDQwIiwiZjE0Ijoi6L+Q6L6+56eR5oqAIn0seyJmMTIiOiIzMDEwMTAiLCJmMTQiOiLmmbbpm6roioLog70ifSx7ImYxMiI6IjYwMDgzNCIsImYxNCI6IueUs+mAmuWcsOmTgSJ9LHsiZjEyIjoiMzAxNTg3IiwiZjE0Ijoi5Lit55Ge6IKh5Lu9In0seyJmMTIiOiI2MDA3ODAiLCJmMTQiOiLpgJrlrp3og73mupAifSx7ImYxMiI6IjYwMDUzMyIsImYxNCI6IuaglumcnuW7uuiuviJ9LHsiZjEyIjoiMDAxMzY5IiwiZjE0Ijoi5Y+M5qyj5p2Q5paZIn0seyJmMTIiOiI2MDM0MjkiLCJmMTQiOiIqU1Tpm4blj4sifSx7ImYxMiI6IjMwMDUzOSIsImYxNCI6Iuaoquays+eyvuWvhiJ9LHsiZjEyIjoiNjAzNjA3IiwiZjE0Ijoi5Lqs5Y2O5r+A5YWJIn0seyJmMTIiOiI2MDA5NzciLCJmMTQiOiLkuK3lm73nlLXlvbEifSx7ImYxMiI6IjY4ODMwMyIsImYxNCI6IuWkp+WFqOiDvea6kCJ9LHsiZjEyIjoiNjAzNzc3IiwiZjE0Ijoi5p2l5LyK5Lu9In0seyJmMTIiOiIzMDA2OTMiLCJmMTQiOiLnm5vlvJjogqHku70ifSx7ImYxMiI6IjYwMDkwMyIsImYxNCI6Iui0teW3nueHg+awlCJ9LHsiZjEyIjoiMDAyOTk4IiwiZjE0Ijoi5LyY5b2p6LWE5rqQIn0seyJmMTIiOiIwMDA4NzgiLCJmMTQiOiLkupHljZfpk5zkuJoifSx7ImYxMiI6IjY4ODAyNiIsImYxNCI6Iua0geeJueeUn+eJqSJ9XX19"
+  }
+}

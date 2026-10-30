@@ -100,7 +100,10 @@ public class RestClientUpstreamClient implements UpstreamClient {
                             (request, response) ->
                                     new RawResponse(
                                             response.getStatusCode().value(),
-                                            StreamUtils.copyToByteArray(response.getBody())));
+                                            response.getBody() == null
+                                                    ? new byte[0]
+                                                    : StreamUtils.copyToByteArray(
+                                                            response.getBody())));
         } finally {
             PERMITS.release();
         }

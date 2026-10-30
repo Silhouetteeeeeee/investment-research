@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "url": "https://push2test.eastmoney.com/api/qt/clist/get?pn=56&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m%3A0%2Bt%3A6%2Cm%3A0%2Bt%3A80%2Cm%3A1%2Bt%3A2%2Cm%3A1%2Bt%3A23&fields=f12%2Cf14",
+    "charset": "utf-8",
+    "bytes": 2436,
+    "recorded_at": "2026-10-30T13:59:21+00:00"
+  },
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/qt/clist/get",
+    "queryParameters": {
+      "pn": {
+        "equalTo": "56"
+      },
+      "pz": {
+        "equalTo": "100"
+      },
+      "po": {
+        "equalTo": "1"
+      },
+      "np": {
+        "equalTo": "1"
+      },
+      "fltt": {
+        "equalTo": "2"
+      },
+      "invt": {
+        "equalTo": "2"
+      },
+      "fid": {
+        "equalTo": "f3"
+      },
+      "fs": {
+        "equalTo": "m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23"
+      },
+      "fields": {
+        "equalTo": "f12,f14"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json; charset=UTF-8"
+    },
+    "base64Body": "eyJyYyI6MCwicnQiOjYsInN2ciI6MTc2MDY4Mzk0LCJsdCI6MSwiZnVsbCI6MSwiZGxta3RzIjoiIiwiZHNjIjoiMCIsImRhdGEiOnsidG90YWwiOjU1NjMsImRpZmYiOlt7ImYxMiI6IjY4ODE1MiIsImYxNCI6Ium6kum6n+S/oeWuiSJ9LHsiZjEyIjoiNjg4NjQ4IiwiZjE0Ijoi5Lit6YKu56eR5oqAIn0seyJmMTIiOiIzMDAxODIiLCJmMTQiOiLmjbfmiJDogqHku70ifSx7ImYxMiI6IjMwMDU1MiIsImYxNCI6IuS4h+mbhuenkeaKgCJ9LHsiZjEyIjoiMzAxMDIzIiwiZjE0Ijoi5aWV5biG5Lyg5YqoIn0seyJmMTIiOiIzMDAzNzgiLCJmMTQiOiLpvI7mjbfmlbDmmboifSx7ImYxMiI6IjY4ODI3OSIsImYxNCI6IuWzsOWyueenkeaKgCJ9LHsiZjEyIjoiMzAwNzQ2IiwiZjE0Ijoi5rGJ5ZiJ5pWw5pm6In0seyJmMTIiOiIzMDA2MTIiLCJmMTQiOiLlrqPkuprlm73pmYUifSx7ImYxMiI6IjY4ODYzMSIsImYxNCI6IuiOseaWr+S/oeaBryJ9LHsiZjEyIjoiMzAxMTgzIiwiZjE0Ijoi5Lic55Sw5b6uIn0seyJmMTIiOiIzMDEwOTEiLCJmMTQiOiLmt7Hln47kuqQifSx7ImYxMiI6IjMwMTMxMSIsImYxNCI6IuaYhuiIueaZuuiDvSJ9LHsiZjEyIjoiNjg4NjYzIiwiZjE0Ijoi5paw6aOO5YWJIn0seyJmMTIiOiIzMDE0NzkiLCJmMTQiOiLlvJjmma/lhYnnlLUifSx7ImYxMiI6IjY4ODAyMCIsImYxNCI6IuaWuemCpuiCoeS7vSJ9LHsiZjEyIjoiMzAwMTMxIiwiZjE0Ijoi6Iux5ZSQ5pm65o6nIn0seyJmMTIiOiIzMDEzNTkiLCJmMTQiOiLkuJzljZfnlLXlrZAifSx7ImYxMiI6IjMwMTI2OSIsImYxNCI6IuWNjuWkp+S5neWkqSJ9LHsiZjEyIjoiNjg4NDQ4IiwiZjE0Ijoi56OB6LC356eR5oqAIn0seyJmMTIiOiI2ODgyNTEiLCJmMTQiOiLkupXmnb7mmbrog70ifSx7ImYxMiI6IjY4ODE0NyIsImYxNCI6IuW+ruWvvOe6s+exsyJ9LHsiZjEyIjoiNjg4NzAyIiwiZjE0Ijoi55ub56eR6YCa5L+hLVUifSx7ImYxMiI6IjMwMDc4MSIsImYxNCI6IuWboOi1m+mbhuWboiJ9LHsiZjEyIjoiNjg4MDgwIiwiZjE0Ijoi5pig57+w6YCaIn0seyJmMTIiOiI2ODg2MjUiLCJmMTQiOiLlkYjlkoznp5HmioAifSx7ImYxMiI6IjMwMDg1MCIsImYxNCI6IuaWsOW8uuiBlCJ9LHsiZjEyIjoiNjg4MDg0IiwiZjE0Ijoi5pm25ZOB54m56KOFIn0seyJmMTIiOiI2ODgxNjciLCJmMTQiOiLngqzlhYnnp5HmioAifSx7ImYxMiI6IjY4ODY5MSIsImYxNCI6IueBv+iKr+iCoeS7vSJ9LHsiZjEyIjoiNjg4NTAyIiwiZjE0Ijoi6IyC6I6x5YWJ5a2mIn0seyJmMTIiOiIzMDA0MTgiLCJmMTQiOiLmmIbku5HkuIfnu7QifSx7ImYxMiI6IjMwMTA4MyIsImYxNCI6IueZvuiDnOaZuuiDvSJ9LHsiZjEyIjoiMzAwOTM5IiwiZjE0Ijoi56eL55Sw5b6uIn0seyJmMTIiOiI2ODgxNjgiLCJmMTQiOiLlronljZrpgJoifSx7ImYxMiI6IjMwMDE3NyIsImYxNCI6IuS4rea1t+i+viJ9LHsiZjEyIjoiNjg4NTkwIiwiZjE0Ijoi5paw6Ie06L2v5Lu2In0seyJmMTIiOiI2ODgwMzciLCJmMTQiOiLoiq/mupDlvq4ifSx7ImYxMiI6IjY4ODIzOSIsImYxNCI6IuiIquWuh+enkeaKgCJ9LHsiZjEyIjoiMzAwNzUxIiwiZjE0Ijoi6L+I5Li66IKh5Lu9In0seyJmMTIiOiIzMDA3ODUiLCJmMTQiOiLlgLzlvpfkubAifSx7ImYxMiI6IjMwMDU3OCIsImYxNCI6IuS8mueVheenkeaKgCJ9LHsiZjEyIjoiMzAxMTU5IiwiZjE0Ijoi5LiJ57u05aSp5ZywIn0seyJmMTIiOiIzMDEyMTkiLCJmMTQiOiLohb7ov5zpkrTkuJoifSx7ImYxMiI6IjY4ODIwNSIsImYxNCI6IuW+t+enkeeriyJ9LHsiZjEyIjoiMzAwNDc2IiwiZjE0Ijoi6IOc5a6P56eR5oqAIn0seyJmMTIiOiIzMDEzMTQiLCJmMTQiOiLnp5HnkZ7mgJ0ifSx7ImYxMiI6IjY4ODQwMCIsImYxNCI6IuWHjOS6keWFiSJ9LHsiZjEyIjoiMzAwNTAyIiwiZjE0Ijoi5paw5piT55ubIn0seyJmMTIiOiI2ODgxODIiLCJmMTQiOiLngb/li6Tnp5HmioAifSx7ImYxMiI6IjMwMDU3MCIsImYxNCI6IuWkqui+sOWFiSJ9LHsiZjEyIjoiNjg4MzE4IiwiZjE0Ijoi6LSi5a+M6LaL5Yq/In0seyJmMTIiOiIzMDE2MjYiLCJmMTQiOiLoi4/lt57lpKnohIkifSx7ImYxMiI6IjY4ODU5MyIsImYxNCI6IuaWsOebuOW+riJ9LHsiZjEyIjoiNjg4MjA4IiwiZjE0Ijoi6YGT6YCa56eR5oqAIn0seyJmMTIiOiIzMDE0NjgiLCJmMTQiOiLljZrnm4jnibnnhIoifSx7ImYxMiI6IjY4ODEzNiIsImYxNCI6IuenkeWFtOWItuiNryJ9LHsiZjEyIjoiNjg4MzMwIiwiZjE0Ijoi5a6P5Yqb6L6+In0seyJmMTIiOiI2ODgxMjIiLCJmMTQiOiLopb/pg6jotoXlr7wifSx7ImYxMiI6IjMwMTM3OCIsImYxNCI6IumAmui+vua1tyJ9LHsiZjEyIjoiMzAwODAzIiwiZjE0Ijoi5oyH5Y2X6ZKIIn0seyJmMTIiOiI2ODgzMDgiLCJmMTQiOiLmrKfnp5Hkur8ifSx7ImYxMiI6IjMwMDkxMSIsImYxNCI6IuS6v+eUsOaZuuiDvSJ9XX19"
+  }
+}

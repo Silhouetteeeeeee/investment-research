@@ -27,6 +27,10 @@ public class UpstreamException extends RuntimeException {
     }
 
     private static String describe(int status, String url) {
-        return status > 0 ? "上游请求失败：HTTP " + status + " " + url : "上游请求失败：" + url;
+        // 查询串里可能有令牌，消息只保留到路径
+        String safeUrl = url == null ? "" : url.split("\\?", 2)[0];
+        return status > 0
+                ? "上游请求失败：HTTP " + status + " " + safeUrl
+                : "上游请求失败：" + safeUrl;
     }
 }

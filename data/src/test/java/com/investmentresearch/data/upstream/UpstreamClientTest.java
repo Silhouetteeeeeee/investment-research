@@ -37,12 +37,13 @@ class UpstreamClientTest {
     @Test
     void returns_body_with_requested_charset() {
         String chinese = "营业收入：12.3 亿元，同比增长 8%";
+        // 响应头故意写成 UTF-8、body 却是 GBK：客户端必须用入参 charset，不能信 header
         WIREMOCK.stubFor(
                 get(urlPathEqualTo("/gbk"))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withHeader("Content-Type", "text/html; charset=GBK")
+                                        .withHeader("Content-Type", "text/html; charset=UTF-8")
                                         .withBody(chinese.getBytes(GBK))));
 
         String body = client.get(WIREMOCK.baseUrl() + "/gbk", GBK, Map.of());
@@ -86,6 +87,19 @@ class UpstreamClientTest {
                             assertThat(upstream.url()).isEqualTo(url);
                         });
         WIREMOCK.verify(1, getRequestedFor(urlPathEqualTo("/missing")));
+    }
+
+    @Test
+    void error_message_redacts_query_string() {
+        String url = WIREMOCK.baseUrl() + "/missing?token=SECRET-QUERY-123";
+        WIREMOCK.stubFor(get(urlPathEqualTo("/missing")).willReturn(aResponse().withStatus(404)));
+
+        UpstreamException error =
+                org.junit.jupiter.api.Assertions.assertThrows(
+                        UpstreamException.class, () -> client.get(url, Map.of()));
+
+        assertThat(error.getMessage()).doesNotContain("SECRET-QUERY-123").doesNotContain("token");
+        assertThat(error.url()).isEqualTo(url);
     }
 
     @Test

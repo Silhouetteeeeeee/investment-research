@@ -3,7 +3,7 @@
     "url": "https://quotes.sina.cn/cn/api/openapi.php/CompanyFinanceService.getFinanceReport2022?paperCode=sz000858&source=lrb&type=0&page=1&num=1000",
     "charset": "utf-8",
     "bytes": 2172543,
-    "recorded_at": "2026-10-30T13:38:44+00:00"
+    "recorded_at": "2026-10-30T13:54:20+00:00"
   },
   "request": {
     "method": "GET",

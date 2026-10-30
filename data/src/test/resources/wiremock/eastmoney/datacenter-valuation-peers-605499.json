@@ -3,7 +3,7 @@
     "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_VALUEANALYSIS_DET&columns=ALL&quoteColumns=&filter=%28BOARD_CODE%3D%22016170%22%29%28TRADE_DATE%3D%272026-10-30%27%29&pageNumber=1&pageSize=500&sortTypes=-1&sortColumns=TOTAL_MARKET_CAP&source=WEB&client=WEB",
     "charset": "utf-8",
     "bytes": 16263,
-    "recorded_at": "2026-10-30T13:38:57+00:00"
+    "recorded_at": "2026-10-30T13:54:32+00:00"
   },
   "request": {
     "method": "GET",

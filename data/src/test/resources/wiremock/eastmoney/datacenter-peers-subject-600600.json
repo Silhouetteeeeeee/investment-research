@@ -3,7 +3,7 @@
     "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_LICO_FN_CPD&columns=ALL&quoteColumns=&filter=%28SECURITY_CODE%3D%22600600%22%29&pageNumber=1&pageSize=40&sortTypes=-1&sortColumns=REPORTDATE&source=WEB&client=WEB",
     "charset": "utf-8",
     "bytes": 37068,
-    "recorded_at": "2026-10-30T13:38:55+00:00"
+    "recorded_at": "2026-10-30T13:54:30+00:00"
   },
   "request": {
     "method": "GET",

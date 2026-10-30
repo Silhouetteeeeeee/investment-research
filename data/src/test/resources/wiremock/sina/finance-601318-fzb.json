@@ -3,7 +3,7 @@
     "url": "https://quotes.sina.cn/cn/api/openapi.php/CompanyFinanceService.getFinanceReport2022?paperCode=sh601318&source=fzb&type=0&page=1&num=1000",
     "charset": "utf-8",
     "bytes": 2750958,
-    "recorded_at": "2026-10-30T13:38:48+00:00"
+    "recorded_at": "2026-10-30T13:54:24+00:00"
   },
   "request": {
     "method": "GET",

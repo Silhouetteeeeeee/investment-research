@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_LICO_FN_CPD&columns=ALL&quoteColumns=&filter=%28BOARD_CODE%3D%22BK1279%22%29%28REPORTDATE%3D%272026-09-30%2000%3A00%3A00%27%29&pageNumber=1&pageSize=500&sortTypes=-1&sortColumns=TOTAL_OPERATE_INCOME&source=WEB&client=WEB",
+    "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_LICO_FN_CPD&columns=ALL&quoteColumns=&filter=%28BOARD_CODE%3D%22BK1279%22%29%28REPORTDATE%3D%272026-09-30%27%29&pageNumber=1&pageSize=500&sortTypes=-1&sortColumns=TOTAL_OPERATE_INCOME&source=WEB&client=WEB",
     "charset": "utf-8",
     "bytes": 16526,
-    "recorded_at": "2026-10-30T13:38:55+00:00"
+    "recorded_at": "2026-10-30T13:54:31+00:00"
   },
   "request": {
     "method": "GET",
@@ -19,7 +19,7 @@
         "equalTo": ""
       },
       "filter": {
-        "equalTo": "(BOARD_CODE=\"BK1279\")(REPORTDATE='2026-09-30 00:00:00')"
+        "equalTo": "(BOARD_CODE=\"BK1279\")(REPORTDATE='2026-09-30')"
       },
       "pageNumber": {
         "equalTo": "1"

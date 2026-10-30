@@ -3,7 +3,7 @@
     "url": "https://emweb.securities.eastmoney.com/PC_HSF10/CompanySurvey/PageAjax?code=SH601318",
     "charset": "utf-8",
     "bytes": 3181,
-    "recorded_at": "2026-10-30T13:38:50+00:00"
+    "recorded_at": "2026-10-30T13:54:26+00:00"
   },
   "request": {
     "method": "GET",

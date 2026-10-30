@@ -3,7 +3,7 @@
     "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_VALUEANALYSIS_DET&columns=ALL&quoteColumns=&filter=%28SECURITY_CODE%3D%22600600%22%29&pageNumber=1&pageSize=3000&sortTypes=-1&sortColumns=TRADE_DATE&source=WEB&client=WEB",
     "charset": "utf-8",
     "bytes": 1228679,
-    "recorded_at": "2026-10-30T13:38:56+00:00"
+    "recorded_at": "2026-10-30T13:54:32+00:00"
   },
   "request": {
     "method": "GET",
