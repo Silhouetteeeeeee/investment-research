@@ -7,6 +7,10 @@ spring:
   flyway:
     locations: classpath:db/migration/sqlite
 
+app:
+  # 静态访问令牌；未设置时启动失败（ApiTokenProperties 校验）
+  api-token: ${APP_API_TOKEN:}
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
