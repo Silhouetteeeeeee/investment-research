@@ -32,6 +32,7 @@ import java.nio.file.Path;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 /** Wires the assistant graph over the already-scanned data adapters. */
 @Configuration
@@ -62,7 +63,7 @@ public class AssistantConfig {
             ValuationPort valuation) {
         return new ToolRegistry(
                 List.of(
-                        new ResolveCompanyTool(directory),
+                        new ResolveCompanyTool(directory, resolver, schemas),
                         new CompanyProfileTool(profiles, resolver, schemas),
                         new FinanceTool(finance, resolver, schemas),
                         new SegmentsTool(segments, resolver, schemas),
@@ -72,10 +73,15 @@ public class AssistantConfig {
     }
 
     @Bean
-    public AgentProperties agentProperties() {
-        // README：APP_DATA_DIR 是 SQLite 与运行数据的根目录，未设置时用 ./var
-        String dataDir = System.getenv().getOrDefault("APP_DATA_DIR", "./var");
-        return new AgentProperties(null, null, Path.of(dataDir), 0);
+    public AgentProperties agentProperties(Environment environment) {
+        // README：APP_DATA_DIR 是 SQLite 与运行数据的根目录，未设置时用 ./var。
+        // 走 Environment 而不是 getenv，才能和 datasource 的 ${APP_DATA_DIR:./var} 解析到同一处。
+        // skills 相对启动目录，spring-boot:run / 测试的启动目录是 app/，需要 APP_SKILLS_DIR=../skills
+        return new AgentProperties(
+                null,
+                Path.of(environment.getProperty("APP_SKILLS_DIR", "skills")),
+                Path.of(environment.getProperty("APP_DATA_DIR", "./var")),
+                0);
     }
 
     @Bean
@@ -94,13 +100,14 @@ public class AssistantConfig {
     }
 
     @Bean
-    public AssistantEngine assistantEngine(ToolRegistry tools, AgentProperties properties) {
-        String apiKey = System.getenv("DEEPSEEK_API_KEY");
+    public AssistantEngine assistantEngine(
+            ToolRegistry tools, AgentProperties properties, Environment environment) {
+        String apiKey = environment.getProperty("DEEPSEEK_API_KEY");
         if (apiKey == null || apiKey.isBlank()) {
             // 缺 key 不能拖垮容器；保留原因供 /api/ask 回「助手不可用」。
             return new UnavailableEngine(MISSING_KEY);
         }
-        return AgentFactory.create(tools, properties);
+        return AgentFactory.create(tools, properties, apiKey);
     }
 
     @Bean

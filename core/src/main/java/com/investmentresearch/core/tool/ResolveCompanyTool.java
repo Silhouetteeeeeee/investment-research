@@ -18,9 +18,14 @@ public final class ResolveCompanyTool implements ResearchTool {
     private final ToolSchema schema;
 
     public ResolveCompanyTool(CompanyDirectory directory) {
+        this(directory, new CompanyResolver(directory), ToolSchemas.loadDefault());
+    }
+
+    public ResolveCompanyTool(
+            CompanyDirectory directory, CompanyResolver resolver, ToolSchemas schemas) {
         this.directory = directory;
-        this.resolver = new CompanyResolver(directory);
-        this.schema = ToolSchemas.loadDefault().get("resolve_company");
+        this.resolver = resolver;
+        this.schema = schemas.get("resolve_company");
     }
 
     @Override

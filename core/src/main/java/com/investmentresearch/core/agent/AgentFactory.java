@@ -9,11 +9,9 @@ public final class AgentFactory {
 
     private AgentFactory() {}
 
-    public static AssistantEngine create(ToolRegistry tools, AgentProperties properties) {
-        String apiKey = System.getenv("DEEPSEEK_API_KEY");
-        if (apiKey == null || apiKey.isBlank()) {
-            throw new IllegalStateException("请先设置环境变量 DEEPSEEK_API_KEY");
-        }
+    /** The key is passed in rather than read here so the config branch stays testable. */
+    public static AssistantEngine create(
+            ToolRegistry tools, AgentProperties properties, String apiKey) {
         return new AgentEngine(
                 tools,
                 properties,

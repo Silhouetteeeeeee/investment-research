@@ -12,6 +12,7 @@
 | `APP_API_TOKEN` | 是 | 页面与 API 的访问令牌；浏览器首次请求时输入。 |
 | `DEEPSEEK_API_KEY` | 运行时需要 | 模型调用密钥。只从环境读取，不要写进仓库或提交。 |
 | `APP_DATA_DIR` | 否 | SQLite 和运行数据目录，默认 `./var`（相对启动目录）。 |
+| `APP_SKILLS_DIR` | 否 | `skills/` 所在目录，默认 `./skills`（相对启动目录）。 |
 
 `.env`、`*.db`、`var/` 已在 `.gitignore` 中，密钥不要提交。
 
@@ -30,8 +31,10 @@ export APP_DATA_DIR=./var
 
 ```bash
 ./mvnw -pl app -am install -DskipTests
-./mvnw -pl app spring-boot:run
+APP_SKILLS_DIR=../skills ./mvnw -pl app spring-boot:run
 ```
+
+`spring-boot:run` 的工作目录是 `app/`，所以 `skills` 要用 `APP_SKILLS_DIR` 指回仓库根。
 
 或打包成可执行 jar 后运行：
 
