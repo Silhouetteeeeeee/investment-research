@@ -16,6 +16,7 @@ import com.investmentresearch.data.persistence.ValPeerEntity;
 import com.investmentresearch.data.persistence.ValPeerMapper;
 import com.investmentresearch.data.upstream.RestClientUpstreamClient;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
@@ -132,7 +133,7 @@ class ValuationAdapterTest {
                                                 List.of(
                                                         historyRow("2026-10-30", 1.0),
                                                         historyRow("2026-10-30", 2.0))))
-                .isInstanceOf(RuntimeException.class);
+                .hasRootCauseInstanceOf(SQLException.class);
 
         assertThat(
                         historyMapper.selectCount(

@@ -43,6 +43,8 @@ import org.springframework.transaction.support.TransactionTemplate;
  */
 @Repository
 public class FinanceAdapter implements FinancePort {
+    // 与 Python 一致。fin_disclosure 暂时没人写，披露日历触发重抓在本阶段不会生效，
+    // 新财报最多晚 7 天出现；补上日历同步（Phase 2）后这条豁免自然消失
     static final int DEFAULT_CACHE_DAYS = 7;
     static final int TREND_PERIODS = FinanceSnapshot.DEFAULT_TREND_PERIODS;
     static final String DEFAULT_ENDPOINT =
@@ -291,7 +293,6 @@ public class FinanceAdapter implements FinancePort {
         if (history.isEmpty()) {
             return true;
         }
-        boolean empty = anyRequiredTableEmpty(code);
         String latest = null;
         for (Map<String, Object> row : history) {
             Object value = row.get("fetched_at");
@@ -309,23 +310,18 @@ public class FinanceAdapter implements FinancePort {
         } catch (DateTimeParseException error) {
             return true;
         }
-        // 空表也走 30 分钟重试间隔，避免上游真没有该表时每次调用都打三次接口
-        if (empty) {
-            return age.compareTo(Duration.ofMinutes(30)) >= 0;
-        }
         if (age.compareTo(Duration.ofDays(DEFAULT_CACHE_DAYS)) > 0) {
             return true;
+        }
+        // 空表也走 30 分钟重试间隔，避免上游真没有该表时每次调用都打三次接口
+        if (anyRequiredTableEmpty(code)) {
+            return age.compareTo(Duration.ofMinutes(30)) >= 0;
         }
         if (age.compareTo(Duration.ofMinutes(30)) < 0) {
             return false;
         }
-        String disclosed;
-        try {
-            disclosed = disclosureMapper.latestDisclosedPeriod(code);
-        } catch (RuntimeException error) {
-            // 披露日历还没建表/没刷新过时退回按时间判断
-            return false;
-        }
+        // 表由 V8 建好；真查不出来就是真故障，交给外层折成失败，不再假装新鲜
+        String disclosed = disclosureMapper.latestDisclosedPeriod(code);
         String localLatest = (String) history.get(history.size() - 1).get("report_date");
         return disclosed != null
                 && localLatest != null
