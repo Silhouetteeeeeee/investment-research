@@ -2,6 +2,7 @@ package com.investmentresearch.core.service;
 
 import com.investmentresearch.core.agent.AskResult;
 import com.investmentresearch.core.agent.AssistantEngine;
+import com.investmentresearch.core.agent.EngineFailure;
 import com.investmentresearch.core.agent.StreamListener;
 import com.investmentresearch.core.agent.ToolEvent;
 import com.investmentresearch.core.domain.Conversation;
@@ -143,13 +144,17 @@ public final class AskService {
             answer = engine.ask(cid, route.code(), route.name(), question, listener);
         } catch (RuntimeException error) {
             String text = "研究失败：" + errorText(error);
-            repository.append(cid, "error", event("text", text, "run", null));
+            // 引擎失败也带着已经跑完的那次运行记录（agent.py:563,720-723），
+            // 页面靠 message.run.id 才打得开这条失败消息的时间线
+            Map<String, Object> run =
+                    writeRun(error instanceof EngineFailure failure ? failure.run() : null);
+            repository.append(cid, "error", event("text", text, "run", run));
             out.send(
                     event(
                             "type", "error",
                             "text", text,
                             "conversation_id", cid,
-                            "run", null));
+                            "run", run));
             out.complete();
             return;
         }

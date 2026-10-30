@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.investmentresearch.core.agent.AskResult;
 import com.investmentresearch.core.agent.AssistantEngine;
+import com.investmentresearch.core.agent.EngineFailure;
 import com.investmentresearch.core.agent.StreamListener;
 import com.investmentresearch.core.domain.Conversation;
 import com.investmentresearch.core.domain.Source;
@@ -169,6 +170,23 @@ class AskServiceTest {
         assertThat(repository.usages).isEmpty();
         assertThat(runStore.written).isEmpty();
         assertThat(sink.completes).isEqualTo(1);
+    }
+
+    @Test
+    void engine_failure_carries_the_error_run_summary() {
+        // Python 在异常前就把 last_run 存好了，失败消息同样能打开时间线
+        String runId = "20261030T120000-abcdef12";
+        engine.failure =
+                new EngineFailure(
+                        "boom", new RunRecord(runId, Map.of("run_id", runId)), null);
+        CapturingSink sink = new CapturingSink();
+
+        service().ask(null, "东鹏饮料的营收怎么样", sink);
+
+        Map<String, Object> run = Map.of("id", runId, "file_bytes", 321L);
+        assertThat(sink.events.get(sink.events.size() - 1)).containsEntry("run", run);
+        assertThat(repository.stored(1L).get(1).payload()).containsEntry("run", run);
+        assertThat(runStore.written).hasSize(1);
     }
 
     @Test
