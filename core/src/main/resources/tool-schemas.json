@@ -1,0 +1,1053 @@
+{
+  "load_skill": {
+    "name": "load_skill",
+    "description": "加载研究 skill 的完整判据与回答结构。可用：business_model（第一问：这家公司究竟靠什么赚钱？）；moat（第二问：竞争优势是什么？能持续多久？）；operating_history（第三问：过去 5–10 年的经营表现如何？）；financial_safety（第四问：财务安全吗？会不会因为一次危机就撑不住？）；growth_outlook（第五问：未来还能增长吗？增长从哪里来？）；management（第六问：管理层值得信任吗？）；valuation（第七问：它值多少钱？）；margin_of_safety（第八问：现在的价格有安全边际吗？）；market_view（大盘怎么看：指数、宽度、量能与操作节奏）；news_events（新闻与事件分析：政策、产业、公司与海外）；sector_rotation（行业轮动分析：强弱、持续性与反转信号）；stock_screening（候选股票筛选：量化初筛、基本面复核与估值排序）；strategy_risk（策略与风险管理：条件下的操作预案与仓位上限）；review_eval（复盘与预测评估：命中率、超额收益与失误归因）；research_memory（公司研究档案：事实、假设、结论变化与未决问题）。宏观问题可一次加载多个。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "business_model",
+            "moat",
+            "operating_history",
+            "financial_safety",
+            "growth_outlook",
+            "management",
+            "valuation",
+            "margin_of_safety",
+            "market_view",
+            "news_events",
+            "sector_rotation",
+            "stock_screening",
+            "strategy_risk",
+            "review_eval",
+            "research_memory"
+          ],
+          "description": "要加载的 skill 名称"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "resolve_company": {
+    "name": "resolve_company",
+    "description": "把公司简称或代码解析成六位代码；重名或找不到时返回候选",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "name_or_code": {
+          "type": "string",
+          "description": "公司简称或六位股票代码"
+        }
+      },
+      "required": [
+        "name_or_code"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "get_company_profile": {
+    "name": "get_company_profile",
+    "description": "公司概况：主营描述、行业分类、员工数、经营范围摘要",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_finance": {
+    "name": "get_finance",
+    "description": "财务快照：营收/净利及同比、毛利率、净利率、ROE、负债率、现金流、有息负债、利息保障、商誉、应收/存货同比；另含每股收益、归母净资产、固定资产/在建工程、应付/合同负债、投资收益与减值、研发与资本开支、单季趋势，以及 balance_detail / income_detail / cashflow_detail 三张表的完整科目（金额均为亿元）",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_financial_history": {
+    "name": "get_financial_history",
+    "description": "年度财务序列：5–10 年的营收、净利、每股收益、毛利率、净利率、费用率、ROE、现金流、有息负债、固定资产/在建工程与负债率，用来看盈利能力能否持续",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "integer",
+          "description": "回看年数，1-10，默认 10"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_segments": {
+    "name": "get_segments",
+    "description": "主营构成：按产品和按地区两组切片，含收入、占比、同比、毛利率，以及最近若干期同口径的分部历史，用来看业务结构变化",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "integer",
+          "description": "分部历史回看期数，1-10，默认 5"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_management": {
+    "name": "get_management",
+    "description": "管理层与治理：董事会/高管/监事会/审计委员会成员，含职务、任期、年龄、学历、薪酬、持股与简历，以及各组薪酬与持股合计",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "resume_chars": {
+          "type": "integer",
+          "description": "每人简历截断字数，0-2000，默认 300；0 表示不返回简历"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_shareholders": {
+    "name": "get_shareholders",
+    "description": "股东结构：实控人、十大股东、十大流通股东（比例为占流通股比例），以及最近若干期股东户数与户均持股变化，用来看筹码集中还是分散",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "periods": {
+          "type": "integer",
+          "description": "股东户数回看期数，1-10，默认 8"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_peers": {
+    "name": "get_peers",
+    "description": "同业对比：同行业、同报告期的营收/净利/增速/毛利率/净利率/ROE/PE/PB，含行业中位数、本公司排名与分位、规模相近公司与营收龙头；样本不足时回退上一报告期。rank=1 表示数值最高（PE/PB 即估值最贵）",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "规模相近的同业数量，3-20，默认 8"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_dividends": {
+    "name": "get_dividends",
+    "description": "分红历史：按报告期列现金分红（税前每 10 股）、送股/转增、实施进度与除权除息日；按年度汇总现金分红总额、归母净利润与分红率，并给出连续分红年数。分红总额按报告期总股本估算，分红率按报告期归年",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "integer",
+          "description": "回看年数，1-20，默认 10"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_insider_trades": {
+    "name": "get_insider_trades",
+    "description": "高管增减持：列变动人、与高管的关系、职务、变动股数、成交均价、金额、变动后持股与原因；按年汇总净增持/净减持，按人汇总净额。持股计划单列，只含已披露记录",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "integer",
+          "description": "回看年数，1-10，默认 3"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_buybacks": {
+    "name": "get_buybacks",
+    "description": "股票回购：按计划列公告日、进度、计划金额/股数/价格区间、已回购金额/股数与完成度，并区分注销、员工持股/股权激励；按公告年度汇总。只含已披露回购计划",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "integer",
+          "description": "回看年数，1-10，默认 5"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_lockup_expiries": {
+    "name": "get_lockup_expiries",
+    "description": "限售解禁：列每批解禁日、解禁股数、解禁市值、占总股本比例、股东户数、股份类型与解禁后流通股；区分历史与未来批次，按年度和股份类型汇总。只含已披露安排，解禁不等于减持",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "integer",
+          "description": "历史回看年数，1-10，默认 3"
+        },
+        "ahead_months": {
+          "type": "integer",
+          "description": "未来展望月数，0-36，默认 12"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_pledges": {
+    "name": "get_pledges",
+    "description": "股权质押：最新质押比例、质押股数、质押市值、笔数、无限售/有限售质押，近一年变化、区间峰值与月度/年度趋势；按周披露，质押比例高不等于违约",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "integer",
+          "description": "回看年数，1-10，默认 3"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_earnings_forecasts": {
+    "name": "get_earnings_forecasts",
+    "description": "业绩预告：按报告期列归母净利润、扣非净利润、每股收益、营业收入的预告区间与同比，区分预增/预减/减亏等类型；同一报告期只保留最新修订。预告是初步测算，可能被修正",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "integer",
+          "description": "回看年数，1-10，默认 3"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_institutional_research": {
+    "name": "get_institutional_research",
+    "description": "机构调研：近 N 年调研场次、参与机构家数、机构类型分布、接待高管、调研方式与最近一场纪要摘要；调研热度不等于基本面，纪要中的说法不代表承诺",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "integer",
+          "description": "回看年数，1-10，默认 3"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_research_notes": {
+    "name": "get_research_notes",
+    "description": "机构调研纪要原文：最近 N 场调研的问答全文（问答成对、已去重），交给你自己阅读并概括；超出 max_chars 的部分会截断并标记，纪要由公司整理披露，回答不代表承诺",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "integer",
+          "description": "最近几场，1-10，默认 2"
+        },
+        "years": {
+          "type": "integer",
+          "description": "回看年数，1-10，默认 3"
+        },
+        "max_chars": {
+          "type": "integer",
+          "description": "原文总字数上限，3000-40000，默认 12000；场次越少每场越完整"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_analyst_views": {
+    "name": "get_analyst_views",
+    "description": "卖方研报观点：近 N 天研报数量、覆盖机构、评级分布、目标价区间、未来两年一致预期 EPS 与最新报告标题；卖方观点带乐观倾向，评级与目标价不是事实",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "days": {
+          "type": "integer",
+          "description": "回看天数，30-730，默认 365"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_announcements": {
+    "name": "get_announcements",
+    "description": "近期公告：带标签的事件（回购、减持、重大合同等）",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "days": {
+          "type": "integer",
+          "description": "回看天数，1-365，默认 180"
+        },
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_valuation": {
+    "name": "get_valuation",
+    "description": "估值：PE/PB 及历史分位、同行业对比；工具只提供事实数据，估值判断交给 skill 的情景分析",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "calc_valuation": {
+    "name": "calc_valuation",
+    "description": "估值计算与校验：数字由代码用 Decimal 计算，假设原样回显。check 用财报 TTM 反推 PE/PB 并与市值口径校验；scenario 按明示假设算悲观/中性/乐观三档每股价值；terminal 检查永续增长终值 PE 的假设是否自洽。情景结果是假设的算术结果，不是目标价。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "check",
+            "scenario",
+            "terminal"
+          ],
+          "description": "check=口径校验；scenario=三情景；terminal=终值 PE"
+        },
+        "price": {
+          "type": "number",
+          "description": "当前股价（元/股）；scenario 省略时用估值数据"
+        },
+        "base_value": {
+          "type": "number",
+          "description": "scenario 的基准每股价值，与 base_label 对应"
+        },
+        "base_label": {
+          "type": "string",
+          "enum": [
+            "EPS",
+            "FCF"
+          ],
+          "description": "基准值口径：EPS=每股收益，FCF=每股自由现金流；默认 EPS"
+        },
+        "growth_pct": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "悲观/中性/乐观三档年化增速（%）"
+        },
+        "exit_pe": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "悲观/中性/乐观三档退出 PE"
+        },
+        "years": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "情景年数，默认 3"
+        },
+        "roic_pct": {
+          "type": "number",
+          "description": "terminal：永续期 ROIC（%）"
+        },
+        "terminal_g_pct": {
+          "type": "number",
+          "description": "terminal：永续增速（%）"
+        },
+        "discount_rate_pct": {
+          "type": "number",
+          "description": "terminal：折现率（%）"
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "get_market_overview": {
+    "name": "get_market_overview",
+    "description": "A股大盘全景与市场状态分类：主要指数涨跌与成交额、涨跌家数与涨跌停、两市成交额与量能、主要指数均线与区间表现、行业板块涨跌与净流入、连板高度与涨停行业、财联社快讯；data.state 给出强势/震荡/弱势/极端风险分类、判断依据、风险等级与失效条件。回答“今天大盘怎么看”“市场情绪如何”“有什么操作建议”时先调用；不需要公司参数",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    }
+  },
+  "get_news_events": {
+    "name": "get_news_events",
+    "description": "当日政策、产业、公司与海外市场事件：分类、来源、发布时间、可能影响的行业、传导路径、可信度与不确定性；另含美股与港股指数表现。回答“今天有什么新闻/政策”“对哪些行业有影响”“海外市场怎么样”时调用；不需要公司参数。涉及具体公司公告时再用 get_announcements 核实原文",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "返回事件条数，默认 12"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "get_sector_rotation": {
+    "name": "get_sector_rotation",
+    "description": "行业轮动：90 个同花顺行业相对沪深300的 5/20/60 日超额收益、近 10 日跑赢天数、上涨家数占比、成交额放大倍数、领涨股，以及持续强势/由弱转强/由强转弱/持续弱势分类和反转信号。回答“哪些行业强势”“板块轮动到哪”“热点能不能持续”“哪个板块在走弱”时调用；不需要公司参数。找驱动因素时再配合 get_news_events 对照",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 20,
+          "description": "强势行业返回条数，默认 8"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "screen_candidates": {
+    "name": "screen_candidates",
+    "description": "量化选股：全市场剔除 ST/退市/新股/停牌与成交额过小的股票，按板块配额取样后，用均线位置、20/60 日涨幅、60 日区间位置、成交额放大倍数合成量化分，返回候选股、入选理由、风险与本地 PE/PB。回答“有什么股票可以关注”“帮我筛选候选股”“今天哪些票值得研究”时调用；不需要公司参数。候选股的基本面与估值必须再用 get_finance、get_valuation、get_announcements 逐只复核",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 30,
+          "description": "候选股条数，默认 15"
+        },
+        "min_amount_yi": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 50,
+          "description": "最低成交额门槛（亿元），默认 1"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "build_strategy_plan": {
+    "name": "build_strategy_plan",
+    "description": "结合市场状态、风险等级、用户风险承受能力、当前仓位与持仓，给出有条件的操作预案：观望/持有/分批建仓/降低风险的动作与触发条件、总仓位上限、单只上限、现金下限与止损比例，并检查超配与止损状态。回答“现在该几成仓”“要不要减仓”“持仓怎么处理”时调用。market_state 不传会现场取一次大盘状态；不传仓位只给区间不给具体动作",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "market_state": {
+          "type": "string",
+          "enum": [
+            "强势",
+            "震荡",
+            "弱势",
+            "极端风险"
+          ],
+          "description": "当前市场状态；不传则现场取大盘数据判断"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": [
+            "低",
+            "中",
+            "高",
+            "极高"
+          ],
+          "description": "市场风险等级，可取自 get_market_overview 的 data.state.risk_level"
+        },
+        "risk_tolerance": {
+          "type": "string",
+          "enum": [
+            "保守",
+            "稳健",
+            "积极"
+          ],
+          "description": "用户风险承受能力，默认稳健"
+        },
+        "position_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "当前总仓位百分比（股票类资产占总资产）"
+        },
+        "cash_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "当前现金比例百分比"
+        },
+        "holdings": {
+          "type": "array",
+          "description": "持仓明细，用于检查超配与止损",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "weight_pct": {
+                "type": "number"
+              },
+              "cost": {
+                "type": "number"
+              },
+              "price": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "save_daily_judgment": {
+    "name": "save_daily_judgment",
+    "description": "把当天的大盘状态、行业强弱、候选股名单和（可选）策略方案存档到本地，供之后复盘评估；同一天重复保存会覆盖旧记录。回答“记一下今天的判断”“保存今天的分析”时调用；不需要公司参数。存档只保存规则引擎的判断，不保存回答里的文字结论",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "strategy": {
+          "type": "object",
+          "description": "可选：此前 build_strategy_plan 返回的方案，用于之后评估策略效果；没有做过策略方案就不要传",
+          "properties": {
+            "stance": {
+              "type": "string"
+            },
+            "total_pct": {
+              "type": "number"
+            },
+            "single_pct": {
+              "type": "number"
+            },
+            "stop_loss_pct": {
+              "type": "number"
+            },
+            "position_pct": {
+              "type": "number"
+            },
+            "caps": {
+              "type": "object",
+              "properties": {
+                "total_pct": {
+                  "type": "number"
+                },
+                "single_pct": {
+                  "type": "number"
+                },
+                "stop_loss_pct": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "review_research_reports": {
+    "name": "review_research_reports",
+    "description": "复盘已保存的每日判断：计算之后 horizon 个交易日的实际走势，统计市场状态、行业方向与候选股的命中率，候选股相对沪深300的超额收益、区间最大回撤与扣成本后的净超额，并列出失误原因。没走完观察窗口的判断标为待观察，不计入命中率。回答“上次判断准不准”“复盘一下”“命中率如何”“策略有没有效果”时调用；不需要公司参数。还没有存档时会要求先保存",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "horizon": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "观察窗口（交易日），默认 5"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60,
+          "description": "复盘最近多少个交易日的存档，默认 20"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "list_research_memory": {
+    "name": "list_research_memory",
+    "description": "查看当前公司是否已有研究档案，返回名称、最后复核时间与各模块计数。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "read_research_memory": {
+    "name": "read_research_memory",
+    "description": "读取公司研究档案的某一模块，可按记录编号或状态过滤。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        },
+        "section": {
+          "type": "string",
+          "enum": [
+            "facts",
+            "hypotheses",
+            "conclusions",
+            "changes",
+            "questions"
+          ]
+        },
+        "record_id": {
+          "type": "string",
+          "description": "记录编号，如 F001/H001/G001/C001/Q001；省略则返回该模块记录"
+        },
+        "status": {
+          "type": "string"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "section"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "append_research_record": {
+    "name": "append_research_record",
+    "description": "向研究档案追加事实、假设、结论或未决问题；结论变化不能由此写入。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        },
+        "section": {
+          "type": "string",
+          "enum": [
+            "facts",
+            "hypotheses",
+            "questions",
+            "conclusions"
+          ]
+        },
+        "record": {
+          "type": "object",
+          "description": "按 section 填不同字段，缺一个整条都会被拒。facts 必填 fact_type、content、report_period、source_id；hypotheses 必填 statement、supporting_fact_ids、verification_method、falsification_condition；conclusions 必填 title、statement；questions 必填 question、missing_evidence、next_action、resolution_criteria。注意事实的正文用 content，假设与结论的判断正文用 statement。",
+          "properties": {
+            "subject": {
+              "type": "string"
+            },
+            "fact_type": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "unit": {
+                    "type": "string"
+                  },
+                  "yoy": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "report_period": {
+              "type": "string"
+            },
+            "published_at": {
+              "type": "string"
+            },
+            "source_id": {
+              "type": "string"
+            },
+            "source_label": {
+              "type": "string"
+            },
+            "source_locator": {
+              "type": "string"
+            },
+            "source_url": {
+              "type": "string"
+            },
+            "verification_status": {
+              "type": "string",
+              "enum": [
+                "已核验",
+                "待核验"
+              ]
+            },
+            "statement": {
+              "type": "string"
+            },
+            "supporting_fact_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "assumptions": {
+              "type": "string"
+            },
+            "confidence": {
+              "type": "string",
+              "enum": [
+                "低",
+                "中",
+                "高"
+              ]
+            },
+            "verification_method": {
+              "type": "string"
+            },
+            "falsification_condition": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "next_review_date": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "based_on_fact_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "based_on_hypothesis_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "question": {
+              "type": "string"
+            },
+            "importance": {
+              "type": "string",
+              "enum": [
+                "高",
+                "中",
+                "低"
+              ]
+            },
+            "known_facts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "missing_evidence": {
+              "type": "string"
+            },
+            "next_action": {
+              "type": "string"
+            },
+            "resolution_criteria": {
+              "type": "string"
+            },
+            "related_hypothesis_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "resolution_note": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "section",
+        "record"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "update_research_record": {
+    "name": "update_research_record",
+    "description": "更新已有记录的状态类字段（事实核验状态、假设状态、问题状态等）。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        },
+        "section": {
+          "type": "string",
+          "enum": [
+            "facts",
+            "hypotheses",
+            "questions"
+          ]
+        },
+        "record_id": {
+          "type": "string"
+        },
+        "patch": {
+          "type": "object",
+          "properties": {
+            "verification_status": {
+              "type": "string",
+              "enum": [
+                "已核验",
+                "待核验"
+              ]
+            },
+            "source_locator": {
+              "type": "string"
+            },
+            "source_url": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "confidence": {
+              "type": "string",
+              "enum": [
+                "低",
+                "中",
+                "高"
+              ]
+            },
+            "next_review_date": {
+              "type": "string"
+            },
+            "last_checked_at": {
+              "type": "string"
+            },
+            "resolution_note": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "section",
+        "record_id",
+        "patch"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "record_conclusion_change": {
+    "name": "record_conclusion_change",
+    "description": "记录一次结论变化（补充/修正/推翻/维持）；历史只追加，不能修改。old_conclusion 必须与档案中的当前结论完全一致。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "股票代码或简称；省略则用当前公司"
+        },
+        "conclusion_id": {
+          "type": "string",
+          "description": "现有结论编号，如 G001"
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "补充",
+            "修正",
+            "推翻",
+            "维持"
+          ]
+        },
+        "old_conclusion": {
+          "type": "string"
+        },
+        "new_conclusion": {
+          "type": "string"
+        },
+        "new_title": {
+          "type": "string",
+          "description": "推翻时新结论的标题"
+        },
+        "trigger_event": {
+          "type": "string"
+        },
+        "trigger_date": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "事实或假设编号，如 F001/H001"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "impact": {
+          "type": "string"
+        },
+        "review_status": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "低",
+            "中",
+            "高"
+          ]
+        },
+        "based_on_fact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "based_on_hypothesis_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "conclusion_id",
+        "operation",
+        "old_conclusion",
+        "new_conclusion",
+        "trigger_event",
+        "trigger_date",
+        "evidence_ids",
+        "reason",
+        "impact"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

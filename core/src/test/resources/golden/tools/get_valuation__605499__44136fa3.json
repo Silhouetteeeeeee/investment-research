@@ -1,0 +1,66 @@
+{
+  "tool": "get_valuation",
+  "arguments": {},
+  "default_company": "605499",
+  "result": {
+    "ok": true,
+    "company": "605499",
+    "as_of": "2026-10-30",
+    "sources": [
+      {
+        "id": "valuation:605499:2026-10-30",
+        "label": "估值",
+        "detail": "东鹏饮料 2026-10-30 估值",
+        "as_of": "2026-10-30",
+        "fetched_at": "2026-10-30 18:41:57",
+        "url": ""
+      }
+    ],
+    "data": {
+      "pe_ttm": 16.52239462,
+      "pe_percentile": 0.8,
+      "pb_mrq": 4.2733608,
+      "pb_percentile": 1.9,
+      "years": 5,
+      "price": 108.0,
+      "market_cap_yi": 792.94,
+      "industry": {
+        "board": "饮料乳品",
+        "count": 28,
+        "median_pe": 25.15485373,
+        "median_pb": 2.20579678,
+        "rank_pe": 4,
+        "rank_total": 21
+      },
+      "peers": [
+        {
+          "name": "伊利股份",
+          "pe_ttm": 19.18061023,
+          "pb_mrq": 3.3552125
+        },
+        {
+          "name": "东鹏饮料",
+          "pe_ttm": 16.52239462,
+          "pb_mrq": 4.2733608
+        },
+        {
+          "name": "养元饮品",
+          "pe_ttm": 32.42540109,
+          "pb_mrq": 5.10216975
+        },
+        {
+          "name": "新乳业",
+          "pe_ttm": 16.73669526,
+          "pb_mrq": 3.35062489
+        },
+        {
+          "name": "妙可蓝多",
+          "pe_ttm": 60.55250166,
+          "pb_mrq": 1.9476766
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

@@ -1,0 +1,308 @@
+{
+  "tool": "get_announcements",
+  "arguments": {
+    "days": 180
+  },
+  "default_company": "601318",
+  "result": {
+    "ok": true,
+    "company": "601318",
+    "as_of": "2026-10-24",
+    "sources": [
+      {
+        "id": "announcement:601318:2026-10-24:AN202610231830850521",
+        "label": "公告",
+        "detail": "中国平安关于披露平安银行2026年第三季度报告的公告",
+        "as_of": "2026-10-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202610231830850521.html"
+      },
+      {
+        "id": "announcement:601318:2026-10-24:AN202610231830850520",
+        "label": "公告",
+        "detail": "2026年第三季度报告",
+        "as_of": "2026-10-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202610231830850520.html"
+      },
+      {
+        "id": "announcement:601318:2026-10-21:AN202610201830719728",
+        "label": "公告",
+        "detail": "中国平安关于召开2026年第三季度业绩说明会的公告",
+        "as_of": "2026-10-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202610201830719728.html"
+      },
+      {
+        "id": "announcement:601318:2026-10-16:AN202610151830529091",
+        "label": "公告",
+        "detail": "中国平安H股公告",
+        "as_of": "2026-10-16",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202610151830529091.html"
+      },
+      {
+        "id": "announcement:601318:2026-10-16:AN202610151830518852",
+        "label": "公告",
+        "detail": "中国平安非执行董事辞任公告",
+        "as_of": "2026-10-16",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202610151830518852.html"
+      },
+      {
+        "id": "announcement:601318:2026-10-01:AN202609301830049741",
+        "label": "公告",
+        "detail": "中国平安H股公告",
+        "as_of": "2026-10-01",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202609301830049741.html"
+      },
+      {
+        "id": "announcement:601318:2026-09-25:AN202609241829865905",
+        "label": "公告",
+        "detail": "中国平安H股公告",
+        "as_of": "2026-09-25",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202609241829865905.html"
+      },
+      {
+        "id": "announcement:601318:2026-09-25:AN202609241829865904",
+        "label": "公告",
+        "detail": "中国平安H股公告",
+        "as_of": "2026-09-25",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202609241829865904.html"
+      },
+      {
+        "id": "announcement:601318:2026-09-08:AN202609071829102560",
+        "label": "公告",
+        "detail": "中国平安关于选举第十三届董事会职工董事的公告",
+        "as_of": "2026-09-08",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202609071829102560.html"
+      },
+      {
+        "id": "announcement:601318:2026-09-03:AN202609021828924181",
+        "label": "公告",
+        "detail": "中国平安2026年半年度权益分派实施公告",
+        "as_of": "2026-09-03",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202609021828924181.html"
+      },
+      {
+        "id": "announcement:601318:2026-09-02:AN202609011828884633",
+        "label": "公告",
+        "detail": "中国平安H股公告",
+        "as_of": "2026-09-02",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202609011828884633.html"
+      },
+      {
+        "id": "announcement:601318:2026-08-21:AN202608201828216005",
+        "label": "公告",
+        "detail": "中国平安2026年中期利润分配方案公告",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202608201828216005.html"
+      },
+      {
+        "id": "announcement:601318:2026-08-21:AN202608201828216003",
+        "label": "公告",
+        "detail": "中国平安2026年中期报告",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202608201828216003.html"
+      },
+      {
+        "id": "announcement:601318:2026-08-21:AN202608201828216002",
+        "label": "公告",
+        "detail": "中国平安第十三届董事会第十五次会议决议公告",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202608201828216002.html"
+      },
+      {
+        "id": "announcement:601318:2026-08-21:AN202608201828216000",
+        "label": "公告",
+        "detail": "中国平安投资者关系管理工作办法(2026版)",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202608201828216000.html"
+      },
+      {
+        "id": "announcement:601318:2026-08-21:AN202608201828215999",
+        "label": "公告",
+        "detail": "中国平安2026年中期业绩报告",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202608201828215999.html"
+      },
+      {
+        "id": "announcement:601318:2026-08-21:AN202608201828215998",
+        "label": "公告",
+        "detail": "中国平安信息披露事务管理制度(2026版)",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202608201828215998.html"
+      },
+      {
+        "id": "announcement:601318:2026-08-21:AN202608201828215997",
+        "label": "公告",
+        "detail": "中国平安2026年中期投资者保护工作报告暨“提质增效重回报”执行情况报告",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202608201828215997.html"
+      },
+      {
+        "id": "announcement:601318:2026-08-21:AN202608201828215996",
+        "label": "公告",
+        "detail": "中国平安内幕信息知情人登记管理规定(2026版)",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202608201828215996.html"
+      },
+      {
+        "id": "announcement:601318:2026-08-21:AN202608201828215995",
+        "label": "公告",
+        "detail": "中国平安信息披露暂缓与豁免事务管理制度(2026版)",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601318/AN202608201828215995.html"
+      }
+    ],
+    "data": {
+      "code": "601318",
+      "name": "中国平安",
+      "days": 180,
+      "as_of": "2026-10-24",
+      "items": [
+        {
+          "date": "2026-10-24",
+          "title": "中国平安关于披露平安银行2026年第三季度报告的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-24",
+          "title": "2026年第三季度报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-21",
+          "title": "中国平安关于召开2026年第三季度业绩说明会的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-16",
+          "title": "中国平安H股公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-16",
+          "title": "中国平安非执行董事辞任公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-01",
+          "title": "中国平安H股公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-25",
+          "title": "中国平安H股公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-25",
+          "title": "中国平安H股公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-08",
+          "title": "中国平安关于选举第十三届董事会职工董事的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-03",
+          "title": "中国平安2026年半年度权益分派实施公告",
+          "tags": [
+            "分红"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-09-02",
+          "title": "中国平安H股公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "中国平安2026年中期利润分配方案公告",
+          "tags": [
+            "分红"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-08-21",
+          "title": "中国平安2026年中期报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "中国平安第十三届董事会第十五次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "中国平安投资者关系管理工作办法(2026版)",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "中国平安2026年中期业绩报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "中国平安信息披露事务管理制度(2026版)",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "中国平安2026年中期投资者保护工作报告暨“提质增效重回报”执行情况报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "中国平安内幕信息知情人登记管理规定(2026版)",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "中国平安信息披露暂缓与豁免事务管理制度(2026版)",
+          "tags": [],
+          "level": null
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

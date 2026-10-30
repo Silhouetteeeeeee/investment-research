@@ -1,0 +1,291 @@
+{
+  "tool": "get_peers",
+  "arguments": {
+    "limit": 8
+  },
+  "default_company": "601318",
+  "result": {
+    "ok": true,
+    "company": "601318",
+    "as_of": "2026-06-30",
+    "sources": [
+      {
+        "id": "peers:601318:2026-06-30",
+        "label": "同业对比",
+        "detail": "中国平安 2026-06-30 · 保险Ⅱ 5 家",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-28 15:33:20",
+        "url": "https://data.eastmoney.com/bbsj/202606/yjbb.html"
+      }
+    ],
+    "data": {
+      "code": "601318",
+      "name": "中国平安",
+      "as_of": "2026-06-30",
+      "industry": {
+        "name": "保险Ⅱ",
+        "code": "BK0474",
+        "count": 5
+      },
+      "report": {
+        "period": "2026-06-30",
+        "qdate": "2026Q2",
+        "datatype": "2026年 半年报"
+      },
+      "valuation_date": "2026-10-27",
+      "valuation_stale": false,
+      "valuation_error": null,
+      "counts": {
+        "industry": 5,
+        "valuation": 5,
+        "selected": 4,
+        "leaders": 3
+      },
+      "subject": {
+        "code": "601318",
+        "name": "中国平安",
+        "market": "上交所主板",
+        "revenue_yi": 5751.38,
+        "net_profit_yi": 925.85,
+        "revenue_yoy": 15.0,
+        "profit_yoy": 36.1,
+        "gross_margin": null,
+        "net_margin": 16.1,
+        "roe": 9.0,
+        "eps": 5.3,
+        "bps": 56.78,
+        "ocf_per_share": 20.32,
+        "pe_ttm": 5.98,
+        "pb_mrq": 0.93,
+        "market_cap_yi": 9526.43,
+        "revenue_ratio": 1.0,
+        "market_cap_ratio": 1.0
+      },
+      "stats": {
+        "revenue": {
+          "value": 5751.38,
+          "median": 3551.15,
+          "rank": 1,
+          "percentile": 100.0,
+          "count": 5
+        },
+        "revenue_yoy": {
+          "value": 15.0,
+          "median": 15.0,
+          "rank": 3,
+          "percentile": 60.0,
+          "count": 5
+        },
+        "net_profit": {
+          "value": 925.85,
+          "median": 367.45,
+          "rank": 2,
+          "percentile": 80.0,
+          "count": 5
+        },
+        "profit_yoy": {
+          "value": 36.1,
+          "median": 38.5,
+          "rank": 4,
+          "percentile": 40.0,
+          "count": 5
+        },
+        "gross_margin": {
+          "value": null,
+          "median": null,
+          "rank": null,
+          "percentile": null,
+          "count": 0
+        },
+        "net_margin": {
+          "value": 16.1,
+          "median": 16.1,
+          "rank": 3,
+          "percentile": 60.0,
+          "count": 5
+        },
+        "roe": {
+          "value": 9.0,
+          "median": 11.2,
+          "rank": 5,
+          "percentile": 20.0,
+          "count": 5
+        },
+        "pe_ttm": {
+          "value": 5.98,
+          "median": 5.04,
+          "rank": 1,
+          "percentile": 100.0,
+          "count": 5
+        },
+        "pb_mrq": {
+          "value": 0.93,
+          "median": 0.96,
+          "rank": 4,
+          "percentile": 40.0,
+          "count": 5
+        },
+        "market_cap": {
+          "value": 9526.43,
+          "median": 3250.46,
+          "rank": 2,
+          "percentile": 80.0,
+          "count": 5
+        }
+      },
+      "peers": [
+        {
+          "code": "601628",
+          "name": "中国人寿",
+          "market": "上交所主板",
+          "revenue_yi": 4343.07,
+          "net_profit_yi": 1344.89,
+          "revenue_yoy": 81.5,
+          "profit_yoy": 228.6,
+          "gross_margin": null,
+          "net_margin": 31.0,
+          "roe": 21.1,
+          "eps": 4.76,
+          "bps": 23.5,
+          "ocf_per_share": 10.01,
+          "pe_ttm": 4.01,
+          "pb_mrq": 1.49,
+          "market_cap_yi": 9920.91,
+          "revenue_ratio": 0.76,
+          "market_cap_ratio": 1.04
+        },
+        {
+          "code": "601319",
+          "name": "中国人保",
+          "market": "上交所主板",
+          "revenue_yi": 3551.15,
+          "net_profit_yi": 367.45,
+          "revenue_yoy": 9.6,
+          "profit_yoy": 38.5,
+          "gross_margin": null,
+          "net_margin": 10.3,
+          "roe": 11.2,
+          "eps": 0.83,
+          "bps": 7.69,
+          "ocf_per_share": 1.45,
+          "pe_ttm": 5.72,
+          "pb_mrq": 0.96,
+          "market_cap_yi": 3250.46,
+          "revenue_ratio": 0.62,
+          "market_cap_ratio": 0.34
+        },
+        {
+          "code": "601601",
+          "name": "中国太保",
+          "market": "上交所主板",
+          "revenue_yi": 2121.36,
+          "net_profit_yi": 307.75,
+          "revenue_yoy": 5.8,
+          "profit_yoy": 10.4,
+          "gross_margin": null,
+          "net_margin": 14.5,
+          "roe": 9.7,
+          "eps": 3.2,
+          "bps": 33.18,
+          "ocf_per_share": 11.96,
+          "pe_ttm": 5.04,
+          "pb_mrq": 0.89,
+          "market_cap_yi": 2843.77,
+          "revenue_ratio": 0.37,
+          "market_cap_ratio": 0.3
+        },
+        {
+          "code": "601336",
+          "name": "新华保险",
+          "market": "上交所主板",
+          "revenue_yi": 832.58,
+          "net_profit_yi": 227.93,
+          "revenue_yoy": 18.9,
+          "profit_yoy": 54.0,
+          "gross_margin": null,
+          "net_margin": 27.4,
+          "roe": 18.9,
+          "eps": 7.31,
+          "bps": 39.61,
+          "ocf_per_share": 18.01,
+          "pe_ttm": 3.59,
+          "pb_mrq": 1.29,
+          "market_cap_yi": 1589.41,
+          "revenue_ratio": 0.14,
+          "market_cap_ratio": 0.17
+        }
+      ],
+      "leaders": [
+        {
+          "code": "601628",
+          "name": "中国人寿",
+          "market": "上交所主板",
+          "revenue_yi": 4343.07,
+          "net_profit_yi": 1344.89,
+          "revenue_yoy": 81.5,
+          "profit_yoy": 228.6,
+          "gross_margin": null,
+          "net_margin": 31.0,
+          "roe": 21.1,
+          "eps": 4.76,
+          "bps": 23.5,
+          "ocf_per_share": 10.01,
+          "pe_ttm": 4.01,
+          "pb_mrq": 1.49,
+          "market_cap_yi": 9920.91,
+          "revenue_ratio": 0.76,
+          "market_cap_ratio": 1.04
+        },
+        {
+          "code": "601319",
+          "name": "中国人保",
+          "market": "上交所主板",
+          "revenue_yi": 3551.15,
+          "net_profit_yi": 367.45,
+          "revenue_yoy": 9.6,
+          "profit_yoy": 38.5,
+          "gross_margin": null,
+          "net_margin": 10.3,
+          "roe": 11.2,
+          "eps": 0.83,
+          "bps": 7.69,
+          "ocf_per_share": 1.45,
+          "pe_ttm": 5.72,
+          "pb_mrq": 0.96,
+          "market_cap_yi": 3250.46,
+          "revenue_ratio": 0.62,
+          "market_cap_ratio": 0.34
+        },
+        {
+          "code": "601601",
+          "name": "中国太保",
+          "market": "上交所主板",
+          "revenue_yi": 2121.36,
+          "net_profit_yi": 307.75,
+          "revenue_yoy": 5.8,
+          "profit_yoy": 10.4,
+          "gross_margin": null,
+          "net_margin": 14.5,
+          "roe": 9.7,
+          "eps": 3.2,
+          "bps": 33.18,
+          "ocf_per_share": 11.96,
+          "pe_ttm": 5.04,
+          "pb_mrq": 0.89,
+          "market_cap_yi": 2843.77,
+          "revenue_ratio": 0.37,
+          "market_cap_ratio": 0.3
+        }
+      ],
+      "notes": [
+        "营收在 0.3–3 倍范围内的公司只有 3 家，其余按最接近的规模补齐",
+        "同行按东方财富行业板块筛选，细分业务可能不完全可比",
+        "估值日期 2026-10-27 与财报期 2026-06-30 不同，PE/PB 是最新市场数据",
+        "金融行业毛利率、净利率口径不可比，重点看 ROE、PB 与资产质量"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

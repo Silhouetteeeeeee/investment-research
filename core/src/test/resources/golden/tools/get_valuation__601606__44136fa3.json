@@ -1,0 +1,66 @@
+{
+  "tool": "get_valuation",
+  "arguments": {},
+  "default_company": "601606",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": "2026-10-29",
+    "sources": [
+      {
+        "id": "valuation:601606:2026-10-29",
+        "label": "估值",
+        "detail": "长城军工 2026-10-29 估值",
+        "as_of": "2026-10-29",
+        "fetched_at": "2026-10-30 14:56:12",
+        "url": ""
+      }
+    ],
+    "data": {
+      "pe_ttm": -230.17644327,
+      "pe_percentile": null,
+      "pb_mrq": 10.03819727,
+      "pb_percentile": 76.9,
+      "years": 5,
+      "price": 29.32,
+      "market_cap_yi": 212.34,
+      "industry": {
+        "board": "地面兵装Ⅱ",
+        "count": 12,
+        "median_pe": 128.73630908,
+        "median_pb": 2.5595245899999997,
+        "rank_pe": null,
+        "rank_total": 7
+      },
+      "peers": [
+        {
+          "name": "内蒙一机",
+          "pe_ttm": 100.35402561,
+          "pb_mrq": 1.82808973
+        },
+        {
+          "name": "长城军工",
+          "pe_ttm": -230.17644327,
+          "pb_mrq": 10.03819727
+        },
+        {
+          "name": "中兵红箭",
+          "pe_ttm": 128.73630908,
+          "pb_mrq": 1.846761
+        },
+        {
+          "name": "北方导航",
+          "pe_ttm": -235.52484493,
+          "pb_mrq": 6.3481605
+        },
+        {
+          "name": "国科军工",
+          "pe_ttm": 57.76417638,
+          "pb_mrq": 4.74084703
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

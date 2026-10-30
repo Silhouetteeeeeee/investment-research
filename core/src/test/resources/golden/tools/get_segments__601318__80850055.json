@@ -1,0 +1,705 @@
+{
+  "tool": "get_segments",
+  "arguments": {
+    "years": 5
+  },
+  "default_company": "601318",
+  "result": {
+    "ok": true,
+    "company": "601318",
+    "as_of": "2026-06-30",
+    "sources": [
+      {
+        "id": "segments:601318:2026-06-30:product",
+        "label": "主营构成·产品",
+        "detail": "中国平安 2026-06-30 按产品",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-28 13:43:27",
+        "url": ""
+      },
+      {
+        "id": "segments:601318:2026-06-30:region",
+        "label": "主营构成·地区",
+        "detail": "中国平安 2026-06-30 按地区",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-28 13:43:27",
+        "url": ""
+      }
+    ],
+    "data": {
+      "code": "601318",
+      "name": "中国平安",
+      "as_of": "2026-06-30",
+      "slices": [
+        {
+          "kind": "product",
+          "label": "产品",
+          "total_income_yi": 5751.38,
+          "items": [
+            {
+              "name": "寿险及健康险",
+              "income_yi": 2693.95,
+              "share": 46.8,
+              "yoy": 17.7,
+              "gross_margin": 25.5
+            },
+            {
+              "name": "财产保险",
+              "income_yi": 1790.41,
+              "share": 31.1,
+              "yoy": 3.9,
+              "gross_margin": 7.3
+            },
+            {
+              "name": "银行",
+              "income_yi": 706.17,
+              "share": 12.3,
+              "yoy": 1.8,
+              "gross_margin": 43.7
+            },
+            {
+              "name": "资产管理",
+              "income_yi": 426.62,
+              "share": 7.4,
+              "yoy": 61.8,
+              "gross_margin": 33.6
+            },
+            {
+              "name": "金融赋能",
+              "income_yi": 224.91,
+              "share": 3.9,
+              "yoy": 16.8,
+              "gross_margin": 1.6
+            },
+            {
+              "name": "其他业务及合并抵销",
+              "income_yi": -90.68,
+              "share": -1.6,
+              "yoy": -43.7,
+              "gross_margin": null
+            }
+          ],
+          "history": [
+            {
+              "period": "2022-06-30",
+              "total_income_yi": 6121.02,
+              "items": [
+                {
+                  "name": "寿险及健康险",
+                  "income_yi": 3427.56,
+                  "share": 56.0,
+                  "yoy": null,
+                  "gross_margin": 8.9
+                },
+                {
+                  "name": "财产保险",
+                  "income_yi": 1444.25,
+                  "share": 23.6,
+                  "yoy": null,
+                  "gross_margin": 6.5
+                },
+                {
+                  "name": "银行",
+                  "income_yi": 920.22,
+                  "share": 15.0,
+                  "yoy": null,
+                  "gross_margin": 30.4
+                },
+                {
+                  "name": "其他资产管理",
+                  "income_yi": 225.99,
+                  "share": 3.7,
+                  "yoy": null,
+                  "gross_margin": 16.1
+                },
+                {
+                  "name": "科技",
+                  "income_yi": 134.62,
+                  "share": 2.2,
+                  "yoy": null,
+                  "gross_margin": 36.5
+                },
+                {
+                  "name": "证券",
+                  "income_yi": 99.47,
+                  "share": 1.6,
+                  "yoy": null,
+                  "gross_margin": 29.5
+                },
+                {
+                  "name": "信托",
+                  "income_yi": 21.49,
+                  "share": 0.4,
+                  "yoy": null,
+                  "gross_margin": 76.9
+                },
+                {
+                  "name": "其他业务及合并抵销",
+                  "income_yi": -152.58,
+                  "share": -2.5,
+                  "yoy": null,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2023-06-30",
+              "total_income_yi": 4887.83,
+              "items": [
+                {
+                  "name": "寿险及健康险",
+                  "income_yi": 2132.6,
+                  "share": 43.6,
+                  "yoy": -37.8,
+                  "gross_margin": 23.2
+                },
+                {
+                  "name": "财产保险",
+                  "income_yi": 1646.84,
+                  "share": 33.7,
+                  "yoy": 14.0,
+                  "gross_margin": 6.5
+                },
+                {
+                  "name": "银行",
+                  "income_yi": 886.1,
+                  "share": 18.1,
+                  "yoy": -3.7,
+                  "gross_margin": 36.0
+                },
+                {
+                  "name": "其他资产管理",
+                  "income_yi": 282.01,
+                  "share": 5.8,
+                  "yoy": 24.8,
+                  "gross_margin": 13.1
+                },
+                {
+                  "name": "科技",
+                  "income_yi": 104.57,
+                  "share": 2.1,
+                  "yoy": -22.3,
+                  "gross_margin": 22.3
+                },
+                {
+                  "name": "其他业务及合并抵销",
+                  "income_yi": -164.29,
+                  "share": -3.4,
+                  "yoy": 7.7,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2024-06-30",
+              "total_income_yi": 4949.66,
+              "items": [
+                {
+                  "name": "寿险及健康险",
+                  "income_yi": 2265.94,
+                  "share": 45.8,
+                  "yoy": 6.3,
+                  "gross_margin": 25.0
+                },
+                {
+                  "name": "财产保险",
+                  "income_yi": 1711.64,
+                  "share": 34.6,
+                  "yoy": 3.9,
+                  "gross_margin": 7.0
+                },
+                {
+                  "name": "银行",
+                  "income_yi": 771.32,
+                  "share": 15.6,
+                  "yoy": -13.0,
+                  "gross_margin": 41.6
+                },
+                {
+                  "name": "资产管理",
+                  "income_yi": 256.79,
+                  "share": 5.2,
+                  "yoy": null,
+                  "gross_margin": 13.5
+                },
+                {
+                  "name": "科技",
+                  "income_yi": 84.83,
+                  "share": 1.7,
+                  "yoy": -18.9,
+                  "gross_margin": 15.3
+                },
+                {
+                  "name": "其他业务及合并抵销",
+                  "income_yi": -140.86,
+                  "share": -2.8,
+                  "yoy": -14.3,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2025-06-30",
+              "total_income_yi": 5000.76,
+              "items": [
+                {
+                  "name": "寿险及健康险",
+                  "income_yi": 2288.31,
+                  "share": 45.8,
+                  "yoy": 1.0,
+                  "gross_margin": 22.8
+                },
+                {
+                  "name": "财产保险",
+                  "income_yi": 1723.42,
+                  "share": 34.5,
+                  "yoy": 0.7,
+                  "gross_margin": 7.5
+                },
+                {
+                  "name": "银行",
+                  "income_yi": 693.85,
+                  "share": 13.9,
+                  "yoy": -10.0,
+                  "gross_margin": 43.4
+                },
+                {
+                  "name": "资产管理",
+                  "income_yi": 263.63,
+                  "share": 5.3,
+                  "yoy": 2.7,
+                  "gross_margin": 22.4
+                },
+                {
+                  "name": "金融赋能",
+                  "income_yi": 192.6,
+                  "share": 3.9,
+                  "yoy": null,
+                  "gross_margin": -27.2
+                },
+                {
+                  "name": "其他业务及合并抵销",
+                  "income_yi": -161.05,
+                  "share": -3.2,
+                  "yoy": 14.3,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2026-06-30",
+              "total_income_yi": 5751.38,
+              "items": [
+                {
+                  "name": "寿险及健康险",
+                  "income_yi": 2693.95,
+                  "share": 46.8,
+                  "yoy": 17.7,
+                  "gross_margin": 25.5
+                },
+                {
+                  "name": "财产保险",
+                  "income_yi": 1790.41,
+                  "share": 31.1,
+                  "yoy": 3.9,
+                  "gross_margin": 7.3
+                },
+                {
+                  "name": "银行",
+                  "income_yi": 706.17,
+                  "share": 12.3,
+                  "yoy": 1.8,
+                  "gross_margin": 43.7
+                },
+                {
+                  "name": "资产管理",
+                  "income_yi": 426.62,
+                  "share": 7.4,
+                  "yoy": 61.8,
+                  "gross_margin": 33.6
+                },
+                {
+                  "name": "金融赋能",
+                  "income_yi": 224.91,
+                  "share": 3.9,
+                  "yoy": 16.8,
+                  "gross_margin": 1.6
+                },
+                {
+                  "name": "其他业务及合并抵销",
+                  "income_yi": -90.68,
+                  "share": -1.6,
+                  "yoy": -43.7,
+                  "gross_margin": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "region",
+          "label": "地区",
+          "total_income_yi": 5751.38,
+          "items": [
+            {
+              "name": "其他主营业务",
+              "income_yi": 3126.47,
+              "share": 54.4,
+              "yoy": 23.3,
+              "gross_margin": null
+            },
+            {
+              "name": "广东",
+              "income_yi": 1040.48,
+              "share": 18.1,
+              "yoy": 5.9,
+              "gross_margin": null
+            },
+            {
+              "name": "浙江",
+              "income_yi": 442.5,
+              "share": 7.7,
+              "yoy": 13.8,
+              "gross_margin": null
+            },
+            {
+              "name": "江苏",
+              "income_yi": 397.06,
+              "share": 6.9,
+              "yoy": 6.6,
+              "gross_margin": null
+            },
+            {
+              "name": "北京",
+              "income_yi": 281.8,
+              "share": 4.9,
+              "yoy": 1.4,
+              "gross_margin": null
+            },
+            {
+              "name": "山东",
+              "income_yi": 263.73,
+              "share": 4.6,
+              "yoy": 7.0,
+              "gross_margin": null
+            },
+            {
+              "name": "四川",
+              "income_yi": 99.74,
+              "share": 1.7,
+              "yoy": 4.5,
+              "gross_margin": null
+            },
+            {
+              "name": "上海",
+              "income_yi": 99.6,
+              "share": 1.7,
+              "yoy": -2.3,
+              "gross_margin": null
+            }
+          ],
+          "history": [
+            {
+              "period": "2021-06-30",
+              "total_income_yi": 6356.49,
+              "items": [
+                {
+                  "name": "其他主营业务",
+                  "income_yi": 4430.08,
+                  "share": 69.7,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "广东",
+                  "income_yi": 806.36,
+                  "share": 12.7,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "江苏",
+                  "income_yi": 288.4,
+                  "share": 4.5,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "山东",
+                  "income_yi": 279.25,
+                  "share": 4.4,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "浙江",
+                  "income_yi": 257.88,
+                  "share": 4.1,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "北京",
+                  "income_yi": 214.71,
+                  "share": 3.4,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "上海",
+                  "income_yi": 79.81,
+                  "share": 1.3,
+                  "yoy": null,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2022-06-30",
+              "total_income_yi": 6121.02,
+              "items": [
+                {
+                  "name": "其他主营业务",
+                  "income_yi": 4135.46,
+                  "share": 67.6,
+                  "yoy": -6.7,
+                  "gross_margin": null
+                },
+                {
+                  "name": "广东",
+                  "income_yi": 815.33,
+                  "share": 13.3,
+                  "yoy": 1.1,
+                  "gross_margin": null
+                },
+                {
+                  "name": "江苏",
+                  "income_yi": 302.85,
+                  "share": 4.9,
+                  "yoy": 5.0,
+                  "gross_margin": null
+                },
+                {
+                  "name": "山东",
+                  "income_yi": 286.94,
+                  "share": 4.7,
+                  "yoy": 2.8,
+                  "gross_margin": null
+                },
+                {
+                  "name": "浙江",
+                  "income_yi": 276.28,
+                  "share": 4.5,
+                  "yoy": 7.1,
+                  "gross_margin": null
+                },
+                {
+                  "name": "北京",
+                  "income_yi": 222.84,
+                  "share": 3.6,
+                  "yoy": 3.8,
+                  "gross_margin": null
+                },
+                {
+                  "name": "上海",
+                  "income_yi": 81.32,
+                  "share": 1.3,
+                  "yoy": 1.9,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2024-06-30",
+              "total_income_yi": 4949.66,
+              "items": [
+                {
+                  "name": "其他主营业务",
+                  "income_yi": 2596.95,
+                  "share": 52.5,
+                  "yoy": -37.2,
+                  "gross_margin": null
+                },
+                {
+                  "name": "广东",
+                  "income_yi": 940.73,
+                  "share": 19.0,
+                  "yoy": 15.4,
+                  "gross_margin": null
+                },
+                {
+                  "name": "江苏",
+                  "income_yi": 356.59,
+                  "share": 7.2,
+                  "yoy": 17.7,
+                  "gross_margin": null
+                },
+                {
+                  "name": "浙江",
+                  "income_yi": 353.95,
+                  "share": 7.2,
+                  "yoy": 28.1,
+                  "gross_margin": null
+                },
+                {
+                  "name": "北京",
+                  "income_yi": 272.84,
+                  "share": 5.5,
+                  "yoy": 22.4,
+                  "gross_margin": null
+                },
+                {
+                  "name": "山东",
+                  "income_yi": 243.62,
+                  "share": 4.9,
+                  "yoy": -15.1,
+                  "gross_margin": null
+                },
+                {
+                  "name": "上海",
+                  "income_yi": 96.18,
+                  "share": 1.9,
+                  "yoy": 18.3,
+                  "gross_margin": null
+                },
+                {
+                  "name": "四川",
+                  "income_yi": 88.8,
+                  "share": 1.8,
+                  "yoy": null,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2025-06-30",
+              "total_income_yi": 5000.76,
+              "items": [
+                {
+                  "name": "其他主营业务",
+                  "income_yi": 2535.0,
+                  "share": 50.7,
+                  "yoy": -2.4,
+                  "gross_margin": null
+                },
+                {
+                  "name": "广东",
+                  "income_yi": 982.5,
+                  "share": 19.6,
+                  "yoy": 4.4,
+                  "gross_margin": null
+                },
+                {
+                  "name": "浙江",
+                  "income_yi": 388.83,
+                  "share": 7.8,
+                  "yoy": 9.9,
+                  "gross_margin": null
+                },
+                {
+                  "name": "江苏",
+                  "income_yi": 372.65,
+                  "share": 7.5,
+                  "yoy": 4.5,
+                  "gross_margin": null
+                },
+                {
+                  "name": "北京",
+                  "income_yi": 278.01,
+                  "share": 5.6,
+                  "yoy": 1.9,
+                  "gross_margin": null
+                },
+                {
+                  "name": "山东",
+                  "income_yi": 246.44,
+                  "share": 4.9,
+                  "yoy": 1.2,
+                  "gross_margin": null
+                },
+                {
+                  "name": "上海",
+                  "income_yi": 101.93,
+                  "share": 2.0,
+                  "yoy": 6.0,
+                  "gross_margin": null
+                },
+                {
+                  "name": "四川",
+                  "income_yi": 95.4,
+                  "share": 1.9,
+                  "yoy": 7.4,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2026-06-30",
+              "total_income_yi": 5751.38,
+              "items": [
+                {
+                  "name": "其他主营业务",
+                  "income_yi": 3126.47,
+                  "share": 54.4,
+                  "yoy": 23.3,
+                  "gross_margin": null
+                },
+                {
+                  "name": "广东",
+                  "income_yi": 1040.48,
+                  "share": 18.1,
+                  "yoy": 5.9,
+                  "gross_margin": null
+                },
+                {
+                  "name": "浙江",
+                  "income_yi": 442.5,
+                  "share": 7.7,
+                  "yoy": 13.8,
+                  "gross_margin": null
+                },
+                {
+                  "name": "江苏",
+                  "income_yi": 397.06,
+                  "share": 6.9,
+                  "yoy": 6.6,
+                  "gross_margin": null
+                },
+                {
+                  "name": "北京",
+                  "income_yi": 281.8,
+                  "share": 4.9,
+                  "yoy": 1.4,
+                  "gross_margin": null
+                },
+                {
+                  "name": "山东",
+                  "income_yi": 263.73,
+                  "share": 4.6,
+                  "yoy": 7.0,
+                  "gross_margin": null
+                },
+                {
+                  "name": "四川",
+                  "income_yi": 99.74,
+                  "share": 1.7,
+                  "yoy": 4.5,
+                  "gross_margin": null
+                },
+                {
+                  "name": "上海",
+                  "income_yi": 99.6,
+                  "share": 1.7,
+                  "yoy": -2.3,
+                  "gross_margin": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

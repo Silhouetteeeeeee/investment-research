@@ -1,0 +1,66 @@
+{
+  "tool": "get_valuation",
+  "arguments": {},
+  "default_company": "601318",
+  "result": {
+    "ok": true,
+    "company": "601318",
+    "as_of": "2026-10-27",
+    "sources": [
+      {
+        "id": "valuation:601318:2026-10-27",
+        "label": "估值",
+        "detail": "中国平安 2026-10-27 估值",
+        "as_of": "2026-10-27",
+        "fetched_at": "2026-10-28 13:43:27",
+        "url": ""
+      }
+    ],
+    "data": {
+      "pe_ttm": 5.97958175,
+      "pe_percentile": 1.0,
+      "pb_mrq": 0.92661985,
+      "pb_percentile": 29.2,
+      "years": 5,
+      "price": 52.61,
+      "market_cap_yi": 9526.43,
+      "industry": {
+        "board": "保险Ⅱ",
+        "count": 5,
+        "median_pe": 5.04259763,
+        "median_pb": 0.95562794,
+        "rank_pe": 5,
+        "rank_total": 5
+      },
+      "peers": [
+        {
+          "name": "中国人寿",
+          "pe_ttm": 4.00624766,
+          "pb_mrq": 1.49365653
+        },
+        {
+          "name": "中国平安",
+          "pe_ttm": 5.97958175,
+          "pb_mrq": 0.92661985
+        },
+        {
+          "name": "中国人保",
+          "pe_ttm": 5.71650746,
+          "pb_mrq": 0.95562794
+        },
+        {
+          "name": "中国太保",
+          "pe_ttm": 5.04259763,
+          "pb_mrq": 0.89091747
+        },
+        {
+          "name": "新华保险",
+          "pe_ttm": 3.58961334,
+          "pb_mrq": 1.28615853
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

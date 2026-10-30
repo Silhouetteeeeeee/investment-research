@@ -1,5 +1,6 @@
 target/
 .env
 *.db
+!core/src/test/resources/fixtures/*.db
 var/
 .idea/

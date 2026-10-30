@@ -1,0 +1,296 @@
+{
+  "tool": "get_announcements",
+  "arguments": {
+    "days": 180
+  },
+  "default_company": "601606",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": "2026-10-21",
+    "sources": [
+      {
+        "id": "announcement:601606:2026-10-21:AN202610201830720455",
+        "label": "公告",
+        "detail": "第五届董事会第十三次会议决议公告",
+        "as_of": "2026-10-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202610201830720455.html"
+      },
+      {
+        "id": "announcement:601606:2026-10-21:AN202610201830720451",
+        "label": "公告",
+        "detail": "2026年三季度报告",
+        "as_of": "2026-10-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202610201830720451.html"
+      },
+      {
+        "id": "announcement:601606:2026-10-21:AN202610201830720449",
+        "label": "公告",
+        "detail": "关于接受控股股东以委托贷款方式拨付国有资本经营预算资金和重大科技创新专项经费暨关联交易的公告",
+        "as_of": "2026-10-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202610201830720449.html"
+      },
+      {
+        "id": "announcement:601606:2026-09-24:AN202609231829802299",
+        "label": "公告",
+        "detail": "关于2026年半年度业绩说明会召开情况的公告",
+        "as_of": "2026-09-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202609231829802299.html"
+      },
+      {
+        "id": "announcement:601606:2026-09-18:AN202609171829516345",
+        "label": "公告",
+        "detail": "投资者关系活动记录表",
+        "as_of": "2026-09-18",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202609171829516345.html"
+      },
+      {
+        "id": "announcement:601606:2026-09-11:AN202609101829228553",
+        "label": "公告",
+        "detail": "关于召开2026年半年度业绩说明会的公告",
+        "as_of": "2026-09-11",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202609101829228553.html"
+      },
+      {
+        "id": "announcement:601606:2026-09-11:AN202609101829228552",
+        "label": "公告",
+        "detail": "关于参加2026年安徽上市公司投资者网上集体接待日活动的公告",
+        "as_of": "2026-09-11",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202609101829228552.html"
+      },
+      {
+        "id": "announcement:601606:2026-08-21:AN202608201828210087",
+        "label": "公告",
+        "detail": "2026年半年度报告",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202608201828210087.html"
+      },
+      {
+        "id": "announcement:601606:2026-08-21:AN202608201828210086",
+        "label": "公告",
+        "detail": "第五届董事会第十二次会议决议公告",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202608201828210086.html"
+      },
+      {
+        "id": "announcement:601606:2026-08-21:AN202608201828210085",
+        "label": "公告",
+        "detail": "2026年半年度报告摘要",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202608201828210085.html"
+      },
+      {
+        "id": "announcement:601606:2026-08-21:AN202608201828210084",
+        "label": "公告",
+        "detail": "对兵器装备集团财务有限责任公司2026年半年度风险评估报告",
+        "as_of": "2026-08-21",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202608201828210084.html"
+      },
+      {
+        "id": "announcement:601606:2026-07-28:AN202607271827388763",
+        "label": "公告",
+        "detail": "股票交易风险提示公告",
+        "as_of": "2026-07-28",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202607271827388763.html"
+      },
+      {
+        "id": "announcement:601606:2026-07-25:AN202607241827321003",
+        "label": "公告",
+        "detail": "股票交易异常波动公告",
+        "as_of": "2026-07-25",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202607241827321003.html"
+      },
+      {
+        "id": "announcement:601606:2026-07-14:AN202607131826927858",
+        "label": "公告",
+        "detail": "2026年半年度业绩预告",
+        "as_of": "2026-07-14",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202607131826927858.html"
+      },
+      {
+        "id": "announcement:601606:2026-07-09:AN202607081826816651",
+        "label": "公告",
+        "detail": "2025年年度权益分派实施公告",
+        "as_of": "2026-07-09",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202607081826816651.html"
+      },
+      {
+        "id": "announcement:601606:2026-05-23:AN202605221822692186",
+        "label": "公告",
+        "detail": "2025年年度股东会决议公告",
+        "as_of": "2026-05-23",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202605221822692186.html"
+      },
+      {
+        "id": "announcement:601606:2026-05-23:AN202605221822692185",
+        "label": "公告",
+        "detail": "2025年年度股东会的法律意见书",
+        "as_of": "2026-05-23",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202605221822692185.html"
+      },
+      {
+        "id": "announcement:601606:2026-05-16:AN202605151822345657",
+        "label": "公告",
+        "detail": "关于2025年度暨2026年一季度业绩说明会召开情况的公告",
+        "as_of": "2026-05-16",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202605151822345657.html"
+      },
+      {
+        "id": "announcement:601606:2026-05-15:AN202605141822313522",
+        "label": "公告",
+        "detail": "2025年年度股东会会议材料",
+        "as_of": "2026-05-15",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/601606/AN202605141822313522.html"
+      }
+    ],
+    "data": {
+      "code": "601606",
+      "name": "长城军工",
+      "days": 180,
+      "as_of": "2026-10-21",
+      "items": [
+        {
+          "date": "2026-10-21",
+          "title": "第五届董事会第十三次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-21",
+          "title": "2026年三季度报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-21",
+          "title": "关于接受控股股东以委托贷款方式拨付国有资本经营预算资金和重大科技创新专项经费暨关联交易的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-24",
+          "title": "关于2026年半年度业绩说明会召开情况的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-18",
+          "title": "投资者关系活动记录表",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-11",
+          "title": "关于召开2026年半年度业绩说明会的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-11",
+          "title": "关于参加2026年安徽上市公司投资者网上集体接待日活动的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "2026年半年度报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "第五届董事会第十二次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "2026年半年度报告摘要",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-21",
+          "title": "对兵器装备集团财务有限责任公司2026年半年度风险评估报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-07-28",
+          "title": "股票交易风险提示公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-07-25",
+          "title": "股票交易异常波动公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-07-14",
+          "title": "2026年半年度业绩预告",
+          "tags": [
+            "业绩预告"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-07-09",
+          "title": "2025年年度权益分派实施公告",
+          "tags": [
+            "分红"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-05-23",
+          "title": "2025年年度股东会决议公告",
+          "tags": [
+            "分红"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-05-23",
+          "title": "2025年年度股东会的法律意见书",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-05-16",
+          "title": "关于2025年度暨2026年一季度业绩说明会召开情况的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-05-15",
+          "title": "2025年年度股东会会议材料",
+          "tags": [],
+          "level": null
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

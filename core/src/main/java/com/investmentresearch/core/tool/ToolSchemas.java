@@ -1,0 +1,62 @@
+package com.investmentresearch.core.tool;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.investmentresearch.core.domain.ToolSchema;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/** The Python-exported tool schemas, keyed by tool name. */
+public final class ToolSchemas {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private final Map<String, ToolSchema> schemas;
+
+    public ToolSchemas(Map<String, Map<String, Object>> all) {
+        Map<String, ToolSchema> parsed = new LinkedHashMap<>();
+        for (Map.Entry<String, Map<String, Object>> entry : all.entrySet()) {
+            Map<String, Object> function = entry.getValue();
+            Object description = function.get("description");
+            Object parameters = function.get("parameters");
+            parsed.put(
+                    entry.getKey(),
+                    new ToolSchema(
+                            entry.getKey(),
+                            description == null ? null : description.toString(),
+                            parameters instanceof Map<?, ?> map ? parameters(map) : null));
+        }
+        this.schemas = Collections.unmodifiableMap(parsed);
+    }
+
+    /** Reads {@code classpath:tool-schemas.json} generated from {@code assistant.tools.schemas()}. */
+    public static ToolSchemas loadDefault() {
+        try (InputStream in = ToolSchemas.class.getResourceAsStream("/tool-schemas.json")) {
+            if (in == null) {
+                throw new IllegalStateException("classpath:tool-schemas.json is missing");
+            }
+            return new ToolSchemas(
+                    MAPPER.readValue(
+                            in,
+                            new TypeReference<Map<String, Map<String, Object>>>() {}));
+        } catch (IOException error) {
+            throw new IllegalStateException("failed to read tool-schemas.json", error);
+        }
+    }
+
+    public ToolSchema get(String name) {
+        ToolSchema schema = schemas.get(name);
+        if (schema == null) {
+            throw new IllegalStateException("unknown tool schema: " + name);
+        }
+        return schema;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> parameters(Map<?, ?> map) {
+        return (Map<String, Object>) map;
+    }
+}

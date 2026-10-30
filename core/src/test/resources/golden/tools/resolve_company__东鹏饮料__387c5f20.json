@@ -1,0 +1,20 @@
+{
+  "tool": "resolve_company",
+  "arguments": {
+    "name_or_code": "东鹏饮料"
+  },
+  "default_company": null,
+  "result": {
+    "ok": true,
+    "company": "605499",
+    "as_of": null,
+    "sources": [],
+    "data": {
+      "code": "605499",
+      "name": "东鹏饮料",
+      "candidates": []
+    },
+    "error": null,
+    "cached": false
+  }
+}

@@ -1,0 +1,321 @@
+{
+  "tool": "get_announcements",
+  "arguments": {
+    "days": 180
+  },
+  "default_company": "000858",
+  "result": {
+    "ok": true,
+    "company": "000858",
+    "as_of": "2026-10-30",
+    "sources": [
+      {
+        "id": "announcement:000858:2026-10-30:AN202610291831186176",
+        "label": "公告",
+        "detail": "关于控股股东及其一致行动人增持股份触及1%整数倍的公告",
+        "as_of": "2026-10-30",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202610291831186176.html"
+      },
+      {
+        "id": "announcement:000858:2026-10-29:AN202610281831129055",
+        "label": "公告",
+        "detail": "关于回购公司股份进展情况的自愿性信息披露公告",
+        "as_of": "2026-10-29",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202610281831129055.html"
+      },
+      {
+        "id": "announcement:000858:2026-10-28:AN202610271831037454",
+        "label": "公告",
+        "detail": "2026年三季度报告",
+        "as_of": "2026-10-28",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202610271831037454.html"
+      },
+      {
+        "id": "announcement:000858:2026-10-10:AN202610091830270252",
+        "label": "公告",
+        "detail": "关于回购公司股份进展的公告",
+        "as_of": "2026-10-10",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202610091830270252.html"
+      },
+      {
+        "id": "announcement:000858:2026-09-12:AN202609111829278393",
+        "label": "公告",
+        "detail": "2026年半年度报告(英文版)",
+        "as_of": "2026-09-12",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202609111829278393.html"
+      },
+      {
+        "id": "announcement:000858:2026-09-03:AN202609021828929718",
+        "label": "公告",
+        "detail": "关于回购公司股份进展的公告",
+        "as_of": "2026-09-03",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202609021828929718.html"
+      },
+      {
+        "id": "announcement:000858:2026-08-29:AN202608281828643704",
+        "label": "公告",
+        "detail": "第七届董事会2026年第11次会议决议公告",
+        "as_of": "2026-08-29",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202608281828643704.html"
+      },
+      {
+        "id": "announcement:000858:2026-08-29:AN202608281828643703",
+        "label": "公告",
+        "detail": "四川省宜宾五粮液集团财务有限公司风险持续评估审核报告",
+        "as_of": "2026-08-29",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202608281828643703.html"
+      },
+      {
+        "id": "announcement:000858:2026-08-29:AN202608281828643701",
+        "label": "公告",
+        "detail": "2026年半年度报告摘要",
+        "as_of": "2026-08-29",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202608281828643701.html"
+      },
+      {
+        "id": "announcement:000858:2026-08-29:AN202608281828643700",
+        "label": "公告",
+        "detail": "2026年半年度报告",
+        "as_of": "2026-08-29",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202608281828643700.html"
+      },
+      {
+        "id": "announcement:000858:2026-08-29:AN202608281828643699",
+        "label": "公告",
+        "detail": "2026年半年度非经营性资金占用及其他关联资金往来情况汇总表",
+        "as_of": "2026-08-29",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202608281828643699.html"
+      },
+      {
+        "id": "announcement:000858:2026-08-07:AN202608061827714630",
+        "label": "公告",
+        "detail": "关于四川省宜宾五粮液集团有限公司增持公司股票的进展公告",
+        "as_of": "2026-08-07",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202608061827714630.html"
+      },
+      {
+        "id": "announcement:000858:2026-08-04:AN202608031827590547",
+        "label": "公告",
+        "detail": "关于回购公司股份进展的公告",
+        "as_of": "2026-08-04",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202608031827590547.html"
+      },
+      {
+        "id": "announcement:000858:2026-07-29:AN202607281827426073",
+        "label": "公告",
+        "detail": "关于董事辞职的公告",
+        "as_of": "2026-07-29",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202607281827426073.html"
+      },
+      {
+        "id": "announcement:000858:2026-07-29:AN202607281827426072",
+        "label": "公告",
+        "detail": "关于变更董事会秘书的公告",
+        "as_of": "2026-07-29",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202607281827426072.html"
+      },
+      {
+        "id": "announcement:000858:2026-07-29:AN202607281827426071",
+        "label": "公告",
+        "detail": "第七届董事会2026年第10次会议决议公告",
+        "as_of": "2026-07-29",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202607281827426071.html"
+      },
+      {
+        "id": "announcement:000858:2026-07-28:AN202607271827388876",
+        "label": "公告",
+        "detail": "第七届董事会2026年第9次会议决议公告",
+        "as_of": "2026-07-28",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202607271827388876.html"
+      },
+      {
+        "id": "announcement:000858:2026-07-18:AN202607171827057259",
+        "label": "公告",
+        "detail": "关于董事辞职的公告",
+        "as_of": "2026-07-18",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202607171827057259.html"
+      },
+      {
+        "id": "announcement:000858:2026-07-16:AN202607151826995006",
+        "label": "公告",
+        "detail": "关于2025年度分红派息实施后调整回购股份价格上限的公告",
+        "as_of": "2026-07-16",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202607151826995006.html"
+      },
+      {
+        "id": "announcement:000858:2026-07-15:AN202607141826963195",
+        "label": "公告",
+        "detail": "2026年半年度业绩预告",
+        "as_of": "2026-07-15",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/000858/AN202607141826963195.html"
+      }
+    ],
+    "data": {
+      "code": "000858",
+      "name": "五 粮 液",
+      "days": 180,
+      "as_of": "2026-10-30",
+      "items": [
+        {
+          "date": "2026-10-30",
+          "title": "关于控股股东及其一致行动人增持股份触及1%整数倍的公告",
+          "tags": [
+            "增持"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-10-29",
+          "title": "关于回购公司股份进展情况的自愿性信息披露公告",
+          "tags": [
+            "回购"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-10-28",
+          "title": "2026年三季度报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-10",
+          "title": "关于回购公司股份进展的公告",
+          "tags": [
+            "回购"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-09-12",
+          "title": "2026年半年度报告(英文版)",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-03",
+          "title": "关于回购公司股份进展的公告",
+          "tags": [
+            "回购"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-08-29",
+          "title": "第七届董事会2026年第11次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-29",
+          "title": "四川省宜宾五粮液集团财务有限公司风险持续评估审核报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-29",
+          "title": "2026年半年度报告摘要",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-29",
+          "title": "2026年半年度报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-29",
+          "title": "2026年半年度非经营性资金占用及其他关联资金往来情况汇总表",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-07",
+          "title": "关于四川省宜宾五粮液集团有限公司增持公司股票的进展公告",
+          "tags": [
+            "增持"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-08-04",
+          "title": "关于回购公司股份进展的公告",
+          "tags": [
+            "回购"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-07-29",
+          "title": "关于董事辞职的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-07-29",
+          "title": "关于变更董事会秘书的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-07-29",
+          "title": "第七届董事会2026年第10次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-07-28",
+          "title": "第七届董事会2026年第9次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-07-18",
+          "title": "关于董事辞职的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-07-16",
+          "title": "关于2025年度分红派息实施后调整回购股份价格上限的公告",
+          "tags": [
+            "回购",
+            "分红"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-07-15",
+          "title": "2026年半年度业绩预告",
+          "tags": [
+            "业绩预告"
+          ],
+          "level": "info"
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

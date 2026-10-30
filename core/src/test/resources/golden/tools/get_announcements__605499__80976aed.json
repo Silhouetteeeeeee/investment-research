@@ -1,0 +1,306 @@
+{
+  "tool": "get_announcements",
+  "arguments": {
+    "days": 180
+  },
+  "default_company": "605499",
+  "result": {
+    "ok": true,
+    "company": "605499",
+    "as_of": "2026-10-30",
+    "sources": [
+      {
+        "id": "announcement:605499:2026-10-30:AN202610291831173009",
+        "label": "公告",
+        "detail": "2026年第三季度报告",
+        "as_of": "2026-10-30",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610291831173009.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-30:AN202610291831173008",
+        "label": "公告",
+        "detail": "2026年前三季度主要经营数据的公告",
+        "as_of": "2026-10-30",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610291831173008.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-30:AN202610291831173007",
+        "label": "公告",
+        "detail": "第四届董事会第二次会议决议公告",
+        "as_of": "2026-10-30",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610291831173007.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-30:AN202610291831173006",
+        "label": "公告",
+        "detail": "关于东鹏饮料(集团)股份有限公司部分募投项目结项并将节余募集资金永久补充流动资金的核查意见",
+        "as_of": "2026-10-30",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610291831173006.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-30:AN202610291831173005",
+        "label": "公告",
+        "detail": "关于部分募投项目结项并将节余募集资金永久补充流动资金的公告",
+        "as_of": "2026-10-30",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610291831173005.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-17:AN202610161830617401",
+        "label": "公告",
+        "detail": "H股公告-董事会会议通告",
+        "as_of": "2026-10-17",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610161830617401.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-14:AN202610131830413267",
+        "label": "公告",
+        "detail": "关于使用部分闲置自有资金进行现金管理的进展公告",
+        "as_of": "2026-10-14",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610131830413267.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-10:AN202610091830272450",
+        "label": "公告",
+        "detail": "2026年第三次临时股东会决议公告",
+        "as_of": "2026-10-10",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610091830272450.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-10:AN202610091830272449",
+        "label": "公告",
+        "detail": "关于以集中竞价交易方式回购A股股份的进展公告",
+        "as_of": "2026-10-10",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610091830272449.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-10:AN202610091830272448",
+        "label": "公告",
+        "detail": "关于董事会完成换届选举及聘任高级管理人员、证券事务代表的公告",
+        "as_of": "2026-10-10",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610091830272448.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-10:AN202610091830272447",
+        "label": "公告",
+        "detail": "第四届董事会第一次会议决议公告",
+        "as_of": "2026-10-10",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610091830272447.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-10:AN202610091830272446",
+        "label": "公告",
+        "detail": "2026年第三次临时股东会之法律意见",
+        "as_of": "2026-10-10",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610091830272446.html"
+      },
+      {
+        "id": "announcement:605499:2026-10-08:AN202610071830185674",
+        "label": "公告",
+        "detail": "H股公告-截至二零二六年九月三十日止之股份发行人的证券变动月报表",
+        "as_of": "2026-10-08",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202610071830185674.html"
+      },
+      {
+        "id": "announcement:605499:2026-09-24:AN202609231829805112",
+        "label": "公告",
+        "detail": "关于选举职工代表董事的公告",
+        "as_of": "2026-09-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202609231829805112.html"
+      },
+      {
+        "id": "announcement:605499:2026-09-24:AN202609231829805111",
+        "label": "公告",
+        "detail": "独立董事提名人声明与承诺(戴国良)",
+        "as_of": "2026-09-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202609231829805111.html"
+      },
+      {
+        "id": "announcement:605499:2026-09-24:AN202609231829805110",
+        "label": "公告",
+        "detail": "第三届董事会第三十次会议决议公告",
+        "as_of": "2026-09-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202609231829805110.html"
+      },
+      {
+        "id": "announcement:605499:2026-09-24:AN202609231829805108",
+        "label": "公告",
+        "detail": "独立董事候选人声明与承诺(李洪斌)",
+        "as_of": "2026-09-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202609231829805108.html"
+      },
+      {
+        "id": "announcement:605499:2026-09-24:AN202609231829805107",
+        "label": "公告",
+        "detail": "独立董事提名人声明与承诺(张亚)",
+        "as_of": "2026-09-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202609231829805107.html"
+      },
+      {
+        "id": "announcement:605499:2026-09-24:AN202609231829805106",
+        "label": "公告",
+        "detail": "独立董事候选人声明与承诺(赵亚利)",
+        "as_of": "2026-09-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202609231829805106.html"
+      },
+      {
+        "id": "announcement:605499:2026-09-24:AN202609231829805105",
+        "label": "公告",
+        "detail": "独立董事候选人声明与承诺(张亚)",
+        "as_of": "2026-09-24",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/605499/AN202609231829805105.html"
+      }
+    ],
+    "data": {
+      "code": "605499",
+      "name": "东鹏饮料",
+      "days": 180,
+      "as_of": "2026-10-30",
+      "items": [
+        {
+          "date": "2026-10-30",
+          "title": "2026年第三季度报告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-30",
+          "title": "2026年前三季度主要经营数据的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-30",
+          "title": "第四届董事会第二次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-30",
+          "title": "关于东鹏饮料(集团)股份有限公司部分募投项目结项并将节余募集资金永久补充流动资金的核查意见",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-30",
+          "title": "关于部分募投项目结项并将节余募集资金永久补充流动资金的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-17",
+          "title": "H股公告-董事会会议通告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-14",
+          "title": "关于使用部分闲置自有资金进行现金管理的进展公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-10",
+          "title": "2026年第三次临时股东会决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-10",
+          "title": "关于以集中竞价交易方式回购A股股份的进展公告",
+          "tags": [
+            "回购"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-10-10",
+          "title": "关于董事会完成换届选举及聘任高级管理人员、证券事务代表的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-10",
+          "title": "第四届董事会第一次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-10",
+          "title": "2026年第三次临时股东会之法律意见",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-10-08",
+          "title": "H股公告-截至二零二六年九月三十日止之股份发行人的证券变动月报表",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-24",
+          "title": "关于选举职工代表董事的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-24",
+          "title": "独立董事提名人声明与承诺(戴国良)",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-24",
+          "title": "第三届董事会第三十次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-24",
+          "title": "独立董事候选人声明与承诺(李洪斌)",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-24",
+          "title": "独立董事提名人声明与承诺(张亚)",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-24",
+          "title": "独立董事候选人声明与承诺(赵亚利)",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-09-24",
+          "title": "独立董事候选人声明与承诺(张亚)",
+          "tags": [],
+          "level": null
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

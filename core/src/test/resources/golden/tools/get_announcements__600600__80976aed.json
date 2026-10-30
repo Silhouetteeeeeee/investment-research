@@ -1,0 +1,312 @@
+{
+  "tool": "get_announcements",
+  "arguments": {
+    "days": 180
+  },
+  "default_company": "600600",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": "2026-10-17",
+    "sources": [
+      {
+        "id": "announcement:600600:2026-10-17:AN202610161830617968",
+        "label": "公告",
+        "detail": "控股股东及其一致行动人增持公司股份进展公告",
+        "as_of": "2026-10-17",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202610161830617968.html"
+      },
+      {
+        "id": "announcement:600600:2026-09-02:AN202609011828877059",
+        "label": "公告",
+        "detail": "关于执行董事、财务总监、董事会秘书离任的公告",
+        "as_of": "2026-09-02",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202609011828877059.html"
+      },
+      {
+        "id": "announcement:600600:2026-08-28:AN202608281828636783",
+        "label": "公告",
+        "detail": "2026年8月28日投资者关系活动记录",
+        "as_of": "2026-08-28",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202608281828636783.html"
+      },
+      {
+        "id": "announcement:600600:2026-08-27:AN202608261828493594",
+        "label": "公告",
+        "detail": "董事会授权管理办法",
+        "as_of": "2026-08-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202608261828493594.html"
+      },
+      {
+        "id": "announcement:600600:2026-08-27:AN202608261828493593",
+        "label": "公告",
+        "detail": "对外投资制度",
+        "as_of": "2026-08-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202608261828493593.html"
+      },
+      {
+        "id": "announcement:600600:2026-08-27:AN202608261828493592",
+        "label": "公告",
+        "detail": "2026年半年度报告摘要",
+        "as_of": "2026-08-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202608261828493592.html"
+      },
+      {
+        "id": "announcement:600600:2026-08-27:AN202608261828493591",
+        "label": "公告",
+        "detail": "第十一届董事会第七次会议决议公告",
+        "as_of": "2026-08-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202608261828493591.html"
+      },
+      {
+        "id": "announcement:600600:2026-08-27:AN202608261828493590",
+        "label": "公告",
+        "detail": "2026年半年度报告全文",
+        "as_of": "2026-08-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202608261828493590.html"
+      },
+      {
+        "id": "announcement:600600:2026-08-22:AN202608211828263938",
+        "label": "公告",
+        "detail": "关于召开2026年半年度业绩说明会的公告",
+        "as_of": "2026-08-22",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202608211828263938.html"
+      },
+      {
+        "id": "announcement:600600:2026-07-25:AN202607241827324324",
+        "label": "公告",
+        "detail": "股东增持公司股份暨后续增持股份计划公告",
+        "as_of": "2026-07-25",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202607241827324324.html"
+      },
+      {
+        "id": "announcement:600600:2026-07-09:AN202607081826816637",
+        "label": "公告",
+        "detail": "2025年年度权益分派实施公告",
+        "as_of": "2026-07-09",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202607081826816637.html"
+      },
+      {
+        "id": "announcement:600600:2026-07-01:AN202607011826631001",
+        "label": "公告",
+        "detail": "2026年6月26日股东会投资者关系活动记录",
+        "as_of": "2026-07-01",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202607011826631001.html"
+      },
+      {
+        "id": "announcement:600600:2026-06-27:AN202606261824809903",
+        "label": "公告",
+        "detail": "第十一届董事会2026年第二次临时会议决议公告",
+        "as_of": "2026-06-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202606261824809903.html"
+      },
+      {
+        "id": "announcement:600600:2026-06-27:AN202606261824809902",
+        "label": "公告",
+        "detail": "董事会议事规则",
+        "as_of": "2026-06-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202606261824809902.html"
+      },
+      {
+        "id": "announcement:600600:2026-06-27:AN202606261824809901",
+        "label": "公告",
+        "detail": "2025年年度股东会决议公告",
+        "as_of": "2026-06-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202606261824809901.html"
+      },
+      {
+        "id": "announcement:600600:2026-06-27:AN202606261824809900",
+        "label": "公告",
+        "detail": "章程",
+        "as_of": "2026-06-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202606261824809900.html"
+      },
+      {
+        "id": "announcement:600600:2026-06-27:AN202606261824809899",
+        "label": "公告",
+        "detail": "股东会议事规则",
+        "as_of": "2026-06-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202606261824809899.html"
+      },
+      {
+        "id": "announcement:600600:2026-06-27:AN202606261824809898",
+        "label": "公告",
+        "detail": "2025年年度股东会的法律意见书",
+        "as_of": "2026-06-27",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202606261824809898.html"
+      },
+      {
+        "id": "announcement:600600:2026-06-19:AN202606181823665162",
+        "label": "公告",
+        "detail": "2025年年度股东会会议资料",
+        "as_of": "2026-06-19",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202606181823665162.html"
+      },
+      {
+        "id": "announcement:600600:2026-05-22:AN202605211822646191",
+        "label": "公告",
+        "detail": "内部审计制度",
+        "as_of": "2026-05-22",
+        "fetched_at": "",
+        "url": "https://data.eastmoney.com/notices/detail/600600/AN202605211822646191.html"
+      }
+    ],
+    "data": {
+      "code": "600600",
+      "name": "青岛啤酒",
+      "days": 180,
+      "as_of": "2026-10-17",
+      "items": [
+        {
+          "date": "2026-10-17",
+          "title": "控股股东及其一致行动人增持公司股份进展公告",
+          "tags": [
+            "增持"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-09-02",
+          "title": "关于执行董事、财务总监、董事会秘书离任的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-28",
+          "title": "2026年8月28日投资者关系活动记录",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-27",
+          "title": "董事会授权管理办法",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-27",
+          "title": "对外投资制度",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-27",
+          "title": "2026年半年度报告摘要",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-27",
+          "title": "第十一届董事会第七次会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-27",
+          "title": "2026年半年度报告全文",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-08-22",
+          "title": "关于召开2026年半年度业绩说明会的公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-07-25",
+          "title": "股东增持公司股份暨后续增持股份计划公告",
+          "tags": [
+            "增持"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-07-09",
+          "title": "2025年年度权益分派实施公告",
+          "tags": [
+            "分红"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-07-01",
+          "title": "2026年6月26日股东会投资者关系活动记录",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-06-27",
+          "title": "第十一届董事会2026年第二次临时会议决议公告",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-06-27",
+          "title": "董事会议事规则",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-06-27",
+          "title": "2025年年度股东会决议公告",
+          "tags": [
+            "分红"
+          ],
+          "level": "info"
+        },
+        {
+          "date": "2026-06-27",
+          "title": "章程",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-06-27",
+          "title": "股东会议事规则",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-06-27",
+          "title": "2025年年度股东会的法律意见书",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-06-19",
+          "title": "2025年年度股东会会议资料",
+          "tags": [],
+          "level": null
+        },
+        {
+          "date": "2026-05-22",
+          "title": "内部审计制度",
+          "tags": [],
+          "level": null
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

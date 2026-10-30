@@ -1,0 +1,418 @@
+{
+  "tool": "get_segments",
+  "arguments": {
+    "years": 5
+  },
+  "default_company": "605499",
+  "result": {
+    "ok": true,
+    "company": "605499",
+    "as_of": "2026-06-30",
+    "sources": [
+      {
+        "id": "segments:605499:2026-06-30:product",
+        "label": "主营构成·产品",
+        "detail": "东鹏饮料 2026-06-30 按产品",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-30 11:06:36",
+        "url": ""
+      },
+      {
+        "id": "segments:605499:2026-06-30:region",
+        "label": "主营构成·地区",
+        "detail": "东鹏饮料 2026-06-30 按地区",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-30 11:06:36",
+        "url": ""
+      }
+    ],
+    "data": {
+      "code": "605499",
+      "name": "东鹏饮料",
+      "as_of": "2026-06-30",
+      "slices": [
+        {
+          "kind": "product",
+          "label": "产品",
+          "total_income_yi": 124.43,
+          "items": [
+            {
+              "name": "能量饮料",
+              "income_yi": 89.37,
+              "share": 71.8,
+              "yoy": 6.9,
+              "gross_margin": 54.7
+            },
+            {
+              "name": "电解质饮料",
+              "income_yi": 16.72,
+              "share": 13.4,
+              "yoy": 12.0,
+              "gross_margin": 40.6
+            },
+            {
+              "name": "茶饮料",
+              "income_yi": 10.58,
+              "share": 8.5,
+              "yoy": null,
+              "gross_margin": 23.7
+            },
+            {
+              "name": "其他饮料",
+              "income_yi": 7.59,
+              "share": 6.1,
+              "yoy": -13.5,
+              "gross_margin": 26.0
+            },
+            {
+              "name": "其他(补充)",
+              "income_yi": 0.17,
+              "share": 0.1,
+              "yoy": 187.5,
+              "gross_margin": 33.4
+            }
+          ],
+          "history": [
+            {
+              "period": "2022-06-30",
+              "total_income_yi": 42.91,
+              "items": [
+                {
+                  "name": "销售东鹏特饮",
+                  "income_yi": 41.18,
+                  "share": 96.0,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "销售其他饮料",
+                  "income_yi": 1.66,
+                  "share": 3.9,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "广告",
+                  "income_yi": 0.04,
+                  "share": 0.1,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "其他",
+                  "income_yi": 0.02,
+                  "share": 0.1,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "销售材料",
+                  "income_yi": 0.01,
+                  "share": 0.0,
+                  "yoy": null,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2023-06-30",
+              "total_income_yi": 54.6,
+              "items": [
+                {
+                  "name": "销售东鹏特饮",
+                  "income_yi": 51.35,
+                  "share": 94.0,
+                  "yoy": 24.7,
+                  "gross_margin": null
+                },
+                {
+                  "name": "销售其他饮料",
+                  "income_yi": 3.2,
+                  "share": 5.9,
+                  "yoy": 92.8,
+                  "gross_margin": null
+                },
+                {
+                  "name": "销售材料及其他",
+                  "income_yi": 0.05,
+                  "share": 0.1,
+                  "yoy": null,
+                  "gross_margin": 71.4
+                }
+              ]
+            },
+            {
+              "period": "2024-06-30",
+              "total_income_yi": 78.73,
+              "items": [
+                {
+                  "name": "销售东鹏特饮",
+                  "income_yi": 68.55,
+                  "share": 87.1,
+                  "yoy": 33.5,
+                  "gross_margin": 47.4
+                },
+                {
+                  "name": "销售其他饮料",
+                  "income_yi": 10.07,
+                  "share": 12.8,
+                  "yoy": 214.7,
+                  "gross_margin": 25.8
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.12,
+                  "share": 0.1,
+                  "yoy": null,
+                  "gross_margin": 25.2
+                }
+              ]
+            },
+            {
+              "period": "2025-06-30",
+              "total_income_yi": 107.37,
+              "items": [
+                {
+                  "name": "能量饮料",
+                  "income_yi": 83.61,
+                  "share": 77.9,
+                  "yoy": null,
+                  "gross_margin": 50.6
+                },
+                {
+                  "name": "电解质饮料",
+                  "income_yi": 14.93,
+                  "share": 13.9,
+                  "yoy": null,
+                  "gross_margin": 32.1
+                },
+                {
+                  "name": "其他饮料",
+                  "income_yi": 8.77,
+                  "share": 8.2,
+                  "yoy": null,
+                  "gross_margin": 15.4
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.06,
+                  "share": 0.1,
+                  "yoy": -47.8,
+                  "gross_margin": 22.1
+                }
+              ]
+            },
+            {
+              "period": "2026-06-30",
+              "total_income_yi": 124.43,
+              "items": [
+                {
+                  "name": "能量饮料",
+                  "income_yi": 89.37,
+                  "share": 71.8,
+                  "yoy": 6.9,
+                  "gross_margin": 54.7
+                },
+                {
+                  "name": "电解质饮料",
+                  "income_yi": 16.72,
+                  "share": 13.4,
+                  "yoy": 12.0,
+                  "gross_margin": 40.6
+                },
+                {
+                  "name": "茶饮料",
+                  "income_yi": 10.58,
+                  "share": 8.5,
+                  "yoy": null,
+                  "gross_margin": 23.7
+                },
+                {
+                  "name": "其他饮料",
+                  "income_yi": 7.59,
+                  "share": 6.1,
+                  "yoy": -13.5,
+                  "gross_margin": 26.0
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.17,
+                  "share": 0.1,
+                  "yoy": 187.5,
+                  "gross_margin": 33.4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "region",
+          "label": "地区",
+          "total_income_yi": 124.43,
+          "items": [
+            {
+              "name": "中国内地",
+              "income_yi": 124.14,
+              "share": 99.8,
+              "yoy": 15.7,
+              "gross_margin": null
+            },
+            {
+              "name": "中国香港及其他国家/地区",
+              "income_yi": 0.29,
+              "share": 0.2,
+              "yoy": 175.3,
+              "gross_margin": null
+            }
+          ],
+          "history": [
+            {
+              "period": "2022-06-30",
+              "total_income_yi": 42.91,
+              "items": [
+                {
+                  "name": "全国区域",
+                  "income_yi": 22.18,
+                  "share": 51.7,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "广东区域",
+                  "income_yi": 16.48,
+                  "share": 38.4,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "直营本部",
+                  "income_yi": 4.18,
+                  "share": 9.7,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.07,
+                  "share": 0.2,
+                  "yoy": null,
+                  "gross_margin": 37.8
+                }
+              ]
+            },
+            {
+              "period": "2023-06-30",
+              "total_income_yi": 54.6,
+              "items": [
+                {
+                  "name": "全国区域",
+                  "income_yi": 29.92,
+                  "share": 54.8,
+                  "yoy": 34.9,
+                  "gross_margin": null
+                },
+                {
+                  "name": "广东区域",
+                  "income_yi": 18.79,
+                  "share": 34.4,
+                  "yoy": 14.0,
+                  "gross_margin": null
+                },
+                {
+                  "name": "直营本部",
+                  "income_yi": 5.84,
+                  "share": 10.7,
+                  "yoy": 39.7,
+                  "gross_margin": null
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.05,
+                  "share": 0.1,
+                  "yoy": -25.7,
+                  "gross_margin": 71.4
+                }
+              ]
+            },
+            {
+              "period": "2024-06-30",
+              "total_income_yi": 78.73,
+              "items": [
+                {
+                  "name": "全国区域",
+                  "income_yi": 46.98,
+                  "share": 59.7,
+                  "yoy": 57.0,
+                  "gross_margin": null
+                },
+                {
+                  "name": "广东区域",
+                  "income_yi": 21.14,
+                  "share": 26.9,
+                  "yoy": 12.5,
+                  "gross_margin": null
+                },
+                {
+                  "name": "全国直营",
+                  "income_yi": 10.5,
+                  "share": 13.3,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.12,
+                  "share": 0.1,
+                  "yoy": 123.5,
+                  "gross_margin": 25.2
+                }
+              ]
+            },
+            {
+              "period": "2025-06-30",
+              "total_income_yi": 107.37,
+              "items": [
+                {
+                  "name": "中国内地",
+                  "income_yi": 107.26,
+                  "share": 99.9,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "中国香港及其他国家/地区",
+                  "income_yi": 0.11,
+                  "share": 0.1,
+                  "yoy": null,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2026-06-30",
+              "total_income_yi": 124.43,
+              "items": [
+                {
+                  "name": "中国内地",
+                  "income_yi": 124.14,
+                  "share": 99.8,
+                  "yoy": 15.7,
+                  "gross_margin": null
+                },
+                {
+                  "name": "中国香港及其他国家/地区",
+                  "income_yi": 0.29,
+                  "share": 0.2,
+                  "yoy": 175.3,
+                  "gross_margin": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

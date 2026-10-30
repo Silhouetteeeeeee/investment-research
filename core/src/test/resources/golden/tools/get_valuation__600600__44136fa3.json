@@ -1,0 +1,66 @@
+{
+  "tool": "get_valuation",
+  "arguments": {},
+  "default_company": "600600",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": "2026-10-27",
+    "sources": [
+      {
+        "id": "valuation:600600:2026-10-27",
+        "label": "估值",
+        "detail": "青岛啤酒 2026-10-27 估值",
+        "as_of": "2026-10-27",
+        "fetched_at": "2026-10-28 10:57:44",
+        "url": ""
+      }
+    ],
+    "data": {
+      "pe_ttm": 14.83443895,
+      "pe_percentile": 0.8,
+      "pb_mrq": 2.17826884,
+      "pb_percentile": 0.7,
+      "years": 5,
+      "price": 50.06,
+      "market_cap_yi": 682.92,
+      "industry": {
+        "board": "非白酒",
+        "count": 17,
+        "median_pe": 23.64213663,
+        "median_pb": 2.51544032,
+        "rank_pe": 2,
+        "rank_total": 11
+      },
+      "peers": [
+        {
+          "name": "青岛啤酒",
+          "pe_ttm": 14.83443895,
+          "pb_mrq": 2.17826884
+        },
+        {
+          "name": "燕京啤酒",
+          "pe_ttm": 14.3399196,
+          "pb_mrq": 1.66121851
+        },
+        {
+          "name": "重庆啤酒",
+          "pe_ttm": 15.63334334,
+          "pb_mrq": 11.46706524
+        },
+        {
+          "name": "珠江啤酒",
+          "pe_ttm": 18.85320349,
+          "pb_mrq": 1.54277114
+        },
+        {
+          "name": "百润股份",
+          "pe_ttm": 23.64213663,
+          "pb_mrq": 3.42505716
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

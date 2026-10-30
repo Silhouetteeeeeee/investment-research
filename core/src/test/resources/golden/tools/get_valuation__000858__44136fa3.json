@@ -1,0 +1,66 @@
+{
+  "tool": "get_valuation",
+  "arguments": {},
+  "default_company": "000858",
+  "result": {
+    "ok": true,
+    "company": "000858",
+    "as_of": "2026-10-29",
+    "sources": [
+      {
+        "id": "valuation:000858:2026-10-29",
+        "label": "估值",
+        "detail": "五 粮 液 2026-10-29 估值",
+        "as_of": "2026-10-29",
+        "fetched_at": "2026-10-30 14:38:02",
+        "url": ""
+      }
+    ],
+    "data": {
+      "pe_ttm": 23.01513577,
+      "pe_percentile": 50.3,
+      "pb_mrq": 2.36887704,
+      "pb_percentile": 4.2,
+      "years": 5,
+      "price": 72.28,
+      "market_cap_yi": 2805.63,
+      "industry": {
+        "board": "白酒Ⅱ",
+        "count": 19,
+        "median_pe": 24.98685521,
+        "median_pb": 2.28521848,
+        "rank_pe": 7,
+        "rank_total": 14
+      },
+      "peers": [
+        {
+          "name": "贵州茅台",
+          "pe_ttm": 20.78506269,
+          "pb_mrq": 6.73666178
+        },
+        {
+          "name": "五粮液",
+          "pe_ttm": 23.01513577,
+          "pb_mrq": 2.36887704
+        },
+        {
+          "name": "山西汾酒",
+          "pe_ttm": 15.57297591,
+          "pb_mrq": 3.57443905
+        },
+        {
+          "name": "泸州老窖",
+          "pe_ttm": 13.73657281,
+          "pb_mrq": 2.19156825
+        },
+        {
+          "name": "洋河股份",
+          "pe_ttm": 118.79647446,
+          "pb_mrq": 1.18805887
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

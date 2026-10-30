@@ -1,0 +1,369 @@
+{
+  "tool": "get_segments",
+  "arguments": {
+    "years": 5
+  },
+  "default_company": "601606",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": "2026-06-30",
+    "sources": [
+      {
+        "id": "segments:601606:2026-06-30:product",
+        "label": "主营构成·产品",
+        "detail": "长城军工 2026-06-30 按产品",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-30 14:56:12",
+        "url": ""
+      },
+      {
+        "id": "segments:601606:2025-12-31:region",
+        "label": "主营构成·地区",
+        "detail": "长城军工 2025-12-31 按地区",
+        "as_of": "2025-12-31",
+        "fetched_at": "2026-10-30 14:56:12",
+        "url": ""
+      }
+    ],
+    "data": {
+      "code": "601606",
+      "name": "长城军工",
+      "as_of": "2026-06-30",
+      "slices": [
+        {
+          "kind": "product",
+          "label": "产品",
+          "total_income_yi": 4.69,
+          "items": [
+            {
+              "name": "装备制造",
+              "income_yi": 2.38,
+              "share": 50.8,
+              "yoy": -50.7,
+              "gross_margin": 15.0
+            },
+            {
+              "name": "民品",
+              "income_yi": 2.16,
+              "share": 46.1,
+              "yoy": 8.2,
+              "gross_margin": 12.8
+            },
+            {
+              "name": "其他(补充)",
+              "income_yi": 0.14,
+              "share": 3.0,
+              "yoy": -9.9,
+              "gross_margin": 69.3
+            }
+          ],
+          "history": [
+            {
+              "period": "2022-06-30",
+              "total_income_yi": 7.43,
+              "items": [
+                {
+                  "name": "军品",
+                  "income_yi": 5.24,
+                  "share": 70.6,
+                  "yoy": null,
+                  "gross_margin": 25.1
+                },
+                {
+                  "name": "民品",
+                  "income_yi": 1.84,
+                  "share": 24.8,
+                  "yoy": null,
+                  "gross_margin": 5.7
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.34,
+                  "share": 4.6,
+                  "yoy": null,
+                  "gross_margin": 58.9
+                }
+              ]
+            },
+            {
+              "period": "2023-06-30",
+              "total_income_yi": 6.33,
+              "items": [
+                {
+                  "name": "军品",
+                  "income_yi": 4.38,
+                  "share": 69.1,
+                  "yoy": -16.5,
+                  "gross_margin": 27.8
+                },
+                {
+                  "name": "民品",
+                  "income_yi": 1.66,
+                  "share": 26.2,
+                  "yoy": -9.9,
+                  "gross_margin": 6.5
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.29,
+                  "share": 4.7,
+                  "yoy": -13.4,
+                  "gross_margin": 60.5
+                }
+              ]
+            },
+            {
+              "period": "2024-06-30",
+              "total_income_yi": 5.39,
+              "items": [
+                {
+                  "name": "装备制造",
+                  "income_yi": 3.45,
+                  "share": 63.9,
+                  "yoy": null,
+                  "gross_margin": 19.0
+                },
+                {
+                  "name": "民品",
+                  "income_yi": 1.68,
+                  "share": 31.1,
+                  "yoy": 1.0,
+                  "gross_margin": 11.0
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.27,
+                  "share": 5.0,
+                  "yoy": -8.1,
+                  "gross_margin": 56.6
+                }
+              ]
+            },
+            {
+              "period": "2025-06-30",
+              "total_income_yi": 6.99,
+              "items": [
+                {
+                  "name": "装备制造",
+                  "income_yi": 4.83,
+                  "share": 69.1,
+                  "yoy": 40.2,
+                  "gross_margin": 22.9
+                },
+                {
+                  "name": "民品",
+                  "income_yi": 2.0,
+                  "share": 28.6,
+                  "yoy": 19.3,
+                  "gross_margin": 12.5
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.16,
+                  "share": 2.3,
+                  "yoy": -41.8,
+                  "gross_margin": 72.7
+                }
+              ]
+            },
+            {
+              "period": "2026-06-30",
+              "total_income_yi": 4.69,
+              "items": [
+                {
+                  "name": "装备制造",
+                  "income_yi": 2.38,
+                  "share": 50.8,
+                  "yoy": -50.7,
+                  "gross_margin": 15.0
+                },
+                {
+                  "name": "民品",
+                  "income_yi": 2.16,
+                  "share": 46.1,
+                  "yoy": 8.2,
+                  "gross_margin": 12.8
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.14,
+                  "share": 3.0,
+                  "yoy": -9.9,
+                  "gross_margin": 69.3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "region",
+          "label": "地区",
+          "total_income_yi": 15.64,
+          "items": [
+            {
+              "name": "省外",
+              "income_yi": 14.56,
+              "share": 93.1,
+              "yoy": 21.2,
+              "gross_margin": 24.0
+            },
+            {
+              "name": "省内",
+              "income_yi": 0.66,
+              "share": 4.2,
+              "yoy": -64.3,
+              "gross_margin": 40.0
+            },
+            {
+              "name": "其他(补充)",
+              "income_yi": 0.43,
+              "share": 2.7,
+              "yoy": -6.8,
+              "gross_margin": 62.9
+            }
+          ],
+          "history": [
+            {
+              "period": "2021-12-31",
+              "total_income_yi": 16.96,
+              "items": [
+                {
+                  "name": "省外",
+                  "income_yi": 15.5,
+                  "share": 91.4,
+                  "yoy": null,
+                  "gross_margin": 21.7
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.97,
+                  "share": 5.7,
+                  "yoy": null,
+                  "gross_margin": 65.8
+                },
+                {
+                  "name": "省内",
+                  "income_yi": 0.49,
+                  "share": 2.9,
+                  "yoy": null,
+                  "gross_margin": 5.8
+                }
+              ]
+            },
+            {
+              "period": "2022-12-31",
+              "total_income_yi": 17.14,
+              "items": [
+                {
+                  "name": "省外",
+                  "income_yi": 12.61,
+                  "share": 73.5,
+                  "yoy": -18.7,
+                  "gross_margin": 21.5
+                },
+                {
+                  "name": "省内",
+                  "income_yi": 3.89,
+                  "share": 22.7,
+                  "yoy": 697.9,
+                  "gross_margin": 21.6
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.65,
+                  "share": 3.8,
+                  "yoy": -33.3,
+                  "gross_margin": 27.7
+                }
+              ]
+            },
+            {
+              "period": "2023-12-31",
+              "total_income_yi": 16.15,
+              "items": [
+                {
+                  "name": "省外",
+                  "income_yi": 11.69,
+                  "share": 72.4,
+                  "yoy": -7.3,
+                  "gross_margin": 20.5
+                },
+                {
+                  "name": "省内",
+                  "income_yi": 3.62,
+                  "share": 22.4,
+                  "yoy": -7.0,
+                  "gross_margin": 20.3
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.84,
+                  "share": 5.2,
+                  "yoy": 30.4,
+                  "gross_margin": 66.8
+                }
+              ]
+            },
+            {
+              "period": "2024-12-31",
+              "total_income_yi": 14.3,
+              "items": [
+                {
+                  "name": "省外",
+                  "income_yi": 12.01,
+                  "share": 84.0,
+                  "yoy": 2.8,
+                  "gross_margin": -4.1
+                },
+                {
+                  "name": "省内",
+                  "income_yi": 1.83,
+                  "share": 12.8,
+                  "yoy": -49.3,
+                  "gross_margin": 15.7
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.46,
+                  "share": 3.2,
+                  "yoy": -45.5,
+                  "gross_margin": 36.8
+                }
+              ]
+            },
+            {
+              "period": "2025-12-31",
+              "total_income_yi": 15.64,
+              "items": [
+                {
+                  "name": "省外",
+                  "income_yi": 14.56,
+                  "share": 93.1,
+                  "yoy": 21.2,
+                  "gross_margin": 24.0
+                },
+                {
+                  "name": "省内",
+                  "income_yi": 0.66,
+                  "share": 4.2,
+                  "yoy": -64.3,
+                  "gross_margin": 40.0
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 0.43,
+                  "share": 2.7,
+                  "yoy": -6.8,
+                  "gross_margin": 62.9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

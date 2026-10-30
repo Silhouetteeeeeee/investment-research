@@ -1,0 +1,16 @@
+{
+  "tool": "resolve_company",
+  "arguments": {
+    "name_or_code": "不存在的公司"
+  },
+  "default_company": null,
+  "result": {
+    "ok": false,
+    "company": null,
+    "as_of": null,
+    "sources": [],
+    "data": null,
+    "error": "没有找到「不存在的公司」",
+    "cached": false
+  }
+}

@@ -1,0 +1,268 @@
+{
+  "tool": "get_segments",
+  "arguments": {
+    "years": 3
+  },
+  "default_company": "000858",
+  "result": {
+    "ok": true,
+    "company": "000858",
+    "as_of": "2026-06-30",
+    "sources": [
+      {
+        "id": "segments:000858:2026-06-30:product",
+        "label": "主营构成·产品",
+        "detail": "五 粮 液 2026-06-30 按产品",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-28 10:37:03",
+        "url": ""
+      },
+      {
+        "id": "segments:000858:2026-06-30:region",
+        "label": "主营构成·地区",
+        "detail": "五 粮 液 2026-06-30 按地区",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-28 10:37:03",
+        "url": ""
+      }
+    ],
+    "data": {
+      "code": "000858",
+      "name": "五 粮 液",
+      "as_of": "2026-06-30",
+      "slices": [
+        {
+          "kind": "product",
+          "label": "产品",
+          "total_income_yi": 284.17,
+          "items": [
+            {
+              "name": "酒类产品",
+              "income_yi": 268.67,
+              "share": 94.5,
+              "yoy": 23.3,
+              "gross_margin": 84.6
+            },
+            {
+              "name": "非酒类产品",
+              "income_yi": 15.5,
+              "share": 5.5,
+              "yoy": -9.7,
+              "gross_margin": 5.5
+            }
+          ],
+          "history": [
+            {
+              "period": "2024-06-30",
+              "total_income_yi": 506.48,
+              "items": [
+                {
+                  "name": "酒类",
+                  "income_yi": 471.11,
+                  "share": 93.0,
+                  "yoy": null,
+                  "gross_margin": 82.6
+                },
+                {
+                  "name": "塑料制品",
+                  "income_yi": 19.81,
+                  "share": 3.9,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "其他",
+                  "income_yi": 14.57,
+                  "share": 2.9,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "印刷",
+                  "income_yi": 0.51,
+                  "share": 0.1,
+                  "yoy": null,
+                  "gross_margin": null
+                },
+                {
+                  "name": "玻瓶",
+                  "income_yi": 0.49,
+                  "share": 0.1,
+                  "yoy": null,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2025-06-30",
+              "total_income_yi": 235.1,
+              "items": [
+                {
+                  "name": "酒类产品",
+                  "income_yi": 217.94,
+                  "share": 92.7,
+                  "yoy": null,
+                  "gross_margin": 83.2
+                },
+                {
+                  "name": "非酒类产品",
+                  "income_yi": 17.16,
+                  "share": 7.3,
+                  "yoy": null,
+                  "gross_margin": 9.8
+                }
+              ]
+            },
+            {
+              "period": "2026-06-30",
+              "total_income_yi": 284.17,
+              "items": [
+                {
+                  "name": "酒类产品",
+                  "income_yi": 268.67,
+                  "share": 94.5,
+                  "yoy": 23.3,
+                  "gross_margin": 84.6
+                },
+                {
+                  "name": "非酒类产品",
+                  "income_yi": 15.5,
+                  "share": 5.5,
+                  "yoy": -9.7,
+                  "gross_margin": 5.5
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "region",
+          "label": "地区",
+          "total_income_yi": 284.17,
+          "items": [
+            {
+              "name": "酒类产品-境内",
+              "income_yi": 268.67,
+              "share": 94.5,
+              "yoy": null,
+              "gross_margin": 84.6
+            },
+            {
+              "name": "非酒类产品",
+              "income_yi": 15.5,
+              "share": 5.5,
+              "yoy": -9.7,
+              "gross_margin": 5.5
+            }
+          ],
+          "history": [
+            {
+              "period": "2024-06-30",
+              "total_income_yi": 506.48,
+              "items": [
+                {
+                  "name": "西部区域-酒类",
+                  "income_yi": 167.59,
+                  "share": 33.1,
+                  "yoy": null,
+                  "gross_margin": 77.8
+                },
+                {
+                  "name": "东部区域-酒类",
+                  "income_yi": 135.52,
+                  "share": 26.8,
+                  "yoy": null,
+                  "gross_margin": 84.8
+                },
+                {
+                  "name": "中部区域-酒类",
+                  "income_yi": 84.62,
+                  "share": 16.7,
+                  "yoy": null,
+                  "gross_margin": 85.1
+                },
+                {
+                  "name": "北部区域-酒类",
+                  "income_yi": 48.41,
+                  "share": 9.6,
+                  "yoy": null,
+                  "gross_margin": 86.2
+                },
+                {
+                  "name": "非酒类产品",
+                  "income_yi": 35.37,
+                  "share": 7.0,
+                  "yoy": null,
+                  "gross_margin": 7.8
+                },
+                {
+                  "name": "南部区域-酒类",
+                  "income_yi": 34.96,
+                  "share": 6.9,
+                  "yoy": null,
+                  "gross_margin": 86.0
+                }
+              ]
+            },
+            {
+              "period": "2025-06-30",
+              "total_income_yi": 235.1,
+              "items": [
+                {
+                  "name": "酒类产品-南部片区",
+                  "income_yi": 123.17,
+                  "share": 52.4,
+                  "yoy": null,
+                  "gross_margin": 78.2
+                },
+                {
+                  "name": "酒类产品-东部片区",
+                  "income_yi": 57.19,
+                  "share": 24.3,
+                  "yoy": null,
+                  "gross_margin": 89.2
+                },
+                {
+                  "name": "酒类产品-北部片区",
+                  "income_yi": 37.58,
+                  "share": 16.0,
+                  "yoy": null,
+                  "gross_margin": 90.5
+                },
+                {
+                  "name": "非酒类产品",
+                  "income_yi": 17.16,
+                  "share": 7.3,
+                  "yoy": -51.5,
+                  "gross_margin": 9.8
+                }
+              ]
+            },
+            {
+              "period": "2026-06-30",
+              "total_income_yi": 284.17,
+              "items": [
+                {
+                  "name": "酒类产品-境内",
+                  "income_yi": 268.67,
+                  "share": 94.5,
+                  "yoy": null,
+                  "gross_margin": 84.6
+                },
+                {
+                  "name": "非酒类产品",
+                  "income_yi": 15.5,
+                  "share": 5.5,
+                  "yoy": -9.7,
+                  "gross_margin": 5.5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

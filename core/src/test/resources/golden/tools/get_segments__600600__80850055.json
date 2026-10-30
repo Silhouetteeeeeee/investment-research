@@ -1,0 +1,600 @@
+{
+  "tool": "get_segments",
+  "arguments": {
+    "years": 5
+  },
+  "default_company": "600600",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": "2026-06-30",
+    "sources": [
+      {
+        "id": "segments:600600:2026-06-30:product",
+        "label": "主营构成·产品",
+        "detail": "青岛啤酒 2026-06-30 按产品",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-28 10:57:43",
+        "url": ""
+      },
+      {
+        "id": "segments:600600:2026-06-30:region",
+        "label": "主营构成·地区",
+        "detail": "青岛啤酒 2026-06-30 按地区",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-28 10:57:43",
+        "url": ""
+      }
+    ],
+    "data": {
+      "code": "600600",
+      "name": "青岛啤酒",
+      "as_of": "2026-06-30",
+      "slices": [
+        {
+          "kind": "product",
+          "label": "产品",
+          "total_income_yi": 196.55,
+          "items": [
+            {
+              "name": "销售啤酒等",
+              "income_yi": 193.37,
+              "share": 98.4,
+              "yoy": -4.3,
+              "gross_margin": 44.8
+            },
+            {
+              "name": "其他(补充)",
+              "income_yi": 3.18,
+              "share": 1.6,
+              "yoy": 14.7,
+              "gross_margin": 46.8
+            }
+          ],
+          "history": [
+            {
+              "period": "2022-06-30",
+              "total_income_yi": 192.73,
+              "items": [
+                {
+                  "name": "销售啤酒等",
+                  "income_yi": 190.68,
+                  "share": 98.9,
+                  "yoy": null,
+                  "gross_margin": 38.1
+                },
+                {
+                  "name": "其他",
+                  "income_yi": 0.65,
+                  "share": 0.3,
+                  "yoy": null,
+                  "gross_margin": 47.6
+                },
+                {
+                  "name": "餐饮相关",
+                  "income_yi": 0.61,
+                  "share": 0.3,
+                  "yoy": null,
+                  "gross_margin": 40.2
+                },
+                {
+                  "name": "销售包装物",
+                  "income_yi": 0.55,
+                  "share": 0.3,
+                  "yoy": null,
+                  "gross_margin": 36.3
+                },
+                {
+                  "name": "工程设备收入",
+                  "income_yi": 0.2,
+                  "share": 0.1,
+                  "yoy": null,
+                  "gross_margin": 34.0
+                },
+                {
+                  "name": "销售材料",
+                  "income_yi": 0.05,
+                  "share": 0.0,
+                  "yoy": null,
+                  "gross_margin": 2.8
+                }
+              ]
+            },
+            {
+              "period": "2023-06-30",
+              "total_income_yi": 215.92,
+              "items": [
+                {
+                  "name": "销售啤酒等",
+                  "income_yi": 213.65,
+                  "share": 99.0,
+                  "yoy": 12.0,
+                  "gross_margin": 39.1
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 2.26,
+                  "share": 1.0,
+                  "yoy": null,
+                  "gross_margin": 47.7
+                }
+              ]
+            },
+            {
+              "period": "2024-06-30",
+              "total_income_yi": 200.68,
+              "items": [
+                {
+                  "name": "销售啤酒等",
+                  "income_yi": 198.28,
+                  "share": 98.8,
+                  "yoy": -7.2,
+                  "gross_margin": 41.6
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 2.4,
+                  "share": 1.2,
+                  "yoy": 6.1,
+                  "gross_margin": 45.0
+                }
+              ]
+            },
+            {
+              "period": "2025-06-30",
+              "total_income_yi": 204.91,
+              "items": [
+                {
+                  "name": "销售啤酒等",
+                  "income_yi": 202.14,
+                  "share": 98.6,
+                  "yoy": 1.9,
+                  "gross_margin": 43.7
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 2.77,
+                  "share": 1.4,
+                  "yoy": 15.4,
+                  "gross_margin": 45.8
+                }
+              ]
+            },
+            {
+              "period": "2026-06-30",
+              "total_income_yi": 196.55,
+              "items": [
+                {
+                  "name": "销售啤酒等",
+                  "income_yi": 193.37,
+                  "share": 98.4,
+                  "yoy": -4.3,
+                  "gross_margin": 44.8
+                },
+                {
+                  "name": "其他(补充)",
+                  "income_yi": 3.18,
+                  "share": 1.6,
+                  "yoy": 14.7,
+                  "gross_margin": 46.8
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "region",
+          "label": "地区",
+          "total_income_yi": 196.55,
+          "items": [
+            {
+              "name": "山东地区",
+              "income_yi": 138.79,
+              "share": 70.6,
+              "yoy": -6.3,
+              "gross_margin": 40.1
+            },
+            {
+              "name": "华北地区",
+              "income_yi": 50.97,
+              "share": 25.9,
+              "yoy": -2.0,
+              "gross_margin": 34.3
+            },
+            {
+              "name": "华南地区",
+              "income_yi": 19.36,
+              "share": 9.8,
+              "yoy": -2.4,
+              "gross_margin": 34.4
+            },
+            {
+              "name": "华东地区",
+              "income_yi": 16.15,
+              "share": 8.2,
+              "yoy": -4.0,
+              "gross_margin": 32.0
+            },
+            {
+              "name": "港澳及其他海外地区",
+              "income_yi": 5.31,
+              "share": 2.7,
+              "yoy": 9.4,
+              "gross_margin": 16.4
+            },
+            {
+              "name": "东南地区",
+              "income_yi": 3.64,
+              "share": 1.9,
+              "yoy": 0.4,
+              "gross_margin": 25.2
+            },
+            {
+              "name": "未分配金额",
+              "income_yi": 0.63,
+              "share": 0.3,
+              "yoy": 3.0,
+              "gross_margin": 4.3
+            },
+            {
+              "name": "财务公司",
+              "income_yi": 0.22,
+              "share": 0.1,
+              "yoy": 187.8,
+              "gross_margin": 27.3
+            },
+            {
+              "name": "分部间抵销",
+              "income_yi": -38.52,
+              "share": -19.6,
+              "yoy": -6.2,
+              "gross_margin": null
+            }
+          ],
+          "history": [
+            {
+              "period": "2022-06-30",
+              "total_income_yi": 192.73,
+              "items": [
+                {
+                  "name": "山东地区",
+                  "income_yi": 118.13,
+                  "share": 61.3,
+                  "yoy": null,
+                  "gross_margin": 23.4
+                },
+                {
+                  "name": "华北地区",
+                  "income_yi": 36.57,
+                  "share": 19.0,
+                  "yoy": null,
+                  "gross_margin": 11.5
+                },
+                {
+                  "name": "华南地区",
+                  "income_yi": 15.15,
+                  "share": 7.9,
+                  "yoy": null,
+                  "gross_margin": 16.2
+                },
+                {
+                  "name": "华东地区",
+                  "income_yi": 14.42,
+                  "share": 7.5,
+                  "yoy": null,
+                  "gross_margin": 19.4
+                },
+                {
+                  "name": "东南地区",
+                  "income_yi": 4.74,
+                  "share": 2.5,
+                  "yoy": null,
+                  "gross_margin": 28.0
+                },
+                {
+                  "name": "港澳及其他海外地区",
+                  "income_yi": 3.61,
+                  "share": 1.9,
+                  "yoy": null,
+                  "gross_margin": -36.4
+                },
+                {
+                  "name": "财务公司",
+                  "income_yi": 0.07,
+                  "share": 0.0,
+                  "yoy": null,
+                  "gross_margin": 99.8
+                },
+                {
+                  "name": "未分配金额",
+                  "income_yi": 0.03,
+                  "share": 0.0,
+                  "yoy": null,
+                  "gross_margin": -488.4
+                },
+                {
+                  "name": "分部间抵销",
+                  "income_yi": 0.0,
+                  "share": 0.0,
+                  "yoy": null,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2023-06-30",
+              "total_income_yi": 215.92,
+              "items": [
+                {
+                  "name": "山东地区",
+                  "income_yi": 134.09,
+                  "share": 62.1,
+                  "yoy": 13.5,
+                  "gross_margin": 23.5
+                },
+                {
+                  "name": "华北地区",
+                  "income_yi": 40.5,
+                  "share": 18.8,
+                  "yoy": 10.8,
+                  "gross_margin": 12.9
+                },
+                {
+                  "name": "华东地区",
+                  "income_yi": 16.42,
+                  "share": 7.6,
+                  "yoy": 13.9,
+                  "gross_margin": 22.4
+                },
+                {
+                  "name": "华南地区",
+                  "income_yi": 16.32,
+                  "share": 7.6,
+                  "yoy": 7.8,
+                  "gross_margin": 15.4
+                },
+                {
+                  "name": "东南地区",
+                  "income_yi": 5.05,
+                  "share": 2.3,
+                  "yoy": 6.4,
+                  "gross_margin": 30.0
+                },
+                {
+                  "name": "港澳及其他海外地区",
+                  "income_yi": 3.5,
+                  "share": 1.6,
+                  "yoy": -3.0,
+                  "gross_margin": -7.8
+                },
+                {
+                  "name": "未分配金额",
+                  "income_yi": 0.03,
+                  "share": 0.0,
+                  "yoy": 16.1,
+                  "gross_margin": -451.5
+                },
+                {
+                  "name": "财务公司",
+                  "income_yi": 0.0,
+                  "share": 0.0,
+                  "yoy": -96.4,
+                  "gross_margin": 5.3
+                }
+              ]
+            },
+            {
+              "period": "2024-06-30",
+              "total_income_yi": 200.68,
+              "items": [
+                {
+                  "name": "山东地区",
+                  "income_yi": 144.47,
+                  "share": 72.0,
+                  "yoy": 7.7,
+                  "gross_margin": 36.5
+                },
+                {
+                  "name": "华北地区",
+                  "income_yi": 50.67,
+                  "share": 25.2,
+                  "yoy": 25.1,
+                  "gross_margin": 33.1
+                },
+                {
+                  "name": "华南地区",
+                  "income_yi": 19.58,
+                  "share": 9.8,
+                  "yoy": 20.0,
+                  "gross_margin": 35.4
+                },
+                {
+                  "name": "华东地区",
+                  "income_yi": 15.3,
+                  "share": 7.6,
+                  "yoy": -6.8,
+                  "gross_margin": 29.5
+                },
+                {
+                  "name": "东南地区",
+                  "income_yi": 3.59,
+                  "share": 1.8,
+                  "yoy": -28.8,
+                  "gross_margin": 21.5
+                },
+                {
+                  "name": "港澳及其他海外地区",
+                  "income_yi": 3.35,
+                  "share": 1.7,
+                  "yoy": -4.2,
+                  "gross_margin": 27.9
+                },
+                {
+                  "name": "未分配金额",
+                  "income_yi": 1.57,
+                  "share": 0.8,
+                  "yoy": 4630.6,
+                  "gross_margin": 0.2
+                },
+                {
+                  "name": "财务公司",
+                  "income_yi": 0.03,
+                  "share": 0.0,
+                  "yoy": 996.6,
+                  "gross_margin": null
+                },
+                {
+                  "name": "分部间抵销",
+                  "income_yi": -37.89,
+                  "share": -18.9,
+                  "yoy": null,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2025-06-30",
+              "total_income_yi": 204.91,
+              "items": [
+                {
+                  "name": "山东地区",
+                  "income_yi": 148.17,
+                  "share": 72.3,
+                  "yoy": 2.6,
+                  "gross_margin": 38.0
+                },
+                {
+                  "name": "华北地区",
+                  "income_yi": 51.99,
+                  "share": 25.4,
+                  "yoy": 2.6,
+                  "gross_margin": 34.2
+                },
+                {
+                  "name": "华南地区",
+                  "income_yi": 19.83,
+                  "share": 9.7,
+                  "yoy": 1.3,
+                  "gross_margin": 35.4
+                },
+                {
+                  "name": "华东地区",
+                  "income_yi": 16.83,
+                  "share": 8.2,
+                  "yoy": 9.9,
+                  "gross_margin": 32.9
+                },
+                {
+                  "name": "港澳及其他海外地区",
+                  "income_yi": 4.86,
+                  "share": 2.4,
+                  "yoy": 44.9,
+                  "gross_margin": 21.3
+                },
+                {
+                  "name": "东南地区",
+                  "income_yi": 3.62,
+                  "share": 1.8,
+                  "yoy": 0.8,
+                  "gross_margin": 22.0
+                },
+                {
+                  "name": "未分配金额",
+                  "income_yi": 0.61,
+                  "share": 0.3,
+                  "yoy": -61.2,
+                  "gross_margin": 0.2
+                },
+                {
+                  "name": "财务公司",
+                  "income_yi": 0.08,
+                  "share": 0.0,
+                  "yoy": 160.1,
+                  "gross_margin": -582.0
+                },
+                {
+                  "name": "分部间抵销",
+                  "income_yi": -41.08,
+                  "share": -20.0,
+                  "yoy": 8.4,
+                  "gross_margin": null
+                }
+              ]
+            },
+            {
+              "period": "2026-06-30",
+              "total_income_yi": 196.55,
+              "items": [
+                {
+                  "name": "山东地区",
+                  "income_yi": 138.79,
+                  "share": 70.6,
+                  "yoy": -6.3,
+                  "gross_margin": 40.1
+                },
+                {
+                  "name": "华北地区",
+                  "income_yi": 50.97,
+                  "share": 25.9,
+                  "yoy": -2.0,
+                  "gross_margin": 34.3
+                },
+                {
+                  "name": "华南地区",
+                  "income_yi": 19.36,
+                  "share": 9.8,
+                  "yoy": -2.4,
+                  "gross_margin": 34.4
+                },
+                {
+                  "name": "华东地区",
+                  "income_yi": 16.15,
+                  "share": 8.2,
+                  "yoy": -4.0,
+                  "gross_margin": 32.0
+                },
+                {
+                  "name": "港澳及其他海外地区",
+                  "income_yi": 5.31,
+                  "share": 2.7,
+                  "yoy": 9.4,
+                  "gross_margin": 16.4
+                },
+                {
+                  "name": "东南地区",
+                  "income_yi": 3.64,
+                  "share": 1.9,
+                  "yoy": 0.4,
+                  "gross_margin": 25.2
+                },
+                {
+                  "name": "未分配金额",
+                  "income_yi": 0.63,
+                  "share": 0.3,
+                  "yoy": 3.0,
+                  "gross_margin": 4.3
+                },
+                {
+                  "name": "财务公司",
+                  "income_yi": 0.22,
+                  "share": 0.1,
+                  "yoy": 187.8,
+                  "gross_margin": 27.3
+                },
+                {
+                  "name": "分部间抵销",
+                  "income_yi": -38.52,
+                  "share": -19.6,
+                  "yoy": -6.2,
+                  "gross_margin": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}
