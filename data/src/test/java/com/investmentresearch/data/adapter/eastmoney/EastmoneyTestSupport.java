@@ -13,6 +13,7 @@ import com.investmentresearch.core.domain.Source;
 import com.investmentresearch.core.domain.ToolResult;
 import com.investmentresearch.data.persistence.CompanyPeerMapper;
 import com.investmentresearch.data.persistence.FinIncomeMapper;
+import com.investmentresearch.data.persistence.ResearchCacheStore;
 import com.investmentresearch.data.persistence.StockMapper;
 import com.investmentresearch.data.persistence.ValHistoryMapper;
 import com.investmentresearch.data.persistence.ValPeerMapper;
@@ -39,7 +40,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /** 同业与估值适配器测试共用夹具：快照复制、WireMock 回放、金标准比对、缓存时间。 */
@@ -62,7 +65,36 @@ final class EastmoneyTestSupport {
             REPO_ROOT.resolve("core/src/test/resources/fixtures/stock-snapshot.db");
     static final ObjectMapper MAPPER = new ObjectMapper();
 
+    /** 金标准生成当天的时钟：窗口结束日 2026-10-31。 */
+    static final Clock CLOCK_END =
+            Clock.fixed(
+                    LocalDateTime.parse("2026-10-31T12:00:00")
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant(),
+                    ZoneId.systemDefault());
+
     private EastmoneyTestSupport() {}
+
+    /** 读缓存路径的测试不允许访问上游。 */
+    static com.investmentresearch.data.upstream.UpstreamClient offline() {
+        return new com.investmentresearch.data.upstream.UpstreamClient() {
+            @Override
+            public String get(String path, Map<String, String> headers) {
+                throw new IllegalStateException("不应访问上游：" + path);
+            }
+
+            @Override
+            public String get(String path, java.nio.charset.Charset charset, Map<String, String> headers) {
+                throw new IllegalStateException("不应访问上游：" + path);
+            }
+        };
+    }
+
+    static ResearchCacheStore cacheStore(String url) {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource(url);
+        dataSource.setDriverClassName("org.sqlite.JDBC");
+        return new ResearchCacheStore(new JdbcTemplate(dataSource));
+    }
 
     static WireMockServer startServer() throws IOException {
         WireMockServer server =
