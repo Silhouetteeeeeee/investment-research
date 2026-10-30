@@ -12,6 +12,7 @@ import com.investmentresearch.data.persistence.BizSegmentMapper;
 import com.investmentresearch.data.persistence.StockMapper;
 import com.investmentresearch.data.upstream.UpstreamClient;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -441,17 +442,24 @@ public class SegmentAdapter implements SegmentPort {
      * 按会用到的切片口径（产品/地区）分别判断是否已有最新应有报告期：
      * 东财各口径披露有先后（601606 地区还停在 2025-12-31），按全局最大报告期会漏掉后到的口径。
      * 某口径在缓存里从未出现过则不阻塞，避免上游本来就没有该口径时每次调用都重抓。
+     * 口径落后但该口径 24 小时内抓过，则按新鲜处理——保留 Python 的 24 小时 TTL，
+     * 否则停更的口径会让每次工具调用都打上游。
      */
     private boolean fresh(List<BizSegmentEntity> rows) {
-        String expected = expectedReportDate(LocalDate.now(clock)).toString();
+        LocalDateTime now = LocalDateTime.now(clock);
+        String expected = expectedReportDate(now.toLocalDate()).toString();
         boolean anySliceKind = false;
         for (String[] slice : SLICE_KINDS) {
-            String newest = newestDate(rows, slice[0]);
+            String kind = slice[0];
+            String newest = newestDate(rows, kind);
             if (newest == null) {
                 continue;
             }
             anySliceKind = true;
-            if (newest.compareTo(expected) < 0) {
+            if (newest.compareTo(expected) >= 0) {
+                continue;
+            }
+            if (!within24Hours(newestFetchedAt(rows, kind), now)) {
                 return false;
             }
         }
@@ -460,7 +468,9 @@ public class SegmentAdapter implements SegmentPort {
         }
         // 只有行业口径等非切片数据时退回全局最新报告期
         String newest = newestDate(rows, null);
-        return newest != null && newest.compareTo(expected) >= 0;
+        return newest != null
+                && (newest.compareTo(expected) >= 0
+                        || within24Hours(newestFetchedAt(rows, null), now));
     }
 
     private static String newestDate(List<BizSegmentEntity> rows, String kind) {
@@ -473,6 +483,30 @@ public class SegmentAdapter implements SegmentPort {
             }
         }
         return newest;
+    }
+
+    private static String newestFetchedAt(List<BizSegmentEntity> rows, String kind) {
+        String newest = null;
+        for (BizSegmentEntity row : rows) {
+            if ((kind == null || kind.equals(row.getKind()))
+                    && row.getFetchedAt() != null
+                    && (newest == null || row.getFetchedAt().compareTo(newest) > 0)) {
+                newest = row.getFetchedAt();
+            }
+        }
+        return newest;
+    }
+
+    private static boolean within24Hours(String fetchedAt, LocalDateTime now) {
+        if (fetchedAt == null) {
+            return false;
+        }
+        try {
+            Duration age = Duration.between(LocalDateTime.parse(fetchedAt, TIMESTAMP), now);
+            return age.compareTo(Duration.ofHours(24)) < 0;
+        } catch (RuntimeException error) {
+            return false;
+        }
     }
 
     /**

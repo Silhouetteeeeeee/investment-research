@@ -159,11 +159,25 @@ class SegmentAdapterTest {
     }
 
     @Test
-    void lagging_slice_kind_is_refetched_even_when_another_kind_is_current() {
-        // 601606 的地区口径停在 2025-12-31、产品已到 2026-06-30：只看全局最新报告期会误判为已新鲜
+    void lagging_slice_kind_within_24_hours_does_not_refetch() {
+        // 601606 地区口径停在 2025-12-31、产品已到 2026-06-30；地区两小时前刚抓过，不再打上游
         mapper.delete(Wrappers.<BizSegmentEntity>query().eq("code", "601606"));
         SegmentAdapter adapter = adapter();
         adapter.segments("601606", 5);
+        setFetchedAt("601606", "2026-10-30 10:00:00");
+        adapter.segments("601606", 5);
+        server.verify(
+                1,
+                getRequestedFor(urlPathEqualTo(F10TestSupport.SEGMENTS_PATH))
+                        .withQueryParam("code", equalTo("601606.SH")));
+    }
+
+    @Test
+    void lagging_slice_kind_is_refetched_after_24_hours() {
+        mapper.delete(Wrappers.<BizSegmentEntity>query().eq("code", "601606"));
+        SegmentAdapter adapter = adapter();
+        adapter.segments("601606", 5);
+        setFetchedAt("601606", "2026-10-29 11:00:00");
         adapter.segments("601606", 5);
         server.verify(
                 2,
@@ -185,6 +199,14 @@ class SegmentAdapterTest {
     void expected_report_date_rolls_over_at_deadlines(String today, String expected) {
         assertThat(SegmentAdapter.expectedReportDate(LocalDate.parse(today)))
                 .isEqualTo(LocalDate.parse(expected));
+    }
+
+    private void setFetchedAt(String code, String fetchedAt) {
+        mapper.update(
+                null,
+                Wrappers.<BizSegmentEntity>update()
+                        .set("fetched_at", fetchedAt)
+                        .eq("code", code));
     }
 
     private SegmentAdapter adapter() {
