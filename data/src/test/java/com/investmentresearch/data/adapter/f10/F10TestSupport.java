@@ -72,6 +72,7 @@ final class F10TestSupport {
         return "jdbc:sqlite:" + database.toAbsolutePath().toString().replace('\\', '/');
     }
 
+    // session 是 SqlSessionTemplate：close() 会抛 UnsupportedOperationException，别在 tearDown 里关
     record Db(SqlSession session, PlatformTransactionManager transactionManager) {}
 
     static Db openDb(String url) {
