@@ -29,6 +29,8 @@ import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /** 两个 F10 适配器测试共用的夹具：快照复制、WireMock 回放、金标准比对。 */
 final class F10TestSupport {
@@ -69,19 +71,19 @@ final class F10TestSupport {
         return "jdbc:sqlite:" + database.toAbsolutePath().toString().replace('\\', '/');
     }
 
-    static SqlSession openSession(String url) {
+    record Db(SqlSession session, PlatformTransactionManager transactionManager) {}
+
+    static Db openDb(String url) {
+        UnpooledDataSource dataSource = new UnpooledDataSource("org.sqlite.JDBC", url, null, null);
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setMapUnderscoreToCamelCase(true);
         configuration.setEnvironment(
-                new Environment(
-                        "test",
-                        new JdbcTransactionFactory(),
-                        new UnpooledDataSource("org.sqlite.JDBC", url, null, null)));
+                new Environment("test", new JdbcTransactionFactory(), dataSource));
         configuration.addMapper(StockMapper.class);
         configuration.addMapper(CompanyProfileMapper.class);
         configuration.addMapper(BizSegmentMapper.class);
         SqlSessionFactory factory = new MybatisSqlSessionFactoryBuilder().build(configuration);
-        return factory.openSession(true);
+        return new Db(factory.openSession(true), new DataSourceTransactionManager(dataSource));
     }
 
     static List<Path> goldens(String tool) throws IOException {

@@ -27,6 +27,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 class SegmentAdapterTest {
     @TempDir Path tempDir;
@@ -35,12 +38,15 @@ class SegmentAdapterTest {
     private SqlSession session;
     private BizSegmentMapper mapper;
     private StockMapper stockMapper;
+    private PlatformTransactionManager transactionManager;
 
     @BeforeEach
     void setUp() throws Exception {
         server = F10TestSupport.startServer();
         String url = F10TestSupport.copySnapshot(tempDir);
-        session = F10TestSupport.openSession(url);
+        F10TestSupport.Db db = F10TestSupport.openDb(url);
+        session = db.session();
+        transactionManager = db.transactionManager();
         mapper = session.getMapper(BizSegmentMapper.class);
         stockMapper = session.getMapper(StockMapper.class);
     }
@@ -133,6 +139,52 @@ class SegmentAdapterTest {
         ToolResult empty = adapter.segments("000002", 5);
         assertThat(empty.ok()).as("empty 200").isFalse();
         assertThat(empty.data()).as("empty 200").isNull();
+
+        // 200 但结构不对：没有 zygcfx，Python 走“没有主营构成数据”，且不写库
+        server.stubFor(
+                get(urlPathEqualTo(F10TestSupport.SEGMENTS_PATH))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody("{\"foo\":1}")));
+        ToolResult wrongShape = adapter.segments("000012", 5);
+        assertThat(wrongShape.ok()).as("wrong shape").isFalse();
+        assertThat(wrongShape.error()).as("wrong shape").contains("没有主营构成数据");
+        assertThat(
+                        mapper.selectCount(
+                                Wrappers.<BizSegmentEntity>query().eq("code", "000012")))
+                .as("失败不写库")
+                .isZero();
+    }
+
+    @Test
+    void lagging_slice_kind_is_refetched_even_when_another_kind_is_current() {
+        // 601606 的地区口径停在 2025-12-31、产品已到 2026-06-30：只看全局最新报告期会误判为已新鲜
+        mapper.delete(Wrappers.<BizSegmentEntity>query().eq("code", "601606"));
+        SegmentAdapter adapter = adapter();
+        adapter.segments("601606", 5);
+        adapter.segments("601606", 5);
+        server.verify(
+                2,
+                getRequestedFor(urlPathEqualTo(F10TestSupport.SEGMENTS_PATH))
+                        .withQueryParam("code", equalTo("601606.SH")));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "2026-04-29, 2025-09-30",
+        "2026-04-30, 2026-03-31",
+        "2026-08-30, 2026-03-31",
+        "2026-08-31, 2026-06-30",
+        "2026-10-30, 2026-06-30",
+        "2026-10-31, 2026-09-30",
+        "2027-04-29, 2026-09-30",
+        "2027-04-30, 2027-03-31"
+    })
+    void expected_report_date_rolls_over_at_deadlines(String today, String expected) {
+        assertThat(SegmentAdapter.expectedReportDate(LocalDate.parse(today)))
+                .isEqualTo(LocalDate.parse(expected));
     }
 
     private SegmentAdapter adapter() {
@@ -146,7 +198,8 @@ class SegmentAdapterTest {
                 stockMapper,
                 new RestClientUpstreamClient(),
                 server.baseUrl() + F10TestSupport.SEGMENTS_PATH,
-                clock);
+                clock,
+                transactionManager);
     }
 
     @SuppressWarnings("unchecked")

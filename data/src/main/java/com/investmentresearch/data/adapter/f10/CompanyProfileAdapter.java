@@ -19,11 +19,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
-/** 东财 F10 公司概况：上游 → 解析 → upsert → 输出。 */
+/** 东财 F10 公司概况：上游 → 解析 → 覆盖写入 → 输出。 */
 @Repository
 public class CompanyProfileAdapter implements CompanyProfilePort {
     static final int SCOPE_MAX_CHARS = 200;
+    // 30 天是任务规格；Python 侧 7 天常量是缓存 TTL，这里有意偏离
     static final long MAX_AGE_DAYS = 30;
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final DateTimeFormatter TIMESTAMP =
@@ -33,6 +36,7 @@ public class CompanyProfileAdapter implements CompanyProfilePort {
     private final UpstreamClient upstreamClient;
     private final String endpoint;
     private final Clock clock;
+    private final TransactionTemplate transactionTemplate;
 
     @Autowired
     public CompanyProfileAdapter(
@@ -42,19 +46,22 @@ public class CompanyProfileAdapter implements CompanyProfilePort {
                             "${app.f10-profile-url:"
                                     + "https://emweb.securities.eastmoney.com"
                                     + "/PC_HSF10/CompanySurvey/PageAjax}")
-                    String endpoint) {
-        this(mapper, upstreamClient, endpoint, Clock.systemDefaultZone());
+                    String endpoint,
+            PlatformTransactionManager transactionManager) {
+        this(mapper, upstreamClient, endpoint, Clock.systemDefaultZone(), transactionManager);
     }
 
     CompanyProfileAdapter(
             CompanyProfileMapper mapper,
             UpstreamClient upstreamClient,
             String endpoint,
-            Clock clock) {
+            Clock clock,
+            PlatformTransactionManager transactionManager) {
         this.mapper = mapper;
         this.upstreamClient = upstreamClient;
         this.endpoint = endpoint;
         this.clock = clock;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
     @Override
@@ -75,7 +82,7 @@ public class CompanyProfileAdapter implements CompanyProfilePort {
             }
             try {
                 CompanyProfileEntity row = fetch(code, prefix);
-                mapper.insertOrUpdate(row);
+                replace(row);
                 return toResult(row);
             } catch (RuntimeException error) {
                 // 抓取失败但有旧缓存时按 Python 的做法继续用旧数据
@@ -88,6 +95,18 @@ public class CompanyProfileAdapter implements CompanyProfilePort {
             // 端口不抛异常：读库或组装出的意外错误同样折成失败
             return ToolResult.failure(code, error.getMessage());
         }
+    }
+
+    /**
+     * 与 Python 的 insert or replace 等价：删后插，上游消失的字段会变回 null。
+     * insertOrUpdate 走 updateById，默认跳过 null，会把旧值留在库里。
+     */
+    private void replace(CompanyProfileEntity row) {
+        transactionTemplate.executeWithoutResult(
+                status -> {
+                    mapper.deleteById(row.getCode());
+                    mapper.insert(row);
+                });
     }
 
     private CompanyProfileEntity fetch(String code, String prefix) {

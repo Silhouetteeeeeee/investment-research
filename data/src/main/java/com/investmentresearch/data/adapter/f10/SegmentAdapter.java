@@ -25,6 +25,8 @@ import java.util.TreeSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /** 东财 F10 主营构成：上游 → 解析 → 整份替换 → 读回 → 输出。 */
 @Repository
@@ -42,6 +44,7 @@ public class SegmentAdapter implements SegmentPort {
     private final UpstreamClient upstreamClient;
     private final String endpoint;
     private final Clock clock;
+    private final TransactionTemplate transactionTemplate;
 
     @Autowired
     public SegmentAdapter(
@@ -52,8 +55,15 @@ public class SegmentAdapter implements SegmentPort {
                             "${app.f10-segments-url:"
                                     + "https://emweb.securities.eastmoney.com"
                                     + "/PC_HSF10/BusinessAnalysis/PageAjax}")
-                    String endpoint) {
-        this(mapper, stockMapper, upstreamClient, endpoint, Clock.systemDefaultZone());
+                    String endpoint,
+            PlatformTransactionManager transactionManager) {
+        this(
+                mapper,
+                stockMapper,
+                upstreamClient,
+                endpoint,
+                Clock.systemDefaultZone(),
+                transactionManager);
     }
 
     SegmentAdapter(
@@ -61,12 +71,14 @@ public class SegmentAdapter implements SegmentPort {
             StockMapper stockMapper,
             UpstreamClient upstreamClient,
             String endpoint,
-            Clock clock) {
+            Clock clock,
+            PlatformTransactionManager transactionManager) {
         this.mapper = mapper;
         this.stockMapper = stockMapper;
         this.upstreamClient = upstreamClient;
         this.endpoint = endpoint;
         this.clock = clock;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
     @Override
@@ -360,6 +372,8 @@ public class SegmentAdapter implements SegmentPort {
     }
 
     private List<BizSegmentEntity> readRows(String code) {
+        // 跟 Python _cached_rows 的 ORDER BY 完全一致；income 相同的行保持插入顺序，
+        // 故意不加 tiebreaker，否则和金标准的行序会漂
         return mapper.selectList(
                 Wrappers.<BizSegmentEntity>query()
                         .eq("code", code)
@@ -408,25 +422,57 @@ public class SegmentAdapter implements SegmentPort {
         return rows;
     }
 
+    /**
+     * 与 Python {@code with conn:} + INSERT OR REPLACE 等价：删+插在一个事务里。
+     * biz_segment 的复合主键 MyBatis-Plus 表达不了（@TableId 只有 code），
+     * 所以不用 insertOrUpdate——它只会按 code 更新，删后插入才安全。
+     */
     private void save(String code, List<BizSegmentEntity> rows) {
-        mapper.delete(Wrappers.<BizSegmentEntity>query().eq("code", code));
-        for (BizSegmentEntity row : rows) {
-            mapper.insert(row);
-        }
+        transactionTemplate.executeWithoutResult(
+                status -> {
+                    mapper.delete(Wrappers.<BizSegmentEntity>query().eq("code", code));
+                    for (BizSegmentEntity row : rows) {
+                        mapper.insert(row);
+                    }
+                });
     }
 
+    /**
+     * 按会用到的切片口径（产品/地区）分别判断是否已有最新应有报告期：
+     * 东财各口径披露有先后（601606 地区还停在 2025-12-31），按全局最大报告期会漏掉后到的口径。
+     * 某口径在缓存里从未出现过则不阻塞，避免上游本来就没有该口径时每次调用都重抓。
+     */
     private boolean fresh(List<BizSegmentEntity> rows) {
+        String expected = expectedReportDate(LocalDate.now(clock)).toString();
+        boolean anySliceKind = false;
+        for (String[] slice : SLICE_KINDS) {
+            String newest = newestDate(rows, slice[0]);
+            if (newest == null) {
+                continue;
+            }
+            anySliceKind = true;
+            if (newest.compareTo(expected) < 0) {
+                return false;
+            }
+        }
+        if (anySliceKind) {
+            return true;
+        }
+        // 只有行业口径等非切片数据时退回全局最新报告期
+        String newest = newestDate(rows, null);
+        return newest != null && newest.compareTo(expected) >= 0;
+    }
+
+    private static String newestDate(List<BizSegmentEntity> rows, String kind) {
         String newest = null;
         for (BizSegmentEntity row : rows) {
-            if (row.getReportDate() != null
+            if ((kind == null || kind.equals(row.getKind()))
+                    && row.getReportDate() != null
                     && (newest == null || row.getReportDate().compareTo(newest) > 0)) {
                 newest = row.getReportDate();
             }
         }
-        if (newest == null) {
-            return false;
-        }
-        return newest.compareTo(expectedReportDate(LocalDate.now(clock)).toString()) >= 0;
+        return newest;
     }
 
     /**

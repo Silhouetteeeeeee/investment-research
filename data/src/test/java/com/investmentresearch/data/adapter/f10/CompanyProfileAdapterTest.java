@@ -1,13 +1,16 @@
 package com.investmentresearch.data.adapter.f10;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.investmentresearch.core.domain.ToolResult;
+import com.investmentresearch.data.persistence.CompanyProfileEntity;
 import com.investmentresearch.data.persistence.CompanyProfileMapper;
 import com.investmentresearch.data.upstream.RestClientUpstreamClient;
 import java.nio.file.Path;
@@ -17,7 +20,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
@@ -26,20 +31,25 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.springframework.transaction.PlatformTransactionManager;
 
 class CompanyProfileAdapterTest {
+    private static final DateTimeFormatter TIMESTAMP =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @TempDir Path tempDir;
 
     private WireMockServer server;
     private SqlSession session;
     private CompanyProfileMapper mapper;
-    private String url;
+    private PlatformTransactionManager transactionManager;
 
     @BeforeEach
     void setUp() throws Exception {
         server = F10TestSupport.startServer();
-        url = F10TestSupport.copySnapshot(tempDir);
-        session = F10TestSupport.openSession(url);
+        String url = F10TestSupport.copySnapshot(tempDir);
+        F10TestSupport.Db db = F10TestSupport.openDb(url);
+        session = db.session();
+        transactionManager = db.transactionManager();
         mapper = session.getMapper(CompanyProfileMapper.class);
     }
 
@@ -67,7 +77,8 @@ class CompanyProfileAdapterTest {
                             mapper,
                             new RestClientUpstreamClient(),
                             server.baseUrl() + F10TestSupport.PROFILE_PATH,
-                            clock);
+                            clock,
+                            transactionManager);
             ToolResult actual = adapter.companyProfile(code);
 
             F10TestSupport.assertMatchesGolden(file, actual);
@@ -84,12 +95,7 @@ class CompanyProfileAdapterTest {
                                         .withHeader("Content-Type", "text/html")
                                         .withBody("<html>WAF</html>")));
 
-        CompanyProfileAdapter adapter =
-                new CompanyProfileAdapter(
-                        mapper,
-                        new RestClientUpstreamClient(),
-                        server.baseUrl() + F10TestSupport.PROFILE_PATH,
-                        pinned("2026-10-30"));
+        CompanyProfileAdapter adapter = adapter(pinned("2026-10-30"));
         ToolResult html = adapter.companyProfile("000001");
         assertThat(html.ok()).as("HTML 200").isFalse();
         assertThat(html.error()).as("HTML 200").contains("获取公司概况失败");
@@ -104,6 +110,40 @@ class CompanyProfileAdapterTest {
         ToolResult empty = adapter.companyProfile("000002");
         assertThat(empty.ok()).as("empty 200").isFalse();
         assertThat(empty.data()).as("empty 200").isNull();
+
+        // 200 但结构不对：jbzl 空数组，Python 走“没有取到公司概况”
+        server.stubFor(
+                get(urlPathEqualTo(F10TestSupport.PROFILE_PATH))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody("{\"jbzl\":[]}")));
+        ToolResult wrongShape = adapter.companyProfile("000011");
+        assertThat(wrongShape.ok()).as("empty jbzl").isFalse();
+        assertThat(wrongShape.error()).as("empty jbzl").contains("没有取到公司概况");
+        assertThat(mapper.selectById("000011")).as("失败不写库").isNull();
+    }
+
+    @Test
+    void profile_cache_expires_after_thirty_days() {
+        String code = "600600";
+        CompanyProfileAdapter adapter = adapter(pinned("2026-10-30"));
+
+        mapper.deleteById(code);
+        insertProfile(code, LocalDate.parse("2026-10-30").atTime(12, 0).minusDays(29));
+        assertThat(adapter.companyProfile(code).ok()).as("29 天").isTrue();
+        server.verify(
+                0,
+                getRequestedFor(urlPathEqualTo(F10TestSupport.PROFILE_PATH))
+                        .withQueryParam("code", equalTo("SH" + code)));
+
+        insertProfile(code, LocalDate.parse("2026-10-30").atTime(12, 0).minusDays(30));
+        assertThat(adapter.companyProfile(code).ok()).as("30 天").isTrue();
+        server.verify(
+                1,
+                getRequestedFor(urlPathEqualTo(F10TestSupport.PROFILE_PATH))
+                        .withQueryParam("code", equalTo("SH" + code)));
     }
 
     @Test
@@ -122,22 +162,47 @@ class CompanyProfileAdapterTest {
                         + F10TestSupport.SNAPSHOT.toAbsolutePath()
                                 .toString()
                                 .replace('\\', '/');
-        assertThat(columns(fresh, "company_profile"))
-                .isEqualTo(columns(python, "company_profile"));
-        assertThat(columns(fresh, "biz_segment"))
-                .isEqualTo(columns(python, "biz_segment"));
+        assertThat(columnSpecs(fresh, "company_profile"))
+                .isEqualTo(columnSpecs(python, "company_profile"));
+        assertThat(columnSpecs(fresh, "biz_segment"))
+                .isEqualTo(columnSpecs(python, "biz_segment"));
     }
 
-    private static List<String> columns(String url, String table) throws Exception {
-        List<String> names = new ArrayList<>();
+    /** 列名、类型、非空、主键序号都要一致，只比列名漏得太多。 */
+    private static List<String> columnSpecs(String url, String table) throws Exception {
+        List<String> specs = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url);
                 Statement statement = connection.createStatement();
                 ResultSet rows = statement.executeQuery("pragma table_info(" + table + ")")) {
             while (rows.next()) {
-                names.add(rows.getString("name"));
+                specs.add(
+                        rows.getString("name")
+                                + "|"
+                                + rows.getString("type")
+                                + "|notnull="
+                                + rows.getInt("notnull")
+                                + "|pk="
+                                + rows.getInt("pk"));
             }
         }
-        return names;
+        return specs;
+    }
+
+    private CompanyProfileAdapter adapter(Clock clock) {
+        return new CompanyProfileAdapter(
+                mapper,
+                new RestClientUpstreamClient(),
+                server.baseUrl() + F10TestSupport.PROFILE_PATH,
+                clock,
+                transactionManager);
+    }
+
+    private void insertProfile(String code, LocalDateTime fetchedAt) {
+        CompanyProfileEntity row = new CompanyProfileEntity();
+        row.setCode(code);
+        row.setFetchedAt(fetchedAt.format(TIMESTAMP));
+        mapper.deleteById(code);
+        mapper.insert(row);
     }
 
     private static Clock pinned(String date) {
