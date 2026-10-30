@@ -12,6 +12,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.investmentresearch.core.domain.Source;
 import com.investmentresearch.core.domain.ToolResult;
 import com.investmentresearch.data.persistence.CompanyPeerMapper;
+import com.investmentresearch.data.persistence.FinIncomeMapper;
 import com.investmentresearch.data.persistence.StockMapper;
 import com.investmentresearch.data.persistence.ValHistoryMapper;
 import com.investmentresearch.data.persistence.ValPeerMapper;
@@ -100,6 +101,7 @@ final class EastmoneyTestSupport {
         configuration.setEnvironment(
                 new Environment("test", new SpringManagedTransactionFactory(), dataSource));
         configuration.addMapper(StockMapper.class);
+        configuration.addMapper(FinIncomeMapper.class);
         configuration.addMapper(CompanyPeerMapper.class);
         configuration.addMapper(ValHistoryMapper.class);
         configuration.addMapper(ValPeerMapper.class);
