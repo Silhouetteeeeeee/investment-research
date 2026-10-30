@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,22 +64,31 @@ public class ConversationRepositoryImpl implements ConversationRepository {
     @Override
     public List<StoredMessage> messages(long id) {
         return messageMapper.listByConversation(id).stream()
-                .map(row -> new StoredMessage(row.getRole(), readMap(row.getPayloadJson())))
+                .map(this::toStoredMessage)
+                .filter(Objects::nonNull)
                 .toList();
+    }
+
+    /** Mirrors the Python store: an unreadable payload is skipped, not fatal for the whole read. */
+    private StoredMessage toStoredMessage(MessageEntity row) {
+        try {
+            Map<String, Object> payload = readMap(row.getPayloadJson());
+            return payload == null ? null : new StoredMessage(row.getRole(), payload);
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
     @Override
     @Transactional
     public int append(long conversationId, String role, Map<String, Object> payload) {
         String now = now();
-        int seq = messageMapper.maxSeq(conversationId) + 1;
         MessageEntity row = new MessageEntity();
         row.setConversationId(conversationId);
-        row.setSeq(seq);
         row.setRole(role);
         row.setPayloadJson(writeJson(payload));
         row.setCreatedAt(now);
-        messageMapper.insertMessage(row);
+        int seq = messageMapper.insertNextSeq(row);
         conversationMapper.update(
                 null,
                 Wrappers.<ConversationEntity>update()

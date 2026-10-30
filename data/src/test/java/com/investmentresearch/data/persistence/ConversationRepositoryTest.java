@@ -156,6 +156,24 @@ class ConversationRepositoryTest {
     }
 
     @Test
+    void messages_skips_unreadable_payload_rows() throws Exception {
+        long id = repository.create("标题", "600519", "贵州茅台");
+        repository.append(id, "user", Map.of("content", "正常"));
+        try (Connection connection = DriverManager.getConnection(url);
+                Statement statement = connection.createStatement()) {
+            statement.executeUpdate(
+                    "INSERT INTO message (conversation_id, seq, role, payload_json, created_at)"
+                            + " VALUES ("
+                            + id
+                            + ", 99, 'assistant', 'not json', '2026-01-01T00:00:00.000000')");
+        }
+
+        assertThat(repository.messages(id))
+                .extracting(StoredMessage::role)
+                .containsExactly("user");
+    }
+
+    @Test
     void schema_is_created_on_a_fresh_database() throws Exception {
         try (Connection connection = DriverManager.getConnection(url);
                 Statement statement = connection.createStatement()) {
