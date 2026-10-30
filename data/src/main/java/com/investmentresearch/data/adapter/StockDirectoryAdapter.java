@@ -14,8 +14,11 @@ import org.springframework.stereotype.Repository;
 /** 本地 stock 表查询；表空时在首次查询内惰性抓一次全 A 列表。 */
 @Repository
 public class StockDirectoryAdapter implements CompanyDirectory {
+    static final long FAILURE_COOLDOWN_MS = 60_000;
+
     private final StockMapper stockMapper;
     private final StockMasterSync sync;
+    private volatile long lastFailureAt;
 
     public StockDirectoryAdapter(StockMapper stockMapper, StockMasterSync sync) {
         this.stockMapper = stockMapper;
@@ -49,19 +52,25 @@ public class StockDirectoryAdapter implements CompanyDirectory {
 
     /** 只加载一次；上游不可用时保持空表，让解析走“找不到”而不是把异常抛给调用方。 */
     private void ensureLoaded() {
-        if (stockMapper.selectCount(null) > 0) {
+        if (stockMapper.selectCount(null) > 0 || inFailureCooldown()) {
             return;
         }
         synchronized (this) {
-            if (stockMapper.selectCount(null) > 0) {
+            if (stockMapper.selectCount(null) > 0 || inFailureCooldown()) {
                 return;
             }
             try {
                 sync.refresh();
+                lastFailureAt = 0;
             } catch (UpstreamException ignored) {
-                // 上游失败保持空表；下一次查询或 06:00 定时任务会再试
+                // 上游失败保持空表；冷却 60s 后再试，避免每次解析都等一次超时
+                lastFailureAt = System.currentTimeMillis();
             }
         }
+    }
+
+    private boolean inFailureCooldown() {
+        return System.currentTimeMillis() - lastFailureAt < FAILURE_COOLDOWN_MS;
     }
 
     private static StockRef toRef(StockEntity row) {

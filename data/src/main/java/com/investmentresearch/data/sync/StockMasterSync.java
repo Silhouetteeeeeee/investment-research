@@ -7,6 +7,7 @@ import com.investmentresearch.core.domain.StockRef;
 import com.investmentresearch.data.persistence.StockEntity;
 import com.investmentresearch.data.persistence.StockMapper;
 import com.investmentresearch.data.upstream.UpstreamClient;
+import com.investmentresearch.data.upstream.UpstreamException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -17,10 +18,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * 全 A 主表刷新：东财 clist 一页 100 条，按 pn 翻页直到空页或不足一页。
+ * 全 A 主表刷新：东财 clist 一页 100 条，页数由首页 total 推出；空页/不足一页也作为兜底终点。
  * 先抓完再写库，上游中途失败时表保持原样（空表也保持空）。
  */
 @Component
@@ -35,24 +37,31 @@ public class StockMasterSync {
     private final StockMapper stockMapper;
     private final UpstreamClient upstreamClient;
     private final String endpoint;
+    private final TransactionTemplate transactionTemplate;
 
     public StockMasterSync(
             StockMapper stockMapper,
             UpstreamClient upstreamClient,
-            @Value("${app.stock-list-url:https://82.push2.eastmoney.com/api/qt/clist/get}")
-                    String endpoint) {
+            @Value("${app.stock-list-url:https://push2test.eastmoney.com/api/qt/clist/get}")
+                    String endpoint,
+            PlatformTransactionManager transactionManager) {
         this.stockMapper = stockMapper;
         this.upstreamClient = upstreamClient;
         this.endpoint = endpoint;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
     @Scheduled(cron = "0 0 6 * * *")
-    @Transactional
     public void refresh() {
         List<StockRef> stocks = new ArrayList<>();
-        for (int page = 1; ; page++) {
-            JsonNode diff = fetchPage(page);
-            if (diff == null || !diff.isArray() || diff.isEmpty()) {
+        int pages = Integer.MAX_VALUE;
+        for (int page = 1; page <= pages; page++) {
+            JsonNode data = fetchPage(page);
+            JsonNode diff = data.path("diff");
+            if (page == 1 && data.path("total").isNumber()) {
+                pages = (int) ((data.path("total").asLong() + PAGE_SIZE - 1) / PAGE_SIZE);
+            }
+            if (!diff.isArray() || diff.isEmpty()) {
                 break;
             }
             for (JsonNode item : diff) {
@@ -68,13 +77,17 @@ public class StockMasterSync {
         }
 
         String now = LocalDateTime.now().format(TIMESTAMP);
-        for (StockRef stock : stocks) {
-            StockEntity row = new StockEntity();
-            row.setCode(stock.code());
-            row.setName(stock.name());
-            row.setRefreshedAt(now);
-            stockMapper.insertOrUpdate(row);
-        }
+        // 事务只包写库，避免翻页耗时占用 Hikari 连接
+        transactionTemplate.executeWithoutResult(
+                status -> {
+                    for (StockRef stock : stocks) {
+                        StockEntity row = new StockEntity();
+                        row.setCode(stock.code());
+                        row.setName(stock.name());
+                        row.setRefreshedAt(now);
+                        stockMapper.insertOrUpdate(row);
+                    }
+                });
     }
 
     private JsonNode fetchPage(int page) {
@@ -90,9 +103,14 @@ public class StockMasterSync {
                         + "&fields="
                         + encode(FIELDS);
         try {
-            return MAPPER.readTree(upstreamClient.get(url, Map.of())).path("data").path("diff");
+            JsonNode root = MAPPER.readTree(upstreamClient.get(url, Map.of()));
+            if (root == null) {
+                throw new UpstreamException(0, url);
+            }
+            return root.path("data");
         } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Invalid stock list JSON from " + endpoint, e);
+            // WAF/HTML/截断响应按上游失败处理，让调用方按“空表”降级而不是抛 500
+            throw new UpstreamException(0, url, e);
         }
     }
 

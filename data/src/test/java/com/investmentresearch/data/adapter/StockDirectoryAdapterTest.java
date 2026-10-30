@@ -27,6 +27,7 @@ import com.investmentresearch.data.persistence.StockMapper;
 import com.investmentresearch.data.sync.StockMasterSync;
 import com.investmentresearch.data.upstream.RestClientUpstreamClient;
 import com.investmentresearch.data.upstream.UpstreamClient;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,11 +48,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 class StockDirectoryAdapterTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String CLIST_PATH = "/api/qt/clist/get";
+    private static final Path REPO_ROOT = findRepoRoot();
+    private static final long EXPECTED_STOCKS = 5_563;
 
     @TempDir Path tempDir;
 
@@ -66,18 +70,23 @@ class StockDirectoryAdapterTest {
     void setUp() throws Exception {
         server = new WireMockServer(options().dynamicPort());
         server.start();
-        Path mapping = Path.of("src/test/resources/wiremock/eastmoney/stock-list-page1.json");
-        server.addStubMapping(
-                Json.read(
-                        Files.readString(mapping, StandardCharsets.UTF_8), StubMapping.class));
-        server.stubFor(
-                get(urlPathEqualTo(CLIST_PATH))
-                        .withQueryParam("pn", equalTo("2"))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
-                                        .withBody("{\"rc\": 0, \"data\": {\"diff\": []}}")));
+        Path wiremock = REPO_ROOT.resolve("data/src/test/resources/wiremock/eastmoney");
+        List<Path> pages;
+        try (Stream<Path> files = Files.list(wiremock)) {
+            pages =
+                    files.filter(
+                                    file ->
+                                            file.getFileName()
+                                                    .toString()
+                                                    .matches("stock-list-p\\d+\\.json"))
+                            .toList();
+        }
+        assertThat(pages).hasSize(56);
+        for (Path page : pages) {
+            server.addStubMapping(
+                    Json.read(
+                            Files.readString(page, StandardCharsets.UTF_8), StubMapping.class));
+        }
 
         String url =
                 "jdbc:sqlite:"
@@ -93,18 +102,24 @@ class StockDirectoryAdapterTest {
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.setDbConfig(new GlobalConfig.DbConfig().setIdType(IdType.AUTO));
         GlobalConfigUtils.setGlobalConfig(configuration, globalConfig);
+        UnpooledDataSource dataSource =
+                new UnpooledDataSource("org.sqlite.JDBC", url, null, null);
         configuration.setEnvironment(
-                new Environment(
-                        "test",
-                        new JdbcTransactionFactory(),
-                        new UnpooledDataSource("org.sqlite.JDBC", url, null, null)));
+                new Environment("test", new JdbcTransactionFactory(), dataSource));
         configuration.addMapper(StockMapper.class);
         SqlSessionFactory factory = new MybatisSqlSessionFactoryBuilder().build(configuration);
-        session = factory.openSession(true);
+        // 手动 session 不参与 Spring 事务；关掉自动提交，让 5563 条写入留在同一事务里，
+        // 否则每条 insert 各自 fsync，整页夹具回放要跑两分钟
+        session = factory.openSession(false);
         mapper = session.getMapper(StockMapper.class);
 
         UpstreamClient client = new RestClientUpstreamClient();
-        sync = new StockMasterSync(mapper, client, server.baseUrl() + CLIST_PATH);
+        sync =
+                new StockMasterSync(
+                        mapper,
+                        client,
+                        server.baseUrl() + CLIST_PATH,
+                        new DataSourceTransactionManager(dataSource));
         adapter = new StockDirectoryAdapter(mapper, sync);
         tool = new ResolveCompanyTool(adapter);
     }
@@ -148,12 +163,26 @@ class StockDirectoryAdapterTest {
     }
 
     @Test
+    void integer_name_or_code_and_non_string_types_follow_python() {
+        ToolResult integer = tool.execute(Map.of("name_or_code", 605499), null);
+
+        assertThat(integer.ok()).isTrue();
+        assertThat(integer.company()).isEqualTo("605499");
+
+        ToolResult bool = tool.execute(Map.of("name_or_code", true), null);
+
+        assertThat(bool.ok()).isFalse();
+        assertThat(bool.error()).isEqualTo("company 参数必须是字符串（收到 bool）");
+    }
+
+    @Test
     void master_table_is_loaded_once_when_empty() {
-        assertThat(adapter.all()).hasSize(100);
-        assertThat(mapper.selectCount(null)).isEqualTo(100);
+        // 一页 100 条、共 56 页；这里证明首次查询把整表写入，第二次查询不再抓
+        assertThat(adapter.all()).hasSize((int) EXPECTED_STOCKS);
+        assertThat(mapper.selectCount(null)).isEqualTo(EXPECTED_STOCKS);
 
         assertThat(adapter.byName("东鹏饮料")).contains(new StockRef("605499", "东鹏饮料"));
-        assertThat(adapter.all()).hasSize(100);
+        assertThat(adapter.all()).hasSize((int) EXPECTED_STOCKS);
 
         server.verify(
                 1,
@@ -166,19 +195,52 @@ class StockDirectoryAdapterTest {
         long first = mapper.selectCount(null);
         sync.refresh();
 
-        assertThat(first).isEqualTo(100);
+        assertThat(first).isEqualTo(EXPECTED_STOCKS);
         assertThat(mapper.selectCount(null)).isEqualTo(first);
+    }
+
+    @Test
+    void malformed_upstream_body_leaves_table_empty_and_returns_not_found() {
+        server.resetAll();
+        server.stubFor(
+                get(urlPathEqualTo(CLIST_PATH))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/html")
+                                        .withBody("<html>WAF</html>")));
+
+        ToolResult result = tool.execute(Map.of("name_or_code", "不存在的公司"), null);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.error()).isEqualTo("没有找到「不存在的公司」");
+        assertThat(mapper.selectCount(null)).isZero();
+    }
+
+    @Test
+    void failed_load_is_not_retried_during_cooldown() {
+        server.resetAll();
+        server.stubFor(
+                get(urlPathEqualTo(CLIST_PATH)).willReturn(aResponse().withStatus(500)));
+
+        adapter.byName("东鹏饮料");
+        adapter.byName("贵州茅台");
+
+        // 客户端对 500 重试一次，共 2 次；第二次查询在 60s 冷却内，不再请求
+        server.verify(2, getRequestedFor(urlPathEqualTo(CLIST_PATH)));
+        assertThat(mapper.selectCount(null)).isZero();
     }
 
     @Test
     void three_resolve_company_goldens_match_field_by_field() throws Exception {
         seedFromSnapshot();
 
-        Path goldenDirectory = Path.of("../core/src/test/resources/golden/tools");
+        Path goldenDirectory = REPO_ROOT.resolve("core/src/test/resources/golden/tools");
         Map<String, String> messages =
                 MAPPER.readValue(
                         Files.readString(
-                                Path.of("../core/src/test/resources/golden/tool-messages.json"),
+                                REPO_ROOT.resolve(
+                                        "core/src/test/resources/golden/tool-messages.json"),
                                 StandardCharsets.UTF_8),
                         new TypeReference<Map<String, String>>() {});
 
@@ -219,9 +281,7 @@ class StockDirectoryAdapterTest {
     }
 
     private void seedFromSnapshot() throws Exception {
-        Path snapshot =
-                Path.of("../core/src/test/resources/fixtures/stock-snapshot.db")
-                        .toAbsolutePath();
+        Path snapshot = REPO_ROOT.resolve("core/src/test/resources/fixtures/stock-snapshot.db");
         String url = "jdbc:sqlite:" + snapshot.toString().replace('\\', '/');
         try (Connection connection = DriverManager.getConnection(url);
                 Statement statement = connection.createStatement();
@@ -238,5 +298,23 @@ class StockDirectoryAdapterTest {
 
     private static String text(JsonNode node) {
         return node == null || node.isNull() ? null : node.asText();
+    }
+
+    private static Path findRepoRoot() {
+        Path dir = Path.of("").toAbsolutePath();
+        while (dir != null) {
+            Path pom = dir.resolve("pom.xml");
+            try {
+                if (Files.isRegularFile(pom)
+                        && Files.readString(pom, StandardCharsets.UTF_8)
+                                .contains("<module>data</module>")) {
+                    return dir;
+                }
+            } catch (IOException ignored) {
+                // keep walking up
+            }
+            dir = dir.getParent();
+        }
+        throw new IllegalStateException("Cannot locate repository root");
     }
 }

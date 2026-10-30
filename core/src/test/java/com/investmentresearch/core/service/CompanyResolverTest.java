@@ -72,6 +72,20 @@ class CompanyResolverTest {
         assertThat(resolved.code()).isNull();
         assertThat(resolved.error()).isEqualTo("没有找到「不存在的公司」");
         assertThat(resolved.candidates()).isEmpty();
+
+        // 全点输入在 Java split 下会得到空数组，必须和 Python 一样落到“找不到”
+        for (String dots : List.of(".", "..", "...")) {
+            assertThat(resolver.resolve(dots, null).error()).isEqualTo("没有找到「" + dots + "」");
+        }
+    }
+
+    @Test
+    void unknown_six_digit_code_returns_prefix_error() {
+        ResolvedCompany resolved = resolver.resolve("123456", null);
+
+        assertThat(resolved.code()).isNull();
+        assertThat(resolved.error()).isEqualTo("无法识别股票代码「123456」");
+        assertThat(resolved.candidates()).isEmpty();
     }
 
     private static final class FakeDirectory implements CompanyDirectory {

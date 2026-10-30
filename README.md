@@ -44,6 +44,13 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 页面首次请求 API 时弹出令牌输入框，令牌保存在浏览器 `localStorage["ir_token"]`，
 之后的请求自动带 `Authorization: Bearer <token>`。
 
+## 数据
+
+股票主表在首次查询（`resolve_company` 等需要公司目录的调用）时才从东财 `clist` 拉取并落库，
+启动不访问上游；之后每天 06:00 定时刷新。接口地址默认
+`https://push2test.eastmoney.com/api/qt/clist/get`，可用 `app.stock-list-url`
+（环境变量 `APP_STOCK_LIST_URL`）改指其他可用主机；上游不可用时解析按“找不到公司”返回，不影响启动。
+
 ## 测试
 
 ```bash

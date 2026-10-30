@@ -79,9 +79,12 @@ public final class CompanyResolver {
         }
         if (upper.contains(".")) {
             String[] parts = upper.split("\\.");
-            String suffix = parts[parts.length - 1];
-            if (suffix.equals("SH") || suffix.equals("SZ") || suffix.equals("BJ")) {
-                return new String[] {suffix, digits(parts[0])};
+            // Java 的 split 会把全点输入拆成空数组；Python 此时落到按简称查找
+            if (parts.length > 0) {
+                String suffix = parts[parts.length - 1];
+                if (suffix.equals("SH") || suffix.equals("SZ") || suffix.equals("BJ")) {
+                    return new String[] {suffix, digits(parts[0])};
+                }
             }
         }
         String digits = digits(upper);
