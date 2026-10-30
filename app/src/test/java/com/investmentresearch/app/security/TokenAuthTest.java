@@ -39,6 +39,7 @@ class TokenAuthTest {
         mvc.perform(get("/api/ping"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.error").value("unauthorized"));
     }
 
@@ -70,6 +71,8 @@ class TokenAuthTest {
         mvc.perform(get("/index.html")).andExpect(status().isOk());
         mvc.perform(get("/styles.css")).andExpect(status().isOk());
         mvc.perform(get("/app.js")).andExpect(status().isOk());
+        mvc.perform(get("/boot.js")).andExpect(status().isOk());
+        mvc.perform(get("/assets/x.js")).andExpect(status().isOk());
         mvc.perform(get("/actuator/health")).andExpect(status().isOk());
     }
 

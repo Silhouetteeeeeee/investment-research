@@ -1,5 +1,6 @@
 package com.investmentresearch.app.security;
 
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -34,12 +36,19 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                // SSE responses complete on an ASYNC dispatch, which the chain re-authorizes
+                // with no SecurityContext; without this every streamed answer would 401.
                 .authorizeHttpRequests(
                         auth ->
-                                auth.requestMatchers(PUBLIC_PATHS)
+                                auth.dispatcherTypeMatchers(DispatcherType.ASYNC)
+                                        .permitAll()
+                                        .requestMatchers(PUBLIC_PATHS)
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
+                // No sessions: a 401 otherwise saves the request into a new JSESSIONID.
+                .sessionManagement(
+                        sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(
                         ex ->
                                 ex.authenticationEntryPoint(
