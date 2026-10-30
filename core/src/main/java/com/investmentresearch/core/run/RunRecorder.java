@@ -45,7 +45,7 @@ public final class RunRecorder {
         payload.put("model", model);
         payload.put("started_at", TIMESTAMP.format(local(now)));
         payload.put("finished_at", null);
-        payload.put("total_ms", 0L);
+        payload.put("total_ms", 0);
         payload.put("rounds", 0);
         payload.put("max_rounds", maxRounds);
         payload.put("stop_reason", "error");
@@ -73,7 +73,12 @@ public final class RunRecorder {
         stage.put("prompt_tokens", promptTokens);
         stage.put("completion_tokens", completionTokens);
         stage.put("finish_reason", finishReason);
-        stage.put("usage_source", usageSource);
+        // 拿不到真实用量就得标 estimate，否则页面会把估算值当成 API 统计
+        stage.put("usage_source", usageSource == null ? "estimate" : usageSource);
+        // 轮数只数真实模型轮：Python 强制作答那一轮不计入（agent.py:742,756-758）
+        if (!forced) {
+            payload.put("rounds", Math.max((Integer) payload.get("rounds"), round));
+        }
     }
 
     public void toolStage(
@@ -125,7 +130,6 @@ public final class RunRecorder {
         stage.put("duration_ms", (int) durationMs);
         stage.put("round", round);
         stages.add(stage);
-        payload.put("rounds", Math.max((Integer) payload.get("rounds"), round));
         return stage;
     }
 

@@ -19,7 +19,8 @@ class FileRunStoreTest {
     @TempDir Path tempDir;
 
     @Test
-    void write_is_atomic_and_readable() throws IOException {
+    void write_leaves_only_the_final_file_and_is_readable() throws IOException {
+        // 原子性无法从外部观测；这里守的是"临时文件不残留、且不以 .json 结尾被当成原文"
         FileRunStore store = new FileRunStore(tempDir);
         Map<String, Object> payload =
                 Map.of("run_id", RUN_ID, "version", 1, "question", "研究一下");

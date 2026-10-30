@@ -43,8 +43,44 @@ class RunRecorderTest {
                 .containsExactly("model", "tool", "model");
         assertThat(stages)
                 .extracting(stage -> (Integer) stage.get("start_ms"))
-                .isSorted();
+                .containsExactly(0, 5_063, 5_103);
+        assertThat(stages)
+                .extracting(stage -> (Integer) stage.get("duration_ms"))
+                .containsExactly(5_063, 40, 2_000);
         assertThat(recorder.payload().get("rounds")).isEqualTo(2);
+    }
+
+    @Test
+    void forced_answer_does_not_raise_rounds() {
+        RunRecorder recorder = recorder();
+        recorder.start(17, "研究一下");
+
+        recorder.modelStage(10, 100, null, 10, 5, "tool_calls", "api", false);
+        recorder.modelStage(11, 100, null, 10, 5, "stop", "api", true);
+
+        assertThat(recorder.payload().get("rounds")).isEqualTo(10);
+    }
+
+    @Test
+    void finish_keeps_a_non_null_error() {
+        RunRecorder recorder = recorder();
+        recorder.start(17, "研究一下");
+
+        recorder.finish("error", "上游挂了");
+
+        assertThat(recorder.payload().get("error")).isEqualTo("上游挂了");
+        assertThat(recorder.payload().get("stop_reason")).isEqualTo("error");
+    }
+
+    @Test
+    void null_usage_source_falls_back_to_estimate() {
+        RunRecorder recorder = recorder();
+        recorder.start(17, "研究一下");
+
+        recorder.modelStage(1, 100, null, null, null, null, null, false);
+
+        assertThat(stages(recorder.payload()).get(0).get("usage_source"))
+                .isEqualTo("estimate");
     }
 
     @Test
