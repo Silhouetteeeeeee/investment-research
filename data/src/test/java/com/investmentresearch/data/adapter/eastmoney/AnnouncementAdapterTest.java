@@ -116,6 +116,9 @@ class AnnouncementAdapterTest {
         assertThat(wide.ok()).isTrue();
         assertThat(wide.data().get("days")).isEqualTo(365);
         assertThat(items(wide)).hasSize(20);
+        // 明细与来源都截在 20 条，来源不补抓取时间
+        assertThat(wide.sources()).hasSize(20);
+        assertThat(wide.sources()).allMatch(source -> source.fetchedAt().isEmpty());
         assertDescending(items(wide));
         assertDescendingSources(wide);
 
@@ -127,10 +130,14 @@ class AnnouncementAdapterTest {
             assertThat((String) item.get("date")).isGreaterThanOrEqualTo("2026-10-29");
         }
         assertDescending(items);
+
+        // Python `arguments.get("days") or 180`：0 和 null 都回落到 180
+        assertThat(adapter().announcements("605499", 0).data().get("days")).isEqualTo(180);
+        assertThat(adapter().announcements("605499", null).data().get("days")).isEqualTo(180);
     }
 
     @Test
-    void empty_list_returns_ok_true_with_empty_sources() {
+    void empty_list_returns_failure_with_no_announcement_message() {
         mapper.delete(Wrappers.<AnnouncementEntity>query().eq("code", "000858"));
         server.stubFor(
                 get(urlPathEqualTo(ANN_PATH))
@@ -142,14 +149,11 @@ class AnnouncementAdapterTest {
 
         ToolResult result = adapter().announcements("000858", 180);
 
-        assertThat(result.ok()).isTrue();
-        assertThat(result.error()).isNull();
+        assertThat(result.ok()).isFalse();
+        assertThat(result.error()).isEqualTo("000858：近 180 天没有公告");
         assertThat(result.asOf()).isNull();
         assertThat(result.sources()).isEmpty();
-        assertThat(items(result)).isEmpty();
-        assertThat(result.data().get("days")).isEqualTo(180);
-        assertThat(result.data().get("as_of")).isNull();
-        assertThat(result.data().get("name")).isEqualTo(stockMapper.selectNameByCode("000858"));
+        assertThat(result.data()).isNull();
         assertThat(count("000858")).isZero();
     }
 

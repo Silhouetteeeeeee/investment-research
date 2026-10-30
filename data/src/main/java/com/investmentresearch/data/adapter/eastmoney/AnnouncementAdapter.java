@@ -37,6 +37,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
     static final int RETENTION_DAYS = 400;
     static final int MAX_AGE_HOURS = 6;
     static final int TOOL_ITEMS = 20;
+    static final int DEFAULT_DAYS = 180;
     static final int MIN_DAYS = 1;
     static final int MAX_DAYS = 365;
     static final String DEFAULT_ENDPOINT =
@@ -111,8 +112,10 @@ public class AnnouncementAdapter implements AnnouncementPort {
     }
 
     @Override
-    public ToolResult announcements(String rawCode, int days) {
-        int window = Math.min(Math.max(days, MIN_DAYS), MAX_DAYS);
+    public ToolResult announcements(String rawCode, Integer days) {
+        // Python `int(arguments.get("days") or 180)`：缺省、null、0 都回到 180
+        int window = days == null || days == 0 ? DEFAULT_DAYS : days;
+        window = Math.min(Math.max(window, MIN_DAYS), MAX_DAYS);
         String code = EastmoneySupport.normalize(rawCode);
         if (code.isEmpty()) {
             return ToolResult.failure(rawCode, "请输入股票代码");
@@ -140,7 +143,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
                     if (!cached.isEmpty()) {
                         return assemble(code, cached, window);
                     }
-                    return empty(code, window);
+                    return noAnnouncements(code, window);
                 }
                 save(code, fetched);
                 rows = readRows(code);
@@ -292,7 +295,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
         }
         window.sort(NEWEST_FIRST);
         if (window.isEmpty()) {
-            return empty(code, days);
+            return noAnnouncements(code, days);
         }
 
         String name = stockMapper.selectNameByCode(code);
@@ -332,14 +335,9 @@ public class AnnouncementAdapter implements AnnouncementPort {
         return ToolResult.ok(code, asOf, sources, data);
     }
 
-    private ToolResult empty(String code, int days) {
-        Map<String, Object> data = new LinkedHashMap<>();
-        data.put("code", code);
-        data.put("name", stockMapper.selectNameByCode(code));
-        data.put("days", days);
-        data.put("as_of", null);
-        data.put("items", List.of());
-        return ToolResult.ok(code, null, List.of(), data);
+    /** Python {@code _announcements}：窗口内没有公告是失败，不是成功空结果。 */
+    private static ToolResult noAnnouncements(String code, int days) {
+        return ToolResult.failure(code, code + "：近 " + days + " 天没有公告");
     }
 
     /** {@code stock/announcements.py:classify}：有利空标签时按"异常"算。 */
