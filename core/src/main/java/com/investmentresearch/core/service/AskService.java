@@ -97,8 +97,9 @@ public final class AskService {
                         "code", route.code(),
                         "name", route.name(),
                         "notice", notice));
-        repository.append(cid, "user", event("text", question));
+        // 初始占用不含刚提交的问题：Python 的 meter 读 agent 历史，新增用户消息尚未进入
         sendMeter(out, cid, 0);
+        repository.append(cid, "user", event("text", question));
 
         Draft draft = new Draft();
         long[] lastMeter = {clock.millis() - METER_INTERVAL_MS};
@@ -209,24 +210,23 @@ public final class AskService {
         try {
             usage = meter.usage(conversationId, draftTokens);
         } catch (RuntimeException error) {
-            // 占用环算不出来不影响回答（assistant/api.py:139-144）
+            // 所有调用点都吞掉 meter 失败；Python 只包了节流那一处（api.py:139-144），此处更保守
             return;
         }
         out.send(event("type", "meter", "usage", usage));
     }
 
-    /** Python projects {@code message or type} and keeps only {@code [:2]} on the page. */
+    /** Python slices {@code [:2]} first, then drops empty strings ({@code api.py:197-200}). */
     private static List<String> pageIssues(List<String> issues) {
         List<String> page = new ArrayList<>();
         if (issues == null) {
             return page;
         }
-        for (String issue : issues) {
+        int limit = Math.min(PAGE_ISSUE_LIMIT, issues.size());
+        for (int i = 0; i < limit; i++) {
+            String issue = issues.get(i);
             if (issue != null && !issue.isEmpty()) {
                 page.add(issue);
-                if (page.size() == PAGE_ISSUE_LIMIT) {
-                    break;
-                }
             }
         }
         return page;
@@ -267,16 +267,17 @@ public final class AskService {
     /** {@code assistant/store.py:build_title}. */
     static String buildTitle(String name, String question) {
         String text = question == null ? "" : question.strip();
-        if (text.length() > TITLE_LIMIT) {
-            text = text.substring(0, TITLE_LIMIT) + "…";
+        if (text.codePointCount(0, text.length()) > TITLE_LIMIT) {
+            text = text.substring(0, text.offsetByCodePoints(0, TITLE_LIMIT)) + "…";
         }
         String value = name == null ? "" : name.strip();
         return value.isEmpty() ? text : value + " · " + text;
     }
 
+    /** Python's {@code f"{error}"}: an exception without a message contributes nothing. */
     private static String errorText(RuntimeException error) {
         String message = error.getMessage();
-        return message == null ? error.toString() : message;
+        return message == null ? "" : message;
     }
 
     private static Map<String, Object> event(Object... pairs) {

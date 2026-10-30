@@ -90,11 +90,14 @@ public final class QuestionRouter {
                 continue;
             }
             // 位置优先，其次名字更长（避免「中国平安」被「平安」抢走）
-            if (best == null || index < best.index || (index == best.index && name.length() > best.nameLength)) {
-                best = new Best(index, name.length(), stock);
+            if (best == null
+                    || index < best.index
+                    || (index == best.index && name.length() > best.name.length())) {
+                best = new Best(index, name, stock);
             }
         }
-        return best == null ? null : best.stock;
+        // Python 返回匹配时用的简称，而不是表里的原始名字（可能带空白）
+        return best == null ? null : new StockRef(best.stock.code(), best.name);
     }
 
     /** {@code assistant/tools.py:refers_to_company}. */
@@ -123,5 +126,5 @@ public final class QuestionRouter {
         return false;
     }
 
-    private record Best(int index, int nameLength, StockRef stock) {}
+    private record Best(int index, String name, StockRef stock) {}
 }

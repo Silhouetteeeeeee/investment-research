@@ -1,19 +1,28 @@
 package com.investmentresearch.core.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.investmentresearch.core.domain.StoredMessage;
 import com.investmentresearch.core.port.ConversationRepository;
+import com.investmentresearch.core.tool.ToolSchemas;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Context-ring numbers for the page. The estimate is the character heuristic from
- * {@code assistant/agent.py:estimate_tokens}; Python also counts the system prompt and tool
- * schemas, but this layer only sees stored messages, so those fixed costs are omitted.
+ * Context-ring numbers for the page. Mirrors {@code assistant/agent.py:_estimate}: the system
+ * prompt and generated tool schemas are a fixed cost, the conversation is estimated from its
+ * messages, and each message adds a small overhead. {@code draftTokens} is the streamed answer.
  */
 public final class ContextMeter {
     static final int BUDGET_TOKENS = 55_000;
     static final int HARD_TOKENS = 80_000;
+
+    private static final ObjectMapper JSON = new ObjectMapper();
+    private static final int FIXED_TOKENS = computeFixedTokens();
 
     private final ConversationRepository repository;
 
@@ -21,9 +30,14 @@ public final class ContextMeter {
         this.repository = repository;
     }
 
-    /** {@code assistant/agent.py:277-301}: {@code draftTokens} is the streamed answer so far. */
+    /** {@code assistant/agent.py:277-301}; thresholds match the frontend's ring. */
     public Map<String, Object> usage(long conversationId, int draftTokens) {
-        int tokens = storedTokens(conversationId) + Math.max(0, draftTokens);
+        List<StoredMessage> messages = repository.messages(conversationId);
+        int tokens =
+                FIXED_TOKENS
+                        + messageTokens(messages)
+                        + 4 * (messageUnits(messages) + 2)
+                        + Math.max(0, draftTokens);
         double share = tokens / (double) BUDGET_TOKENS;
         String level = share >= 1 ? "over" : share >= 0.8 ? "warn" : "normal";
 
@@ -37,16 +51,50 @@ public final class ContextMeter {
         return usage;
     }
 
-    private int storedTokens(long conversationId) {
+    static int fixedTokens() {
+        return FIXED_TOKENS;
+    }
+
+    /** The same resources the engine's prompt and registry consume, so a prompt edit moves this. */
+    private static int computeFixedTokens() {
+        // 解析一次，确保运行中的引擎和这里读的是同一份 schema 资源
+        ToolSchemas.loadDefault();
+        return estimateTokens(resource("/prompts/system.md"))
+                + estimateTokens(resource("/tool-schemas.json"));
+    }
+
+    private static String resource(String path) {
+        try (InputStream stream = ContextMeter.class.getResourceAsStream(path)) {
+            if (stream == null) {
+                throw new IllegalStateException("缺少 classpath 资源：" + path);
+            }
+            return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException error) {
+            throw new IllegalStateException("读取 classpath 资源失败：" + path, error);
+        }
+    }
+
+    private static int messageTokens(List<StoredMessage> messages) {
         int tokens = 0;
-        List<StoredMessage> messages = repository.messages(conversationId);
         for (StoredMessage message : messages) {
             tokens += estimateTokens(messageText(message.payload()));
         }
         return tokens;
     }
 
-    /** Mirrors {@code assistant/agent.py:_message_text}: content plus tool names and arguments. */
+    /** Python's {@code len(self._history)}: each stored message plus each replayable raw message. */
+    private static int messageUnits(List<StoredMessage> messages) {
+        int units = messages.size();
+        for (StoredMessage message : messages) {
+            Object raw = message.payload() == null ? null : message.payload().get("raw");
+            if (raw instanceof List<?> items) {
+                units += items.size();
+            }
+        }
+        return units;
+    }
+
+    /** Mirrors {@code assistant/agent.py:_message_text}; raw items may be text or tool-result maps. */
     private static String messageText(Map<String, Object> payload) {
         if (payload == null) {
             return "";
@@ -57,28 +105,24 @@ public final class ContextMeter {
         Object raw = payload.get("raw");
         if (raw instanceof List<?> items) {
             for (Object item : items) {
-                if (!(item instanceof Map<?, ?> message)) {
-                    continue;
-                }
-                append(text, message.get("content"));
-                Object calls = message.get("tool_calls");
-                if (calls instanceof List<?> list) {
-                    for (Object call : list) {
-                        if (call instanceof Map<?, ?> entry
-                                && entry.get("function") instanceof Map<?, ?> function) {
-                            append(text, function.get("name"));
-                            Object arguments = function.get("arguments");
-                            if (arguments != null) {
-                                append(text, arguments instanceof String value
-                                        ? value
-                                        : String.valueOf(arguments));
-                            }
-                        }
-                    }
+                // 新 engine 的 raw 是 {role, tool_call_id, content}；旧的是 ToolResult map，整体序列化
+                if (item instanceof Map<?, ?> message
+                        && message.get("content") instanceof String content) {
+                    text.append(content);
+                } else if (item != null) {
+                    text.append(serialize(item));
                 }
             }
         }
         return text.toString();
+    }
+
+    private static String serialize(Object value) {
+        try {
+            return JSON.writeValueAsString(value);
+        } catch (JsonProcessingException error) {
+            return String.valueOf(value);
+        }
     }
 
     private static void append(StringBuilder text, Object value) {
@@ -87,7 +131,7 @@ public final class ContextMeter {
         }
     }
 
-    /** {@code assistant/agent.py:estimate_tokens}: CJK 0.7, the rest 0.3, +1, deliberately high. */
+    /** {@code assistant/agent.py:1106-1116}: CJK 0.7, the rest 0.3, +1, deliberately high. */
     static int estimateTokens(String text) {
         if (text == null || text.isEmpty()) {
             return 0;

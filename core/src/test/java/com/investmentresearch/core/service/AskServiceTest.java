@@ -67,8 +67,8 @@ class AskServiceTest {
                 .containsEntry("role", "assistant")
                 .containsEntry("text", "东鹏饮料 2025 年营收稳健。");
         assertThat(message).doesNotContainKey("raw");
-        // 空白 issue 被丢弃，页面只留前两条
-        assertThat((List<String>) message.get("issues")).containsExactly("问题一", "问题二");
+        // Python 先切 [:2] 再丢空串，所以第二个空 issue 之后的内容不会出现在页面上
+        assertThat((List<String>) message.get("issues")).containsExactly("问题一");
         assertThat((List<?>) message.get("sources")).hasSize(1);
         @SuppressWarnings("unchecked")
         Map<String, Object> source = (Map<String, Object>) ((List<?>) message.get("sources")).get(0);
@@ -168,6 +168,19 @@ class AskServiceTest {
                 .containsEntry("run", null);
         assertThat(repository.usages).isEmpty();
         assertThat(runStore.written).isEmpty();
+        assertThat(sink.completes).isEqualTo(1);
+    }
+
+    @Test
+    void message_less_engine_failure_uses_the_empty_python_copy() {
+        engine.failure = new IllegalStateException();
+        CapturingSink sink = new CapturingSink();
+
+        service().ask(null, "东鹏饮料的营收怎么样", sink);
+
+        Map<String, Object> error = sink.events.get(sink.events.size() - 1);
+        assertThat(error).containsEntry("text", "研究失败：");
+        assertThat(repository.stored(1L).get(1).payload()).containsEntry("text", "研究失败：");
     }
 
     @Test
@@ -188,14 +201,42 @@ class AskServiceTest {
     @Test
     void usage_is_persisted_after_done() {
         engine.result = answer();
+        CapturingSink sink = new CapturingSink();
 
-        service().ask(null, "东鹏饮料的营收怎么样", new CapturingSink());
+        service().ask(null, "东鹏饮料的营收怎么样", sink);
 
         Map<String, Object> usage = repository.usages.get(1L);
         assertThat(usage)
                 .containsEntry("budget_tokens", 55_000)
                 .containsEntry("hard_tokens", 80_000)
                 .containsKeys("tokens", "percent", "ratio", "level");
+        Map<String, Object> done = sink.events.get(sink.events.size() - 1);
+        assertThat(done.get("usage")).isEqualTo(usage);
+    }
+
+    @Test
+    void title_truncates_by_code_points() {
+        assertThat(AskService.buildTitle(null, "问".repeat(31)))
+                .isEqualTo("问".repeat(30) + "…");
+        // 增补平面字符在 UTF-16 里占两个单元，Python 的 len() 按一个算
+        assertThat(AskService.buildTitle("东鹏饮料", "😀".repeat(31)))
+                .isEqualTo("东鹏饮料 · " + "😀".repeat(30) + "…");
+    }
+
+    @Test
+    void market_question_leaves_the_current_conversation_untouched() {
+        long current = seed("贵州茅台 · 上一轮", "600519", "贵州茅台");
+        repository.append(current, "user", new LinkedHashMap<>(Map.of("text", "旧问题")));
+        List<StoredMessage> before = List.copyOf(repository.stored(current));
+        CapturingSink sink = new CapturingSink();
+
+        service().ask(current, "大盘走势怎么样", sink);
+
+        assertThat(types(sink)).containsExactly("warning");
+        assertThat(repository.conversations).hasSize(1);
+        assertThat(repository.stored(current)).isEqualTo(before);
+        assertThat(repository.usages).isEmpty();
+        assertThat(engine.calls).isZero();
     }
 
     @Test

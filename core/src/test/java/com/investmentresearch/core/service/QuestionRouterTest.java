@@ -18,7 +18,7 @@ class QuestionRouterTest {
                     new StockRef("000001", "平安银行"),
                     new StockRef("000002", "平安"),
                     new StockRef("600000", " "),
-                    new StockRef("600001", "浦发银行"));
+                    new StockRef("600001", " 浦发银行 "));
 
     private final QuestionRouter router = new QuestionRouter(new FakeDirectory(STOCKS));
 
@@ -52,6 +52,14 @@ class QuestionRouterTest {
         assertThat(router.route(null, null, "平安银行怎么样").name()).isEqualTo("平安银行");
         // 先出现者胜：贵州茅台在 0，中国平安在 5
         assertThat(router.route(null, null, "贵州茅台和中国平安").name()).isEqualTo("贵州茅台");
+    }
+
+    @Test
+    void matched_name_is_the_stripped_name_from_the_directory() {
+        Route route = router.route(null, null, "浦发银行怎么样");
+
+        assertThat(route.code()).isEqualTo("600001");
+        assertThat(route.name()).isEqualTo("浦发银行");
     }
 
     @Test

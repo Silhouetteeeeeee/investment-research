@@ -6,6 +6,7 @@ import com.investmentresearch.core.domain.Conversation;
 import com.investmentresearch.core.domain.StoredMessage;
 import com.investmentresearch.core.port.ConversationRepository;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,16 +18,18 @@ class ContextMeterTest {
     private final ContextMeter meter = new ContextMeter(repository);
 
     @Test
-    void usage_reports_the_frontend_ring_shape() {
+    void usage_reports_the_frontend_ring_shape_including_the_fixed_cost() {
         Map<String, Object> usage = meter.usage(1, 0);
 
+        // 空会话也含 system prompt + schema 的固定成本，以及 4*(0+2) 的消息开销
         assertThat(usage)
-                .containsEntry("tokens", 0)
+                .containsEntry("tokens", ContextMeter.fixedTokens() + 8)
                 .containsEntry("budget_tokens", 55_000)
                 .containsEntry("hard_tokens", 80_000)
-                .containsEntry("percent", 0.0)
-                .containsEntry("ratio", 0.0)
-                .containsEntry("level", "normal");
+                .containsEntry("level", "normal")
+                .containsKeys("percent", "ratio");
+        assertThat((Double) usage.get("percent")).isGreaterThan(0.0);
+        assertThat(ContextMeter.fixedTokens()).isGreaterThan(10_000);
     }
 
     @Test
@@ -39,52 +42,88 @@ class ContextMeterTest {
 
     @Test
     void stored_messages_and_the_draft_are_added_together() {
-        repository.messages.add(new StoredMessage("user", Map.of("text", "中文中文中文中文中")));
+        String text = "中文中文中文中文中";
+        repository.messages.add(new StoredMessage("user", Map.of("text", text)));
 
         Map<String, Object> usage = meter.usage(1, 1_000);
 
-        // 9 个中文字符 → int(6.3) + 1 = 7
-        assertThat(usage).containsEntry("tokens", 1_007);
-        assertThat(usage).containsEntry("level", "normal");
+        int expected =
+                ContextMeter.fixedTokens()
+                        + ContextMeter.estimateTokens(text)
+                        + 4 * (1 + 2)
+                        + 1_000;
+        assertThat(usage).containsEntry("tokens", expected);
     }
 
     @Test
-    void raw_tool_messages_from_the_assistant_turn_are_counted() {
-        Map<String, Object> function =
-                Map.of("name", "get_finance", "arguments", "{}");
-        Map<String, Object> toolMessage =
+    void raw_tool_content_is_counted_for_the_engine_shape() {
+        Map<String, Object> rawTool =
                 Map.of(
                         "role", "tool",
-                        "content", "中文中文",
-                        "tool_calls", List.of(Map.of("function", function)));
-        Map<String, Object> assistant =
-                Map.of("text", "回答", "raw", List.of(toolMessage));
-        repository.messages.add(new StoredMessage("assistant", assistant));
+                        "tool_call_id", "call-1",
+                        "content", "中文中文");
+        repository.messages.add(
+                new StoredMessage("assistant", Map.of("text", "回答", "raw", List.of(rawTool))));
 
-        // 回答 2 + 工具内容 4 = 6 个中文字符；get_finance 与 {} 共 13 个其他字符
-        assertThat((Integer) meter.usage(1, 0).get("tokens")).isEqualTo(9);
+        int expected =
+                ContextMeter.fixedTokens()
+                        + ContextMeter.estimateTokens("回答")
+                        + ContextMeter.estimateTokens("中文中文")
+                        + 4 * (2 + 2);
+        assertThat(meter.usage(1, 0)).containsEntry("tokens", expected);
+    }
+
+    @Test
+    void tool_result_maps_without_a_content_field_are_still_counted() {
+        Map<String, Object> toolResult = new LinkedHashMap<>();
+        toolResult.put("ok", true);
+        toolResult.put("company", "605499");
+        toolResult.put("as_of", "2025-09-30");
+        toolResult.put("data", Map.of("revenue", "中文中文中文"));
+        toolResult.put("cached", false);
+        repository.messages.add(
+                new StoredMessage(
+                        "assistant", Map.of("text", "回答", "raw", List.of(toolResult))));
+
+        // 没有 content 时整条工具结果被序列化，所以一定高于只有固定成本和消息开销的下限
+        assertThat((Integer) meter.usage(1, 0).get("tokens"))
+                .isGreaterThan(ContextMeter.fixedTokens() + 4 * (2 + 2));
     }
 
     @Test
     void eighty_percent_is_warn_and_full_budget_is_over() {
-        assertThat(meter.usage(1, 44_000)).containsEntry("level", "warn");
+        int base = (Integer) meter.usage(1, 0).get("tokens");
+
+        assertThat(meter.usage(1, 44_000 - base))
+                .containsEntry("tokens", 44_000)
+                .containsEntry("level", "warn");
         // 80% 是 44000 tokens，少一个仍属正常
-        assertThat(meter.usage(1, 43_999)).containsEntry("level", "normal");
-        assertThat(meter.usage(1, 55_000)).containsEntry("level", "over");
+        assertThat(meter.usage(1, 43_999 - base))
+                .containsEntry("tokens", 43_999)
+                .containsEntry("level", "normal");
+        assertThat(meter.usage(1, 55_000 - base))
+                .containsEntry("tokens", 55_000)
+                .containsEntry("level", "over");
     }
 
     @Test
     void over_budget_clamps_ratio_but_percent_stays_truthful() {
-        Map<String, Object> usage = meter.usage(1, 110_000);
+        int base = (Integer) meter.usage(1, 0).get("tokens");
 
-        assertThat(usage).containsEntry("percent", 200.0);
-        assertThat(usage).containsEntry("ratio", 1.0);
-        assertThat(usage).containsEntry("level", "over");
+        Map<String, Object> usage = meter.usage(1, 110_000 - base);
+
+        assertThat(usage)
+                .containsEntry("tokens", 110_000)
+                .containsEntry("percent", 200.0)
+                .containsEntry("ratio", 1.0)
+                .containsEntry("level", "over");
     }
 
     @Test
     void negative_draft_tokens_are_ignored() {
-        assertThat(meter.usage(1, -10)).containsEntry("tokens", 0);
+        int base = (Integer) meter.usage(1, 0).get("tokens");
+
+        assertThat(meter.usage(1, -10)).containsEntry("tokens", base);
     }
 
     private static final class FakeRepository implements ConversationRepository {
