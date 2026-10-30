@@ -25,11 +25,13 @@ function askToken() {
 
 async function apiFetch(url, options = {}) {
   const opts = { ...options, headers: { ...(options.headers || {}) } };
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) opts.headers.Authorization = `Bearer ${token}`;
+  const sent = localStorage.getItem(TOKEN_KEY);
+  if (sent) opts.headers.Authorization = `Bearer ${sent}`;
   let response = await fetch(url, opts);
   if (response.status === 401) {
-    const fresh = askToken();
+    // 并行请求会同时 401；先看别的请求是否已经问到并保存了新的令牌，避免连续弹两次
+    const stored = localStorage.getItem(TOKEN_KEY);
+    const fresh = stored && stored !== sent ? stored : askToken();
     if (fresh) {
       opts.headers.Authorization = `Bearer ${fresh}`;
       response = await fetch(url, opts);

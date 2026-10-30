@@ -1,7 +1,8 @@
 # frontend
 
 投资助手的原生页面：Vue 3（global build，不需要打包）+ marked + DOMPurify，由
-`assistant/api.py`（Starlette）提供服务和数据接口。
+Spring Boot 服务（`app` 模块）直接托管，接口在 `/api/**`，请求带
+`Authorization: Bearer <APP_API_TOKEN>`。
 
 - `index.html`：页面结构
 - `styles.css`：样式
