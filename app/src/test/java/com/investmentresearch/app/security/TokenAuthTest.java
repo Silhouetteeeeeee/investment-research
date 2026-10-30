@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,6 +50,14 @@ class TokenAuthTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.error").value("unauthorized"));
+    }
+
+    // The chain is STATELESS; a 401 must not create a session for the request cache.
+    @Test
+    void unauthorized_response_creates_no_session() throws Exception {
+        MvcResult result =
+                mvc.perform(get("/api/ping")).andExpect(status().isUnauthorized()).andReturn();
+        assertThat(result.getRequest().getSession(false)).isNull();
     }
 
     @Test
@@ -104,6 +113,20 @@ class TokenAuthTest {
                             assertThat(context.getStartupFailure())
                                     .hasRootCauseInstanceOf(IllegalStateException.class)
                                     .hasStackTraceContaining("APP_API_TOKEN 未配置");
+                        });
+    }
+
+    @Test
+    void non_ascii_app_api_token_fails_startup() {
+        new ApplicationContextRunner()
+                .withUserConfiguration(PropertiesOnlyConfig.class)
+                .withPropertyValues("app.api-token=令牌")
+                .run(
+                        context -> {
+                            assertThat(context).hasFailed();
+                            assertThat(context.getStartupFailure())
+                                    .hasRootCauseInstanceOf(IllegalStateException.class)
+                                    .hasStackTraceContaining("ASCII");
                         });
     }
 
