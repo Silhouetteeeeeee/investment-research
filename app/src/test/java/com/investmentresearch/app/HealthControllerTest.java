@@ -8,6 +8,7 @@ import com.investmentresearch.app.api.HealthController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(HealthController.class)
@@ -18,6 +19,7 @@ class HealthControllerTest {
     void health_returns_ok_without_token() throws Exception {
         mvc.perform(get("/health"))
            .andExpect(status().isOk())
+           .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
            .andExpect(content().string("ok"));
     }
 }
