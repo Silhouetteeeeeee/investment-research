@@ -158,6 +158,104 @@ class AnnouncementAdapterTest {
     }
 
     @Test
+    void fresh_cache_with_empty_window_returns_failure() {
+        // 缓存新鲜但 days=1 窗口内没有公告：走 assemble 的空窗口分支，不是页 1 空
+        makeFresh("600600");
+        ToolResult result = adapter().announcements("600600", 1);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.error()).isEqualTo("600600：近 1 天没有公告");
+        server.verify(0, getRequestedFor(urlPathEqualTo(ANN_PATH)));
+    }
+
+    @Test
+    void payload_fields_are_clipped_and_normalised() {
+        mapper.delete(Wrappers.<AnnouncementEntity>query().eq("code", "000858"));
+        String longTitle = "超长标题".repeat(20);
+        server.stubFor(
+                get(urlPathEqualTo(ANN_PATH))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody(
+                                                "{\"data\":{\"list\":["
+                                                        + "{\"art_code\":\"ANLONG\",\"notice_date\":\"2026-10-29 00:00:00\",\"title_ch\":\""
+                                                        + longTitle
+                                                        + "\",\"columns\":[]},"
+                                                        + "{\"art_code\":\"ANPREFIX\",\"notice_date\":\"2026-10-28 00:00:00\","
+                                                        + "\"title_ch\":\"测试公司:关于回购股份的公告\","
+                                                        + "\"codes\":[{\"short_name\":\"测试公司\"}],"
+                                                        + "\"columns\":[{\"column_name\":\"股票回购\"}]},"
+                                                        + "{\"art_code\":\"ANCAT\",\"notice_date\":\"2026-10-27 00:00:00\","
+                                                        + "\"title_ch\":\"普通事项公告\","
+                                                        + "\"columns\":[{\"column_name\":\"股权激励\"}]}"
+                                                        + "]}}")));
+
+        ToolResult result = adapter().announcements("000858", 180);
+
+        assertThat(result.ok()).isTrue();
+        List<Map<String, Object>> items = items(result);
+        assertThat(items).extracting(item -> (String) item.get("title"))
+                .containsExactly(longTitle, "关于回购股份的公告", "普通事项公告");
+        // 60 字截断只加在 source detail，item 标题保持完整
+        assertThat(result.sources().get(0).detail())
+                .isEqualTo(longTitle.substring(0, 60) + "…");
+        assertThat(items.get(1).get("tags")).isEqualTo(List.of("回购"));
+        assertThat(items.get(2).get("tags")).isEqualTo(List.of("股权激励"));
+        assertThat(items.get(2).get("level")).isEqualTo("info");
+
+        List<AnnouncementEntity> rows =
+                mapper.selectList(
+                        Wrappers.<AnnouncementEntity>query().eq("code", "000858"));
+        AnnouncementEntity prefix =
+                rows.stream()
+                        .filter(row -> "ANPREFIX".equals(row.getArtCode()))
+                        .findFirst()
+                        .orElseThrow();
+        assertThat(prefix.getCategories()).isEqualTo("股票回购");
+        assertThat(prefix.getUrl())
+                .isEqualTo(
+                        "https://data.eastmoney.com/notices/detail/000858/ANPREFIX.html");
+    }
+
+    @Test
+    void server_error_falls_back_to_cached_rows() {
+        setFetchedAt("600600", STALE_TIMESTAMP);
+        server.stubFor(
+                get(urlPathEqualTo(ANN_PATH)).willReturn(aResponse().withStatus(500)));
+
+        ToolResult result = adapter().announcements("600600", 180);
+
+        assertThat(result.ok()).isTrue();
+        assertThat(result.asOf()).isEqualTo("2026-10-17");
+        assertThat(result.sources()).hasSize(20);
+        // 上游客户端对 5xx 重试一次才放弃，随后回退到旧缓存
+        server.verify(
+                2,
+                getRequestedFor(urlPathEqualTo(ANN_PATH))
+                        .withQueryParam("stock_list", equalTo("600600")));
+    }
+
+    @Test
+    void unparseable_fetched_at_is_treated_as_stale() {
+        setFetchedAt("605499", "not-a-timestamp");
+
+        ToolResult result = adapter().announcements("605499", 180);
+
+        assertThat(result.ok()).isTrue();
+        List<AnnouncementEntity> rows =
+                mapper.selectList(
+                        Wrappers.<AnnouncementEntity>query().eq("code", "605499"));
+        assertThat(rows).extracting(AnnouncementEntity::getFetchedAt)
+                .contains("2026-10-30 12:00:00");
+        server.verify(
+                4,
+                getRequestedFor(urlPathEqualTo(ANN_PATH))
+                        .withQueryParam("stock_list", equalTo("605499")));
+    }
+
+    @Test
     void malformed_date_row_is_skipped_not_fatal() {
         mapper.delete(Wrappers.<AnnouncementEntity>query().eq("code", "000858"));
         server.stubFor(

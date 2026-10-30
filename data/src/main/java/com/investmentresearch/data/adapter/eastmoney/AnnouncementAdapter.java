@@ -12,11 +12,9 @@ import com.investmentresearch.data.persistence.AnnouncementMapper;
 import com.investmentresearch.data.persistence.StockMapper;
 import com.investmentresearch.data.upstream.UpstreamClient;
 import java.time.Clock;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -33,9 +31,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Repository
 public class AnnouncementAdapter implements AnnouncementPort {
     static final int PAGE_SIZE = 100;
-    static final int MAX_PAGES = 5;
     static final int RETENTION_DAYS = 400;
-    static final int MAX_AGE_HOURS = 6;
     static final int TOOL_ITEMS = 20;
     static final int DEFAULT_DAYS = 180;
     static final int MIN_DAYS = 1;
@@ -113,7 +109,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
 
     @Override
     public ToolResult announcements(String rawCode, Integer days) {
-        // Python `int(arguments.get("days") or 180)`：缺省、null、0 都回到 180
+        // 生产路径 AnnouncementsTool 已给 180 并钳成 int；这里的兜底只服务直接调用方
         int window = days == null || days == 0 ? DEFAULT_DAYS : days;
         window = Math.min(Math.max(window, MIN_DAYS), MAX_DAYS);
         String code = EastmoneySupport.normalize(rawCode);
@@ -121,6 +117,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
             return ToolResult.failure(rawCode, "请输入股票代码");
         }
         try {
+            // 生产路径 resolve_code 已挡住未知前缀；这里保留 Python fetch 内的校验作兜底
             if (!knownExchange(code)) {
                 return ToolResult.failure(code, code + "：无法判断交易所");
             }
@@ -134,7 +131,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
                     fetched = fetch(code);
                 } catch (RuntimeException error) {
                     if (cached.isEmpty()) {
-                        return ToolResult.failure(code, error.getMessage());
+                        return ToolResult.failure(code, reason(error));
                     }
                     return assemble(code, cached, window);
                 }
@@ -151,7 +148,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
             return assemble(code, rows, window);
         } catch (RuntimeException error) {
             // 端口不抛异常：上游、读库或组装出的意外错误同样折成失败
-            return ToolResult.failure(code, error.getMessage());
+            return ToolResult.failure(code, reason(error));
         }
     }
 
@@ -159,7 +156,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
         String cutoff = LocalDate.now(clock).minusDays(RETENTION_DAYS).toString();
         String fetchedAt = LocalDateTime.now(clock).format(TIMESTAMP);
         Map<String, AnnouncementEntity> rows = new LinkedHashMap<>();
-        for (int page = 1; page <= MAX_PAGES; page++) {
+        for (int page = 1; page <= EastmoneySupport.MAX_PAGES; page++) {
             List<JsonNode> items = fetchPage(code, page);
             if (items.isEmpty()) {
                 break;
@@ -213,9 +210,9 @@ public class AnnouncementAdapter implements AnnouncementPort {
         try {
             root = MAPPER.readTree(upstreamClient.get(url, Map.of()));
         } catch (JsonProcessingException error) {
-            throw new AnnouncementException("获取公告失败：" + error.getMessage());
+            throw new AnnouncementException("获取公告失败：" + reason(error));
         } catch (RuntimeException error) {
-            throw new AnnouncementException("获取公告失败：" + error.getMessage());
+            throw new AnnouncementException("获取公告失败：" + reason(error));
         }
         if (root == null || !root.isObject()) {
             throw new AnnouncementException("公告接口返回格式异常");
@@ -259,24 +256,13 @@ public class AnnouncementAdapter implements AnnouncementPort {
 
     /** Python {@code _age_hours}：取缓存里最新的 fetched_at，空缓存一律视为过期。 */
     private boolean fresh(List<AnnouncementEntity> rows) {
-        String newest = null;
-        for (AnnouncementEntity row : rows) {
-            if (row.getFetchedAt() != null
-                    && (newest == null || row.getFetchedAt().compareTo(newest) > 0)) {
-                newest = row.getFetchedAt();
-            }
-        }
-        if (newest == null) {
-            return false;
-        }
-        try {
-            LocalDateTime fetched = LocalDateTime.parse(newest, TIMESTAMP);
-            return Duration.between(fetched, LocalDateTime.now(clock))
-                            .compareTo(Duration.ofHours(MAX_AGE_HOURS))
-                    <= 0;
-        } catch (DateTimeParseException error) {
-            return false;
-        }
+        return EastmoneySupport.fresh(
+                rows.stream().map(AnnouncementEntity::getFetchedAt).toList(), clock);
+    }
+
+    /** Python {@code str(error)} 永远有文本；{@code getMessage()} 可能为 null。 */
+    private static String reason(Exception error) {
+        return error.getMessage() == null ? error.toString() : error.getMessage();
     }
 
     /** 照抄 {@code assistant/tools.py:_announcements}。 */
