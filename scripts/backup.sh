@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Consistent SQLite snapshot with a rolling 7-day retention.
 set -euo pipefail
+# Backups contain conversations; keep them unreadable to other users.
+umask 077
 
 DATA_DIR="${DATA_DIR:-./var}"
 DB="$DATA_DIR/app.db"
@@ -14,8 +16,11 @@ fi
 
 mkdir -p "$BACKUP_DIR"
 target="$BACKUP_DIR/app-$(date +%Y%m%d).db"
-# .backup overwrites the target, so a same-day rerun refreshes it instead of duplicating.
-sqlite3 "$DB" ".backup '$target'"
+# Write to .tmp and rename, so a killed run never leaves a truncated backup under
+# the final name; .timeout keeps a live writer from failing the copy outright.
+tmp="$target.tmp"
+sqlite3 -cmd ".timeout 5000" "$DB" ".backup '$tmp'"
+mv -f -- "$tmp" "$target"
 
 # Names sort by day (app-YYYYMMDD.db); drop everything past the newest KEEP files.
 ls -1 "$BACKUP_DIR"/app-*.db | sort -r | tail -n +$((KEEP + 1)) | xargs -r rm -f --

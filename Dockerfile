@@ -12,8 +12,9 @@ FROM eclipse-temurin:21-jre
 RUN apt-get update \
  && apt-get install -y --no-install-recommends curl \
  && rm -rf /var/lib/apt/lists/* \
- && groupadd --system app \
- && useradd --system --gid app --home-dir /app --shell /usr/sbin/nologin app
+# Fixed UID/GID so the host can chown the ./var bind mount to the same owner.
+ && groupadd --system --gid 10001 app \
+ && useradd --system --uid 10001 --gid 10001 --home-dir /app --shell /usr/sbin/nologin app
 
 WORKDIR /app
 # No secrets here: they come from the environment / compose .env at runtime.

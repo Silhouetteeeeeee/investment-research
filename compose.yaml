@@ -8,7 +8,8 @@ services:
       # the container and is reachable only by the image's HEALTHCHECK.
       - "80:8080"
     environment:
-      APP_API_TOKEN: ${APP_API_TOKEN}
+      # Fails compose up loudly instead of starting tokenless and crash-looping.
+      APP_API_TOKEN: ${APP_API_TOKEN:?APP_API_TOKEN 未设置，请先写进 .env}
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
       XQ_TOKEN: ${XQ_TOKEN}
       APP_DATA_DIR: /app/var

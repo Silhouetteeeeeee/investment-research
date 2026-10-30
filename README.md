@@ -55,17 +55,22 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 
 ```bash
 cp .env.example .env          # 填 APP_API_TOKEN 和 DEEPSEEK_API_KEY
+# 容器以 UID 10001 运行；./var 由 Docker 建成 root 所有会让 SQLite 建不了库
+mkdir -p var && sudo chown -R 10001:10001 var
 docker compose up -d --build
 curl -s http://127.0.0.1/health   # ok
 ```
 
-- 只发布 `80:8080`。管理端口 `8081` 不对外发布，容器健康检查走容器内的
-  `http://127.0.0.1:8081/actuator/health`（`HEALTHCHECK` 每 30s 一次）。
-- `APP_API_TOKEN` **至少 32 个 ASCII 字符**（如 `openssl rand -hex 32`）。非 ASCII
+- 只发布 `80:8080`。管理端口 `8081` 不对外发布，且 `management.server.address`
+  只听回环，容器健康检查走容器内的 `http://127.0.0.1:8081/actuator/health`
+  （`HEALTHCHECK` 每 30s 一次）。
+- `APP_API_TOKEN` **建议至少 32 个 ASCII 字符**（如 `openssl rand -hex 32`）。非 ASCII
   令牌会被启动期直接拒绝：Tomcat 按 ISO-8859-1 解码请求头，非 ASCII 令牌永远匹配不上。
   `DEEPSEEK_API_KEY`、`XQ_TOKEN` 也只从环境读取，不要写进镜像或提交仓库。
+  `.env` 缺 `APP_API_TOKEN` 时 `docker compose up` 会直接报错退出，不会静默起一个无令牌实例。
 - 卷：`./var` → `/app/var`（SQLite 在 `./var/app.db`，重启后数据仍在）；
-  `./skills` → `/app/skills`（只读，可在宿主机覆盖镜像内的技能目录）。
+  `./skills` → `/app/skills`（只读，宿主机挂载会**整体覆盖**镜像内的 `skills/`，
+  所以镜像里预留的是空目录 + `.gitkeep`）。
 - `frontend/` 随镜像打包到 `/app/frontend`，镜像 `WORKDIR /app`，与应用里
   `file:./frontend/` 的相对路径一致。
 - 镜像多阶段构建（`maven:3.9-eclipse-temurin-21` → `eclipse-temurin:21-jre`），

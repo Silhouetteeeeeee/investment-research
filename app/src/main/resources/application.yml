@@ -24,6 +24,8 @@ management:
   server:
     # 管理端口独立，compose 不发布；容器健康检查走 127.0.0.1:8081
     port: 8081
+    # 只听回环：容器内健康检查照常可用，裸机运行时也不把健康页暴露到局域网
+    address: 127.0.0.1
   endpoints:
     web:
       exposure:

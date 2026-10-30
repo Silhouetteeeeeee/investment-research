@@ -27,6 +27,8 @@ public class SecurityConfig {
         "/assets/**",
         "/favicon.ico",
         "/error",
+        // The management port inherits this chain; without it the container
+        // HEALTHCHECK (and the bare-metal health probe) would get a 401.
         "/actuator/health"
     };
 
