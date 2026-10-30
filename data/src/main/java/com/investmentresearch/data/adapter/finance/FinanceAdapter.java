@@ -13,6 +13,7 @@ import com.investmentresearch.data.persistence.FinBalanceEntity;
 import com.investmentresearch.data.persistence.FinBalanceMapper;
 import com.investmentresearch.data.persistence.FinCashflowEntity;
 import com.investmentresearch.data.persistence.FinCashflowMapper;
+import com.investmentresearch.data.persistence.FinDisclosureMapper;
 import com.investmentresearch.data.persistence.FinIncomeEntity;
 import com.investmentresearch.data.persistence.FinIncomeMapper;
 import com.investmentresearch.data.persistence.FinMetricsEntity;
@@ -33,10 +34,12 @@ import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * 财报快照：新浪三表 → 解析入库 → 派生指标 → 输出。本地缓存超过 7 天或没有数据时先抓一次，
- * 与 Python {@code finance_service.ensure_financials} 的口径一致（披露日历那一步暂未接入）。
+ * 财报快照：新浪三表 → 解析入库 → 派生指标 → 输出。本地缓存超过 7 天、缺表或披露日历
+ * 显示有更新的报告期时先抓一次，与 Python {@code finance_service.ensure_financials} 一致。
  */
 @Repository
 public class FinanceAdapter implements FinancePort {
@@ -56,10 +59,12 @@ public class FinanceAdapter implements FinancePort {
     private final FinIncomeMapper incomeMapper;
     private final FinCashflowMapper cashflowMapper;
     private final FinMetricsMapper metricsMapper;
+    private final FinDisclosureMapper disclosureMapper;
     private final StockMapper stockMapper;
     private final UpstreamClient upstreamClient;
     private final String endpoint;
     private final Clock clock;
+    private final TransactionTemplate transactionTemplate;
 
     @Autowired
     public FinanceAdapter(
@@ -67,18 +72,22 @@ public class FinanceAdapter implements FinancePort {
             FinIncomeMapper incomeMapper,
             FinCashflowMapper cashflowMapper,
             FinMetricsMapper metricsMapper,
+            FinDisclosureMapper disclosureMapper,
             StockMapper stockMapper,
             UpstreamClient upstreamClient,
-            @Value("${app.finance-url:" + DEFAULT_ENDPOINT + "}") String endpoint) {
+            @Value("${app.finance-url:" + DEFAULT_ENDPOINT + "}") String endpoint,
+            PlatformTransactionManager transactionManager) {
         this(
                 balanceMapper,
                 incomeMapper,
                 cashflowMapper,
                 metricsMapper,
+                disclosureMapper,
                 stockMapper,
                 upstreamClient,
                 endpoint,
-                Clock.systemDefaultZone());
+                Clock.systemDefaultZone(),
+                transactionManager);
     }
 
     FinanceAdapter(
@@ -86,18 +95,22 @@ public class FinanceAdapter implements FinancePort {
             FinIncomeMapper incomeMapper,
             FinCashflowMapper cashflowMapper,
             FinMetricsMapper metricsMapper,
+            FinDisclosureMapper disclosureMapper,
             StockMapper stockMapper,
             UpstreamClient upstreamClient,
             String endpoint,
-            Clock clock) {
+            Clock clock,
+            PlatformTransactionManager transactionManager) {
         this.balanceMapper = balanceMapper;
         this.incomeMapper = incomeMapper;
         this.cashflowMapper = cashflowMapper;
         this.metricsMapper = metricsMapper;
+        this.disclosureMapper = disclosureMapper;
         this.stockMapper = stockMapper;
         this.upstreamClient = upstreamClient;
         this.endpoint = endpoint;
         this.clock = clock;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
     @Override
@@ -107,25 +120,26 @@ public class FinanceAdapter implements FinancePort {
             return ToolResult.failure(rawCode, "请输入股票代码");
         }
 
-        List<Map<String, Object>> history = history(code);
-        if (stale(history)) {
-            try {
+        try {
+            List<Map<String, Object>> history = history(code);
+            if (stale(code, history)) {
                 refresh(code);
-            } catch (RuntimeException error) {
-                return ToolResult.failure(code, error.getMessage());
+                history = history(code);
             }
-            history = history(code);
-        }
-        if (history.isEmpty()) {
-            return ToolResult.failure(code, code + "：没有可用的财报数据");
-        }
+            if (history.isEmpty()) {
+                return ToolResult.failure(code, code + "：没有可用的财报数据");
+            }
 
-        Map<String, Object> snapshot =
-                FinanceSnapshot.build(history, TREND_PERIODS, nameOf(code));
-        if (!Boolean.TRUE.equals(snapshot.get("available"))) {
-            return ToolResult.failure(code, code + "：没有可用的财报数据");
+            Map<String, Object> snapshot =
+                    FinanceSnapshot.build(history, TREND_PERIODS, nameOf(code));
+            if (!Boolean.TRUE.equals(snapshot.get("available"))) {
+                return ToolResult.failure(code, code + "：没有可用的财报数据");
+            }
+            return toResult(code, snapshot);
+        } catch (RuntimeException error) {
+            // 端口不抛异常：上游、读库或组装出的意外错误同样折成失败
+            return ToolResult.failure(code, error.getMessage());
         }
-        return toResult(code, snapshot);
     }
 
     /** 抓三表、算指标、覆盖写入；上游单表失败时保留其余两张表的结果。 */
@@ -139,7 +153,7 @@ public class FinanceAdapter implements FinancePort {
             try {
                 List<Map<String, Object>> rows =
                         FinanceStatements.normalize(
-                                fetch(spec, symbol), spec, code, fetchedAt);
+                                fetch(code, spec, symbol), spec, code, fetchedAt);
                 statements.put(
                         spec.key(),
                         rows.stream()
@@ -175,30 +189,37 @@ public class FinanceAdapter implements FinancePort {
         }
         List<Map<String, Object>> metrics = FinanceMetrics.build(merged);
 
-        // 整表覆盖某公司的数据，避免上游删除的报告期残留；中途失败时下次调用会重新抓
-        balanceMapper.delete(Wrappers.<FinBalanceEntity>query().eq("code", code));
-        incomeMapper.delete(Wrappers.<FinIncomeEntity>query().eq("code", code));
-        cashflowMapper.delete(Wrappers.<FinCashflowEntity>query().eq("code", code));
-        metricsMapper.delete(Wrappers.<FinMetricsEntity>query().eq("code", code));
-        for (Map<String, Object> row : statements.getOrDefault("balance", List.of())) {
-            balanceMapper.insert(MAPPER.convertValue(row, FinBalanceEntity.class));
-        }
-        for (Map<String, Object> row : statements.getOrDefault("income", List.of())) {
-            incomeMapper.insert(MAPPER.convertValue(row, FinIncomeEntity.class));
-        }
-        for (Map<String, Object> row : statements.getOrDefault("cashflow", List.of())) {
-            cashflowMapper.insert(MAPPER.convertValue(row, FinCashflowEntity.class));
-        }
+        // 整表覆盖某公司的数据，避免上游删除的报告期残留；删+插必须同事务，
+        // 否则中途崩溃会留下新 fetched_at 覆盖残缺历史，7 天内都不会重抓。
         String computedAt = LocalDateTime.now(clock).format(TIMESTAMP);
-        for (Map<String, Object> row : metrics) {
-            Map<String, Object> withStamp = new LinkedHashMap<>(row);
-            withStamp.put("code", code);
-            withStamp.put("computed_at", computedAt);
-            metricsMapper.insert(MAPPER.convertValue(withStamp, FinMetricsEntity.class));
-        }
+        transactionTemplate.executeWithoutResult(
+                status -> {
+                    balanceMapper.delete(Wrappers.<FinBalanceEntity>query().eq("code", code));
+                    incomeMapper.delete(Wrappers.<FinIncomeEntity>query().eq("code", code));
+                    cashflowMapper.delete(Wrappers.<FinCashflowEntity>query().eq("code", code));
+                    metricsMapper.delete(Wrappers.<FinMetricsEntity>query().eq("code", code));
+                    for (Map<String, Object> row :
+                            statements.getOrDefault("balance", List.of())) {
+                        balanceMapper.insert(MAPPER.convertValue(row, FinBalanceEntity.class));
+                    }
+                    for (Map<String, Object> row :
+                            statements.getOrDefault("income", List.of())) {
+                        incomeMapper.insert(MAPPER.convertValue(row, FinIncomeEntity.class));
+                    }
+                    for (Map<String, Object> row :
+                            statements.getOrDefault("cashflow", List.of())) {
+                        cashflowMapper.insert(MAPPER.convertValue(row, FinCashflowEntity.class));
+                    }
+                    for (Map<String, Object> row : metrics) {
+                        Map<String, Object> withStamp = new LinkedHashMap<>(row);
+                        withStamp.put("code", code);
+                        withStamp.put("computed_at", computedAt);
+                        metricsMapper.insert(MAPPER.convertValue(withStamp, FinMetricsEntity.class));
+                    }
+                });
     }
 
-    private JsonNode fetch(FinanceStatements.Spec spec, String symbol) {
+    private JsonNode fetch(String code, FinanceStatements.Spec spec, String symbol) {
         String url =
                 endpoint
                         + "?paperCode="
@@ -209,15 +230,15 @@ public class FinanceAdapter implements FinancePort {
         try {
             JsonNode root = MAPPER.readTree(upstreamClient.get(url, Map.of()));
             if (root == null) {
-                throw new FinanceException(symbol + " 的" + spec.symbol() + "为空");
+                throw new FinanceException(code + " 的" + spec.symbol() + "为空");
             }
             return root.path("result").path("data");
         } catch (JsonProcessingException error) {
             // 200 但返回 HTML/WAF/截断内容：按上游失败处理，不把解析异常抛给调用方
-            throw new FinanceException("获取 " + symbol + " 的" + spec.symbol() + "失败");
+            throw new FinanceException("获取 " + code + " 的" + spec.symbol() + "失败");
         } catch (com.investmentresearch.data.upstream.UpstreamException error) {
             throw new FinanceException(
-                    "获取 " + symbol + " 的" + spec.symbol() + "失败：" + error.getMessage());
+                    "获取 " + code + " 的" + spec.symbol() + "失败：" + error.getMessage());
         }
     }
 
@@ -262,9 +283,12 @@ public class FinanceAdapter implements FinancePort {
         }
     }
 
-    /** 本地缓存最后一次抓取距今超过 7 天就重抓；没有时间戳也重抓。 */
-    private boolean stale(List<Map<String, Object>> history) {
-        if (history.isEmpty()) {
+    /**
+     * 照抄 {@code finance_service._needs_sync}：任一张必填表为空、缓存超过 7 天、或披露日历
+     * 已出现比本地更新的报告期时重抓；30 分钟内抓过则先等上游跟上。
+     */
+    private boolean stale(String code, List<Map<String, Object>> history) {
+        if (history.isEmpty() || anyRequiredTableEmpty(code)) {
             return true;
         }
         String latest = null;
@@ -277,14 +301,42 @@ public class FinanceAdapter implements FinancePort {
         if (latest == null) {
             return true;
         }
+        Duration age;
         try {
             LocalDateTime fetched = LocalDateTime.parse(latest, TIMESTAMP);
-            return Duration.between(fetched, LocalDateTime.now(clock))
-                    .compareTo(Duration.ofDays(DEFAULT_CACHE_DAYS))
-                    > 0;
+            age = Duration.between(fetched, LocalDateTime.now(clock));
         } catch (DateTimeParseException error) {
             return true;
         }
+        if (age.compareTo(Duration.ofDays(DEFAULT_CACHE_DAYS)) > 0) {
+            return true;
+        }
+        if (age.compareTo(Duration.ofMinutes(30)) < 0) {
+            return false;
+        }
+        String disclosed;
+        try {
+            disclosed = disclosureMapper.latestDisclosedPeriod(code);
+        } catch (RuntimeException error) {
+            // 披露日历还没建表/没刷新过时退回按时间判断
+            return false;
+        }
+        String localLatest = (String) history.get(history.size() - 1).get("report_date");
+        return disclosed != null
+                && localLatest != null
+                && disclosed.compareTo(localLatest) > 0;
+    }
+
+    private boolean anyRequiredTableEmpty(String code) {
+        return count(balanceMapper, code) == 0
+                || count(incomeMapper, code) == 0
+                || count(cashflowMapper, code) == 0
+                || count(metricsMapper, code) == 0;
+    }
+
+    private static <T> long count(
+            com.baomidou.mybatisplus.core.mapper.BaseMapper<T> mapper, String code) {
+        return mapper.selectCount(Wrappers.<T>query().eq("code", code));
     }
 
     private String nameOf(String code) {

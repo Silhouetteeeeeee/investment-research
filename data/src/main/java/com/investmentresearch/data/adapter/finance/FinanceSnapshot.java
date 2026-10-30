@@ -70,7 +70,8 @@ final class FinanceSnapshot {
         String reportDate = (String) latest.get("report_date");
         Map<String, Object> lastYear = byDate(ordered, sameQuarterLastYear(reportDate));
         List<Map<String, Object>> trend =
-                ordered.subList(ordered.size() - Math.max(1, periods), ordered.size());
+                ordered.subList(
+                        Math.max(0, ordered.size() - Math.max(1, periods)), ordered.size());
 
         Map<String, Object> latestOut = new LinkedHashMap<>();
         latestOut.put("report_date", reportDate);
