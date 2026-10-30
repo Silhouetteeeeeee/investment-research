@@ -13,13 +13,20 @@ import com.investmentresearch.data.persistence.ValHistoryMapper;
 import com.investmentresearch.data.persistence.ValPeerMapper;
 import com.investmentresearch.data.upstream.RestClientUpstreamClient;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.springframework.transaction.PlatformTransactionManager;
 
 class PeerAdapterTest {
     @TempDir Path tempDir;
@@ -30,6 +37,7 @@ class PeerAdapterTest {
     private StockMapper stockMapper;
     private ValHistoryMapper historyMapper;
     private ValPeerMapper valPeerMapper;
+    private PlatformTransactionManager transactionManager;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -37,6 +45,7 @@ class PeerAdapterTest {
         EastmoneyTestSupport.Db db =
                 EastmoneyTestSupport.openDb(EastmoneyTestSupport.copySnapshot(tempDir));
         session = db.session();
+        transactionManager = db.transactionManager();
         peerMapper = session.getMapper(CompanyPeerMapper.class);
         stockMapper = session.getMapper(StockMapper.class);
         historyMapper = session.getMapper(ValHistoryMapper.class);
@@ -45,7 +54,6 @@ class PeerAdapterTest {
 
     @AfterEach
     void tearDown() {
-        session.close();
         server.stop();
     }
 
@@ -81,12 +89,62 @@ class PeerAdapterTest {
         assertThat(revenue.get("median")).isNotNull();
         assertThat(revenue.get("rank")).isEqualTo(1);
         assertThat(revenue.get("count")).isEqualTo(17);
+        // 数值直接由录制的 Q3 同业行算出：中位营收 587443328.43 元（5.87 亿），本公司 280.35 亿
+        assertThat(revenue.get("median")).isEqualTo(5.87);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> subject = (Map<String, Object>) first.data().get("subject");
+        assertThat(subject.get("revenue_yi")).isEqualTo(280.35);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> industry = (Map<String, Object>) first.data().get("industry");
+        assertThat(industry.get("code")).isEqualTo("BK1279");
+        assertThat(industry.get("count")).isEqualTo(17);
 
         server.verify(
                 6,
                 getRequestedFor(urlPathEqualTo(EastmoneyTestSupport.DATA_PATH))
                         .withQueryParam(
                                 "filter", equalTo("(SECURITY_CODE=\"600600\")")));
+    }
+
+    @Test
+    void migrations_create_the_same_peers_valuation_columns_as_python() throws Exception {
+        String fresh =
+                "jdbc:sqlite:"
+                        + tempDir.resolve("fresh.db").toAbsolutePath().toString().replace('\\', '/');
+        Flyway.configure()
+                .dataSource(fresh, null, null)
+                .locations("classpath:db/migration/sqlite")
+                .load()
+                .migrate();
+
+        String python =
+                "jdbc:sqlite:"
+                        + EastmoneyTestSupport.SNAPSHOT
+                                .toAbsolutePath()
+                                .toString()
+                                .replace('\\', '/');
+        for (String table : List.of("company_peers", "val_history", "val_peer")) {
+            assertThat(columnSpecs(fresh, table)).as(table).isEqualTo(columnSpecs(python, table));
+        }
+    }
+
+    private static List<String> columnSpecs(String url, String table) throws Exception {
+        List<String> specs = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url);
+                Statement statement = connection.createStatement();
+                ResultSet rows = statement.executeQuery("pragma table_info(" + table + ")")) {
+            while (rows.next()) {
+                specs.add(
+                        rows.getString("name")
+                                + "|"
+                                + rows.getString("type")
+                                + "|notnull="
+                                + rows.getInt("notnull")
+                                + "|pk="
+                                + rows.getInt("pk"));
+            }
+        }
+        return specs;
     }
 
     private PeerAdapter adapter() {
@@ -96,7 +154,8 @@ class PeerAdapterTest {
                         valPeerMapper,
                         new RestClientUpstreamClient(),
                         server.baseUrl() + EastmoneyTestSupport.DATA_PATH,
-                        EastmoneyTestSupport.CLOCK);
+                        EastmoneyTestSupport.CLOCK,
+                        transactionManager);
         return new PeerAdapter(
                 peerMapper,
                 stockMapper,

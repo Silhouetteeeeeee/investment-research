@@ -11,10 +11,8 @@ import com.investmentresearch.data.persistence.StockMapper;
 import com.investmentresearch.data.persistence.ValPeerEntity;
 import com.investmentresearch.data.upstream.UpstreamClient;
 import java.time.Clock;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -52,8 +50,6 @@ public class PeerAdapter implements PeerPort {
                     "pe_ttm",
                     "pb_mrq",
                     "market_cap");
-    private static final DateTimeFormatter TIMESTAMP =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final CompanyPeerMapper mapper;
     private final StockMapper stockMapper;
@@ -160,7 +156,9 @@ public class PeerAdapter implements PeerPort {
     private Loaded ensureCohort(String code) {
         CompanyPeerEntity cachedRow = mapper.selectById(code);
         Cohort cached = readCohort(cachedRow, code);
-        if (cached != null && fresh(cachedRow.getFetchedAt())) {
+        if (cached != null
+                && EastmoneySupport.fresh(
+                        Collections.singletonList(cachedRow.getFetchedAt()), clock)) {
             return new Loaded(cached, false);
         }
         try {
@@ -743,7 +741,7 @@ public class PeerAdapter implements PeerPort {
         }
         result.add("同行按东方财富行业板块筛选，细分业务可能不完全可比");
 
-        if (valuationError != null) {
+        if (valuationError != null && !valuationError.isBlank()) {
             if (hasValuation) {
                 result.add("估值同业抓取失败，使用本地缓存：" + valuationError);
             } else {
@@ -918,19 +916,5 @@ public class PeerAdapter implements PeerPort {
             }
         }
         return null;
-    }
-
-    private boolean fresh(String fetchedAt) {
-        if (fetchedAt == null) {
-            return false;
-        }
-        LocalDateTime fetched;
-        try {
-            fetched = LocalDateTime.parse(fetchedAt, TIMESTAMP);
-        } catch (RuntimeException error) {
-            return false;
-        }
-        Duration age = Duration.between(fetched, LocalDateTime.now(clock));
-        return age.compareTo(Duration.ofHours((long) EastmoneySupport.MAX_AGE_HOURS)) <= 0;
     }
 }

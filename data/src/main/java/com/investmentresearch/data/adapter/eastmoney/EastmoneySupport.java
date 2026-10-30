@@ -9,11 +9,13 @@ import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /** 两个 datacenter 适配器共用的小工具，逐个对应 Python 的 {@code stock.peers} / {@code stock.valuation}。 */
 final class EastmoneySupport {
@@ -113,6 +115,23 @@ final class EastmoneySupport {
 
     static boolean positive(Double value) {
         return value != null && value > 0;
+    }
+
+    /** Python {@code _age_hours}：取最晚的抓取时间，6 小时内算新鲜；没有可用时间戳时视为无限旧。 */
+    static boolean fresh(List<String> stamps, Clock clock) {
+        String newest =
+                stamps.stream().filter(Objects::nonNull).max(String::compareTo).orElse(null);
+        if (newest == null) {
+            return false;
+        }
+        LocalDateTime fetched;
+        try {
+            fetched = LocalDateTime.parse(newest, TIMESTAMP);
+        } catch (RuntimeException error) {
+            return false;
+        }
+        Duration age = Duration.between(fetched, LocalDateTime.now(clock));
+        return age.compareTo(Duration.ofHours((long) MAX_AGE_HOURS)) <= 0;
     }
 
     /**

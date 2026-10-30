@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.Clock;
@@ -35,7 +36,10 @@ import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /** 同业与估值适配器测试共用夹具：快照复制、WireMock 回放、金标准比对、缓存时间。 */
 final class EastmoneyTestSupport {
@@ -85,20 +89,23 @@ final class EastmoneyTestSupport {
         return "jdbc:sqlite:" + database.toAbsolutePath().toString().replace('\\', '/');
     }
 
-    record Db(SqlSession session) {}
+    record Db(SqlSession session, PlatformTransactionManager transactionManager) {}
 
     static Db openDb(String url) {
         UnpooledDataSource dataSource = new UnpooledDataSource("org.sqlite.JDBC", url, null, null);
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setMapUnderscoreToCamelCase(true);
+        // SpringManagedTransactionFactory 让 mapper 复用 TransactionTemplate 绑定的连接，
+        // 否则事务包的是另一个连接，删掉事务测试也不会失败
         configuration.setEnvironment(
-                new Environment("test", new JdbcTransactionFactory(), dataSource));
+                new Environment("test", new SpringManagedTransactionFactory(), dataSource));
         configuration.addMapper(StockMapper.class);
         configuration.addMapper(CompanyPeerMapper.class);
         configuration.addMapper(ValHistoryMapper.class);
         configuration.addMapper(ValPeerMapper.class);
         SqlSessionFactory factory = new MybatisSqlSessionFactoryBuilder().build(configuration);
-        return new Db(factory.openSession(true));
+        // SqlSessionTemplate 每次调用都开新会话，事务活动时复用 TransactionTemplate 绑定的连接
+        return new Db(new SqlSessionTemplate(factory), new DataSourceTransactionManager(dataSource));
     }
 
     /**
@@ -112,17 +119,16 @@ final class EastmoneyTestSupport {
     }
 
     static void exec(SqlSession session, String sql, Object... args) {
-        try {
-            // 连接归 SqlSession 管，这里只关 statement，否则后续 mapper 调用会撞上已关闭连接
-            Connection connection = session.getConnection();
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                for (int i = 0; i < args.length; i++) {
-                    statement.setObject(i + 1, args[i]);
-                }
-                statement.executeUpdate();
+        // SqlSessionTemplate 每次调用后都会关掉自己的连接，所以这里另开一条连接直接用
+        String url =
+                ((UnpooledDataSource) session.getConfiguration().getEnvironment().getDataSource())
+                        .getUrl();
+        try (Connection connection = DriverManager.getConnection(url);
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            for (int i = 0; i < args.length; i++) {
+                statement.setObject(i + 1, args[i]);
             }
-            // 绕过 mapper 直接改库，必须清掉一级缓存，否则紧接着的 selectById 还是旧值
-            session.clearCache();
+            statement.executeUpdate();
         } catch (SQLException error) {
             throw new IllegalStateException(error);
         }
@@ -155,7 +161,10 @@ final class EastmoneyTestSupport {
         Map<String, Object> actualMap = resultMap(actual);
         stripFetchedAt(expected);
         stripFetchedAt(actualMap);
-        assertThat(actualMap).as(file.toString()).isEqualTo(expected);
+        // Map.equals 不看键顺序，序列化后再比才能发现顺序/键集差异
+        assertThat(MAPPER.writeValueAsString(actualMap))
+                .as(file.toString())
+                .isEqualTo(MAPPER.writeValueAsString(expected));
     }
 
     private static Map<String, Object> resultMap(ToolResult result) {

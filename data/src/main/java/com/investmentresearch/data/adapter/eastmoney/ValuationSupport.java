@@ -8,32 +8,28 @@ import com.investmentresearch.data.persistence.ValPeerEntity;
 import com.investmentresearch.data.persistence.ValPeerMapper;
 import com.investmentresearch.data.upstream.UpstreamClient;
 import java.time.Clock;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * 估值取数/缓存，照抄 {@code stock/valuation.py:ensure_valuation}：历史与同行业快照各自 6 小时缓存，
- * 抓取失败但本地有缓存时降级并标记 stale。今日尚无估值时以最近一个交易日为准。
+ * 抓取失败但本地有缓存时降级并标记 stale。
  */
 @Repository
 class ValuationSupport {
     static final String REPORT_NAME = "RPT_VALUEANALYSIS_DET";
-    private static final DateTimeFormatter TIMESTAMP =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final ValHistoryMapper historyMapper;
     private final ValPeerMapper peerMapper;
     private final UpstreamClient upstreamClient;
     private final String endpoint;
     private final Clock clock;
+    private final TransactionTemplate transactionTemplate;
 
     @Autowired
     ValuationSupport(
@@ -41,8 +37,15 @@ class ValuationSupport {
             ValPeerMapper peerMapper,
             UpstreamClient upstreamClient,
             @Value("${app.datacenter-url:https://datacenter-web.eastmoney.com/api/data/v1/get}")
-                    String endpoint) {
-        this(historyMapper, peerMapper, upstreamClient, endpoint, Clock.systemDefaultZone());
+                    String endpoint,
+            PlatformTransactionManager transactionManager) {
+        this(
+                historyMapper,
+                peerMapper,
+                upstreamClient,
+                endpoint,
+                Clock.systemDefaultZone(),
+                transactionManager);
     }
 
     ValuationSupport(
@@ -50,12 +53,14 @@ class ValuationSupport {
             ValPeerMapper peerMapper,
             UpstreamClient upstreamClient,
             String endpoint,
-            Clock clock) {
+            Clock clock,
+            PlatformTransactionManager transactionManager) {
         this.historyMapper = historyMapper;
         this.peerMapper = peerMapper;
         this.upstreamClient = upstreamClient;
         this.endpoint = endpoint;
         this.clock = clock;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
     record Snapshot(
@@ -69,7 +74,7 @@ class ValuationSupport {
         if (history.rows().isEmpty()) {
             throw new EastmoneySupport.EastmoneyException(code + "：没有取到估值数据");
         }
-        List<ValHistoryEntity> rows = untilToday(history.rows());
+        List<ValHistoryEntity> rows = history.rows();
         ValHistoryEntity latest = rows.get(rows.size() - 1);
 
         List<ValPeerEntity> peers = List.of();
@@ -91,7 +96,8 @@ class ValuationSupport {
 
     private History ensureHistory(String code) {
         List<ValHistoryEntity> cached = cachedHistory(code);
-        if (fresh(cached.stream().map(ValHistoryEntity::getFetchedAt).toList())) {
+        if (EastmoneySupport.fresh(
+                cached.stream().map(ValHistoryEntity::getFetchedAt).toList(), clock)) {
             return new History(cached, false);
         }
         try {
@@ -111,7 +117,8 @@ class ValuationSupport {
 
     private List<ValPeerEntity> ensurePeers(String boardCode, String tradeDate) {
         List<ValPeerEntity> cached = cachedPeers(boardCode, tradeDate);
-        if (fresh(cached.stream().map(ValPeerEntity::getFetchedAt).toList())) {
+        if (EastmoneySupport.fresh(
+                cached.stream().map(ValPeerEntity::getFetchedAt).toList(), clock)) {
             return cached;
         }
         List<ValPeerEntity> rows = fetchPeers(boardCode, tradeDate);
@@ -120,16 +127,6 @@ class ValuationSupport {
         }
         savePeers(boardCode, tradeDate, rows);
         return cachedPeers(boardCode, tradeDate);
-    }
-
-    /** 估值只到最近一个交易日为止：今天还没有收盘数据时自然回落到上一交易日。 */
-    private List<ValHistoryEntity> untilToday(List<ValHistoryEntity> rows) {
-        String today = LocalDate.now(clock).toString();
-        List<ValHistoryEntity> filtered =
-                rows.stream()
-                        .filter(row -> row.getTradeDate() != null && row.getTradeDate().compareTo(today) <= 0)
-                        .toList();
-        return filtered.isEmpty() ? rows : filtered;
     }
 
     private List<ValHistoryEntity> fetchHistory(String code) {
@@ -211,36 +208,32 @@ class ValuationSupport {
                         .orderByDesc("total_mv"));
     }
 
-    private void saveHistory(String code, List<ValHistoryEntity> rows) {
-        historyMapper.delete(Wrappers.<ValHistoryEntity>query().eq("code", code));
-        for (ValHistoryEntity row : rows) {
-            historyMapper.insert(row);
-        }
+    /**
+     * 与 Python 的 INSERT OR REPLACE 等价：删+插在一个事务里。
+     * 复合主键 MyBatis-Plus 表达不了（@TableId 只有 code），insertOrUpdate 会按 code 覆盖整批行，
+     * 所以删后插入才安全。
+     */
+    void saveHistory(String code, List<ValHistoryEntity> rows) {
+        transactionTemplate.executeWithoutResult(
+                status -> {
+                    historyMapper.delete(
+                            Wrappers.<ValHistoryEntity>query().eq("code", code));
+                    for (ValHistoryEntity row : rows) {
+                        historyMapper.insert(row);
+                    }
+                });
     }
 
-    private void savePeers(String boardCode, String tradeDate, List<ValPeerEntity> rows) {
-        peerMapper.delete(
-                Wrappers.<ValPeerEntity>query()
-                        .eq("board_code", boardCode)
-                        .eq("trade_date", tradeDate));
-        for (ValPeerEntity row : rows) {
-            peerMapper.insert(row);
-        }
-    }
-
-    /** Python {@code _age_hours}：取最晚的抓取时间；没有可用时间戳时视为无限旧。 */
-    private boolean fresh(List<String> stamps) {
-        String newest = stamps.stream().filter(Objects::nonNull).max(String::compareTo).orElse(null);
-        if (newest == null) {
-            return false;
-        }
-        LocalDateTime fetched;
-        try {
-            fetched = LocalDateTime.parse(newest, TIMESTAMP);
-        } catch (RuntimeException error) {
-            return false;
-        }
-        Duration age = Duration.between(fetched, LocalDateTime.now(clock));
-        return age.compareTo(Duration.ofHours((long) EastmoneySupport.MAX_AGE_HOURS)) <= 0;
+    void savePeers(String boardCode, String tradeDate, List<ValPeerEntity> rows) {
+        transactionTemplate.executeWithoutResult(
+                status -> {
+                    peerMapper.delete(
+                            Wrappers.<ValPeerEntity>query()
+                                    .eq("board_code", boardCode)
+                                    .eq("trade_date", tradeDate));
+                    for (ValPeerEntity row : rows) {
+                        peerMapper.insert(row);
+                    }
+                });
     }
 }
