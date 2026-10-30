@@ -159,9 +159,10 @@ class AnnouncementAdapterTest {
 
     @Test
     void fresh_cache_with_empty_window_returns_failure() {
-        // 缓存新鲜但 days=1 窗口内没有公告：走 assemble 的空窗口分支，不是页 1 空
+        // 缓存新鲜但窗口内没有公告：走 assemble 的空窗口分支，不是页 1 空。
+        // days=-5 同时验证夹取后的值进了失败文案
         makeFresh("600600");
-        ToolResult result = adapter().announcements("600600", 1);
+        ToolResult result = adapter().announcements("600600", -5);
 
         assertThat(result.ok()).isFalse();
         assertThat(result.error()).isEqualTo("600600：近 1 天没有公告");
@@ -248,7 +249,8 @@ class AnnouncementAdapterTest {
                 mapper.selectList(
                         Wrappers.<AnnouncementEntity>query().eq("code", "605499"));
         assertThat(rows).extracting(AnnouncementEntity::getFetchedAt)
-                .contains("2026-10-30 12:00:00");
+                .contains("2026-10-30 12:00:00")
+                .doesNotContain("not-a-timestamp");
         server.verify(
                 4,
                 getRequestedFor(urlPathEqualTo(ANN_PATH))

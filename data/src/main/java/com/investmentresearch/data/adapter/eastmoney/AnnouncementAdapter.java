@@ -3,7 +3,6 @@ package com.investmentresearch.data.adapter.eastmoney;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.investmentresearch.core.domain.Source;
 import com.investmentresearch.core.domain.ToolResult;
 import com.investmentresearch.core.port.AnnouncementPort;
@@ -14,7 +13,6 @@ import com.investmentresearch.data.upstream.UpstreamClient;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -41,9 +39,6 @@ public class AnnouncementAdapter implements AnnouncementPort {
     private static final String DETAIL_URL =
             "https://data.eastmoney.com/notices/detail/%s/%s.html";
     private static final String SOURCE_LABEL = "公告";
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final DateTimeFormatter TIMESTAMP =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     // 第一条是标签，其余是关键词；先判断利空，再判断利好
     private static final String[][] WARNING_RULES = {
         {"减持", "减持"},
@@ -154,7 +149,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
 
     private List<AnnouncementEntity> fetch(String code) {
         String cutoff = LocalDate.now(clock).minusDays(RETENTION_DAYS).toString();
-        String fetchedAt = LocalDateTime.now(clock).format(TIMESTAMP);
+        String fetchedAt = LocalDateTime.now(clock).format(EastmoneySupport.TIMESTAMP);
         Map<String, AnnouncementEntity> rows = new LinkedHashMap<>();
         for (int page = 1; page <= EastmoneySupport.MAX_PAGES; page++) {
             List<JsonNode> items = fetchPage(code, page);
@@ -208,7 +203,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
                         + code;
         JsonNode root;
         try {
-            root = MAPPER.readTree(upstreamClient.get(url, Map.of()));
+            root = EastmoneySupport.MAPPER.readTree(upstreamClient.get(url, Map.of()));
         } catch (JsonProcessingException error) {
             throw new AnnouncementException("获取公告失败：" + reason(error));
         } catch (RuntimeException error) {

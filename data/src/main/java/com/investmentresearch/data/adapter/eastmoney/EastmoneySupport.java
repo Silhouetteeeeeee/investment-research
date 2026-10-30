@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/** 两个 datacenter 适配器共用的小工具，逐个对应 Python 的 {@code stock.peers} / {@code stock.valuation}。 */
+/** datacenter 适配器共用的小工具，逐个对应 Python 的 {@code stock.peers} / {@code stock.valuation}。 */
 final class EastmoneySupport {
     static final ObjectMapper MAPPER = new ObjectMapper();
     static final DateTimeFormatter TIMESTAMP =
