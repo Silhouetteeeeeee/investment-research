@@ -92,7 +92,7 @@ public class FinanceAdapter implements FinancePort {
                 transactionManager);
     }
 
-    FinanceAdapter(
+    public FinanceAdapter(
             FinBalanceMapper balanceMapper,
             FinIncomeMapper incomeMapper,
             FinCashflowMapper cashflowMapper,
@@ -141,7 +141,7 @@ public class FinanceAdapter implements FinancePort {
     }
 
     /** 读库，过期或缺表时先抓一次；与 Python {@code ensure_financials} 同一入口。 */
-    List<Map<String, Object>> freshHistory(String code) {
+    public List<Map<String, Object>> freshHistory(String code) {
         List<Map<String, Object>> history = history(code);
         if (stale(code, history)) {
             refresh(code);
