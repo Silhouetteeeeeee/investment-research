@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("biz_segment")
 public class BizSegmentEntity {
+    // code 不是唯一键（真主键是 code+report_date+kind+item_name，MyBatis-Plus 表达不了），
+    // 只用于 mapper 定位，不要用 insertOrUpdate/updateById——它们会按 code 覆盖整批行
     @TableId(type = IdType.INPUT)
     private String code;
 

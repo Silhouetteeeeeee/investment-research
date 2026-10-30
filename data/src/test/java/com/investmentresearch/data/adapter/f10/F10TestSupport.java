@@ -28,7 +28,8 @@ import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -77,13 +78,16 @@ final class F10TestSupport {
         UnpooledDataSource dataSource = new UnpooledDataSource("org.sqlite.JDBC", url, null, null);
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setMapUnderscoreToCamelCase(true);
+        // SpringManagedTransactionFactory 让 mapper 复用 TransactionTemplate 绑定的连接，
+        // 否则事务包的是另一个连接，删掉事务测试也不会失败
         configuration.setEnvironment(
-                new Environment("test", new JdbcTransactionFactory(), dataSource));
+                new Environment("test", new SpringManagedTransactionFactory(), dataSource));
         configuration.addMapper(StockMapper.class);
         configuration.addMapper(CompanyProfileMapper.class);
         configuration.addMapper(BizSegmentMapper.class);
         SqlSessionFactory factory = new MybatisSqlSessionFactoryBuilder().build(configuration);
-        return new Db(factory.openSession(true), new DataSourceTransactionManager(dataSource));
+        // SqlSessionTemplate 每次调用都开新会话，事务活动时复用 TransactionTemplate 绑定的连接
+        return new Db(new SqlSessionTemplate(factory), new DataSourceTransactionManager(dataSource));
     }
 
     static List<Path> goldens(String tool) throws IOException {

@@ -55,7 +55,6 @@ class CompanyProfileAdapterTest {
 
     @AfterEach
     void tearDown() {
-        session.close();
         server.stop();
     }
 
@@ -123,6 +122,46 @@ class CompanyProfileAdapterTest {
         assertThat(wrongShape.ok()).as("empty jbzl").isFalse();
         assertThat(wrongShape.error()).as("empty jbzl").contains("没有取到公司概况");
         assertThat(mapper.selectById("000011")).as("失败不写库").isNull();
+
+        // jbzl 是对象而不是数组：同样属于结构错误，不能当空处理或抛异常
+        server.stubFor(
+                get(urlPathEqualTo(F10TestSupport.PROFILE_PATH))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody("{\"jbzl\":{}}")));
+        ToolResult objectShape = adapter.companyProfile("000013");
+        assertThat(objectShape.ok()).as("jbzl object").isFalse();
+        assertThat(objectShape.error()).as("jbzl object").contains("没有取到公司概况");
+        assertThat(mapper.selectById("000013")).as("失败不写库").isNull();
+    }
+
+    @Test
+    void profile_replace_nulls_fields_missing_upstream() {
+        String code = "600600";
+        mapper.deleteById(code);
+        CompanyProfileEntity seed = new CompanyProfileEntity();
+        seed.setCode(code);
+        seed.setName("旧名");
+        seed.setIndustry("旧行业");
+        seed.setFetchedAt("2026-09-01 12:00:00");
+        mapper.insert(seed);
+
+        // 上游这次没给 EM2016，覆盖写入后 industry 必须是 null，而不是保留“旧行业”
+        server.stubFor(
+                get(urlPathEqualTo(F10TestSupport.PROFILE_PATH))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody("{\"jbzl\":[{\"SECURITY_NAME_ABBR\":\"青岛啤酒\"}]}")));
+
+        ToolResult result = adapter(pinned("2026-10-30")).companyProfile(code);
+
+        assertThat(result.ok()).isTrue();
+        assertThat(result.data().get("industry")).isNull();
+        assertThat(mapper.selectById(code).getIndustry()).isNull();
     }
 
     @Test

@@ -53,7 +53,6 @@ class SegmentAdapterTest {
 
     @AfterEach
     void tearDown() {
-        session.close();
         server.stop();
     }
 
@@ -185,6 +184,73 @@ class SegmentAdapterTest {
                         .withQueryParam("code", equalTo("601606.SH")));
     }
 
+    @Test
+    void failed_replace_rolls_back_and_keeps_previous_rows() {
+        String code = "601606";
+        mapper.delete(Wrappers.<BizSegmentEntity>query().eq("code", code));
+        SegmentAdapter adapter = adapter();
+        ToolResult first = adapter.segments(code, 5);
+        assertThat(first.ok()).isTrue();
+        long before = mapper.selectCount(Wrappers.<BizSegmentEntity>query().eq("code", code));
+        setFetchedAt(code, "2026-10-29 11:00:00");
+
+        // 上游给两条复合主键相同的行：第二次 insert 会撞主键，整份替换必须回滚
+        server.stubFor(
+                get(urlPathEqualTo(F10TestSupport.SEGMENTS_PATH))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody(
+                                                "{\"zygcfx\":["
+                                                        + "{\"REPORT_DATE\":\"2026-06-30 00:00:00\","
+                                                        + "\"MAINOP_TYPE\":\"2\",\"ITEM_NAME\":\"甲\","
+                                                        + "\"MAIN_BUSINESS_INCOME\":100},"
+                                                        + "{\"REPORT_DATE\":\"2026-06-30 00:00:00\","
+                                                        + "\"MAINOP_TYPE\":\"2\",\"ITEM_NAME\":\"甲\","
+                                                        + "\"MAIN_BUSINESS_INCOME\":200}]}")));
+
+        ToolResult second = adapter.segments(code, 5);
+        assertThat(second.ok()).as("失败后回退旧缓存").isTrue();
+        assertThat(second.data()).isEqualTo(first.data());
+        assertThat(mapper.selectCount(Wrappers.<BizSegmentEntity>query().eq("code", code)))
+                .as("删除与插入一起回滚")
+                .isEqualTo(before);
+    }
+
+    @Test
+    void only_industry_kind_uses_global_fallback_without_refetch() {
+        mapper.delete(Wrappers.<BizSegmentEntity>query().eq("code", "605499"));
+        insertRow("605499", "2026-06-30", "1", "行业甲", 100.0);
+        SegmentAdapter adapter = adapter();
+
+        ToolResult result = adapter.segments("605499", 5);
+
+        server.verify(
+                0,
+                getRequestedFor(urlPathEqualTo(F10TestSupport.SEGMENTS_PATH))
+                        .withQueryParam("code", equalTo("605499.SH")));
+        assertThat(result.ok()).isFalse();
+        assertThat(result.error()).contains("没有可用的主营构成");
+    }
+
+    @Test
+    void region_only_cache_is_fresh_without_product_rows() {
+        mapper.delete(Wrappers.<BizSegmentEntity>query().eq("code", "600600"));
+        insertRow("600600", "2026-06-30", "3", "华东", 100.0);
+        SegmentAdapter adapter = adapter();
+
+        ToolResult result = adapter.segments("600600", 5);
+
+        server.verify(
+                0,
+                getRequestedFor(urlPathEqualTo(F10TestSupport.SEGMENTS_PATH))
+                        .withQueryParam("code", equalTo("600600.SH")));
+        assertThat(result.ok()).isTrue();
+        assertThat(slices(result.data())).extracting(slice -> slice.get("kind"))
+                .containsExactly("region");
+    }
+
     @ParameterizedTest
     @CsvSource({
         "2026-04-29, 2025-09-30",
@@ -199,6 +265,18 @@ class SegmentAdapterTest {
     void expected_report_date_rolls_over_at_deadlines(String today, String expected) {
         assertThat(SegmentAdapter.expectedReportDate(LocalDate.parse(today)))
                 .isEqualTo(LocalDate.parse(expected));
+    }
+
+    private void insertRow(
+            String code, String reportDate, String kind, String itemName, double income) {
+        BizSegmentEntity row = new BizSegmentEntity();
+        row.setCode(code);
+        row.setReportDate(reportDate);
+        row.setKind(kind);
+        row.setItemName(itemName);
+        row.setIncome(income);
+        row.setFetchedAt("2026-10-30 12:00:00");
+        mapper.insert(row);
     }
 
     private void setFetchedAt(String code, String fetchedAt) {
