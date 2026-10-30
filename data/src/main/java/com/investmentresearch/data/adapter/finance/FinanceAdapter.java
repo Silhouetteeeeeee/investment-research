@@ -123,11 +123,7 @@ public class FinanceAdapter implements FinancePort {
         }
 
         try {
-            List<Map<String, Object>> history = history(code);
-            if (stale(code, history)) {
-                refresh(code);
-                history = history(code);
-            }
+            List<Map<String, Object>> history = freshHistory(code);
             if (history.isEmpty()) {
                 return ToolResult.failure(code, code + "：没有可用的财报数据");
             }
@@ -142,6 +138,16 @@ public class FinanceAdapter implements FinancePort {
             // 端口不抛异常：上游、读库或组装出的意外错误同样折成失败
             return ToolResult.failure(code, error.getMessage());
         }
+    }
+
+    /** 读库，过期或缺表时先抓一次；与 Python {@code ensure_financials} 同一入口。 */
+    List<Map<String, Object>> freshHistory(String code) {
+        List<Map<String, Object>> history = history(code);
+        if (stale(code, history)) {
+            refresh(code);
+            history = history(code);
+        }
+        return history;
     }
 
     /** 抓三表、算指标、覆盖写入；上游单表失败时保留其余两张表的结果。 */
