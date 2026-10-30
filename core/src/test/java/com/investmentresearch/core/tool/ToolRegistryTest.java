@@ -77,6 +77,17 @@ class ToolRegistryTest {
     }
 
     @Test
+    void unknown_tool_with_valid_company_still_leaves_company_null() {
+        ToolRegistry registry = new ToolRegistry(List.of());
+
+        ToolResult result = registry.run("no_such_tool", Map.of("company", "605499"), null);
+
+        // 与 Python 不同：这里不回填解析出的代码，Task 14 的约定
+        assertThat(result.company()).isNull();
+        assertThat(result.error()).isEqualTo("未知工具：no_such_tool");
+    }
+
+    @Test
     void missing_company_uses_default_company() {
         AtomicReference<String> seen = new AtomicReference<>();
         ToolRegistry registry =
@@ -265,6 +276,8 @@ class ToolRegistryTest {
         assertThat(peersLimit(0)).isEqualTo(3);
         assertThat(peersLimit(null)).isEqualTo(8);
         assertThat(peersLimit(99)).isEqualTo(20);
+        // 3e9 超过 int 范围：(int)(long) 会溢出成负数再夹成 3
+        assertThat(peersLimit(3_000_000_000L)).isEqualTo(20);
     }
 
     private int peersLimit(Object value) {

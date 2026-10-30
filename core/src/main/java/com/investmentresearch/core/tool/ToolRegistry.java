@@ -35,14 +35,14 @@ public final class ToolRegistry {
 
     public ToolResult run(String name, Map<String, Object> arguments, String defaultCompany) {
         Map<String, Object> args = arguments == null ? Map.of() : arguments;
-        // Python 先校验 company 参数再进未知工具分支；其余解析仍交给各工具
-        CompanyTool.CompanyText company = CompanyTool.companyText(args.get("company"));
-        if (company.error() != null) {
-            return ToolResult.failure(null, company.error());
-        }
-
         ResearchTool tool = tools.get(name);
         if (tool == null) {
+            // Python 在未知工具分支之前就校验 company 类型，所以这里也先校验；
+            // 已注册的工具由 CompanyTool 自己校验，像 resolve_company 这样的非公司工具不吃这个参数
+            CompanyTool.CompanyText company = CompanyTool.companyText(args.get("company"));
+            if (company.error() != null) {
+                return ToolResult.failure(null, company.error());
+            }
             // Python 在此还会回填已解析出的代码；这里按 Task 14 的约定不回填
             return ToolResult.failure(null, "未知工具：" + name);
         }

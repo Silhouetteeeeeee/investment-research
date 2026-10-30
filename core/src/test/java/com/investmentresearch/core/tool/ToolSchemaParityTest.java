@@ -1,6 +1,7 @@
 package com.investmentresearch.core.tool;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -57,6 +58,8 @@ class ToolSchemaParityTest {
 
         ToolRegistry registry = new ToolRegistry(tools);
 
+        // 注册表为空时下面的循环一次都不跑，测试会假通过
+        assertFalse(registry.schemas().isEmpty());
         for (ToolSchema schema : registry.schemas()) {
             Map<String, Object> expected = exported.get(schema.name());
             assertNotNull(expected, schema.name());
