@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:sqlite:file:${APP_DATA_DIR:./var}/app.db
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 4
+  flyway:
+    locations: classpath:db/migration/sqlite
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
