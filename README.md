@@ -80,11 +80,17 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
   `system_prompt_hash`、`tools_hash`；详情页因此不显示流式标记，并会出现
   “消息 0 条 · system 0%”。`prompts`、`skills`、`calls` 目前也只保留空数组。
 - 系统提示词保留了 `research_memory` 以及行情、新闻、选股等工具的描述，但这些工具
-  在阶段 1 尚未注册；真实模型可能先尝试加载失败的工具，浪费一轮。
+  在阶段 1 尚未注册；真实模型可能先尝试加载失败的工具，浪费一轮。同理，`get_dividends`、
+  `get_shareholders`、`get_management` 等公司研究工具也还没注册——阶段 1 只有 7 个工具真正可用。
 - `get_valuation`、`get_announcements`、`resolve_company` 等时效性工具不进入会话缓存，
   与 Python 的 `UNCACHED_TOOLS` 一致。
 
 ## 容器部署（Docker Compose）
+
+> **HTTP 明文风险**：本阶段只提供 HTTP，没有 TLS。部署到公网 IP 时，`APP_API_TOKEN`、
+> 问题与回答、公告原文全部以明文在链路上传输，路径上的任何一跳都能读到并复用这个长期令牌。
+> 若要公网使用，至少在前面加一层终止 TLS 的反代（Caddy / Nginx + 证书），或只通过
+> VPN / SSH 隧道访问；不要把明文端口直接暴露在公网。
 
 ```bash
 cp .env.example .env          # 填 APP_API_TOKEN 和 DEEPSEEK_API_KEY
