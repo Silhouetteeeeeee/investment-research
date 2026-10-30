@@ -210,7 +210,13 @@ class ConversationControllerTest {
 
     @Test
     void run_detail_rejects_path_traversal_id() throws Exception {
-        when(repository.find(1)).thenReturn(Optional.of(conversation(1, "东鹏饮料", "605499", 0)));
+        when(repository.find(1)).thenReturn(Optional.of(conversation(1, "东鹏饮料", "605499", 1)));
+        // 让这条消息真的"引用"穿越串：否则 referenced() 先拒，validRunId 一次都没跑到
+        when(repository.messages(1))
+                .thenReturn(
+                        List.of(
+                                new StoredMessage(
+                                        "assistant", Map.of("run", Map.of("id", "..\\secret")))));
 
         mvc.perform(get("/api/conversations/1/runs/{runId}", "..\\secret"))
                 .andExpect(status().isNotFound())

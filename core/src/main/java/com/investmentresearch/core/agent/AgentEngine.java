@@ -125,7 +125,8 @@ public final class AgentEngine implements AssistantEngine {
             StreamListener listener) {
         RunRecorder recorder =
                 new RunRecorder(
-                        Clock.systemUTC(),
+                        // Python 用本地时间（datetime.now()），UTC 会让时间线差 8 小时
+                        Clock.systemDefaultZone(),
                         properties.model(),
                         properties.maxTurns(),
                         toolSchemas);
@@ -199,7 +200,8 @@ public final class AgentEngine implements AssistantEngine {
             }
             // 运行记录先收尾再抛，前端失败消息也能展开时间线（agent.py:720-723）
             recorder.finish("error", message);
-            throw new EngineFailure("回答生成失败：" + message, recordedRun(recorder, issues), error);
+            // 不再自己加前缀：AskService 会拼"研究失败："，加两层就成"研究失败：回答生成失败：…"
+            throw new EngineFailure(message, recordedRun(recorder, issues), error);
         }
     }
 
@@ -235,9 +237,10 @@ public final class AgentEngine implements AssistantEngine {
                 if (!forced) {
                     state.round.incrementAndGet();
                 }
+                // 强制作答那一轮 Python 记 max_rounds+1 且不计入轮数（agent.py:742）
+                int round = state.round.get() + (forced ? 1 : 0);
                 state.modelCalls.put(
-                        call.getReplyId(),
-                        new ModelCall(state.round.get(), forced, System.nanoTime()));
+                        call.getReplyId(), new ModelCall(round, forced, System.nanoTime()));
             }
             case MODEL_CALL_END -> {
                 ModelCallEndEvent end = (ModelCallEndEvent) event;
