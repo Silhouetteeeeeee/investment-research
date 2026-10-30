@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.investmentresearch.app.Application;
+import com.investmentresearch.core.agent.AssistantEngine;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +44,9 @@ class TokenAuthTest {
     @Autowired MockMvc mvc;
     @Autowired TestRestTemplate rest;
     @LocalManagementPort int managementPort;
+
+    // Keeps the full-context boot offline: the real engine would read DEEPSEEK_API_KEY.
+    @MockitoBean AssistantEngine engine;
 
     @Test
     void api_without_token_returns_401_json() throws Exception {

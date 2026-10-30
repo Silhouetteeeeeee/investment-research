@@ -3,6 +3,8 @@ package com.investmentresearch.app.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.investmentresearch.app.Application;
+import com.investmentresearch.core.agent.AssistantEngine;
+import com.investmentresearch.core.port.CompanyDirectory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 // The @WebMvcTest cannot see the security chain. This boots the real context so a
 // 401-after-async regression (DispatcherType.ASYNC) fails here — verified by removing
@@ -27,6 +30,11 @@ import org.springframework.http.ResponseEntity;
         })
 class AskStreamAuthTest {
     @Autowired TestRestTemplate rest;
+
+    // The route needs the directory and the engine; stubbing them keeps this security test
+    // offline and independent of any local DEEPSEEK_API_KEY.
+    @MockitoBean CompanyDirectory directory;
+    @MockitoBean AssistantEngine engine;
 
     @Test
     void authenticated_async_stream_completes_with_200_and_full_body() {
@@ -51,7 +59,9 @@ class AskStreamAuthTest {
         assertThat(response.getHeaders().getCacheControl()).contains("no-cache");
         assertThat(response.getHeaders().getFirst("X-Accel-Buffering")).isEqualTo("no");
         assertThat(response.getBody())
-                .isEqualTo("data: {\"type\":\"error\",\"text\":\"助手尚未接入模型\"}\n\n");
+                .isEqualTo(
+                        "data: {\"type\":\"warning\",\"text\":\"没认出你问的是哪家公司，"
+                                + "请在问题里带上公司名或六位代码。\"}\n\n");
     }
 
     @Test
