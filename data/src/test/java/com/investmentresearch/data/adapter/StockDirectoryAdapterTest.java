@@ -218,6 +218,37 @@ class StockDirectoryAdapterTest {
     }
 
     @Test
+    void empty_200_body_is_a_failure_not_an_empty_page() {
+        assertInvalidEnvelopeFailsAndCoolsDown("");
+    }
+
+    @Test
+    void json_without_data_envelope_is_a_failure_not_an_empty_page() {
+        assertInvalidEnvelopeFailsAndCoolsDown("{\"rc\": 102}");
+    }
+
+    private void assertInvalidEnvelopeFailsAndCoolsDown(String body) {
+        server.resetAll();
+        server.stubFor(
+                get(urlPathEqualTo(CLIST_PATH))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody(body)));
+
+        ToolResult first = tool.execute(Map.of("name_or_code", "不存在的公司"), null);
+        ToolResult second = tool.execute(Map.of("name_or_code", "不存在的公司"), null);
+
+        assertThat(first.ok()).isFalse();
+        assertThat(first.error()).isEqualTo("没有找到「不存在的公司」");
+        assertThat(second.ok()).isFalse();
+        assertThat(mapper.selectCount(null)).isZero();
+        // 200 不重试；第二次查询已在 60s 冷却内，全程只打一次上游
+        server.verify(1, getRequestedFor(urlPathEqualTo(CLIST_PATH)));
+    }
+
+    @Test
     void failed_load_is_not_retried_during_cooldown() {
         server.resetAll();
         server.stubFor(

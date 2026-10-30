@@ -104,10 +104,17 @@ public class StockMasterSync {
                         + encode(FIELDS);
         try {
             JsonNode root = MAPPER.readTree(upstreamClient.get(url, Map.of()));
-            if (root == null) {
+            // 空 body / {"rc":102} / 截断 JSON 都不是“空页”，必须按上游失败处理：
+            // 否则 cooldown 不会生效，且翻页中途的半张表会被提交
+            JsonNode data = root == null ? null : root.get("data");
+            if (root == null
+                    || !root.isObject()
+                    || data == null
+                    || !data.isObject()
+                    || !data.path("diff").isArray()) {
                 throw new UpstreamException(0, url);
             }
-            return root.path("data");
+            return data;
         } catch (JsonProcessingException e) {
             // WAF/HTML/截断响应按上游失败处理，让调用方按“空表”降级而不是抛 500
             throw new UpstreamException(0, url, e);
