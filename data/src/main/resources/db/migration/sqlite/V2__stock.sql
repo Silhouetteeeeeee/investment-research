@@ -1,0 +1,1 @@
+CREATE TABLE stock (code TEXT PRIMARY KEY, name TEXT NOT NULL, refreshed_at TEXT NOT NULL);
