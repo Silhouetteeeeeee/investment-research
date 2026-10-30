@@ -1,0 +1,76 @@
+{
+  "tool": "calc_valuation",
+  "arguments": {
+    "mode": "check"
+  },
+  "default_company": "601606",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": "2026-10-29",
+    "sources": [
+      {
+        "id": "valuation:601606:2026-10-29",
+        "label": "估值",
+        "detail": "长城军工 2026-10-29 估值",
+        "as_of": "2026-10-29",
+        "fetched_at": "2026-10-30 14:56:12",
+        "url": ""
+      },
+      {
+        "id": "finance:601606:2026-09-30",
+        "label": "财报",
+        "detail": "长城军工 2026-09-30 财务快照",
+        "as_of": "2026-09-30",
+        "fetched_at": "2026-10-30 14:56:11",
+        "url": ""
+      }
+    ],
+    "data": {
+      "mode": "check",
+      "price": 29.32,
+      "market_cap_yi": 212.34,
+      "valuation": {
+        "pe_ttm": -230.17644327,
+        "pb_mrq": 10.03819727,
+        "as_of": "2026-10-29"
+      },
+      "financials": {
+        "period": "2026-09-30",
+        "ttm_net_profit_yi": -0.92,
+        "equity_parent_yi": 21.15,
+        "ttm_fcf_yi": -2.83,
+        "is_financial": false
+      },
+      "checks": [
+        {
+          "name": "PE(TTM)",
+          "reported": -230.17644327,
+          "implied": null,
+          "diff_pct": null,
+          "status": "skip",
+          "note": "缺少可比数据"
+        },
+        {
+          "name": "PB(MRQ)",
+          "reported": 10.03819727,
+          "implied": 10.03819727425062,
+          "diff_pct": 0.0,
+          "status": "pass",
+          "note": "差异 ≤ 1%，口径一致"
+        }
+      ],
+      "fcf_yield_pct": -1.33,
+      "warnings": [
+        "TTM 归母净利润为负，PE 不适用",
+        "PB 按归母净资产校验；少数股东权益 0.1 未计入"
+      ],
+      "notes": [
+        "PE/PB 用东财估值与新浪财报两套数据交叉校验；差异可能来自 TTM/MRQ 口径或财报同步时点，不代表数据错误。"
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

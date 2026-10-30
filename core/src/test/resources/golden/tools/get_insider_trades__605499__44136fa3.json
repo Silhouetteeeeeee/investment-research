@@ -1,0 +1,136 @@
+{
+  "tool": "get_insider_trades",
+  "arguments": {},
+  "default_company": "605499",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "605499",
+    "as_of": "2026-05-29",
+    "sources": [
+      {
+        "id": "insider:605499:2026-05-29",
+        "label": "高管增减持",
+        "detail": "东鹏饮料 高管增减持 2026-05-29",
+        "as_of": "2026-05-29",
+        "fetched_at": "2026-10-26 19:11:01",
+        "url": "https://data.eastmoney.com/executive/605499.html"
+      }
+    ],
+    "data": {
+      "code": "605499",
+      "name": "东鹏饮料",
+      "as_of": "2026-05-29",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_trades": true,
+      "latest": {
+        "change_date": "2026-05-29",
+        "year": 2026,
+        "person": "林木勤",
+        "executive": "林木勤",
+        "position": "董事长,董事,总裁",
+        "relation": "本人",
+        "kind": "individual",
+        "direction": "增持",
+        "shares": 49800,
+        "average_price": 129.8,
+        "amount_wan": 646.38,
+        "amount_estimated": false,
+        "reason": "增持",
+        "change_ratio_pct": 0.0068,
+        "hold_after": 336304724,
+        "begin_hold": 336254924,
+        "end_hold": 336304724,
+        "hold_type": "A股"
+      },
+      "annual": [
+        {
+          "year": 2026,
+          "events": 1,
+          "buy_events": 1,
+          "sell_events": 0,
+          "buy_shares": 49800,
+          "sell_shares": 0,
+          "net_shares": 49800,
+          "buy_amount_wan": 646.38,
+          "sell_amount_wan": 0.0,
+          "net_amount_wan": 646.38,
+          "missing_amount_events": 0,
+          "amount_complete": true
+        }
+      ],
+      "people": [
+        {
+          "person": "林木勤",
+          "executive": "林木勤",
+          "position": "董事长,董事,总裁",
+          "relation": "本人",
+          "kind": "individual",
+          "events": 1,
+          "buy_shares": 49800,
+          "sell_shares": 0,
+          "net_shares": 49800,
+          "buy_amount_wan": 646.38,
+          "sell_amount_wan": 0.0,
+          "net_amount_wan": 646.38,
+          "missing_amount_events": 0,
+          "amount_complete": true,
+          "first_date": "2026-05-29",
+          "latest_date": "2026-05-29",
+          "latest_hold": 336304724,
+          "latest_price": 129.8
+        }
+      ],
+      "events": [
+        {
+          "change_date": "2026-05-29",
+          "year": 2026,
+          "person": "林木勤",
+          "executive": "林木勤",
+          "position": "董事长,董事,总裁",
+          "relation": "本人",
+          "kind": "individual",
+          "direction": "增持",
+          "shares": 49800,
+          "average_price": 129.8,
+          "amount_wan": 646.38,
+          "amount_estimated": false,
+          "reason": "增持",
+          "change_ratio_pct": 0.0068,
+          "hold_after": 336304724,
+          "begin_hold": 336254924,
+          "end_hold": 336304724,
+          "hold_type": "A股"
+        }
+      ],
+      "events_truncated": 0,
+      "counts": {
+        "events": 1,
+        "buy_events": 1,
+        "sell_events": 0,
+        "people": 1,
+        "insiders": 1,
+        "plans": 0,
+        "plan_events": 0,
+        "buy_shares": 49800,
+        "sell_shares": 0,
+        "net_shares": 49800,
+        "buy_amount_wan": 646.38,
+        "sell_amount_wan": 0.0,
+        "net_amount_wan": 646.38,
+        "missing_amount_events": 0,
+        "estimated_amount_events": 0,
+        "latest_date": "2026-05-29"
+      },
+      "notes": [
+        "只统计已披露的高管及其关联人变动，未覆盖未披露或未达披露标准的交易",
+        "变动股数为正表示增持、为负表示减持；金额为披露金额，缺失时按成交均价×股数估算"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

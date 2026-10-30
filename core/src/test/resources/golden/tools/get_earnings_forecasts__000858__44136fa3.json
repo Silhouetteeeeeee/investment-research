@@ -1,0 +1,160 @@
+{
+  "tool": "get_earnings_forecasts",
+  "arguments": {},
+  "default_company": "000858",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "000858",
+    "as_of": "2026-07-15",
+    "sources": [
+      {
+        "id": "forecasts:000858:2026-07-15",
+        "label": "业绩预告",
+        "detail": "五 粮 液 业绩预告 2026-07-15",
+        "as_of": "2026-07-15",
+        "fetched_at": "2026-10-28 10:37:17",
+        "url": "https://data.eastmoney.com/bbsj/yjyg.html?code=000858"
+      }
+    ],
+    "data": {
+      "code": "000858",
+      "name": "五 粮 液",
+      "as_of": "2026-07-15",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_forecasts": true,
+      "latest": {
+        "report_date": "2026-06-30",
+        "notice_date": "2026-07-15",
+        "year": 2026,
+        "type": "预增",
+        "metrics": [
+          {
+            "finance_code": "004",
+            "label": "归母净利润",
+            "unit": "亿元",
+            "type": "预增",
+            "lower": 87.3,
+            "upper": 92.0,
+            "yoy_low": 88.8,
+            "yoy_high": 98.97,
+            "prior": 46.24,
+            "mid": 89.65
+          },
+          {
+            "finance_code": "005",
+            "label": "扣非净利润",
+            "unit": "亿元",
+            "type": "预增",
+            "lower": 84.6,
+            "upper": 89.3,
+            "yoy_low": 83.45,
+            "yoy_high": 93.64,
+            "prior": 46.12,
+            "mid": 86.95
+          },
+          {
+            "finance_code": "003",
+            "label": "每股收益",
+            "unit": "元/股",
+            "type": "预增",
+            "lower": 2.2492,
+            "upper": 2.3703,
+            "yoy_low": null,
+            "yoy_high": null,
+            "prior": 1.1912,
+            "mid": 2.3098
+          }
+        ],
+        "reason": "2026年半年度,公司预计实现归属于上市公司股东的净利润较上年同期增长,主要系上年同期基数较低及公司销售旺季核心产品动销回暖所致。"
+      },
+      "events": [
+        {
+          "report_date": "2026-06-30",
+          "notice_date": "2026-07-15",
+          "year": 2026,
+          "type": "预增",
+          "metrics": [
+            {
+              "finance_code": "004",
+              "label": "归母净利润",
+              "unit": "亿元",
+              "type": "预增",
+              "lower": 87.3,
+              "upper": 92.0,
+              "yoy_low": 88.8,
+              "yoy_high": 98.97,
+              "prior": 46.24,
+              "mid": 89.65
+            },
+            {
+              "finance_code": "005",
+              "label": "扣非净利润",
+              "unit": "亿元",
+              "type": "预增",
+              "lower": 84.6,
+              "upper": 89.3,
+              "yoy_low": 83.45,
+              "yoy_high": 93.64,
+              "prior": 46.12,
+              "mid": 86.95
+            },
+            {
+              "finance_code": "003",
+              "label": "每股收益",
+              "unit": "元/股",
+              "type": "预增",
+              "lower": 2.2492,
+              "upper": 2.3703,
+              "yoy_low": null,
+              "yoy_high": null,
+              "prior": 1.1912,
+              "mid": 2.3098
+            }
+          ],
+          "reason": "2026年半年度,公司预计实现归属于上市公司股东的净利润较上年同期增长,主要系上年同期基数较低及公司销售旺季核心产品动销回暖所致。"
+        }
+      ],
+      "annual": [
+        {
+          "year": 2026,
+          "events": 1,
+          "report_dates": [
+            "2026-06-30"
+          ]
+        }
+      ],
+      "type_counts": [
+        {
+          "type": "预增",
+          "events": 1
+        }
+      ],
+      "events_truncated": 0,
+      "counts": {
+        "events": 1,
+        "latest_report_date": "2026-06-30",
+        "latest_notice_date": "2026-07-15",
+        "latest_type": "预增",
+        "latest_net_profit_low_yi": 87.3,
+        "latest_net_profit_high_yi": 92.0,
+        "latest_net_profit_yoy_low": 88.8,
+        "latest_net_profit_yoy_high": 98.97,
+        "latest_eps_low": 2.2492,
+        "latest_eps_high": 2.3703,
+        "latest_revenue_low_yi": null,
+        "latest_revenue_high_yi": null
+      },
+      "notes": [
+        "业绩预告是公司初步测算，可能被修订，最终以定期报告为准",
+        "预告多为区间或约数，不是确定值，同比基数受非经常性损益影响",
+        "只含已披露预告，未覆盖未发布预告的期间"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

@@ -1,0 +1,7 @@
+[
+  {
+    "code": "601606",
+    "data": "{\"code\": \"601606\", \"events\": [{\"free_date\": \"2021-08-06\", \"year\": 2021, \"is_upcoming\": false, \"days_until\": null, \"shares\": 426501559, \"market_cap\": 5420834814.89, \"price\": 12.71, \"ratio_total_pct\": 58.8904769545, \"ratio_free_pct\": 58.8904769545, \"holders\": 1, \"shares_type\": \"首发原股东限售股份\", \"market_type\": \"sh\", \"free_shares_after\": 724228400, \"non_free_shares_after\": 0, \"able_free_shares\": 426501559, \"update_date\": \"2021-07-29\", \"security_name\": \"长城军工\", \"key\": [\"2021-08-06\", \"首发原股东限售股份\", 426501559, 1]}, {\"free_date\": \"2019-08-06\", \"year\": 2019, \"is_upcoming\": false, \"days_until\": null, \"shares\": 149726841, \"market_cap\": 2091683968.77, \"price\": 13.97, \"ratio_total_pct\": 20.6739808878, \"ratio_free_pct\": 50.2900042526, \"holders\": 4, \"shares_type\": \"首发原股东限售股份\", \"market_type\": \"sh\", \"free_shares_after\": 297726841, \"non_free_shares_after\": 426501559, \"able_free_shares\": 149726841, \"update_date\": \"2019-07-29\", \"security_name\": \"长城军工\", \"key\": [\"2019-08-06\", \"首发原股东限售股份\", 149726841, 4]}], \"count\": 2}",
+    "fetched_at": "2026-10-30 14:56:17"
+  }
+]

@@ -57,8 +57,22 @@ COMPANY_TABLES = (
     "announcement",
     "val_history",
 )
+# Phase-2 research caches: mostly (code, data, fetched_at); a few carry an extra key column.
+RESEARCH_TABLES = (
+    "company_management",
+    "company_shareholders",
+    "company_dividends",
+    "company_insider_trades",
+    "company_buybacks",
+    "company_lockups",
+    "company_pledges",
+    "company_forecasts",
+    "company_research",
+    "research_notes",
+    "company_reports",
+)
 # val_peer has no company code; copy the boards the five companies belong to.
-SNAPSHOT_TABLES = COMPANY_TABLES + ("val_peer",)
+SNAPSHOT_TABLES = COMPANY_TABLES + RESEARCH_TABLES + ("val_peer",)
 
 COMPANY_TOOLS = (
     ("get_company_profile", {}),
@@ -67,6 +81,40 @@ COMPANY_TOOLS = (
     ("get_peers", {"limit": 8}),
     ("get_announcements", {"days": 180}),
     ("get_valuation", {}),
+)
+# Phase-2 tools: only generated for companies whose cache table actually has a row,
+# so a stale cache can never turn into a network call during generation.
+RESEARCH_TOOLS = (
+    ("get_management", {}, "company_management"),
+    ("get_shareholders", {}, "company_shareholders"),
+    ("get_dividends", {}, "company_dividends"),
+    ("get_insider_trades", {}, "company_insider_trades"),
+    ("get_buybacks", {}, "company_buybacks"),
+    ("get_lockup_expiries", {}, "company_lockups"),
+    ("get_pledges", {}, "company_pledges"),
+    ("get_earnings_forecasts", {}, "company_forecasts"),
+    ("get_institutional_research", {}, "company_research"),
+    ("get_research_notes", {}, "research_notes"),
+    ("get_analyst_views", {}, "company_reports"),
+    ("get_financial_history", {}, "fin_income"),
+    ("get_financial_history", {"years": 5}, "fin_income"),
+    ("calc_valuation", {"mode": "check"}, "val_history"),
+    (
+        "calc_valuation",
+        {
+            "mode": "scenario",
+            "base_value": 5.0,
+            "growth_pct": [3, 8, 12],
+            "exit_pe": [15, 20, 25],
+            "years": 3,
+        },
+        "val_history",
+    ),
+    (
+        "calc_valuation",
+        {"mode": "terminal", "roic_pct": 15, "terminal_g_pct": 3, "discount_rate_pct": 9},
+        "val_history",
+    ),
 )
 RESOLVE_CASES = ("605499", "东鹏饮料", "不存在的公司")
 
@@ -90,12 +138,22 @@ def install_network_guard() -> None:
 def patch_modules(db_path: Path, as_of: date) -> None:
     """Point the tool modules at the temp DB copy, force cache hits, pin today."""
     import assistant.company_profile as company_profile
+    import stock.analyst_views as analyst_views
     import stock.announcements as announcements
+    import stock.buybacks as buybacks
     import stock.db_service as db_service
     import stock.disclosure_service as disclosure_service
+    import stock.dividends as dividends
     import stock.finance_service as finance_service
+    import stock.forecasts as forecasts
+    import stock.insider_trades as insider_trades
+    import stock.lockups as lockups
+    import stock.management as management
     import stock.peers as peers
+    import stock.pledges as pledges
+    import stock.research as research
     import stock.segments as segments
+    import stock.shareholders as shareholders
     import stock.valuation as valuation
 
     for module in (
@@ -107,10 +165,36 @@ def patch_modules(db_path: Path, as_of: date) -> None:
         announcements,
         valuation,
         company_profile,
+        management,
+        shareholders,
+        dividends,
+        insider_trades,
+        buybacks,
+        lockups,
+        pledges,
+        forecasts,
+        research,
+        analyst_views,
     ):
         module.DB_PATH = str(db_path)
 
-    for module in (segments, peers, announcements, valuation, company_profile):
+    for module in (
+        segments,
+        peers,
+        announcements,
+        valuation,
+        company_profile,
+        management,
+        shareholders,
+        dividends,
+        insider_trades,
+        buybacks,
+        lockups,
+        pledges,
+        forecasts,
+        research,
+        analyst_views,
+    ):
         module._age_hours = lambda *_args, **_kwargs: 0.0
     finance_service._cache_age = lambda _history: timedelta(0)
 
@@ -231,11 +315,26 @@ def rows_for(connection: sqlite3.Connection, table: str, code: str) -> list[dict
     return [{column: row[column] for column in table_columns} for row in rows]
 
 
-def build_cases() -> list[tuple[str, dict, str | None, bool]]:
+def codes_with_rows(connection: sqlite3.Connection, table: str) -> list[str]:
+    """Golden companies that actually have a cached row in ``table``, in company order."""
+    marks = ",".join("?" for _ in CODES)
+    found = {
+        row[0]
+        for row in connection.execute(
+            f'select distinct code from "{table}" where code in ({marks})', CODES
+        )
+    }
+    return [code for code in CODES if code in found]
+
+
+def build_cases(available: dict[str, list[str]]) -> list[tuple[str, dict, str | None, bool]]:
     """(tool, arguments, default_company, expect_ok)."""
     cases: list[tuple[str, dict, str | None, bool]] = []
     for code, _name in COMPANIES:
         for tool, arguments in COMPANY_TOOLS:
+            cases.append((tool, arguments, code, True))
+    for tool, arguments, table in RESEARCH_TOOLS:
+        for code in available.get(table, ()):
             cases.append((tool, arguments, code, True))
     for name_or_code in RESOLVE_CASES:
         cases.append(
@@ -322,16 +421,28 @@ def main() -> int:
 
         connection = connect(work_db)
         try:
+            available = {
+                table: codes_with_rows(connection, table)
+                for table in SNAPSHOT_TABLES
+                if table != "val_peer"  # no company code column
+            }
             for table in SNAPSHOT_TABLES:
-                for code, _name in COMPANIES:
+                for code in available.get(table, CODES):
                     write_json(rows_dir / f"{table}__{code}.json", rows_for(connection, table, code))
+            cases = build_cases(available)
         finally:
             connection.close()
 
         messages: dict[str, str] = {}
-        for tool, arguments, default_company, expect_ok in build_cases():
+        skipped: list[str] = []
+        for tool, arguments, default_company, expect_ok in cases:
             try:
                 result = tools.run_tool(tool, arguments, default_company)
+            except NetworkBlocked:
+                # Incomplete cache for this company (e.g. a research note never fetched);
+                # skip it instead of pinning a degenerate result.
+                skipped.append(f"{tool} {arguments} ({default_company})")
+                continue
             except BaseException as error:  # noqa: BLE001 - includes NetworkBlocked
                 raise SystemExit(
                     f"{tool} {arguments} (default_company={default_company}) failed: "
@@ -371,6 +482,8 @@ def main() -> int:
             f"tools={len(messages)} schemas={len(by_name)} "
             f"rows={len(SNAPSHOT_TABLES) * len(COMPANIES)} snapshot_rows={sum(counts.values())}"
         )
+        for label in skipped:
+            print(f"  skipped (cache incomplete): {label}")
         for table, count in counts.items():
             print(f"  {table}: {count}")
         return 0

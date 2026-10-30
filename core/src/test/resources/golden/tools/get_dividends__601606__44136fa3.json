@@ -1,0 +1,305 @@
+{
+  "tool": "get_dividends",
+  "arguments": {},
+  "default_company": "601606",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": "2025-12-31",
+    "sources": [
+      {
+        "id": "dividends:601606:2025-12-31",
+        "label": "分红历史",
+        "detail": "长城军工 分红 2025-12-31",
+        "as_of": "2025-12-31",
+        "fetched_at": "2026-10-30 14:56:16",
+        "url": "https://data.eastmoney.com/yjfp/detail/601606.html"
+      }
+    ],
+    "data": {
+      "code": "601606",
+      "name": "长城军工",
+      "as_of": "2025-12-31",
+      "has_dividends": true,
+      "latest": {
+        "report_date": "2025-12-31",
+        "fiscal_year": 2025,
+        "period_label": "年报",
+        "plan": "10派0.04元(含税,扣税后0.036元)",
+        "plan_short": "10派0.04元",
+        "status": "实施分配",
+        "cash_per_10": 0.04,
+        "cash_per_share": 0.004,
+        "cash_total_yi": 0.03,
+        "bonus_per_10": null,
+        "transfer_per_10": null,
+        "share_bonus_per_10": null,
+        "total_shares_wan": 72422.84,
+        "yield_pct": 0.02,
+        "eps": 0.01,
+        "plan_notice_date": "2026-04-25",
+        "notice_date": "2026-07-09",
+        "record_date": "2026-07-15",
+        "ex_date": "2026-07-16"
+      },
+      "annual": [
+        {
+          "year": 2018,
+          "periods": [
+            "2018-12-31"
+          ],
+          "report_count": 1,
+          "cash_total_yi": 0.3,
+          "cash_complete": true,
+          "net_profit_yi": 0.98,
+          "payout_ratio": 31.0,
+          "payout_basis": "归母净利润",
+          "share_bonus_count": 0
+        },
+        {
+          "year": 2019,
+          "periods": [
+            "2019-12-31"
+          ],
+          "report_count": 1,
+          "cash_total_yi": 0.3,
+          "cash_complete": true,
+          "net_profit_yi": 1.0,
+          "payout_ratio": 30.3,
+          "payout_basis": "归母净利润",
+          "share_bonus_count": 0
+        },
+        {
+          "year": 2020,
+          "periods": [
+            "2020-12-31"
+          ],
+          "report_count": 1,
+          "cash_total_yi": 0.35,
+          "cash_complete": true,
+          "net_profit_yi": 1.17,
+          "payout_ratio": 30.2,
+          "payout_basis": "归母净利润",
+          "share_bonus_count": 0
+        },
+        {
+          "year": 2021,
+          "periods": [
+            "2021-12-31"
+          ],
+          "report_count": 1,
+          "cash_total_yi": 0.28,
+          "cash_complete": true,
+          "net_profit_yi": 1.36,
+          "payout_ratio": 20.2,
+          "payout_basis": "归母净利润",
+          "share_bonus_count": 0
+        },
+        {
+          "year": 2022,
+          "periods": [
+            "2022-12-31"
+          ],
+          "report_count": 1,
+          "cash_total_yi": 0.17,
+          "cash_complete": true,
+          "net_profit_yi": 0.8,
+          "payout_ratio": 20.8,
+          "payout_basis": "归母净利润",
+          "share_bonus_count": 0
+        },
+        {
+          "year": 2023,
+          "periods": [
+            "2023-12-31"
+          ],
+          "report_count": 1,
+          "cash_total_yi": 0.06,
+          "cash_complete": true,
+          "net_profit_yi": 0.27,
+          "payout_ratio": 21.7,
+          "payout_basis": "归母净利润",
+          "share_bonus_count": 0
+        },
+        {
+          "year": 2025,
+          "periods": [
+            "2025-12-31"
+          ],
+          "report_count": 1,
+          "cash_total_yi": 0.03,
+          "cash_complete": true,
+          "net_profit_yi": 0.08,
+          "payout_ratio": 34.7,
+          "payout_basis": "归母净利润",
+          "share_bonus_count": 0
+        }
+      ],
+      "events": [
+        {
+          "report_date": "2025-12-31",
+          "fiscal_year": 2025,
+          "period_label": "年报",
+          "plan": "10派0.04元(含税,扣税后0.036元)",
+          "plan_short": "10派0.04元",
+          "status": "实施分配",
+          "cash_per_10": 0.04,
+          "cash_per_share": 0.004,
+          "cash_total_yi": 0.03,
+          "bonus_per_10": null,
+          "transfer_per_10": null,
+          "share_bonus_per_10": null,
+          "total_shares_wan": 72422.84,
+          "yield_pct": 0.02,
+          "eps": 0.01,
+          "plan_notice_date": "2026-04-25",
+          "notice_date": "2026-07-09",
+          "record_date": "2026-07-15",
+          "ex_date": "2026-07-16"
+        },
+        {
+          "report_date": "2023-12-31",
+          "fiscal_year": 2023,
+          "period_label": "年报",
+          "plan": "10派0.08元(含税,扣税后0.072元)",
+          "plan_short": "10派0.08元",
+          "status": "实施分配",
+          "cash_per_10": 0.08,
+          "cash_per_share": 0.008,
+          "cash_total_yi": 0.06,
+          "bonus_per_10": null,
+          "transfer_per_10": null,
+          "share_bonus_per_10": null,
+          "total_shares_wan": 72422.84,
+          "yield_pct": 0.09,
+          "eps": 0.04,
+          "plan_notice_date": "2024-04-30",
+          "notice_date": "2024-07-09",
+          "record_date": "2024-07-15",
+          "ex_date": "2024-07-16"
+        },
+        {
+          "report_date": "2022-12-31",
+          "fiscal_year": 2022,
+          "period_label": "年报",
+          "plan": "10派0.23元(含税,扣税后0.207元)",
+          "plan_short": "10派0.23元",
+          "status": "实施分配",
+          "cash_per_10": 0.23,
+          "cash_per_share": 0.023,
+          "cash_total_yi": 0.17,
+          "bonus_per_10": null,
+          "transfer_per_10": null,
+          "share_bonus_per_10": null,
+          "total_shares_wan": 72422.84,
+          "yield_pct": 0.17,
+          "eps": 0.11,
+          "plan_notice_date": "2023-04-19",
+          "notice_date": "2023-07-05",
+          "record_date": "2023-07-11",
+          "ex_date": "2023-07-12"
+        },
+        {
+          "report_date": "2021-12-31",
+          "fiscal_year": 2021,
+          "period_label": "年报",
+          "plan": "10派0.38元(含税,扣税后0.342元)",
+          "plan_short": "10派0.38元",
+          "status": "实施分配",
+          "cash_per_10": 0.38,
+          "cash_per_share": 0.038,
+          "cash_total_yi": 0.28,
+          "bonus_per_10": null,
+          "transfer_per_10": null,
+          "share_bonus_per_10": null,
+          "total_shares_wan": 72422.84,
+          "yield_pct": 0.35,
+          "eps": 0.19,
+          "plan_notice_date": "2022-04-08",
+          "notice_date": "2022-06-15",
+          "record_date": "2022-06-21",
+          "ex_date": "2022-06-22"
+        },
+        {
+          "report_date": "2020-12-31",
+          "fiscal_year": 2020,
+          "period_label": "年报",
+          "plan": "10派0.49元(含税,扣税后0.441元)",
+          "plan_short": "10派0.49元",
+          "status": "实施分配",
+          "cash_per_10": 0.49,
+          "cash_per_share": 0.049,
+          "cash_total_yi": 0.35,
+          "bonus_per_10": null,
+          "transfer_per_10": null,
+          "share_bonus_per_10": null,
+          "total_shares_wan": 72422.84,
+          "yield_pct": 0.48,
+          "eps": 0.16,
+          "plan_notice_date": "2021-04-28",
+          "notice_date": "2021-07-09",
+          "record_date": "2021-07-15",
+          "ex_date": "2021-07-16"
+        },
+        {
+          "report_date": "2019-12-31",
+          "fiscal_year": 2019,
+          "period_label": "年报",
+          "plan": "10派0.42元(含税,扣税后0.378元)",
+          "plan_short": "10派0.42元",
+          "status": "实施分配",
+          "cash_per_10": 0.42,
+          "cash_per_share": 0.042,
+          "cash_total_yi": 0.3,
+          "bonus_per_10": null,
+          "transfer_per_10": null,
+          "share_bonus_per_10": null,
+          "total_shares_wan": 72422.84,
+          "yield_pct": 0.3,
+          "eps": 0.14,
+          "plan_notice_date": "2020-04-28",
+          "notice_date": "2020-07-10",
+          "record_date": "2020-07-15",
+          "ex_date": "2020-07-16"
+        },
+        {
+          "report_date": "2018-12-31",
+          "fiscal_year": 2018,
+          "period_label": "年报",
+          "plan": "10派0.42元(含税,扣税后0.378元)",
+          "plan_short": "10派0.42元",
+          "status": "实施分配",
+          "cash_per_10": 0.42,
+          "cash_per_share": 0.042,
+          "cash_total_yi": 0.3,
+          "bonus_per_10": null,
+          "transfer_per_10": null,
+          "share_bonus_per_10": null,
+          "total_shares_wan": 72422.84,
+          "yield_pct": 0.28,
+          "eps": 0.15,
+          "plan_notice_date": "2019-04-25",
+          "notice_date": "2019-07-03",
+          "record_date": "2019-07-08",
+          "ex_date": "2019-07-09"
+        }
+      ],
+      "counts": {
+        "events": 7,
+        "years": 7,
+        "cash_years": 7,
+        "consecutive_years": 1,
+        "latest_cash_year": 2025
+      },
+      "notes": [
+        "分红总额按税前每 10 股派息 ÷ 10 × 报告期总股本估算，未考虑回购专户等股本差异",
+        "分红率 = 年度现金分红总额 ÷ 年报归母净利润，按报告期归年",
+        "股息率由数据源按公告时点股价计算，不能代表当前股息率"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

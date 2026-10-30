@@ -1,0 +1,407 @@
+{
+  "tool": "get_management",
+  "arguments": {},
+  "default_company": "605499",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "605499",
+    "as_of": "2026-10-10",
+    "sources": [
+      {
+        "id": "management:605499",
+        "label": "管理层与持股",
+        "detail": "东鹏饮料 2026-10-10",
+        "as_of": "2026-10-10",
+        "fetched_at": "2026-10-25 13:17:07",
+        "url": "https://basic.10jqka.com.cn/605499/company.html"
+      }
+    ],
+    "data": {
+      "code": "605499",
+      "name": "东鹏饮料",
+      "as_of": "2026-10-10",
+      "salary_year": "2025",
+      "count": 20,
+      "stale": false,
+      "groups": [
+        {
+          "key": "directors",
+          "label": "董事会",
+          "count": 11,
+          "salary_total_wan": 2997.58,
+          "hold_ratio": 51.8,
+          "direct_ratio": 50.8,
+          "indirect_ratio": 1.0,
+          "members": [
+            {
+              "name": "林木勤",
+              "duties": [
+                "董事长",
+                "董事"
+              ],
+              "tenure": "2018-01-01–2029-10-09",
+              "age": "62岁",
+              "education": "硕士",
+              "salary_wan": 531.61,
+              "hold_wan": 34342.26,
+              "hold_ratio": 46.8,
+              "direct_ratio": 45.8,
+              "indirect_ratio": 1.0,
+              "is_control": true,
+              "is_legal_person": true,
+              "resume": "林木勤先生：中国国籍，无境外永久居留权。毕业于中山大学工商管理专业，硕士研究生学历。1988年4月至1997年3月，任深圳奥林天然饮料有限公司部门经理；1997年3月至2003年9月，任深圳市东鹏饮料实业公司副总经理；2003年10月至今任东鹏饮料董事长、总裁。"
+            },
+            {
+              "name": "林木港",
+              "duties": [
+                "董事"
+              ],
+              "tenure": "2018-01-01–2029-10-09",
+              "age": "56岁",
+              "education": "硕士",
+              "salary_wan": 437.84,
+              "hold_wan": 3531.5,
+              "hold_ratio": 4.8,
+              "direct_ratio": 4.8,
+              "indirect_ratio": 0.0,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "林木港先生：中国国籍，无境外永久居留权。毕业于北京大学工商管理专业，硕士研究生学历。2001年3月至2003年9月任深圳市东鹏饮料实业公司营销计划中心总经理，2003年10月至今任东鹏饮料执行总裁及董事。"
+            },
+            {
+              "name": "蒋薇薇",
+              "duties": [
+                "董事"
+              ],
+              "tenure": "2024-02-01–2029-10-09",
+              "age": "46岁",
+              "education": "本科",
+              "salary_wan": 428.5,
+              "hold_wan": 67.6,
+              "hold_ratio": 0.1,
+              "direct_ratio": 0.1,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "蒋薇薇女士：中国国籍，无境外永久居留权，毕业于安徽大学新闻专业，本科学历。2012年1月至2015年6月，任昌荣传媒股份有限公司广州公司副总经理；2017年9月至今，先后担任公司品牌中心负责人、品牌发展中心总经理、副总裁、董事，现任公司董事、副总裁。"
+            },
+            {
+              "name": "卢义富",
+              "duties": [
+                "董事"
+              ],
+              "tenure": "2024-02-01–2029-10-09",
+              "age": "54岁",
+              "education": "大专",
+              "salary_wan": 411.34,
+              "hold_wan": 62.53,
+              "hold_ratio": 0.1,
+              "direct_ratio": 0.1,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "卢义富先生：中国国籍，无境外永久居留权，毕业于湘潭大学化学工程专业。2006年7月至2017年7月，任加多宝（中国）饮料有限公司分公司总经理；2017年8月至2018年8月，任香飘飘食品股份有限公司营销中心总经理；2018年9月至今，先后担任公司全国营销本部负责人、总经理、副总裁、董事，现任公司董事、副总裁。"
+            },
+            {
+              "name": "余斌",
+              "duties": [
+                "董事"
+              ],
+              "tenure": "2026-10-09–2029-10-09",
+              "age": "52岁",
+              "education": "硕士",
+              "salary_wan": 623.37,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "余斌先生：中国国籍，无境外永久居留权，毕业于中国香港中文大学（深圳）工商管理专业，研究生学历。2012年1月至2015年7月任厦门银鹭食品集团有限公司销售中心副总经理；2015年8月至2017年7月任东鹏饮料集团有限公司全国营销总监；2017年8月至2020年7月任厦门禹道实业集团有限公司总经理；自2020年8月起，先后担任东鹏饮料人力资源中心负责人、总裁办主任，现任人力资源中心总经理。"
+            },
+            {
+              "name": "胡亚军",
+              "duties": [
+                "董事"
+              ],
+              "tenure": "2026-10-09–2029-10-09",
+              "age": "56岁",
+              "education": "本科",
+              "salary_wan": 458.32,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "胡亚军先生：中国国籍，无境外永久居留权，毕业于中南民族大学经济管理专业，本科学历。2001年10月至2007年7月，任广东太古可口可乐公司大区销售总监；2007年7月至2014年2月，任百事可乐（中国）投资有限公司华南区销售总监及广西百事装瓶厂总经理；2014年2月至2016年10月，任上海新发展集团广西巴马铂泉分公司总经理；2016年10月至今，先后担任公司全国直营本部负责人、总经理，现任公司海外战区总经理。"
+            },
+            {
+              "name": "林戴吉",
+              "duties": [
+                "职工董事"
+              ],
+              "tenure": "2024-02-01–2029-10-09",
+              "age": "40岁",
+              "education": "本科",
+              "salary_wan": 65.35,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "林戴吉先生：中国国籍，无境外永久居留权，财务管理专业本科学历。2019年至今历任东鹏饮料内审部副经理、资金管理部副经理、资金管理经理；现任融资部经理，2024年2月1日起任公司职工代表董事。"
+            },
+            {
+              "name": "张亚",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2026-10-09–2029-10-09",
+              "age": null,
+              "education": "硕士",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "张亚先生：中国国籍，无境外永久居留权，硕士学历。1993年8月至1995年10月担任安徽省池州地区司法局科员；1995年11月至1996年6月担任池州地区律师事务所专职律师；1996年7月至2012年3月曾任广东仁人律师事务所专职律师、合伙人；2012年3月至2017年3月曾任广东博商律师事务所主任、合伙人；2017年4月至今担任北京东元（深圳）律师事务所主任、负责人。"
+            },
+            {
+              "name": "李洪斌",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2024-02-01–2029-10-09",
+              "age": "61岁",
+              "education": "硕士",
+              "salary_wan": 15.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "李洪斌先生：中国国籍，无境外永久居留权，硕士学历，副教授。1988年7月至2025年1月任中山大学副教授，现已退休。2002年6月至2014年4月在广州东凌粮油股份有限公司任独立董事；2018年5月至2024年10月在东莞铭普光磁股份有限公司任独立董事；2021年4月至2024年10月在广州天维信息技术股份有限公司任独立董事；2022年4月至今任广东景兴健康护理实业股份有限公司独立董事；2022年5月至今任深圳市盛世智能装备股份有限公司独立董事，2024年2月至今担任公司独立董事。"
+            },
+            {
+              "name": "赵亚利",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2024-02-01–2029-10-09",
+              "age": "69岁",
+              "education": "本科",
+              "salary_wan": 15.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "赵亚利女士：中国国籍，无境外永久居留权。天津轻工学院学士学位，并为教授级高级工程师。1993年3月至2020年11月，曾任中国饮料工业协会副秘书长、秘书长、副理事长、理事长等协会职务及食品安全国家标准审评委员会委员、全国饮料标准化技术委员会主任委员等，2017年至2020年任中国轻工业联合会兼职副会长。此外，曾任上海证交所上市公司国投中鲁果汁股份有限公司的独立董事，2020年11月至今任中国饮料工业协会名誉理事长，2024年2月至今担任公司独立董事。"
+            },
+            {
+              "name": "戴国良",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2025-04-02–2029-10-09",
+              "age": "70岁",
+              "education": "本科",
+              "salary_wan": 11.25,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "戴国良先生：中国香港籍，拥有澳大利亚永久居留权，毕业于新西兰惠灵顿维多利亚大学，商业与管理学士学位。中国香港会计师公会及澳洲会计师公会准会员。2017年6月至今担任虹鼎有限公司股东及董事；2018年9月至今分别担任冀想企业有限公司、和益集团有限公司董事；2017年5月至今担任信越控股有限公司独立非执行董事；2020年6月至2026年6月担任青岛有屋智能家居科技股份有限公司独立董事；2023年1月至今担任中国星集团有限公司独立非执行董事；2024年1月至今担任财华社集团有限公司董事；2024年7月至今担任精英汇集团控股有限公司独立非执行董事；2025年4月至今担任公司独立董事。"
+            }
+          ]
+        },
+        {
+          "key": "manager",
+          "label": "高管",
+          "count": 6,
+          "salary_total_wan": 2014.98,
+          "hold_ratio": 52.3,
+          "direct_ratio": 51.3,
+          "indirect_ratio": 1.0,
+          "members": [
+            {
+              "name": "林木港",
+              "duties": [
+                "执行总裁"
+              ],
+              "tenure": "2019-04-08–2029-10-09",
+              "age": "56岁",
+              "education": "硕士",
+              "salary_wan": 437.84,
+              "hold_wan": 3531.5,
+              "hold_ratio": 4.8,
+              "direct_ratio": 4.8,
+              "indirect_ratio": 0.0,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "林木港先生：中国国籍，无境外永久居留权。毕业于北京大学工商管理专业，硕士研究生学历。2001年3月至2003年9月任深圳市东鹏饮料实业公司营销计划中心总经理，2003年10月至今任东鹏饮料执行总裁及董事。"
+            },
+            {
+              "name": "林木勤",
+              "duties": [
+                "总裁"
+              ],
+              "tenure": "2018-01-01–2029-10-09",
+              "age": "62岁",
+              "education": "硕士",
+              "salary_wan": 531.61,
+              "hold_wan": 34342.26,
+              "hold_ratio": 46.8,
+              "direct_ratio": 45.8,
+              "indirect_ratio": 1.0,
+              "is_control": true,
+              "is_legal_person": true,
+              "resume": "林木勤先生：中国国籍，无境外永久居留权。毕业于中山大学工商管理专业，硕士研究生学历。1988年4月至1997年3月，任深圳奥林天然饮料有限公司部门经理；1997年3月至2003年9月，任深圳市东鹏饮料实业公司副总经理；2003年10月至今任东鹏饮料董事长、总裁。"
+            },
+            {
+              "name": "詹宏辉",
+              "duties": [
+                "董事会秘书"
+              ],
+              "tenure": "2025-12-29–2029-10-09",
+              "age": "34岁",
+              "education": "硕士",
+              "salary_wan": 0.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "詹宏辉先生：中国国籍，无境外永久居留权。毕业于北京大学汇丰商学院工商管理专业，硕士研究生学历，中国注册会计师（CPA）及英国特许公认会计师（ACCA）。詹宏辉先生曾任安永华明会计师事务所审计员、首控基金管理有限公司投资经理、深圳工大股权投资管理有限公司投资经理、普华永道中天会计师事务所审计经理。2022年4月加入东鹏饮料，历任财务管理部副总监、财务管理部总监、财务中心副总经理；2025年12月至今任公司董事会秘书。"
+            },
+            {
+              "name": "蒋薇薇",
+              "duties": [
+                "副总裁"
+              ],
+              "tenure": "2019-04-28–2029-10-09",
+              "age": "46岁",
+              "education": "本科",
+              "salary_wan": 428.5,
+              "hold_wan": 67.6,
+              "hold_ratio": 0.1,
+              "direct_ratio": 0.1,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "蒋薇薇女士：中国国籍，无境外永久居留权，毕业于安徽大学新闻专业，本科学历。2012年1月至2015年6月，任昌荣传媒股份有限公司广州公司副总经理；2017年9月至今，先后担任公司品牌中心负责人、品牌发展中心总经理、副总裁、董事，现任公司董事、副总裁。"
+            },
+            {
+              "name": "卢义富",
+              "duties": [
+                "副总裁"
+              ],
+              "tenure": "2019-04-28–2029-10-09",
+              "age": "54岁",
+              "education": "大专",
+              "salary_wan": 411.34,
+              "hold_wan": 62.53,
+              "hold_ratio": 0.1,
+              "direct_ratio": 0.1,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "卢义富先生：中国国籍，无境外永久居留权，毕业于湘潭大学化学工程专业。2006年7月至2017年7月，任加多宝（中国）饮料有限公司分公司总经理；2017年8月至2018年8月，任香飘飘食品股份有限公司营销中心总经理；2018年9月至今，先后担任公司全国营销本部负责人、总经理、副总裁、董事，现任公司董事、副总裁。"
+            },
+            {
+              "name": "彭得新",
+              "duties": [
+                "财务总监"
+              ],
+              "tenure": "2021-10-13–2029-10-09",
+              "age": "50岁",
+              "education": "硕士",
+              "salary_wan": 205.69,
+              "hold_wan": 378.52,
+              "hold_ratio": 0.5,
+              "direct_ratio": 0.5,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "彭得新先生：中国国籍，无境外永久居留权，1976年出生，毕业于中国香港中文大学（深圳）工商管理专业，研究生学历。2003年2月至2021年10月，先后担任东鹏饮料财务部长、集团财务副总监，2021年10月至今任东鹏饮料财务总监。"
+            }
+          ]
+        },
+        {
+          "key": "auditors",
+          "label": "审计委员会",
+          "count": 3,
+          "salary_total_wan": 41.25,
+          "hold_ratio": null,
+          "direct_ratio": null,
+          "indirect_ratio": null,
+          "members": [
+            {
+              "name": "戴国良",
+              "duties": [
+                "审计委员会主任委员"
+              ],
+              "tenure": "2025-04-02–2029-10-09",
+              "age": "70岁",
+              "education": "本科",
+              "salary_wan": 11.25,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "戴国良先生：中国香港籍，拥有澳大利亚永久居留权，毕业于新西兰惠灵顿维多利亚大学，商业与管理学士学位。中国香港会计师公会及澳洲会计师公会准会员。2017年6月至今担任虹鼎有限公司股东及董事；2018年9月至今分别担任冀想企业有限公司、和益集团有限公司董事；2017年5月至今担任信越控股有限公司独立非执行董事；2020年6月至2026年6月担任青岛有屋智能家居科技股份有限公司独立董事；2023年1月至今担任中国星集团有限公司独立非执行董事；2024年1月至今担任财华社集团有限公司董事；2024年7月至今担任精英汇集团控股有限公司独立非执行董事；2025年4月至今担任公司独立董事。"
+            },
+            {
+              "name": "李洪斌",
+              "duties": [
+                "审计委员会委员"
+              ],
+              "tenure": "2024-02-01–2029-10-09",
+              "age": "61岁",
+              "education": "硕士",
+              "salary_wan": 15.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "李洪斌先生：中国国籍，无境外永久居留权，硕士学历，副教授。1988年7月至2025年1月任中山大学副教授，现已退休。2002年6月至2014年4月在广州东凌粮油股份有限公司任独立董事；2018年5月至2024年10月在东莞铭普光磁股份有限公司任独立董事；2021年4月至2024年10月在广州天维信息技术股份有限公司任独立董事；2022年4月至今任广东景兴健康护理实业股份有限公司独立董事；2022年5月至今任深圳市盛世智能装备股份有限公司独立董事，2024年2月至今担任公司独立董事。"
+            },
+            {
+              "name": "赵亚利",
+              "duties": [
+                "审计委员会委员"
+              ],
+              "tenure": "2024-02-01–2029-10-09",
+              "age": "69岁",
+              "education": "本科",
+              "salary_wan": 15.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "赵亚利女士：中国国籍，无境外永久居留权。天津轻工学院学士学位，并为教授级高级工程师。1993年3月至2020年11月，曾任中国饮料工业协会副秘书长、秘书长、副理事长、理事长等协会职务及食品安全国家标准审评委员会委员、全国饮料标准化技术委员会主任委员等，2017年至2020年任中国轻工业联合会兼职副会长。此外，曾任上海证交所上市公司国投中鲁果汁股份有限公司的独立董事，2020年11月至今任中国饮料工业协会名誉理事长，2024年2月至今担任公司独立董事。"
+            }
+          ]
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

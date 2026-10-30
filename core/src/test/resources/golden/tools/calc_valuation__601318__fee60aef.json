@@ -1,0 +1,78 @@
+{
+  "tool": "calc_valuation",
+  "arguments": {
+    "mode": "check"
+  },
+  "default_company": "601318",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "601318",
+    "as_of": "2026-10-27",
+    "sources": [
+      {
+        "id": "valuation:601318:2026-10-27",
+        "label": "估值",
+        "detail": "中国平安 2026-10-27 估值",
+        "as_of": "2026-10-27",
+        "fetched_at": "2026-10-28 13:43:27",
+        "url": ""
+      },
+      {
+        "id": "finance:601318:2026-09-30",
+        "label": "财报",
+        "detail": "中国平安 2026-09-30 财务快照",
+        "as_of": "2026-09-30",
+        "fetched_at": "2026-10-30 11:06:44",
+        "url": ""
+      }
+    ],
+    "data": {
+      "mode": "check",
+      "price": 52.61,
+      "market_cap_yi": 9526.43,
+      "valuation": {
+        "pe_ttm": 5.97958175,
+        "pb_mrq": 0.92661985,
+        "as_of": "2026-10-27"
+      },
+      "financials": {
+        "period": "2026-09-30",
+        "ttm_net_profit_yi": 985.67,
+        "equity_parent_yi": 14750.7,
+        "ttm_fcf_yi": 8765.76,
+        "is_financial": true
+      },
+      "checks": [
+        {
+          "name": "PE(TTM)",
+          "reported": 5.97958175,
+          "implied": 9.664928884484157,
+          "diff_pct": 61.63,
+          "status": "fail",
+          "note": "差异 > 5%，引用前先核对原始财报与估值口径"
+        },
+        {
+          "name": "PB(MRQ)",
+          "reported": 0.92661985,
+          "implied": 0.6458290422535541,
+          "diff_pct": -30.3,
+          "status": "fail",
+          "note": "差异 > 5%，引用前先核对原始财报与估值口径"
+        }
+      ],
+      "fcf_yield_pct": null,
+      "warnings": [
+        "PE(TTM) 校验差异 +61.63%，可能是指标口径或财报未同步，引用前先核对",
+        "PB(MRQ) 校验差异 -30.30%，可能是指标口径或财报未同步，引用前先核对",
+        "金融机构：自由现金流收益率口径不可比，未计算",
+        "PB 按归母净资产校验；少数股东权益 4307.04 未计入"
+      ],
+      "notes": [
+        "PE/PB 用东财估值与新浪财报两套数据交叉校验；差异可能来自 TTM/MRQ 口径或财报同步时点，不代表数据错误。"
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "tool": "get_analyst_views",
+  "arguments": {},
+  "default_company": "601606",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": null,
+    "sources": [
+      {
+        "id": "analyst:601606",
+        "label": "研报观点",
+        "detail": "长城军工 卖方研报",
+        "as_of": "",
+        "fetched_at": "2026-10-30 14:56:17",
+        "url": "https://data.eastmoney.com/report/stock.jshtml?stockcode=601606"
+      }
+    ],
+    "data": {
+      "code": "601606",
+      "name": "长城军工",
+      "as_of": null,
+      "window_start": "2025-10-31",
+      "window_end": "2026-10-31",
+      "days": 365,
+      "has_reports": false,
+      "latest": null,
+      "reports": [],
+      "latest_by_org": [],
+      "reports_truncated": 0,
+      "rows_truncated": false,
+      "counts": {
+        "reports": 0,
+        "orgs": 0,
+        "latest_date": null,
+        "ratings": [],
+        "rating_changes": 0,
+        "target_price_orgs": 0,
+        "target_price_low": null,
+        "target_price_high": null,
+        "target_price_median": null,
+        "consensus_current_year": {
+          "year": 2026,
+          "eps": null,
+          "orgs": 0
+        },
+        "consensus_next_year": {
+          "year": 2027,
+          "eps": null,
+          "orgs": 0
+        }
+      },
+      "notes": [
+        "没有取到研报，可能近一段时间没有机构覆盖"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

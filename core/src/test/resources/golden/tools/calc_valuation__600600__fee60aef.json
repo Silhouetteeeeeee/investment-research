@@ -1,0 +1,75 @@
+{
+  "tool": "calc_valuation",
+  "arguments": {
+    "mode": "check"
+  },
+  "default_company": "600600",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": "2026-10-27",
+    "sources": [
+      {
+        "id": "valuation:600600:2026-10-27",
+        "label": "估值",
+        "detail": "青岛啤酒 2026-10-27 估值",
+        "as_of": "2026-10-27",
+        "fetched_at": "2026-10-28 10:57:44",
+        "url": ""
+      },
+      {
+        "id": "finance:600600:2026-06-30",
+        "label": "财报",
+        "detail": "青岛啤酒 2026-06-30 财务快照",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-28 10:57:42",
+        "url": ""
+      }
+    ],
+    "data": {
+      "mode": "check",
+      "price": 50.06,
+      "market_cap_yi": 682.92,
+      "valuation": {
+        "pe_ttm": 14.83443895,
+        "pb_mrq": 2.17826884,
+        "as_of": "2026-10-27"
+      },
+      "financials": {
+        "period": "2026-06-30",
+        "ttm_net_profit_yi": 46.04,
+        "equity_parent_yi": 313.51,
+        "ttm_fcf_yi": 28.84,
+        "is_financial": false
+      },
+      "checks": [
+        {
+          "name": "PE(TTM)",
+          "reported": 14.83443895,
+          "implied": 14.834438947449621,
+          "diff_pct": -0.0,
+          "status": "pass",
+          "note": "差异 ≤ 1%，口径一致"
+        },
+        {
+          "name": "PB(MRQ)",
+          "reported": 2.17826884,
+          "implied": 2.1782688436057622,
+          "diff_pct": 0.0,
+          "status": "pass",
+          "note": "差异 ≤ 1%，口径一致"
+        }
+      ],
+      "fcf_yield_pct": 4.22,
+      "warnings": [
+        "PB 按归母净资产校验；少数股东权益 8.78 未计入"
+      ],
+      "notes": [
+        "PE/PB 用东财估值与新浪财报两套数据交叉校验；差异可能来自 TTM/MRQ 口径或财报同步时点，不代表数据错误。"
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

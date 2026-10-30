@@ -1,0 +1,75 @@
+{
+  "tool": "calc_valuation",
+  "arguments": {
+    "mode": "check"
+  },
+  "default_company": "000858",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "000858",
+    "as_of": "2026-10-29",
+    "sources": [
+      {
+        "id": "valuation:000858:2026-10-29",
+        "label": "估值",
+        "detail": "五 粮 液 2026-10-29 估值",
+        "as_of": "2026-10-29",
+        "fetched_at": "2026-10-30 14:38:02",
+        "url": ""
+      },
+      {
+        "id": "finance:000858:2026-09-30",
+        "label": "财报",
+        "detail": "五 粮 液 2026-09-30 财务快照",
+        "as_of": "2026-09-30",
+        "fetched_at": "2026-10-28 10:37:03",
+        "url": ""
+      }
+    ],
+    "data": {
+      "mode": "check",
+      "price": 72.28,
+      "market_cap_yi": 2805.63,
+      "valuation": {
+        "pe_ttm": 23.01513577,
+        "pb_mrq": 2.36887704,
+        "as_of": "2026-10-29"
+      },
+      "financials": {
+        "period": "2026-09-30",
+        "ttm_net_profit_yi": 121.9,
+        "equity_parent_yi": 1184.37,
+        "ttm_fcf_yi": 3.68,
+        "is_financial": false
+      },
+      "checks": [
+        {
+          "name": "PE(TTM)",
+          "reported": 23.01513577,
+          "implied": 23.015135766118973,
+          "diff_pct": -0.0,
+          "status": "pass",
+          "note": "差异 ≤ 1%，口径一致"
+        },
+        {
+          "name": "PB(MRQ)",
+          "reported": 2.36887704,
+          "implied": 2.3688770405824786,
+          "diff_pct": 0.0,
+          "status": "pass",
+          "note": "差异 ≤ 1%，口径一致"
+        }
+      ],
+      "fcf_yield_pct": 0.13,
+      "warnings": [
+        "PB 按归母净资产校验；少数股东权益 25.2 未计入"
+      ],
+      "notes": [
+        "PE/PB 用东财估值与新浪财报两套数据交叉校验；差异可能来自 TTM/MRQ 口径或财报同步时点，不代表数据错误。"
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

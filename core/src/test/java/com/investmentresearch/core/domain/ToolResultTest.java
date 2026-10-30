@@ -113,8 +113,8 @@ class ToolResultTest {
         try (Stream<Path> stream = Files.list(directory)) {
             files = stream.filter(file -> file.toString().endsWith(".json")).toList();
         }
-        assertEquals(34, files.size());
-        assertEquals(34, messages.size());
+        assertTrue(files.size() >= 34, "golden cases shrank: " + files.size());
+        assertEquals(files.size(), messages.size());
 
         for (Path file : files) {
             String name = file.getFileName().toString();

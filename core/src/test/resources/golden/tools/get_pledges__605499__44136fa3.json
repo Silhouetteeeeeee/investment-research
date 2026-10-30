@@ -1,0 +1,61 @@
+{
+  "tool": "get_pledges",
+  "arguments": {},
+  "default_company": "605499",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "605499",
+    "as_of": null,
+    "sources": [
+      {
+        "id": "pledges:605499",
+        "label": "股权质押",
+        "detail": "东鹏饮料 股权质押",
+        "as_of": "",
+        "fetched_at": "2026-10-26 19:08:26",
+        "url": "https://data.eastmoney.com/gpzy/detail/605499.html"
+      }
+    ],
+    "data": {
+      "code": "605499",
+      "name": "东鹏饮料",
+      "as_of": null,
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_pledges": false,
+      "latest": null,
+      "series": [],
+      "annual": [],
+      "counts": {
+        "points": 0,
+        "latest_date": null,
+        "latest_ratio_pct": null,
+        "latest_balance_shares_wan": null,
+        "latest_market_cap_yi": null,
+        "latest_deal_num": null,
+        "latest_unlimited_shares_wan": null,
+        "latest_limited_shares_wan": null,
+        "latest_industry": null,
+        "year_ago_date": null,
+        "year_ago_ratio_pct": null,
+        "change_pp": null,
+        "direction": null,
+        "peak_ratio_pct": null,
+        "peak_date": null,
+        "low_ratio_pct": null,
+        "low_date": null,
+        "avg_ratio_pct": null,
+        "high_pledge": false,
+        "watch_pledge": false
+      },
+      "notes": [
+        "没有取到股权质押记录，可能公司没有质押或数据源未收录"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

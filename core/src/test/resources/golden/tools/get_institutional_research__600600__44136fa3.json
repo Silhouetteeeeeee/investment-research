@@ -1,0 +1,379 @@
+{
+  "tool": "get_institutional_research",
+  "arguments": {},
+  "default_company": "600600",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": "2026-08-28",
+    "sources": [
+      {
+        "id": "research:600600:2026-08-28",
+        "label": "机构调研",
+        "detail": "青岛啤酒 机构调研 2026-08-28",
+        "as_of": "2026-08-28",
+        "fetched_at": "2026-10-28 10:57:53",
+        "url": "https://data.eastmoney.com/jgdy/"
+      }
+    ],
+    "data": {
+      "code": "600600",
+      "name": "青岛啤酒",
+      "as_of": "2026-08-28",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_research": true,
+      "latest": {
+        "date": "2026-08-28",
+        "notice_date": "2026-08-28",
+        "place": "全景网“投资者关系互动平台”(https://ir.p5w.net)",
+        "ways": [
+          "业绩说明会"
+        ],
+        "receptionists": [
+          "党委书记、董事长 姜宗祥",
+          "党委委员、执行董事、财务总监、董事会秘书 侯秋燕",
+          "独立董事 王亚平"
+        ],
+        "institution_count": 1,
+        "disclosed_count": 1,
+        "org_types": [
+          {
+            "type": "未分类",
+            "count": 1
+          }
+        ],
+        "institutions": [
+          "海内外投资者"
+        ],
+        "content": "青啤公司于2026年8月27日披露了2026年半年度报告。为进一步加强与投资者的互动交流,公司召开了2026年半年度业绩说明会。在信息披露允许的范围内,以在线交流形式就投资者关注的公司业绩表现、经营情况等问题进行沟通和交流。投资者提问及公司回复情况如下:\r\n1.公司账上有大量现金,为什么不学其他同行国企回购注销股份\r\n答:尊敬的投资者,您好!感谢对本公司的关注。公司将继续做强做优啤酒主业,积极开拓市场,提升公司运营能力,推动高质量发展;同时,公司也将综合运用现金分红、信息披露、投资者关系管理及其他举措加大市值管理力度,为投资者创造更多回报。7月25日,公司披露《控股股东及其一致行动人增持公司股份暨后续增持股份计划公告》,体现了控股股东对公司未来发展信心以及长期价值的认可。谢谢。\r\n2.姜总您好!请问公司有无制定未来分红计划,有无提高分红金额的规划。谢谢?\r\n答:尊敬的投资者,您好!感谢对本公司的关注。公司高度重视股东合理投资回报,秉承积极回报股东的发展理念,实行持续、稳定的利润分配政策。伴随公司经营业绩的提升,公司已逐年加大对投资者的现金分红力度,2023至2025年度公司每股派发现金红利分别为2.00元(含税)、2.20元(含税)、2.35元(含税)。2025年度分红率已达69%,总金额超32亿元(含税)。谢谢。\r\n3.青岛啤酒股份尤其是H股股价大幅波动,请问公司有何市值管理举措…"
+      },
+      "events": [
+        {
+          "date": "2026-08-28",
+          "notice_date": "2026-08-28",
+          "place": "全景网“投资者关系互动平台”(https://ir.p5w.net)",
+          "ways": [
+            "业绩说明会"
+          ],
+          "receptionists": [
+            "党委书记、董事长 姜宗祥",
+            "党委委员、执行董事、财务总监、董事会秘书 侯秋燕",
+            "独立董事 王亚平"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "海内外投资者"
+          ],
+          "content": "青啤公司于2026年8月27日披露了2026年半年度报告。为进一步加强与投资者的互动交流,公司召开了2026年半年度业绩说明会。在信息披露允许的范围内,以在线交流形式就投资者关注的公司业绩表现、经营情况等问题进行沟通和交流。投资者提问及公司回复情况如下:\r\n1.公司账上有大量现金,为什么不学其他同行国企回购注销股份\r\n答:尊敬的投资者,您好!感谢对本公司的关注。公司将继续做强做优啤酒主业,积极开拓市场,提升公司运营能力,推动高质量发展;同时,公司也将综合运用现金分红、信息披露、投资者关系管理及其他举措加大市值管理力度,为投资者创造更多回报。7月25日,公司披露《控股股东及其一致行动人增持公司股份暨后续增持股份计划公告》,体现了控股股东对公司未来发展信心以及长期价值的认可。谢谢。\r\n2.姜总您好!请问公司有无制定未来分红计划,有无提高分红金额的规划。谢谢?\r\n答:尊敬的投资者,您好!感谢对本公司的关注。公司高度重视股东合理投资回报,秉承积极回报股东的发展理念,实行持续、稳定的利润分配政策。伴随公司经营业绩的提升,公司已逐年加大对投资者的现金分红力度,2023至2025年度公司每股派发现金红利分别为2.00元(含税)、2.20元(含税)、2.35元(含税)。2025年度分红率已达69%,总金额超32亿元(含税)。谢谢。\r\n3.青岛啤酒股份尤其是H股股价大幅波动,请问公司有何市值管理举措…"
+        },
+        {
+          "date": "2026-06-26",
+          "notice_date": "2026-07-01",
+          "place": "青岛啤酒时光海岸度假酒店",
+          "ways": [
+            "股东会"
+          ],
+          "receptionists": [
+            "党委书记、董事长 姜宗祥",
+            "党委副书记、执行董事 刘富华",
+            "执行董事、财务总监、董事会秘书 侯秋燕",
+            "职工董事、工会主席 孙静"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "海内外投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2026-05-08",
+          "notice_date": "2026-05-11",
+          "place": "\"全景路演\"网站(http://rs.p5w.net);微信公众号(名称:全景财经);全景路演APP",
+          "ways": [
+            "业绩说明会",
+            "参加青岛辖区上市公司投资者网上集体接待日活动"
+          ],
+          "receptionists": [
+            "执行董事、财务总监、董事会秘书 侯秋燕"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "海内外投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2026-03-27",
+          "notice_date": "2026-03-30",
+          "place": "全景网\"投资者关系互动平台\"(https://ir.p5w.net)",
+          "ways": [
+            "业绩说明会"
+          ],
+          "receptionists": [
+            "党委书记、董事长 姜宗祥",
+            "党委委员、执行董事、财务总监、董事会秘书 侯秋燕",
+            "独立董事 张然"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "海内外投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2025-11-14",
+          "notice_date": "2025-11-17",
+          "place": "全景网\"投资者关系互动平台\"(https://ir.p5w.net)",
+          "ways": [
+            "业绩说明会"
+          ],
+          "receptionists": [
+            "党委书记、董事长 姜宗祥",
+            "党委委员、执行董事、财务总监、董事会秘书 侯秋燕",
+            "独立董事 张然"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "境内外投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2025-09-09",
+          "notice_date": "2025-09-09",
+          "place": "全景网\"投资者关系互动平台\"(https://ir.p5w.net)",
+          "ways": [
+            "业绩说明会"
+          ],
+          "receptionists": [
+            "党委书记、董事长 姜宗祥",
+            "党委委员、执行董事、财务总监、董事会秘书 侯秋燕",
+            "独立董事 张然"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "境内外投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2025-05-20",
+          "notice_date": "2025-05-23",
+          "place": "青岛线下",
+          "ways": [
+            "股东会"
+          ],
+          "receptionists": [
+            "党委书记、董事长、总裁 姜宗祥",
+            "党委委员、执行董事、财务总监 侯秋燕",
+            "董事会秘书 张瑞祥"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "公司登记参会股东及分析师"
+          ],
+          "content": null
+        },
+        {
+          "date": "2025-05-12",
+          "notice_date": "2025-05-14",
+          "place": "\"全景路演\"网站(http://rs.p5w.net)",
+          "ways": [
+            "上市公司投资者网上集体接待日活动"
+          ],
+          "receptionists": [
+            "执行董事、财务总监 侯秋燕",
+            "董事会秘书 张瑞祥"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "境内外投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2025-04-15",
+          "notice_date": "2025-04-16",
+          "place": "全景网\"投资者关系互动平台\"(https://ir.p5w.net)",
+          "ways": [
+            "业绩说明会"
+          ],
+          "receptionists": [
+            "党委书记、董事长、总裁 姜宗祥",
+            "党委委员、执行董事、财务总监 侯秋燕",
+            "董事会秘书 张瑞祥",
+            "独立董事 张然"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "境内外投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2024-11-28",
+          "notice_date": "2024-12-02",
+          "place": "中国证券报中证网(https://www.cs.com.cn)",
+          "ways": [
+            "参加上市公司投资者网上集体接待日活动",
+            "业绩说明会",
+            "网络文字互动"
+          ],
+          "receptionists": [
+            "执行董事、财务总监 侯秋燕",
+            "董事会秘书 张瑞祥"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "境内外投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2024-08-30",
+          "notice_date": "2024-09-02",
+          "place": "全景网\"投资者关系互动平台\"(https://ir.p5w.net)",
+          "ways": [
+            "业绩说明会",
+            "网络文字互动"
+          ],
+          "receptionists": [
+            "执行董事、总裁 姜宗祥",
+            "执行董事、财务总监 侯秋燕",
+            "董事会秘书 张瑞祥",
+            "独立董事 张然"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "境内外投资者"
+          ],
+          "content": null
+        }
+      ],
+      "annual": [
+        {
+          "year": 2024,
+          "events": 2,
+          "institution_visits": 2
+        },
+        {
+          "year": 2025,
+          "events": 5,
+          "institution_visits": 5
+        },
+        {
+          "year": 2026,
+          "events": 4,
+          "institution_visits": 4
+        }
+      ],
+      "org_types": [
+        {
+          "type": "未分类",
+          "count": 11
+        }
+      ],
+      "events_truncated": 0,
+      "rows_truncated": false,
+      "counts": {
+        "events": 11,
+        "institution_visits": 11,
+        "latest_date": "2026-08-28",
+        "latest_notice_date": "2026-08-28",
+        "latest_institution_count": 1,
+        "latest_place": "全景网“投资者关系互动平台”(https://ir.p5w.net)",
+        "events_12m": 5,
+        "institution_visits_12m": 5
+      },
+      "notes": [
+        "调研纪要是公司整理披露的交流记录，问答可能经过筛选，不代表承诺",
+        "机构家数按披露的接待对象统计，同一机构多次调研会重复计入",
+        "调研热度不等于基本面，需要看问答内容与后续经营数据",
+        "只含已披露的调研记录，未披露的接待无法统计"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

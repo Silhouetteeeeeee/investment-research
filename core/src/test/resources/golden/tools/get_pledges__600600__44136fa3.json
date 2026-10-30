@@ -1,0 +1,73 @@
+{
+  "tool": "get_pledges",
+  "arguments": {},
+  "default_company": "600600",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": "2019-06-06",
+    "sources": [
+      {
+        "id": "pledges:600600:2019-06-06",
+        "label": "股权质押",
+        "detail": "青岛啤酒 股权质押 2019-06-06",
+        "as_of": "2019-06-06",
+        "fetched_at": "2026-10-28 10:57:50",
+        "url": "https://data.eastmoney.com/gpzy/detail/600600.html"
+      }
+    ],
+    "data": {
+      "code": "600600",
+      "name": "青岛啤酒",
+      "as_of": "2019-06-06",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_pledges": true,
+      "latest": {
+        "trade_date": "2019-06-06",
+        "year": 2019,
+        "month": null,
+        "ratio_pct": 0.0,
+        "balance_shares_wan": 0.01,
+        "market_cap_yi": 0.0,
+        "deal_num": 1,
+        "unlimited_shares_wan": 0.01,
+        "limited_shares_wan": 0.0,
+        "industry": "非白酒"
+      },
+      "series": [],
+      "annual": [],
+      "counts": {
+        "points": 0,
+        "latest_date": "2019-06-06",
+        "latest_ratio_pct": 0.0,
+        "latest_balance_shares_wan": 0.01,
+        "latest_market_cap_yi": 0.0,
+        "latest_deal_num": 1,
+        "latest_unlimited_shares_wan": 0.01,
+        "latest_limited_shares_wan": 0.0,
+        "latest_industry": "非白酒",
+        "year_ago_date": null,
+        "year_ago_ratio_pct": null,
+        "change_pp": null,
+        "direction": null,
+        "peak_ratio_pct": null,
+        "peak_date": null,
+        "low_ratio_pct": null,
+        "low_date": null,
+        "avg_ratio_pct": null,
+        "high_pledge": false,
+        "watch_pledge": false
+      },
+      "notes": [
+        "近3年没有披露的质押记录；最近一次为2019-06-06",
+        "数据按周披露，早期记录可能已停止更新"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

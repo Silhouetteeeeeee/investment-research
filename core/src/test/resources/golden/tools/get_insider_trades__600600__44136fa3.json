@@ -1,0 +1,79 @@
+{
+  "tool": "get_insider_trades",
+  "arguments": {},
+  "default_company": "600600",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": "2023-07-04",
+    "sources": [
+      {
+        "id": "insider:600600:2023-07-04",
+        "label": "高管增减持",
+        "detail": "青岛啤酒 高管增减持 2023-07-04",
+        "as_of": "2023-07-04",
+        "fetched_at": "2026-10-28 10:57:49",
+        "url": "https://data.eastmoney.com/executive/600600.html"
+      }
+    ],
+    "data": {
+      "code": "600600",
+      "name": "青岛啤酒",
+      "as_of": "2023-07-04",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_trades": false,
+      "latest": {
+        "change_date": "2023-07-04",
+        "year": 2023,
+        "person": "黄克兴",
+        "executive": "黄克兴",
+        "position": "董事",
+        "relation": "本人",
+        "kind": "individual",
+        "direction": "减持",
+        "shares": -15000,
+        "average_price": 105.19,
+        "amount_wan": -157.78,
+        "amount_estimated": false,
+        "reason": "二级市场买卖",
+        "change_ratio_pct": 0.0011,
+        "hold_after": 136300,
+        "begin_hold": 151300,
+        "end_hold": 136300,
+        "hold_type": "A股"
+      },
+      "annual": [],
+      "people": [],
+      "events": [],
+      "events_truncated": 0,
+      "counts": {
+        "events": 0,
+        "buy_events": 0,
+        "sell_events": 0,
+        "people": 0,
+        "insiders": 0,
+        "plans": 0,
+        "plan_events": 0,
+        "buy_shares": 0,
+        "sell_shares": 0,
+        "net_shares": 0,
+        "buy_amount_wan": 0.0,
+        "sell_amount_wan": 0.0,
+        "net_amount_wan": 0.0,
+        "missing_amount_events": 0,
+        "estimated_amount_events": 0,
+        "latest_date": null
+      },
+      "notes": [
+        "近3年没有披露的增减持记录；最近一次为 2023-07-04 黄克兴减持 1.50万股",
+        "只统计已披露的高管及其关联人变动，未覆盖未披露或未达披露标准的交易"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "tool": "get_insider_trades",
+  "arguments": {},
+  "default_company": "000858",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "000858",
+    "as_of": "2022-05-27",
+    "sources": [
+      {
+        "id": "insider:000858:2022-05-27",
+        "label": "高管增减持",
+        "detail": "五 粮 液 高管增减持 2022-05-27",
+        "as_of": "2022-05-27",
+        "fetched_at": "2026-10-28 10:37:16",
+        "url": "https://data.eastmoney.com/executive/000858.html"
+      }
+    ],
+    "data": {
+      "code": "000858",
+      "name": "五 粮 液",
+      "as_of": "2022-05-27",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_trades": false,
+      "latest": {
+        "change_date": "2022-05-27",
+        "year": 2022,
+        "person": "刘枫",
+        "executive": "刘枫",
+        "position": "监事",
+        "relation": "本人",
+        "kind": "individual",
+        "direction": "增持",
+        "shares": 100,
+        "average_price": 157.97,
+        "amount_wan": 1.58,
+        "amount_estimated": false,
+        "reason": "竞价交易",
+        "change_ratio_pct": 0.0001,
+        "hold_after": 100,
+        "begin_hold": null,
+        "end_hold": 100,
+        "hold_type": "A股"
+      },
+      "annual": [],
+      "people": [],
+      "events": [],
+      "events_truncated": 0,
+      "counts": {
+        "events": 0,
+        "buy_events": 0,
+        "sell_events": 0,
+        "people": 0,
+        "insiders": 0,
+        "plans": 0,
+        "plan_events": 0,
+        "buy_shares": 0,
+        "sell_shares": 0,
+        "net_shares": 0,
+        "buy_amount_wan": 0.0,
+        "sell_amount_wan": 0.0,
+        "net_amount_wan": 0.0,
+        "missing_amount_events": 0,
+        "estimated_amount_events": 0,
+        "latest_date": null
+      },
+      "notes": [
+        "近3年没有披露的增减持记录；最近一次为 2022-05-27 刘枫增持 100股",
+        "只统计已披露的高管及其关联人变动，未覆盖未披露或未达披露标准的交易"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "tool": "calc_valuation",
+  "arguments": {
+    "mode": "terminal",
+    "roic_pct": 15,
+    "terminal_g_pct": 3,
+    "discount_rate_pct": 9
+  },
+  "default_company": "600600",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": null,
+    "sources": [],
+    "data": {
+      "mode": "terminal",
+      "inputs": {
+        "roic_pct": 15.0,
+        "terminal_g_pct": 3.0,
+        "discount_rate_pct": 9.0
+      },
+      "terminal_pe": 13.3,
+      "payout_ratio_pct": 80.0,
+      "valid": true,
+      "status": "pass",
+      "checks": [
+        {
+          "name": "终值 PE",
+          "status": "pass",
+          "message": "永续增长模型可用"
+        }
+      ],
+      "warnings": [],
+      "notes": [
+        "终值 PE 只用于检查永续增长假设是否自洽，不是目标价。"
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

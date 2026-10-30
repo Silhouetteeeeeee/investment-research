@@ -1,0 +1,346 @@
+{
+  "tool": "get_shareholders",
+  "arguments": {},
+  "default_company": "601606",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": "2026-09-30",
+    "sources": [
+      {
+        "id": "shareholders:601606:2026-09-30",
+        "label": "股东结构",
+        "detail": "长城军工 2026-09-30",
+        "as_of": "2026-09-30",
+        "fetched_at": "2026-10-30 14:56:16",
+        "url": "https://emweb.securities.eastmoney.com/PC_HSF10/ShareholderResearch/Index?type=web&code=SH601606"
+      }
+    ],
+    "data": {
+      "code": "601606",
+      "name": "长城军工",
+      "as_of": "2026-09-30",
+      "stale": false,
+      "controller": {
+        "name": "中国兵器装备集团有限公司",
+        "ratio": null
+      },
+      "top10": [
+        {
+          "rank": 1,
+          "name": "安徽军工集团控股有限公司",
+          "share_type": "流通A股",
+          "shares_wan": 42650.16,
+          "ratio": 58.9,
+          "change_wan": null,
+          "change_text": "不变",
+          "change_ratio": null
+        },
+        {
+          "rank": 2,
+          "name": "中国农业银行股份有限公司-华夏国证航天航空行业交易型开放式指数证券投资基金",
+          "share_type": "流通A股",
+          "shares_wan": 211.6,
+          "ratio": 0.3,
+          "change_wan": 5.15,
+          "change_text": null,
+          "change_ratio": 2.5
+        },
+        {
+          "rank": 3,
+          "name": "中国建设银行股份有限公司-国泰中证军工交易型开放式指数证券投资基金",
+          "share_type": "流通A股",
+          "shares_wan": 198.21,
+          "ratio": 0.3,
+          "change_wan": 47.01,
+          "change_text": null,
+          "change_ratio": 31.1
+        },
+        {
+          "rank": 4,
+          "name": "UBS AG",
+          "share_type": "流通A股",
+          "shares_wan": 173.1,
+          "ratio": 0.2,
+          "change_wan": 49.36,
+          "change_text": null,
+          "change_ratio": 39.9
+        },
+        {
+          "rank": 5,
+          "name": "香港中央结算有限公司",
+          "share_type": "流通A股",
+          "shares_wan": 168.29,
+          "ratio": 0.2,
+          "change_wan": 51.38,
+          "change_text": null,
+          "change_ratio": 43.9
+        },
+        {
+          "rank": 6,
+          "name": "上海东证期货-工商银行-东证期货工银慧享一号集合资产管理计划",
+          "share_type": "流通A股",
+          "shares_wan": 136.15,
+          "ratio": 0.2,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null
+        },
+        {
+          "rank": 7,
+          "name": "中国国际金融香港资产管理有限公司-CICCFT10(Q)",
+          "share_type": "流通A股",
+          "shares_wan": 119.08,
+          "ratio": 0.2,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null
+        },
+        {
+          "rank": 8,
+          "name": "中国建设银行股份有限公司-长城景气成长混合型证券投资基金",
+          "share_type": "流通A股",
+          "shares_wan": 110.0,
+          "ratio": 0.1,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null
+        },
+        {
+          "rank": 9,
+          "name": "国投证券股份有限公司-华安国证航天航空行业交易型开放式指数证券投资基金",
+          "share_type": "流通A股",
+          "shares_wan": 101.37,
+          "ratio": 0.1,
+          "change_wan": 5.12,
+          "change_text": null,
+          "change_ratio": 5.3
+        },
+        {
+          "rank": 10,
+          "name": "中国工商银行股份有限公司-广发中证军工交易型开放式指数证券投资基金",
+          "share_type": "流通A股",
+          "shares_wan": 92.28,
+          "ratio": 0.1,
+          "change_wan": -6.78,
+          "change_text": null,
+          "change_ratio": -6.8
+        }
+      ],
+      "free_float_top10": [
+        {
+          "rank": 1,
+          "name": "安徽军工集团控股有限公司",
+          "share_type": "A股",
+          "shares_wan": 42650.16,
+          "ratio": 58.9,
+          "change_wan": null,
+          "change_text": "不变",
+          "change_ratio": null,
+          "holder_type": "其它"
+        },
+        {
+          "rank": 2,
+          "name": "中国农业银行股份有限公司-华夏国证航天航空行业交易型开放式指数证券投资基金",
+          "share_type": "A股",
+          "shares_wan": 211.6,
+          "ratio": 0.3,
+          "change_wan": 5.15,
+          "change_text": null,
+          "change_ratio": 2.5,
+          "holder_type": "证券投资基金"
+        },
+        {
+          "rank": 3,
+          "name": "中国建设银行股份有限公司-国泰中证军工交易型开放式指数证券投资基金",
+          "share_type": "A股",
+          "shares_wan": 198.21,
+          "ratio": 0.3,
+          "change_wan": 47.01,
+          "change_text": null,
+          "change_ratio": 31.1,
+          "holder_type": "证券投资基金"
+        },
+        {
+          "rank": 4,
+          "name": "UBS AG",
+          "share_type": "A股",
+          "shares_wan": 173.1,
+          "ratio": 0.2,
+          "change_wan": 49.36,
+          "change_text": null,
+          "change_ratio": 39.9,
+          "holder_type": "QFII"
+        },
+        {
+          "rank": 5,
+          "name": "香港中央结算有限公司",
+          "share_type": "A股",
+          "shares_wan": 168.29,
+          "ratio": 0.2,
+          "change_wan": 51.38,
+          "change_text": null,
+          "change_ratio": 43.9,
+          "holder_type": "其它"
+        },
+        {
+          "rank": 6,
+          "name": "上海东证期货-工商银行-东证期货工银慧享一号集合资产管理计划",
+          "share_type": "A股",
+          "shares_wan": 136.15,
+          "ratio": 0.2,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null,
+          "holder_type": "期货公司资产管理计划"
+        },
+        {
+          "rank": 7,
+          "name": "中国国际金融香港资产管理有限公司-CICCFT10(Q)",
+          "share_type": "A股",
+          "shares_wan": 119.08,
+          "ratio": 0.2,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null,
+          "holder_type": "其他理财产品"
+        },
+        {
+          "rank": 8,
+          "name": "中国建设银行股份有限公司-长城景气成长混合型证券投资基金",
+          "share_type": "A股",
+          "shares_wan": 110.0,
+          "ratio": 0.2,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null,
+          "holder_type": "证券投资基金"
+        },
+        {
+          "rank": 9,
+          "name": "国投证券股份有限公司-华安国证航天航空行业交易型开放式指数证券投资基金",
+          "share_type": "A股",
+          "shares_wan": 101.37,
+          "ratio": 0.1,
+          "change_wan": 5.12,
+          "change_text": null,
+          "change_ratio": 5.3,
+          "holder_type": "证券投资基金"
+        },
+        {
+          "rank": 10,
+          "name": "中国工商银行股份有限公司-广发中证军工交易型开放式指数证券投资基金",
+          "share_type": "A股",
+          "shares_wan": 92.28,
+          "ratio": 0.1,
+          "change_wan": -6.78,
+          "change_text": null,
+          "change_ratio": -6.8,
+          "holder_type": "证券投资基金"
+        }
+      ],
+      "holder_count": {
+        "latest": {
+          "period": "2026-09-30",
+          "holders": 185041,
+          "holders_change_pct": 10.1,
+          "avg_free_shares": 3913,
+          "avg_free_shares_change_pct": -9.2,
+          "focus": "非常分散",
+          "top10_ratio": 60.7,
+          "free_float_top10_ratio": 60.7
+        },
+        "history": [
+          {
+            "period": "2024-12-31",
+            "holders": 70275,
+            "holders_change_pct": 23.3,
+            "avg_free_shares": 10305,
+            "avg_free_shares_change_pct": -18.9,
+            "focus": "非常分散",
+            "top10_ratio": 65.1,
+            "free_float_top10_ratio": 65.1
+          },
+          {
+            "period": "2025-03-31",
+            "holders": 61188,
+            "holders_change_pct": -12.9,
+            "avg_free_shares": 11836,
+            "avg_free_shares_change_pct": 14.9,
+            "focus": "非常分散",
+            "top10_ratio": 65.5,
+            "free_float_top10_ratio": 65.5
+          },
+          {
+            "period": "2025-06-30",
+            "holders": 144697,
+            "holders_change_pct": 136.5,
+            "avg_free_shares": 5005,
+            "avg_free_shares_change_pct": -57.7,
+            "focus": "非常分散",
+            "top10_ratio": 65.6,
+            "free_float_top10_ratio": 65.6
+          },
+          {
+            "period": "2025-09-30",
+            "holders": 182652,
+            "holders_change_pct": 26.2,
+            "avg_free_shares": 3965,
+            "avg_free_shares_change_pct": -20.8,
+            "focus": "非常分散",
+            "top10_ratio": 63.0,
+            "free_float_top10_ratio": 63.0
+          },
+          {
+            "period": "2025-12-31",
+            "holders": 233246,
+            "holders_change_pct": 27.7,
+            "avg_free_shares": 3104,
+            "avg_free_shares_change_pct": -21.7,
+            "focus": "非常分散",
+            "top10_ratio": 62.1,
+            "free_float_top10_ratio": 62.1
+          },
+          {
+            "period": "2026-03-31",
+            "holders": 209879,
+            "holders_change_pct": -10.0,
+            "avg_free_shares": 3450,
+            "avg_free_shares_change_pct": 11.1,
+            "focus": "非常分散",
+            "top10_ratio": 60.7,
+            "free_float_top10_ratio": 60.7
+          },
+          {
+            "period": "2026-06-30",
+            "holders": 168013,
+            "holders_change_pct": -19.9,
+            "avg_free_shares": 4310,
+            "avg_free_shares_change_pct": 24.9,
+            "focus": "非常分散",
+            "top10_ratio": 60.3,
+            "free_float_top10_ratio": 60.3
+          },
+          {
+            "period": "2026-09-30",
+            "holders": 185041,
+            "holders_change_pct": 10.1,
+            "avg_free_shares": 3913,
+            "avg_free_shares_change_pct": -9.2,
+            "focus": "非常分散",
+            "top10_ratio": 60.7,
+            "free_float_top10_ratio": 60.7
+          }
+        ]
+      },
+      "counts": {
+        "top10": 10,
+        "free_float_top10": 10,
+        "holder_periods": 8
+      }
+    },
+    "error": null,
+    "cached": false
+  }
+}

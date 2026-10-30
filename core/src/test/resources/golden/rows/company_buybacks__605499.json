@@ -1,0 +1,7 @@
+[
+  {
+    "code": "605499",
+    "data": "{\"code\": \"605499\", \"plans\": [{\"plan_id\": \"15569\", \"announce_date\": \"2026-04-02\", \"year\": 2026, \"status\": \"实施中\", \"progress_code\": \"004\", \"is_active\": true, \"pending\": false, \"completed\": false, \"stopped\": false, \"start_date\": \"2026-04-30\", \"end_date\": \"2027-04-29\", \"update_date\": \"2026-09-18\", \"finish_date\": null, \"advanced_date\": null, \"planned_amount_low\": 1000000000.0, \"planned_amount_high\": 2000000000.0, \"planned_shares_low\": 5379815, \"planned_shares_high\": 10759630, \"planned_price_low\": null, \"planned_price_high\": 185.88, \"planned_ratio_low_pct\": 0.95256960947, \"planned_ratio_high_pct\": 1.90513921894, \"actual_amount\": 1038719867.57, \"actual_shares\": 7122551, \"actual_price_low\": 134.2, \"actual_price_high\": 154.9, \"actual_ratio_total_pct\": 1.428854414205, \"actual_ratio_float_pct\": 1.551830915766, \"amount_completion_pct\": 103.9, \"shares_completion_pct\": 132.4, \"purpose\": \"基于对公司未来发展前景的信心和对公司价值的高度认可,并结合公司经营情况、主营业务发展前景、公司财务状况以及未来的盈利能力等因素,拟回购公司A股股份,本次回购的股份中,不低于90%的股份将用于注销并减少注册资本,剩余部分拟用于依法注销减少注册资本及持续用于实施公司股权激励计划及/或员工持股计划,以增强投资者信心,提高股东回报,优化公司治理结构,构建管理团队持股的长期激励与约束机制,确保公司长期经营目标的实现。\", \"purpose_short\": \"基于对公司未来发展前景的信心和对公司价值的高度认可,并结合公司经营情况、主营业务发展前景、公司财务状况以及未来的盈利能力…\", \"purpose_tags\": [\"注销\", \"员工持股\", \"股权激励\"], \"cancel\": true, \"incentive\": true, \"security_name\": \"东鹏饮料\"}], \"count\": 1}",
+    "fetched_at": "2026-10-26 19:11:01"
+  }
+]

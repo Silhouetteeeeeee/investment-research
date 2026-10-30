@@ -1,0 +1,7 @@
+[
+  {
+    "code": "000858",
+    "data": "{\"code\": \"000858\", \"plans\": [{\"plan_id\": \"15878\", \"announce_date\": \"2026-04-30\", \"year\": 2026, \"status\": \"实施中\", \"progress_code\": \"004\", \"is_active\": true, \"pending\": false, \"completed\": false, \"stopped\": false, \"start_date\": \"2026-05-18\", \"end_date\": \"2027-05-18\", \"update_date\": \"2026-10-10\", \"finish_date\": null, \"advanced_date\": null, \"planned_amount_low\": 8000000000.0, \"planned_amount_high\": 10000000000.0, \"planned_shares_low\": null, \"planned_shares_high\": null, \"planned_price_low\": null, \"planned_price_high\": 151.01, \"planned_ratio_low_pct\": null, \"planned_ratio_high_pct\": null, \"actual_amount\": 1200719041.53, \"actual_shares\": 16127753, \"actual_price_low\": 70.28, \"actual_price_high\": 85.25, \"actual_ratio_total_pct\": null, \"actual_ratio_float_pct\": null, \"amount_completion_pct\": 15.0, \"shares_completion_pct\": null, \"purpose\": \"为维护公司及广大投资者的利益,增强投资信心,在保证公司正常经营和长期发展不受影响的前提下,根据中国证监会、深圳证券交易所等相关规定,公司拟以自有资金实施股份回购,回购股份将用于减少公司注册资本。\", \"purpose_short\": \"为维护公司及广大投资者的利益,增强投资信心,在保证公司正常经营和长期发展不受影响的前提下,根据中国证监会、深圳证券交易所…\", \"purpose_tags\": [\"注销\"], \"cancel\": true, \"incentive\": false, \"security_name\": \"五粮液\"}], \"count\": 1}",
+    "fetched_at": "2026-10-28 10:37:16"
+  }
+]

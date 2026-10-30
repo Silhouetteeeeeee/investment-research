@@ -1,0 +1,75 @@
+{
+  "tool": "calc_valuation",
+  "arguments": {
+    "mode": "check"
+  },
+  "default_company": "605499",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "605499",
+    "as_of": "2026-10-30",
+    "sources": [
+      {
+        "id": "valuation:605499:2026-10-30",
+        "label": "估值",
+        "detail": "东鹏饮料 2026-10-30 估值",
+        "as_of": "2026-10-30",
+        "fetched_at": "2026-10-30 18:41:57",
+        "url": ""
+      },
+      {
+        "id": "finance:605499:2026-09-30",
+        "label": "财报",
+        "detail": "东鹏饮料 2026-09-30 财务快照",
+        "as_of": "2026-09-30",
+        "fetched_at": "2026-10-30 11:06:46",
+        "url": ""
+      }
+    ],
+    "data": {
+      "mode": "check",
+      "price": 108.0,
+      "market_cap_yi": 792.94,
+      "valuation": {
+        "pe_ttm": 16.52239462,
+        "pb_mrq": 4.2733608,
+        "as_of": "2026-10-30"
+      },
+      "financials": {
+        "period": "2026-09-30",
+        "ttm_net_profit_yi": 47.99,
+        "equity_parent_yi": 185.55,
+        "ttm_fcf_yi": 45.92,
+        "is_financial": false
+      },
+      "checks": [
+        {
+          "name": "PE(TTM)",
+          "reported": 16.52239462,
+          "implied": 16.52239462239975,
+          "diff_pct": 0.0,
+          "status": "pass",
+          "note": "差异 ≤ 1%，口径一致"
+        },
+        {
+          "name": "PB(MRQ)",
+          "reported": 4.2733608,
+          "implied": 4.2733607982592705,
+          "diff_pct": -0.0,
+          "status": "pass",
+          "note": "差异 ≤ 1%，口径一致"
+        }
+      ],
+      "fcf_yield_pct": 5.79,
+      "warnings": [
+        "PB 按归母净资产校验；少数股东权益 0.42 未计入"
+      ],
+      "notes": [
+        "PE/PB 用东财估值与新浪财报两套数据交叉校验；差异可能来自 TTM/MRQ 口径或财报同步时点，不代表数据错误。"
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

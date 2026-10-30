@@ -1,0 +1,88 @@
+{
+  "tool": "get_earnings_forecasts",
+  "arguments": {},
+  "default_company": "600600",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": "2022-01-14",
+    "sources": [
+      {
+        "id": "forecasts:600600:2022-01-14",
+        "label": "业绩预告",
+        "detail": "青岛啤酒 业绩预告 2022-01-14",
+        "as_of": "2022-01-14",
+        "fetched_at": "2026-10-28 10:57:49",
+        "url": "https://data.eastmoney.com/bbsj/yjyg.html?code=600600"
+      }
+    ],
+    "data": {
+      "code": "600600",
+      "name": "青岛啤酒",
+      "as_of": "2022-01-14",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_forecasts": true,
+      "latest": {
+        "report_date": "2021-12-31",
+        "notice_date": "2022-01-14",
+        "year": 2021,
+        "type": "略增",
+        "metrics": [
+          {
+            "finance_code": "004",
+            "label": "归母净利润",
+            "unit": "亿元",
+            "type": "略增",
+            "lower": 31.5,
+            "upper": 31.5,
+            "yoy_low": 43.0,
+            "yoy_high": 43.0,
+            "prior": 22.01,
+            "mid": 31.5
+          },
+          {
+            "finance_code": "005",
+            "label": "扣非净利润",
+            "unit": "亿元",
+            "type": "略增",
+            "lower": 21.94,
+            "upper": 21.94,
+            "yoy_low": 21.0,
+            "yoy_high": 21.0,
+            "prior": 18.16,
+            "mid": 21.94
+          }
+        ],
+        "reason": "(一)主营业务影响2021年,本公司在董事会的带领下继续坚定不移的推进实施高质量发展战略,统筹抓好疫情防控和经营发展。公司充分发挥青岛啤酒的品牌和品质优势,积极主动开拓国内外市场,加快推进产品结构升级,同时积极开源节流,降本增效,实现了经营利润的持续增长。(二)非经营性损益的影响2021年,政府对本公司位于杨家群地块的土地进行收储,土地征收补偿款确认收入后预计将增加公司归属于上市公司股东的净利润约…"
+      },
+      "events": [],
+      "annual": [],
+      "type_counts": [],
+      "events_truncated": 0,
+      "counts": {
+        "events": 0,
+        "latest_report_date": "2021-12-31",
+        "latest_notice_date": "2022-01-14",
+        "latest_type": "略增",
+        "latest_net_profit_low_yi": 31.5,
+        "latest_net_profit_high_yi": 31.5,
+        "latest_net_profit_yoy_low": 43.0,
+        "latest_net_profit_yoy_high": 43.0,
+        "latest_eps_low": null,
+        "latest_eps_high": null,
+        "latest_revenue_low_yi": null,
+        "latest_revenue_high_yi": null
+      },
+      "notes": [
+        "近3年没有已披露的业绩预告；最近一次为2021-12-31",
+        "预告可能被修订，最终以定期报告为准"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

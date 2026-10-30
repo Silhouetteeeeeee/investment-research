@@ -1,0 +1,87 @@
+{
+  "tool": "calc_valuation",
+  "arguments": {
+    "mode": "scenario",
+    "base_value": 5.0,
+    "growth_pct": [
+      3,
+      8,
+      12
+    ],
+    "exit_pe": [
+      15,
+      20,
+      25
+    ],
+    "years": 3
+  },
+  "default_company": "605499",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "605499",
+    "as_of": "2026-10-30",
+    "sources": [
+      {
+        "id": "valuation:605499:2026-10-30",
+        "label": "估值",
+        "detail": "东鹏饮料 2026-10-30 估值",
+        "as_of": "2026-10-30",
+        "fetched_at": "2026-10-30 18:41:57",
+        "url": ""
+      }
+    ],
+    "data": {
+      "mode": "scenario",
+      "assumptions": {
+        "base_value": 5.0,
+        "base_label": "EPS",
+        "years": 3,
+        "growth_pct": [
+          3.0,
+          8.0,
+          12.0
+        ],
+        "exit_pe": [
+          15.0,
+          20.0,
+          25.0
+        ],
+        "price": 108.0
+      },
+      "scenarios": [
+        {
+          "label": "悲观",
+          "growth_pct": 3.0,
+          "exit_pe": 15.0,
+          "future_base_per_share": 5.46,
+          "value_per_share": 81.95,
+          "upside_pct": -24.1
+        },
+        {
+          "label": "中性",
+          "growth_pct": 8.0,
+          "exit_pe": 20.0,
+          "future_base_per_share": 6.3,
+          "value_per_share": 125.97,
+          "upside_pct": 16.6
+        },
+        {
+          "label": "乐观",
+          "growth_pct": 12.0,
+          "exit_pe": 25.0,
+          "future_base_per_share": 7.02,
+          "value_per_share": 175.62,
+          "upside_pct": 62.6
+        }
+      ],
+      "warnings": [],
+      "notes": [
+        "情景结果是明示假设下的算术结果，不是目标价，也不是买卖建议。",
+        "基准值与退出 PE 由调用方给出，工具不替你选择参数。"
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

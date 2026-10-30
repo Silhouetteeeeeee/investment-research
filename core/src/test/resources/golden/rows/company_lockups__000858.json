@@ -1,0 +1,7 @@
+[
+  {
+    "code": "000858",
+    "data": "{\"code\": \"000858\", \"events\": [{\"free_date\": \"2021-06-04\", \"year\": 2021, \"is_upcoming\": false, \"days_until\": null, \"shares\": 85641285, \"market_cap\": 27002697160.5, \"price\": 315.3, \"ratio_total_pct\": 2.2063352325, \"ratio_free_pct\": 2.2064346088, \"holders\": 10, \"shares_type\": \"定向增发机构配售股份\", \"market_type\": \"szzb\", \"free_shares_after\": 3881433180, \"non_free_shares_after\": 174825, \"able_free_shares\": 85641285, \"update_date\": \"2021-06-03\", \"security_name\": \"五粮液\", \"key\": [\"2021-06-04\", \"定向增发机构配售股份\", 85641285, 10]}], \"count\": 1}",
+    "fetched_at": "2026-10-28 10:37:17"
+  }
+]

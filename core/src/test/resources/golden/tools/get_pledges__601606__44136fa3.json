@@ -1,0 +1,73 @@
+{
+  "tool": "get_pledges",
+  "arguments": {},
+  "default_company": "601606",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": "2020-11-13",
+    "sources": [
+      {
+        "id": "pledges:601606:2020-11-13",
+        "label": "股权质押",
+        "detail": "长城军工 股权质押 2020-11-13",
+        "as_of": "2020-11-13",
+        "fetched_at": "2026-10-30 14:56:17",
+        "url": "https://data.eastmoney.com/gpzy/detail/601606.html"
+      }
+    ],
+    "data": {
+      "code": "601606",
+      "name": "长城军工",
+      "as_of": "2020-11-13",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_pledges": true,
+      "latest": {
+        "trade_date": "2020-11-13",
+        "year": 2020,
+        "month": null,
+        "ratio_pct": 0.0,
+        "balance_shares_wan": 0.01,
+        "market_cap_yi": 0.0,
+        "deal_num": 1,
+        "unlimited_shares_wan": 0.01,
+        "limited_shares_wan": 0.0,
+        "industry": "地面兵装Ⅱ"
+      },
+      "series": [],
+      "annual": [],
+      "counts": {
+        "points": 0,
+        "latest_date": "2020-11-13",
+        "latest_ratio_pct": 0.0,
+        "latest_balance_shares_wan": 0.01,
+        "latest_market_cap_yi": 0.0,
+        "latest_deal_num": 1,
+        "latest_unlimited_shares_wan": 0.01,
+        "latest_limited_shares_wan": 0.0,
+        "latest_industry": "地面兵装Ⅱ",
+        "year_ago_date": null,
+        "year_ago_ratio_pct": null,
+        "change_pp": null,
+        "direction": null,
+        "peak_ratio_pct": null,
+        "peak_date": null,
+        "low_ratio_pct": null,
+        "low_date": null,
+        "avg_ratio_pct": null,
+        "high_pledge": false,
+        "watch_pledge": false
+      },
+      "notes": [
+        "近3年没有披露的质押记录；最近一次为2020-11-13",
+        "数据按周披露，早期记录可能已停止更新"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

@@ -1,0 +1,596 @@
+{
+  "tool": "get_institutional_research",
+  "arguments": {},
+  "default_company": "000858",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "000858",
+    "as_of": "2026-06-30",
+    "sources": [
+      {
+        "id": "research:000858:2026-06-30",
+        "label": "机构调研",
+        "detail": "五 粮 液 机构调研 2026-06-30",
+        "as_of": "2026-06-30",
+        "fetched_at": "2026-10-28 10:37:18",
+        "url": "https://data.eastmoney.com/jgdy/"
+      }
+    ],
+    "data": {
+      "code": "000858",
+      "name": "五 粮 液",
+      "as_of": "2026-06-30",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_research": true,
+      "latest": {
+        "date": "2026-06-26",
+        "notice_date": "2026-06-30",
+        "place": "公司多功能厅",
+        "ways": [
+          "现场参观",
+          "股东会"
+        ],
+        "receptionists": [
+          "公司董事",
+          "高级管理人员"
+        ],
+        "institution_count": 1,
+        "disclosed_count": 1,
+        "org_types": [
+          {
+            "type": "未分类",
+            "count": 1
+          }
+        ],
+        "institutions": [
+          "现场参会的所有投资者"
+        ],
+        "content": "\"投资者关系活动主要内容记录,\"\r\n\"2026 年 6 月 26 日,公司以现场会议的方式举行\"\"2025年度股东会\"\"。主要内容整理如下:\r\n\r\n一、董事长讲话内容\r\n当前,白酒行业仍处于深度调整阶段,公司需要对此作出理性的分析和判断,在穿越周期中抓住战略发展机会。概括为\"\"两个始终\"\":一是白酒消费的底层逻辑和价值属性始终没有改变;二是五粮液长期价值成长的根基始终没有改变。\r\n公司将以\"\"只争朝夕的长期主义和系统思考的精细管理\"\"作为经营方针。只争朝夕的长期主义核心是与消费者、员工、股东、合作商、社会等利益相关方一起,持续共创长期价值。\r\n一是面向消费者,深耕长期用户价值。二是面向员工,搭建长期成长平台。三是面向股东,夯实企业长期价值。四是面向合作商,构建长期互利共赢生态。五是面向社会,践行国企担当,扛起社会责任。系统思考的精细管理核心是立足于生产经营和服务客户全过程,做好事、干成事。一是品牌文化领域,持续深挖文化底蕴,拓宽品牌价值空间。二是生产品质领域,坚守品质生命线,筑牢产业核心根基。三是市场营销领域,构建全域市场格局,精细化开展渠道终端运营。四是公司治理领域,健全长效合规防线,不断完善权责清晰、协调运转、有效制衡的现代化治理体系。五是运营管理领域,坚守精细管理准则,持续提升全局运营效能。\r\n\r\n二、投资者互动交流\r\n(一)如何看待行业及穿越周期\r\n当前白酒行业仍处于结构性…"
+      },
+      "events": [
+        {
+          "date": "2026-06-26",
+          "notice_date": "2026-06-30",
+          "place": "公司多功能厅",
+          "ways": [
+            "现场参观",
+            "股东会"
+          ],
+          "receptionists": [
+            "公司董事",
+            "高级管理人员"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "现场参会的所有投资者"
+          ],
+          "content": "\"投资者关系活动主要内容记录,\"\r\n\"2026 年 6 月 26 日,公司以现场会议的方式举行\"\"2025年度股东会\"\"。主要内容整理如下:\r\n\r\n一、董事长讲话内容\r\n当前,白酒行业仍处于深度调整阶段,公司需要对此作出理性的分析和判断,在穿越周期中抓住战略发展机会。概括为\"\"两个始终\"\":一是白酒消费的底层逻辑和价值属性始终没有改变;二是五粮液长期价值成长的根基始终没有改变。\r\n公司将以\"\"只争朝夕的长期主义和系统思考的精细管理\"\"作为经营方针。只争朝夕的长期主义核心是与消费者、员工、股东、合作商、社会等利益相关方一起,持续共创长期价值。\r\n一是面向消费者,深耕长期用户价值。二是面向员工,搭建长期成长平台。三是面向股东,夯实企业长期价值。四是面向合作商,构建长期互利共赢生态。五是面向社会,践行国企担当,扛起社会责任。系统思考的精细管理核心是立足于生产经营和服务客户全过程,做好事、干成事。一是品牌文化领域,持续深挖文化底蕴,拓宽品牌价值空间。二是生产品质领域,坚守品质生命线,筑牢产业核心根基。三是市场营销领域,构建全域市场格局,精细化开展渠道终端运营。四是公司治理领域,健全长效合规防线,不断完善权责清晰、协调运转、有效制衡的现代化治理体系。五是运营管理领域,坚守精细管理准则,持续提升全局运营效能。\r\n\r\n二、投资者互动交流\r\n(一)如何看待行业及穿越周期\r\n当前白酒行业仍处于结构性…"
+        },
+        {
+          "date": "2026-05-18",
+          "notice_date": "2026-05-19",
+          "place": "公司多功能厅",
+          "ways": [
+            "现场参观",
+            "股东大会"
+          ],
+          "receptionists": [
+            "公司董事",
+            "高级管理人员"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "现场参会的所有投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2026-04-30",
+          "notice_date": "2026-05-07",
+          "place": "线上",
+          "ways": [
+            "业绩说明会",
+            "网络远程形式"
+          ],
+          "receptionists": [
+            "公司副董事长、总经理、董事会秘书、副总经理、总工程师等相关高管"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "通过全景网参与本次业绩说明会的投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2026-03-24",
+          "notice_date": "2026-03-31",
+          "place": "成都、深圳",
+          "ways": [
+            "分析师会议",
+            "路演活动",
+            "券商策略会"
+          ],
+          "receptionists": [
+            "公司副总经理",
+            "董事会秘书",
+            "证券事务代表等"
+          ],
+          "institution_count": 27,
+          "disclosed_count": 27,
+          "org_types": [
+            {
+              "type": "基金管理公司",
+              "count": 7
+            },
+            {
+              "type": "证券公司",
+              "count": 7
+            },
+            {
+              "type": "未分类",
+              "count": 5
+            },
+            {
+              "type": "其它",
+              "count": 4
+            },
+            {
+              "type": "保险资产管理公司",
+              "count": 1
+            },
+            {
+              "type": "保险集团控股公司",
+              "count": 1
+            },
+            {
+              "type": "其它金融公司",
+              "count": 1
+            },
+            {
+              "type": "寿险公司",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "易方达基金",
+            "平安资产",
+            "建信养老",
+            "平安养老",
+            "博时基金",
+            "汇添富基金",
+            "鹏华基金",
+            "招商基金",
+            "高盛高华",
+            "汇丰前海",
+            "中信里昂",
+            "中金公司",
+            "中信证券",
+            "华创证券",
+            "国泰海通",
+            "IDG",
+            "景顺长城基金",
+            "FMR",
+            "Balyasny",
+            "Library"
+          ],
+          "content": null
+        },
+        {
+          "date": "2025-06-20",
+          "notice_date": "2025-06-24",
+          "place": "公司多功能厅",
+          "ways": [
+            "现场参观",
+            "股东大会"
+          ],
+          "receptionists": [
+            "公司董事",
+            "监事",
+            "高级管理人员"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "现场参会的所有投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2025-05-09",
+          "notice_date": "2025-05-12",
+          "place": "线上",
+          "ways": [
+            "业绩说明会",
+            "网络远程形式"
+          ],
+          "receptionists": [
+            "公司董事长",
+            "副董事长",
+            "总经理",
+            "董秘",
+            "副总经理等相关高管"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "通过全景网参与本次业绩说明会的投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2024-12-31",
+          "notice_date": "2025-01-02",
+          "place": "公司怡心园",
+          "ways": [
+            "现场参观",
+            "股东大会"
+          ],
+          "receptionists": [
+            "公司董监高人员"
+          ],
+          "institution_count": 2,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "现场参会的所有投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2024-08-30",
+          "notice_date": "2024-09-19",
+          "place": "公司所在地、上海、深圳、北京、线上",
+          "ways": [
+            "现场参观",
+            "分析师会议",
+            "路演活动",
+            "券商策略会"
+          ],
+          "receptionists": [
+            "公司董事会秘书",
+            "证券事务代表等"
+          ],
+          "institution_count": 55,
+          "disclosed_count": 26,
+          "org_types": [
+            {
+              "type": "基金管理公司",
+              "count": 13
+            },
+            {
+              "type": "其它",
+              "count": 4
+            },
+            {
+              "type": "未分类",
+              "count": 3
+            },
+            {
+              "type": "其它金融公司",
+              "count": 2
+            },
+            {
+              "type": "投资公司",
+              "count": 2
+            },
+            {
+              "type": "保险资产管理公司",
+              "count": 1
+            },
+            {
+              "type": "寿险公司",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "平安资管",
+            "盘京投资",
+            "中银基金",
+            "工银理财",
+            "新华养老",
+            "招商基金",
+            "广发基金",
+            "易方达基金",
+            "宝盈基金",
+            "前海开源",
+            "诺安基金",
+            "景顺长城",
+            "安信基金",
+            "鹏华基金",
+            "华夏基金",
+            "荷兰汇赢",
+            "铭基国际",
+            "淡马锡",
+            "摩根资管",
+            "瑞银资管"
+          ],
+          "content": null
+        },
+        {
+          "date": "2024-06-28",
+          "notice_date": "2024-07-01",
+          "place": "公司多功能厅",
+          "ways": [
+            "现场参观",
+            "股东大会"
+          ],
+          "receptionists": [
+            "公司董事",
+            "监事",
+            "高级管理人员"
+          ],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "现场参会的所有投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2024-05-23",
+          "notice_date": "2024-05-27",
+          "place": "线上",
+          "ways": [
+            "业绩说明会",
+            "网络远程方式"
+          ],
+          "receptionists": [],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "通过全景网参与本次业绩说明会的投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2024-05-23",
+          "notice_date": "2024-05-24",
+          "place": "线上",
+          "ways": [
+            "业绩说明会",
+            "网络远程方式"
+          ],
+          "receptionists": [],
+          "institution_count": 1,
+          "disclosed_count": 1,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "通过全景网参与本次业绩说明会的投资者"
+          ],
+          "content": null
+        },
+        {
+          "date": "2024-05-07",
+          "notice_date": "2024-05-14",
+          "place": "新加坡",
+          "ways": [
+            "路演活动",
+            "券商策略会",
+            "线下面对面交流"
+          ],
+          "receptionists": [],
+          "institution_count": 57,
+          "disclosed_count": 57,
+          "org_types": [
+            {
+              "type": "未分类",
+              "count": 32
+            },
+            {
+              "type": "其它",
+              "count": 11
+            },
+            {
+              "type": "投资公司",
+              "count": 8
+            },
+            {
+              "type": "资产管理公司",
+              "count": 5
+            },
+            {
+              "type": "基金管理公司",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "T Rowe Price",
+            "Janus Henderson",
+            "Invesco Henley",
+            "富敦 Fullerton",
+            "首域投资 First Sentier",
+            "亨德森全球投资",
+            "瀚亚投资",
+            "CIMB Principal",
+            "Willmar Investment",
+            "Broad Peak Investment",
+            "Avanda Investment Management",
+            "AROHI Asset management",
+            "东吴中新资本",
+            "Avanda 投资",
+            "嘉实资本",
+            "立格资本",
+            "Fullerton Fund",
+            "新思路投资",
+            "新加坡政府投资",
+            "Verition"
+          ],
+          "content": null
+        },
+        {
+          "date": "2024-02-26",
+          "notice_date": "2024-03-11",
+          "place": "宜宾、上海、成都、广州",
+          "ways": [
+            "现场参观",
+            "路演活动",
+            "券商策略会",
+            "线下面对面",
+            "线上交流"
+          ],
+          "receptionists": [],
+          "institution_count": 7,
+          "disclosed_count": 7,
+          "org_types": [
+            {
+              "type": "证券公司",
+              "count": 6
+            },
+            {
+              "type": "未分类",
+              "count": 1
+            }
+          ],
+          "institutions": [
+            "东亚前海证券",
+            "申万宏源证券",
+            "华创证券",
+            "华泰证券",
+            "德邦证券",
+            "华西证券",
+            "部分机构投资者"
+          ],
+          "content": null
+        }
+      ],
+      "annual": [
+        {
+          "year": 2024,
+          "events": 7,
+          "institution_visits": 124
+        },
+        {
+          "year": 2025,
+          "events": 2,
+          "institution_visits": 2
+        },
+        {
+          "year": 2026,
+          "events": 4,
+          "institution_visits": 30
+        }
+      ],
+      "org_types": [
+        {
+          "type": "未分类",
+          "count": 50
+        },
+        {
+          "type": "基金管理公司",
+          "count": 21
+        },
+        {
+          "type": "其它",
+          "count": 19
+        },
+        {
+          "type": "证券公司",
+          "count": 13
+        },
+        {
+          "type": "投资公司",
+          "count": 10
+        },
+        {
+          "type": "资产管理公司",
+          "count": 5
+        },
+        {
+          "type": "其它金融公司",
+          "count": 3
+        },
+        {
+          "type": "保险资产管理公司",
+          "count": 2
+        },
+        {
+          "type": "寿险公司",
+          "count": 2
+        },
+        {
+          "type": "保险集团控股公司",
+          "count": 1
+        }
+      ],
+      "events_truncated": 0,
+      "rows_truncated": false,
+      "counts": {
+        "events": 13,
+        "institution_visits": 156,
+        "latest_date": "2026-06-26",
+        "latest_notice_date": "2026-06-30",
+        "latest_institution_count": 1,
+        "latest_place": "公司多功能厅",
+        "events_12m": 4,
+        "institution_visits_12m": 30
+      },
+      "notes": [
+        "调研纪要是公司整理披露的交流记录，问答可能经过筛选，不代表承诺",
+        "机构家数按披露的接待对象统计，同一机构多次调研会重复计入",
+        "调研热度不等于基本面，需要看问答内容与后续经营数据",
+        "只含已披露的调研记录，未披露的接待无法统计"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

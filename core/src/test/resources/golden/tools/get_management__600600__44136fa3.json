@@ -1,0 +1,378 @@
+{
+  "tool": "get_management",
+  "arguments": {},
+  "default_company": "600600",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "600600",
+    "as_of": "2026-06-27",
+    "sources": [
+      {
+        "id": "management:600600",
+        "label": "管理层与持股",
+        "detail": "青岛啤酒 2026-06-27",
+        "as_of": "2026-06-27",
+        "fetched_at": "2026-10-28 10:57:48",
+        "url": "https://basic.10jqka.com.cn/600600/company.html"
+      }
+    ],
+    "data": {
+      "code": "600600",
+      "name": "青岛啤酒",
+      "as_of": "2026-06-27",
+      "salary_year": "2025",
+      "count": 18,
+      "stale": false,
+      "groups": [
+        {
+          "key": "directors",
+          "label": "董事会",
+          "count": 8,
+          "salary_total_wan": 198.33,
+          "hold_ratio": 0.0,
+          "direct_ratio": 0.0,
+          "indirect_ratio": null,
+          "members": [
+            {
+              "name": "姜宗祥",
+              "duties": [
+                "董事长",
+                "执行董事"
+              ],
+              "tenure": "2024-12-25–2028-05-19",
+              "age": "54岁",
+              "education": "硕士",
+              "salary_wan": 107.94,
+              "hold_wan": 10.29,
+              "hold_ratio": 0.0,
+              "direct_ratio": 0.0,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": true,
+              "resume": "姜宗祥，1972年7月出生，山东工业大学本科毕业，南开大学经济学硕士。现任青岛啤酒股份有限公司党委书记、董事长、总裁，青岛啤酒集团有限公司党委书记、董事长。曾任青岛啤酒（芜湖）有限公司副总经理，青岛啤酒股份有限公司战略投资管理总部副部长、信息管理总部部长及制造中心采购管理总部部长、制造总裁助理兼采购管理总部部长、副总裁兼供应链总裁等职。具有丰富的公司治理、战略管理、数字化转型、供应链管理及生产经营经验。现为山东省第十四届人大代表。"
+            },
+            {
+              "name": "刘富华",
+              "duties": [
+                "执行董事"
+              ],
+              "tenure": "2025-05-20–2028-05-19",
+              "age": "50岁",
+              "education": "硕士",
+              "salary_wan": 0.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "刘富华，1976年6月出生，在职硕士研究生学历。现任青岛啤酒股份有限公司党委副书记、执行董事，青岛啤酒集团有限公司党委副书记、董事、副总裁，青岛饮料集团有限公司党委书记、董事长。曾历任青岛地铁集团有限公司总经理助理、人力资源部部长，青岛地铁集团有限公司党委委员、副总经理，青岛饮料集团有限公司党委副书记、董事、总经理（职业经理人）等职。具有较丰富的企业经营管理经验。"
+            },
+            {
+              "name": "孙静",
+              "duties": [
+                "职工董事"
+              ],
+              "tenure": "2025-05-22–2028-05-19",
+              "age": null,
+              "education": "硕士",
+              "salary_wan": 64.89,
+              "hold_wan": 8.25,
+              "hold_ratio": 0.0,
+              "direct_ratio": 0.0,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "孙静，工商管理硕士，现任青岛啤酒股份有限公司党委委员、职工董事、工会主席，总裁办公室主任。曾任青岛啤酒股份有限公司青岛啤酒厂职员，青岛啤酒股份有限公司公共关系管理总部副部长、部长，董事长助理兼总裁办公室主任。具有丰富的企业品牌管理、ESG体系建设和综合管理经验。为中国工会十八大代表。"
+            },
+            {
+              "name": "王亚平",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2026-06-26–2028-05-19",
+              "age": "62岁",
+              "education": "本科",
+              "salary_wan": 8.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "王亚平先生，1964年2月出生，中国国籍，无境外永久居留权，华东政法学院（现为华东政法大学）本科毕业，一级律师，曾任青岛啤酒股份有限公司独立监事，现任山东国曜琴岛律师事务所合伙人会议主席。兼任青岛国恩科技股份有限公司（股票代码：002768.SZ；02768.HK）独立非执行董事，青岛三柏硕健康科技股份有限公司（股票代码：001300.SZ）独立董事，青岛控股国际有限公司（股票代码：0499.HK）独立非执行董事。"
+            },
+            {
+              "name": "赵红",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2025-05-20–2028-05-19",
+              "age": "63岁",
+              "education": "博士",
+              "salary_wan": 8.75,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "赵红女士，1963年出生，博士研究生，现任中国科学院大学教授。兼任华夏银行股份有限公司、青岛啤酒股份有限公司独立董事。曾任中国科学院大学经管学院副院长、中丹学院院长等职务。曾任北京工业大学经管学院教研室主任、副院长；中国科学院大学经管学院副院长、中丹学院院长。"
+            },
+            {
+              "name": "邹国强",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2026-06-26–2028-05-19",
+              "age": "50岁",
+              "education": "本科",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "邹国强先生，1976年出生，中国香港中文大学会计专业工商管理学士，现任来凯医药有限公司（股票代码：02105.HK）首席财务官，青岛港国际股份有限公司（股票代码：601298.SH；06198.HK）独立非执行董事，上海第九城市信息技术有限公司（纳斯达克证券交易所上市公司，股票代码：NCTY）独立董事，中国通商集团有限公司（股票代码：01719.HK）独立非执行董事和张家口银行股份有限公司独立董事。拥有特许金融分析师（CFA）、中国香港注册会计师、英国注册会计师、澳大利亚注册公共会计师和财务会计师执业资格，在会计及财务管理方面拥有超过20年的工作经验。"
+            },
+            {
+              "name": "赵昌文",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2025-05-20–2028-05-19",
+              "age": "62岁",
+              "education": "博士",
+              "salary_wan": 8.75,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "赵昌文，1964年12月出生，经济学博士，现任青岛啤酒股份有限公司独立董事，中山大学吴小兰讲席教授，岭南学院教授、博士生导师，中山大学国家发展研究院院长。曾任青岛啤酒股份有限公司独立董事（2011年6月至2014年6月）。"
+            },
+            {
+              "name": "薛爽",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2026-06-26–2028-05-19",
+              "age": "55岁",
+              "education": "博士",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "薛爽女士，1971年2月出生，中共党员，中国国籍，无境外永久居留权，博士研究生学历，教授职称，国家人文社科重点研究基地会计与财务研究院的专职研究员，入选教育部新世纪优秀人才计划，财政部会计名家培养工程，上海市曙光学者，浦江人才计划，中国审计学会理事，上海财务学会副会长。曾工作于中国农业银行大连分行和广东发展银行大连分行。现任上海财经大学教授，兼任上海吉祥航空股份有限公司、中国人民财产保险股份有限公司独立董事。2019年5月至2025年8月担任江苏金融租赁股份有限公司独立董事，其中本届独立董事任期为2023年11月至2025年8月。"
+            }
+          ]
+        },
+        {
+          "key": "manager",
+          "label": "高管",
+          "count": 5,
+          "salary_total_wan": 392.81,
+          "hold_ratio": 0.0,
+          "direct_ratio": 0.0,
+          "indirect_ratio": null,
+          "members": [
+            {
+              "name": "姜宗祥",
+              "duties": [
+                "代总裁",
+                "代董事会秘书"
+              ],
+              "tenure": "2025-05-20 至今",
+              "age": "54岁",
+              "education": "硕士",
+              "salary_wan": 107.94,
+              "hold_wan": 10.29,
+              "hold_ratio": 0.0,
+              "direct_ratio": 0.0,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": true,
+              "resume": "姜宗祥，1972年7月出生，山东工业大学本科毕业，南开大学经济学硕士。现任青岛啤酒股份有限公司党委书记、董事长、总裁，青岛啤酒集团有限公司党委书记、董事长。曾任青岛啤酒（芜湖）有限公司副总经理，青岛啤酒股份有限公司战略投资管理总部副部长、信息管理总部部长及制造中心采购管理总部部长、制造总裁助理兼采购管理总部部长、副总裁兼供应链总裁等职。具有丰富的公司治理、战略管理、数字化转型、供应链管理及生产经营经验。现为山东省第十四届人大代表。"
+            },
+            {
+              "name": "徐楠",
+              "duties": [
+                "副总裁",
+                "制造总裁",
+                "总酿酒师"
+              ],
+              "tenure": "2019-08-01–2028-05-19",
+              "age": "58岁",
+              "education": "本科",
+              "salary_wan": 95.69,
+              "hold_wan": 11.0,
+              "hold_ratio": 0.0,
+              "direct_ratio": 0.0,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "徐楠，山东轻工业学院本科毕业，工学学士，正高级工程师。现任青岛啤酒股份有限公司党委委员、副总裁、制造总裁、总酿酒师。曾任青岛啤酒（寿光）有限公司总酿酒师、总经理，青岛啤酒股份有限公司制造总裁助理兼青岛啤酒二厂厂长，青岛啤酒股份有限公司制造总裁助理兼青岛啤酒三厂厂长，青岛啤酒股份有限公司制造总裁助理兼生产技术管理总部部长。具有丰富的生产运营及质量管理经验。荣获第三届“中国酿酒大师”荣誉称号。"
+            },
+            {
+              "name": "员水源",
+              "duties": [
+                "副总裁",
+                "供应链总裁"
+              ],
+              "tenure": "2022-10-14–2028-05-19",
+              "age": "50岁",
+              "education": "本科",
+              "salary_wan": 94.66,
+              "hold_wan": 5.07,
+              "hold_ratio": 0.0,
+              "direct_ratio": 0.0,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "员水源，1976年7月出生，郑州纺织工学院本科、管理学学士，现任青岛啤酒股份有限公司副总裁兼供应链总裁，曾任青岛啤酒股份有限公司营销中心华北省区总经理助理、营销中心华北省区副总经理、公司营销中心河北省区总经理。具有丰富的啤酒市场一线营销工作和供应链管理工作经验。"
+            },
+            {
+              "name": "李辉",
+              "duties": [
+                "副总裁",
+                "营销总裁"
+              ],
+              "tenure": "2022-10-14–2028-05-19",
+              "age": "48岁",
+              "education": "硕士",
+              "salary_wan": 94.52,
+              "hold_wan": 4.67,
+              "hold_ratio": 0.0,
+              "direct_ratio": 0.0,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "李辉，男，1978年11月出生，东南大学研究生、管理学硕士，现任青岛啤酒股份有限公司副总裁、兼任营销中心市场发展研究总部总经理。曾任青岛啤酒股份有限公司战略投资管理总部副部长，营销中心创新营销事业总部总经理，具有丰富的企业战略管理、数字化转型和市场营销工作经验。"
+            },
+            {
+              "name": "汪岩",
+              "duties": [
+                "副总裁"
+              ],
+              "tenure": "2026-01-19–2028-05-19",
+              "age": null,
+              "education": "硕士",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "汪岩先生，在职硕士研究生学历，现任青岛啤酒股份有限公司制造副总裁兼人力资源管理总部部长。曾任青岛啤酒股份有限公司总裁助理、营销中心人力行政总部总经理、人力资源管理总部副部长等职。具有丰富的人力资源管理实践经验和企业经营管理经验。"
+            }
+          ]
+        },
+        {
+          "key": "auditors",
+          "label": "审计委员会",
+          "count": 5,
+          "salary_total_wan": 25.5,
+          "hold_ratio": null,
+          "direct_ratio": null,
+          "indirect_ratio": null,
+          "members": [
+            {
+              "name": "王亚平",
+              "duties": [
+                "审计与内控委员会委员"
+              ],
+              "tenure": "2026-06-26–2028-05-19",
+              "age": "62岁",
+              "education": "本科",
+              "salary_wan": 8.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "王亚平先生，1964年2月出生，中国国籍，无境外永久居留权，华东政法学院（现为华东政法大学）本科毕业，一级律师，曾任青岛啤酒股份有限公司独立监事，现任山东国曜琴岛律师事务所合伙人会议主席。兼任青岛国恩科技股份有限公司（股票代码：002768.SZ；02768.HK）独立非执行董事，青岛三柏硕健康科技股份有限公司（股票代码：001300.SZ）独立董事，青岛控股国际有限公司（股票代码：0499.HK）独立非执行董事。"
+            },
+            {
+              "name": "赵红",
+              "duties": [
+                "审计与内控委员会委员"
+              ],
+              "tenure": "2025-05-20–2028-05-19",
+              "age": "63岁",
+              "education": "博士",
+              "salary_wan": 8.75,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "赵红女士，1963年出生，博士研究生，现任中国科学院大学教授。兼任华夏银行股份有限公司、青岛啤酒股份有限公司独立董事。曾任中国科学院大学经管学院副院长、中丹学院院长等职务。曾任北京工业大学经管学院教研室主任、副院长；中国科学院大学经管学院副院长、中丹学院院长。"
+            },
+            {
+              "name": "邹国强",
+              "duties": [
+                "审计与内控委员会委员"
+              ],
+              "tenure": "2026-06-26–2028-05-19",
+              "age": "50岁",
+              "education": "本科",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "邹国强先生，1976年出生，中国香港中文大学会计专业工商管理学士，现任来凯医药有限公司（股票代码：02105.HK）首席财务官，青岛港国际股份有限公司（股票代码：601298.SH；06198.HK）独立非执行董事，上海第九城市信息技术有限公司（纳斯达克证券交易所上市公司，股票代码：NCTY）独立董事，中国通商集团有限公司（股票代码：01719.HK）独立非执行董事和张家口银行股份有限公司独立董事。拥有特许金融分析师（CFA）、中国香港注册会计师、英国注册会计师、澳大利亚注册公共会计师和财务会计师执业资格，在会计及财务管理方面拥有超过20年的工作经验。"
+            },
+            {
+              "name": "赵昌文",
+              "duties": [
+                "审计与内控委员会委员"
+              ],
+              "tenure": "2025-05-20–2028-05-19",
+              "age": "62岁",
+              "education": "博士",
+              "salary_wan": 8.75,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "赵昌文，1964年12月出生，经济学博士，现任青岛啤酒股份有限公司独立董事，中山大学吴小兰讲席教授，岭南学院教授、博士生导师，中山大学国家发展研究院院长。曾任青岛啤酒股份有限公司独立董事（2011年6月至2014年6月）。"
+            },
+            {
+              "name": "薛爽",
+              "duties": [
+                "审计与内控委员会委员"
+              ],
+              "tenure": "2026-06-26–2028-05-19",
+              "age": "55岁",
+              "education": "博士",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "薛爽女士，1971年2月出生，中共党员，中国国籍，无境外永久居留权，博士研究生学历，教授职称，国家人文社科重点研究基地会计与财务研究院的专职研究员，入选教育部新世纪优秀人才计划，财政部会计名家培养工程，上海市曙光学者，浦江人才计划，中国审计学会理事，上海财务学会副会长。曾工作于中国农业银行大连分行和广东发展银行大连分行。现任上海财经大学教授，兼任上海吉祥航空股份有限公司、中国人民财产保险股份有限公司独立董事。2019年5月至2025年8月担任江苏金融租赁股份有限公司独立董事，其中本届独立董事任期为2023年11月至2025年8月。"
+            }
+          ]
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

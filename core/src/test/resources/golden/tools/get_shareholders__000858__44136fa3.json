@@ -1,0 +1,346 @@
+{
+  "tool": "get_shareholders",
+  "arguments": {},
+  "default_company": "000858",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "000858",
+    "as_of": "2026-09-30",
+    "sources": [
+      {
+        "id": "shareholders:000858:2026-09-30",
+        "label": "股东结构",
+        "detail": "五 粮 液 2026-09-30",
+        "as_of": "2026-09-30",
+        "fetched_at": "2026-10-28 10:37:16",
+        "url": "https://emweb.securities.eastmoney.com/PC_HSF10/ShareholderResearch/Index?type=web&code=SZ000858"
+      }
+    ],
+    "data": {
+      "code": "000858",
+      "name": "五 粮 液",
+      "as_of": "2026-09-30",
+      "stale": false,
+      "controller": {
+        "name": "宜宾市政府国有资产监督管理委员会",
+        "ratio": null
+      },
+      "top10": [
+        {
+          "rank": 1,
+          "name": "宜宾发展控股集团有限公司",
+          "share_type": "流通A股",
+          "shares_wan": 133654.8,
+          "ratio": 34.4,
+          "change_wan": null,
+          "change_text": "不变",
+          "change_ratio": null
+        },
+        {
+          "rank": 2,
+          "name": "四川省宜宾五粮液集团有限公司",
+          "share_type": "流通A股",
+          "shares_wan": 80676.45,
+          "ratio": 20.8,
+          "change_wan": 284.99,
+          "change_text": null,
+          "change_ratio": 0.4
+        },
+        {
+          "rank": 3,
+          "name": "中国证券金融股份有限公司",
+          "share_type": "流通A股",
+          "shares_wan": 6246.08,
+          "ratio": 1.6,
+          "change_wan": null,
+          "change_text": "不变",
+          "change_ratio": null
+        },
+        {
+          "rank": 4,
+          "name": "香港中央结算有限公司",
+          "share_type": "流通A股",
+          "shares_wan": 5678.03,
+          "ratio": 1.5,
+          "change_wan": -1107.43,
+          "change_text": null,
+          "change_ratio": -16.3
+        },
+        {
+          "rank": 5,
+          "name": "中国银行股份有限公司-招商中证白酒指数分级证券投资基金",
+          "share_type": "流通A股",
+          "shares_wan": 4320.73,
+          "ratio": 1.1,
+          "change_wan": -1694.04,
+          "change_text": null,
+          "change_ratio": -28.2
+        },
+        {
+          "rank": 6,
+          "name": "瑞众人寿保险有限责任公司-自有资金",
+          "share_type": "流通A股",
+          "shares_wan": 3348.03,
+          "ratio": 0.9,
+          "change_wan": 219.73,
+          "change_text": null,
+          "change_ratio": 7.0
+        },
+        {
+          "rank": 7,
+          "name": "中国建设银行股份有限公司-鹏华中证酒交易型开放式指数证券投资基金",
+          "share_type": "流通A股",
+          "shares_wan": 2092.91,
+          "ratio": 0.5,
+          "change_wan": -624.26,
+          "change_text": null,
+          "change_ratio": -23.0
+        },
+        {
+          "rank": 8,
+          "name": "中国工商银行股份有限公司-中证主要消费交易型开放式指数证券投资基金",
+          "share_type": "流通A股",
+          "shares_wan": 1850.99,
+          "ratio": 0.5,
+          "change_wan": -35.18,
+          "change_text": null,
+          "change_ratio": -1.9
+        },
+        {
+          "rank": 9,
+          "name": "和谐健康保险股份有限公司-万能产品",
+          "share_type": "流通A股",
+          "shares_wan": 1033.04,
+          "ratio": 0.3,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null
+        },
+        {
+          "rank": 10,
+          "name": "和谐健康保险股份有限公司-万能",
+          "share_type": "流通A股",
+          "shares_wan": 1004.76,
+          "ratio": 0.3,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null
+        }
+      ],
+      "free_float_top10": [
+        {
+          "rank": 1,
+          "name": "宜宾发展控股集团有限公司",
+          "share_type": "A股",
+          "shares_wan": 133654.8,
+          "ratio": 34.4,
+          "change_wan": null,
+          "change_text": "不变",
+          "change_ratio": null,
+          "holder_type": "其它"
+        },
+        {
+          "rank": 2,
+          "name": "四川省宜宾五粮液集团有限公司",
+          "share_type": "A股",
+          "shares_wan": 80676.45,
+          "ratio": 20.8,
+          "change_wan": 414.52,
+          "change_text": null,
+          "change_ratio": 0.5,
+          "holder_type": "其它"
+        },
+        {
+          "rank": 3,
+          "name": "中国证券金融股份有限公司",
+          "share_type": "A股",
+          "shares_wan": 6246.08,
+          "ratio": 1.6,
+          "change_wan": null,
+          "change_text": "不变",
+          "change_ratio": null,
+          "holder_type": "证券公司"
+        },
+        {
+          "rank": 4,
+          "name": "香港中央结算有限公司",
+          "share_type": "A股",
+          "shares_wan": 5678.03,
+          "ratio": 1.5,
+          "change_wan": -1107.43,
+          "change_text": null,
+          "change_ratio": -16.3,
+          "holder_type": "其它"
+        },
+        {
+          "rank": 5,
+          "name": "中国银行股份有限公司-招商中证白酒指数分级证券投资基金",
+          "share_type": "A股",
+          "shares_wan": 4320.73,
+          "ratio": 1.1,
+          "change_wan": -1694.04,
+          "change_text": null,
+          "change_ratio": -28.2,
+          "holder_type": "证券投资基金"
+        },
+        {
+          "rank": 6,
+          "name": "瑞众人寿保险有限责任公司-自有资金",
+          "share_type": "A股",
+          "shares_wan": 3348.03,
+          "ratio": 0.9,
+          "change_wan": 219.73,
+          "change_text": null,
+          "change_ratio": 7.0,
+          "holder_type": "保险产品"
+        },
+        {
+          "rank": 7,
+          "name": "中国建设银行股份有限公司-鹏华中证酒交易型开放式指数证券投资基金",
+          "share_type": "A股",
+          "shares_wan": 2092.91,
+          "ratio": 0.5,
+          "change_wan": -624.26,
+          "change_text": null,
+          "change_ratio": -23.0,
+          "holder_type": "证券投资基金"
+        },
+        {
+          "rank": 8,
+          "name": "中国工商银行股份有限公司-中证主要消费交易型开放式指数证券投资基金",
+          "share_type": "A股",
+          "shares_wan": 1850.99,
+          "ratio": 0.5,
+          "change_wan": -35.18,
+          "change_text": null,
+          "change_ratio": -1.9,
+          "holder_type": "证券投资基金"
+        },
+        {
+          "rank": 9,
+          "name": "和谐健康保险股份有限公司-万能产品",
+          "share_type": "A股",
+          "shares_wan": 1033.04,
+          "ratio": 0.3,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null,
+          "holder_type": "保险产品"
+        },
+        {
+          "rank": 10,
+          "name": "和谐健康保险股份有限公司-万能",
+          "share_type": "A股",
+          "shares_wan": 1004.76,
+          "ratio": 0.3,
+          "change_wan": null,
+          "change_text": "新进",
+          "change_ratio": null,
+          "holder_type": "保险产品"
+        }
+      ],
+      "holder_count": {
+        "latest": {
+          "period": "2026-09-30",
+          "holders": 772886,
+          "holders_change_pct": 7.3,
+          "avg_free_shares": 5022,
+          "avg_free_shares_change_pct": -6.8,
+          "focus": "非常分散",
+          "top10_ratio": 61.8,
+          "free_float_top10_ratio": 61.8
+        },
+        "history": [
+          {
+            "period": "2026-06-11",
+            "holders": 600000,
+            "holders_change_pct": 0.0,
+            "avg_free_shares": 6469,
+            "avg_free_shares_change_pct": 0.0,
+            "focus": "非常分散",
+            "top10_ratio": null,
+            "free_float_top10_ratio": null
+          },
+          {
+            "period": "2026-06-30",
+            "holders": 714632,
+            "holders_change_pct": 19.1,
+            "avg_free_shares": 5431,
+            "avg_free_shares_change_pct": -16.0,
+            "focus": "非常分散",
+            "top10_ratio": 63.0,
+            "free_float_top10_ratio": 63.0
+          },
+          {
+            "period": "2026-07-07",
+            "holders": 600000,
+            "holders_change_pct": 0.0,
+            "avg_free_shares": 6469,
+            "avg_free_shares_change_pct": 0.0,
+            "focus": "非常分散",
+            "top10_ratio": null,
+            "free_float_top10_ratio": null
+          },
+          {
+            "period": "2026-07-24",
+            "holders": 600000,
+            "holders_change_pct": 0.0,
+            "avg_free_shares": 6469,
+            "avg_free_shares_change_pct": 0.0,
+            "focus": "非常分散",
+            "top10_ratio": null,
+            "free_float_top10_ratio": null
+          },
+          {
+            "period": "2026-07-25",
+            "holders": 600000,
+            "holders_change_pct": 0.0,
+            "avg_free_shares": 6469,
+            "avg_free_shares_change_pct": 0.0,
+            "focus": "非常分散",
+            "top10_ratio": null,
+            "free_float_top10_ratio": null
+          },
+          {
+            "period": "2026-08-10",
+            "holders": 600000,
+            "holders_change_pct": 0.0,
+            "avg_free_shares": 6469,
+            "avg_free_shares_change_pct": 0.0,
+            "focus": "非常分散",
+            "top10_ratio": null,
+            "free_float_top10_ratio": null
+          },
+          {
+            "period": "2026-09-10",
+            "holders": 720000,
+            "holders_change_pct": 20.0,
+            "avg_free_shares": 5390,
+            "avg_free_shares_change_pct": -16.7,
+            "focus": "非常分散",
+            "top10_ratio": null,
+            "free_float_top10_ratio": null
+          },
+          {
+            "period": "2026-09-30",
+            "holders": 772886,
+            "holders_change_pct": 7.3,
+            "avg_free_shares": 5022,
+            "avg_free_shares_change_pct": -6.8,
+            "focus": "非常分散",
+            "top10_ratio": 61.8,
+            "free_float_top10_ratio": 61.8
+          }
+        ]
+      },
+      "counts": {
+        "top10": 10,
+        "free_float_top10": 10,
+        "holder_periods": 8
+      }
+    },
+    "error": null,
+    "cached": false
+  }
+}

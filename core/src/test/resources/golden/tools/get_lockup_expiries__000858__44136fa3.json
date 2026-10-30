@@ -1,0 +1,84 @@
+{
+  "tool": "get_lockup_expiries",
+  "arguments": {},
+  "default_company": "000858",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "000858",
+    "as_of": "2021-06-03",
+    "sources": [
+      {
+        "id": "lockups:000858:2021-06-03",
+        "label": "限售解禁",
+        "detail": "五 粮 液 限售解禁 2021-06-03",
+        "as_of": "2021-06-03",
+        "fetched_at": "2026-10-28 10:37:17",
+        "url": "https://data.eastmoney.com/dxf/detail.html?code=000858"
+      }
+    ],
+    "data": {
+      "code": "000858",
+      "name": "五 粮 液",
+      "as_of": "2021-06-03",
+      "window_start": "2024-01-01",
+      "window_end": "2027-10-31",
+      "years": 3,
+      "ahead_months": 12,
+      "has_lockups": false,
+      "latest": {
+        "free_date": "2021-06-04",
+        "year": 2021,
+        "is_upcoming": false,
+        "days_until": -1975,
+        "shares_wan": 8564.13,
+        "market_cap_yi": 270.03,
+        "price": 315.3,
+        "ratio_total_pct": 2.21,
+        "ratio_free_pct": 2.21,
+        "holders": 10,
+        "shares_type": "定向增发机构配售股份",
+        "market_type": "szzb",
+        "free_shares_after_wan": 388143.32,
+        "non_free_shares_after_wan": 17.48,
+        "able_free_shares_wan": 8564.13,
+        "update_date": "2021-06-03"
+      },
+      "next": null,
+      "upcoming": [],
+      "history": [],
+      "annual": [],
+      "types": [],
+      "events_truncated": 0,
+      "counts": {
+        "events": 0,
+        "history_events": 0,
+        "upcoming_events": 0,
+        "next_date": null,
+        "next_days": null,
+        "next_shares_wan": null,
+        "next_market_cap_yi": null,
+        "next_ratio_pct": null,
+        "next_holders": null,
+        "next_type": null,
+        "upcoming_shares_wan": null,
+        "upcoming_market_cap_yi": null,
+        "upcoming_ratio_pct": null,
+        "history_shares_wan": null,
+        "history_market_cap_yi": null,
+        "total_shares_wan": null,
+        "total_market_cap_yi": null,
+        "latest_date": null,
+        "latest_type": null,
+        "missing_market_cap": 0
+      },
+      "notes": [
+        "近3年及未来12个月没有披露的解禁；最近一次为2021-06-04",
+        "只统计已披露的解禁批次，未覆盖未公告的安排"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}

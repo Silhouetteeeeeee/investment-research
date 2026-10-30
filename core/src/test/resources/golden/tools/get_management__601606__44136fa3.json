@@ -1,0 +1,358 @@
+{
+  "tool": "get_management",
+  "arguments": {},
+  "default_company": "601606",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": "2026-04-25",
+    "sources": [
+      {
+        "id": "management:601606",
+        "label": "管理层与持股",
+        "detail": "长城军工 2026-04-25",
+        "as_of": "2026-04-25",
+        "fetched_at": "2026-10-30 14:56:15",
+        "url": "https://basic.10jqka.com.cn/601606/company.html"
+      }
+    ],
+    "data": {
+      "code": "601606",
+      "name": "长城军工",
+      "as_of": "2026-04-25",
+      "salary_year": "2025",
+      "count": 17,
+      "stale": false,
+      "groups": [
+        {
+          "key": "directors",
+          "label": "董事会",
+          "count": 9,
+          "salary_total_wan": 114.22,
+          "hold_ratio": null,
+          "direct_ratio": null,
+          "indirect_ratio": null,
+          "members": [
+            {
+              "name": "涂荣",
+              "duties": [
+                "董事长",
+                "董事"
+              ],
+              "tenure": "2023-12-22–2027-07-28",
+              "age": "52岁",
+              "education": "硕士",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": true,
+              "resume": "涂荣，男，1974年出生，中国国籍，中共党员，无境外永久居留权，硕士研究生，高级工程师。曾担任长安工业公司采购物流部采购处副处长、处长，采购物流部处长，采购部处长，采购部副部长，采购部副部长（主持工作）兼党支部书记，采购部部长兼党支部书记，战略运营部部长兼党支部书记，长安工业公司副总经理，长安望江公司副总经理，成都陵川特种工业有限责任公司总经理、党委副书记。现任安徽军工董事长、党委书记，长城军工董事长、党委书记。"
+            },
+            {
+              "name": "徐波",
+              "duties": [
+                "副董事长",
+                "董事"
+              ],
+              "tenure": "2025-12-19–2027-07-28",
+              "age": "50岁",
+              "education": "硕士",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "徐波，男，1976年出生，中国国籍，中共党员，无境外永久居留权，硕士研究生，正高级经济师。曾任中国兵器装备集团发展计划部员工、副处长、处长，湖南云箭集团有限公司副总经理，中国兵器装备集团战略发展部副主任，中国兵器工业集团战略发展部副部长（副主任），现任安徽军工集团控股有限公司董事、总经理、党委副书记，长城军工副董事长。"
+            },
+            {
+              "name": "李昌坤",
+              "duties": [
+                "董事"
+              ],
+              "tenure": "2023-12-22–2027-07-28",
+              "age": "43岁",
+              "education": "本科",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "李昌坤，男，1983年出生，中国国籍，中共党员，无境外永久居留权，工学学士，高级工程师。曾担任西南技术工程研究所研发工程师、事业部主任、支部书记，产业发展与制造管理部主任，庆导公司总经理，所长助理。现任安徽军工副总经理，长城军工董事。"
+            },
+            {
+              "name": "蔡芸",
+              "duties": [
+                "董事"
+              ],
+              "tenure": "2024-07-29–2027-07-28",
+              "age": "49岁",
+              "education": "硕士",
+              "salary_wan": 33.75,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "蔡芸，女，1977年出生，中国国籍，中共党员，无境外永久居留权，省委党校研究生学历，高级会计师。曾担任东风机电财务部长，安徽军工集团财务部部长，神剑科技董事，金星预应力董事，军工物流公司董事，融合发展公司董事，芯核防务监事。现任长城军工董事、财务总监、财务部部长，神剑科技董事、金星预应力董事。"
+            },
+            {
+              "name": "张兆忠",
+              "duties": [
+                "董事"
+              ],
+              "tenure": "2018-07-01–2027-07-28",
+              "age": "57岁",
+              "education": "硕士",
+              "salary_wan": 56.47,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "张兆忠，男，1969年出生，中国国籍，中共党员，无境外永久居留权，研究生学历，工程师。曾担任安徽省皖西机械厂技术员，安徽军工经济运行部副部长、部长，安徽长城军工有限责任公司董事会秘书，神剑科技董事，东风机电董事，红星机电董事、董事长，方圆机电董事、董事长，长城军工副总经理。现任长城军工董事、总经理、董事会秘书，安徽长城军工投资管理有限责任公司执行董事，红星机电董事、方圆机电董事、东风机电董事。"
+            },
+            {
+              "name": "周鸿彦",
+              "duties": [
+                "董事"
+              ],
+              "tenure": "2023-12-22–2027-07-28",
+              "age": "53岁",
+              "education": "硕士",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "周鸿彦，男，1973年出生，中国国籍，中共党员，无境外永久居留权，硕士研究生，正高级会计师。曾担任嘉陵股份海南嘉泰公司财务总监兼财务部长、总经理、党总支部书记，嘉陵股份海源公司副总经理，嘉陵股份办公室副主任、外事办主任，嘉陵特装财务会计部副部长，嘉陵股份财务部副部长（主持工作）、财务部部长兼党支部书记，嘉陵股份董事、董事会秘书、副总经理，重庆嘉陵工业有限公司董事、总会计师，重庆嘉陵特种装备有限公司总会计师。现任安徽军工董事、总会计师，长城军工董事。"
+            },
+            {
+              "name": "李勇",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2024-07-29–2027-07-28",
+              "age": "51岁",
+              "education": "博士",
+              "salary_wan": 8.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "李勇，1975年出生，中国国籍，中共党员，中国科学技术大学博士、中国科学技术大学管理学院副教授，实验教学中心主任，新金融研究中心执行主任，同时兼任众邦银行、大亚湾智慧园区、合肥市经信委等机构评审专家和顾问。2000年至今于中国科学技术大学从事科研和教育工作，曾任中国科学技术大学管理学院工商管理系副主任，现任中国科学技术大学管理学院新金融研究中心执行主任，长城军工独立董事。"
+            },
+            {
+              "name": "黄正祥",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2024-07-29–2027-07-28",
+              "age": "59岁",
+              "education": "博士",
+              "salary_wan": 8.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "黄正祥，1967年出生，中国国籍，中共党员，男，南京理工大学博士，南京理工大学机械工程学院教授、博士生导师。中国兵工学会高级会员，《兵工学报》《爆破器材》《高压物理学报》《火炸药学报》《工程力学》《弹道学报》等杂志审稿人。江苏省“青蓝工程”中青年学术带头人，江苏省“333工程”中青年科技领军人才培养对象，现任长城军工独立董事。"
+            },
+            {
+              "name": "郭志远",
+              "duties": [
+                "独立董事"
+              ],
+              "tenure": "2024-07-29–2027-07-28",
+              "age": "52岁",
+              "education": "博士",
+              "salary_wan": 8.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "郭志远，1974年出生，中国国籍，中共党员，中国政法大学法学博士，华东政法大学“经天学者”特聘教授，博士生导师。上海远京律师事务所管委会主任。兼任中国行为法学会法律风险防控委员会副会长、中国伦理学会法律伦理委员会副主任、中国计算机学会计算法学研究会执委、中国法学教育研究会理事、中国刑事诉讼法学研究会理事、中国民事诉讼法学研究会理事，长城军工独立董事。"
+            }
+          ]
+        },
+        {
+          "key": "manager",
+          "label": "高管",
+          "count": 5,
+          "salary_total_wan": 166.18,
+          "hold_ratio": null,
+          "direct_ratio": null,
+          "indirect_ratio": null,
+          "members": [
+            {
+              "name": "张兆忠",
+              "duties": [
+                "总经理",
+                "董事会秘书"
+              ],
+              "tenure": "2023-12-22–2027-07-28",
+              "age": "57岁",
+              "education": "硕士",
+              "salary_wan": 56.47,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "张兆忠，男，1969年出生，中国国籍，中共党员，无境外永久居留权，研究生学历，工程师。曾担任安徽省皖西机械厂技术员，安徽军工经济运行部副部长、部长，安徽长城军工有限责任公司董事会秘书，神剑科技董事，东风机电董事，红星机电董事、董事长，方圆机电董事、董事长，长城军工副总经理。现任长城军工董事、总经理、董事会秘书，安徽长城军工投资管理有限责任公司执行董事，红星机电董事、方圆机电董事、东风机电董事。"
+            },
+            {
+              "name": "潘卫华",
+              "duties": [
+                "副总经理"
+              ],
+              "tenure": "2026-04-23–2027-07-28",
+              "age": "56岁",
+              "education": null,
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "潘卫华，男，1970年出生，中国国籍，中共党员，无境外永久居留权，正高级经济师。曾任安徽军工纪委副书记兼审计监察部副部长（中层正职），安徽军工人力资源部部长、党委秘书、董事会秘书，安徽军工人力资源部部长、党委秘书、董事会秘书、机关党委委员、副书记，安徽军工职工监事、兼神剑科技、东风机电董事，长城置业公司董事长、总经理（法定代表人）、党支部书记，蚌埠长城置业公司董事长、总经理（法定代表人），安徽东风机电科技股份有限公司董事、总经理、党委副书记，安徽东风机电科技股份有限公司党委书记、董事长，现任安徽东风机电科技股份有限公司党委书记、董事长。"
+            },
+            {
+              "name": "吴海峰",
+              "duties": [
+                "副总经理"
+              ],
+              "tenure": "2026-04-23–2027-07-28",
+              "age": "52岁",
+              "education": "硕士",
+              "salary_wan": 24.02,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "吴海峰，男，1974年出生，中国国籍，中共党员，无境外永久居留权，工程师。曾任安徽军工经济运行部办事员、处长，长城军工职工监事，经济运行部业务主办，安徽军工经济运行部副部长，长城军工职工监事，安徽军工经济运行部（安全监管部）部长，神剑科技党委副书记、董事、总经理，长城军工职工监事，神剑科技党委副书记、董事、总经理（主持工作）。现任安徽神剑科技股份有限公司党委书记、董事长。"
+            },
+            {
+              "name": "蔡芸",
+              "duties": [
+                "财务总监"
+              ],
+              "tenure": "2024-07-29–2027-07-28",
+              "age": "49岁",
+              "education": "硕士",
+              "salary_wan": 33.75,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "蔡芸，女，1977年出生，中国国籍，中共党员，无境外永久居留权，省委党校研究生学历，高级会计师。曾担任东风机电财务部长，安徽军工集团财务部部长，神剑科技董事，金星预应力董事，军工物流公司董事，融合发展公司董事，芯核防务监事。现任长城军工董事、财务总监、财务部部长，神剑科技董事、金星预应力董事。"
+            },
+            {
+              "name": "王晓兵",
+              "duties": [
+                "总工程师"
+              ],
+              "tenure": "2023-12-22–2027-07-28",
+              "age": "54岁",
+              "education": "本科",
+              "salary_wan": 51.94,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "王晓兵，男，1972年出生，中国国籍，中共党员，无境外永久居留权，工学学士学位，正高级工程师。曾担任神剑科技军品科研处主任设计师、总师办副主任、产品研发部副部长、总师办主任、制导研发中心办公室主任、副总工程师、副总经理，方圆机电董事长、总经理，神剑科技党委副书记、董事、总经理，长城军工研究院董事长、总经理、执行董事。现任长城军工总工程师。"
+            }
+          ]
+        },
+        {
+          "key": "auditors",
+          "label": "审计委员会",
+          "count": 3,
+          "salary_total_wan": 16.0,
+          "hold_ratio": null,
+          "direct_ratio": null,
+          "indirect_ratio": null,
+          "members": [
+            {
+              "name": "李勇",
+              "duties": [
+                "审计委员会召集人"
+              ],
+              "tenure": "2024-07-29–2027-07-28",
+              "age": "51岁",
+              "education": "博士",
+              "salary_wan": 8.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "李勇，1975年出生，中国国籍，中共党员，中国科学技术大学博士、中国科学技术大学管理学院副教授，实验教学中心主任，新金融研究中心执行主任，同时兼任众邦银行、大亚湾智慧园区、合肥市经信委等机构评审专家和顾问。2000年至今于中国科学技术大学从事科研和教育工作，曾任中国科学技术大学管理学院工商管理系副主任，现任中国科学技术大学管理学院新金融研究中心执行主任，长城军工独立董事。"
+            },
+            {
+              "name": "涂荣",
+              "duties": [
+                "审计委员会委员"
+              ],
+              "tenure": "2023-12-22–2027-07-28",
+              "age": "52岁",
+              "education": "硕士",
+              "salary_wan": null,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": true,
+              "resume": "涂荣，男，1974年出生，中国国籍，中共党员，无境外永久居留权，硕士研究生，高级工程师。曾担任长安工业公司采购物流部采购处副处长、处长，采购物流部处长，采购部处长，采购部副部长，采购部副部长（主持工作）兼党支部书记，采购部部长兼党支部书记，战略运营部部长兼党支部书记，长安工业公司副总经理，长安望江公司副总经理，成都陵川特种工业有限责任公司总经理、党委副书记。现任安徽军工董事长、党委书记，长城军工董事长、党委书记。"
+            },
+            {
+              "name": "郭志远",
+              "duties": [
+                "审计委员会委员"
+              ],
+              "tenure": "2024-07-29–2027-07-28",
+              "age": "52岁",
+              "education": "博士",
+              "salary_wan": 8.0,
+              "hold_wan": null,
+              "hold_ratio": null,
+              "direct_ratio": null,
+              "indirect_ratio": null,
+              "is_control": false,
+              "is_legal_person": false,
+              "resume": "郭志远，1974年出生，中国国籍，中共党员，中国政法大学法学博士，华东政法大学“经天学者”特聘教授，博士生导师。上海远京律师事务所管委会主任。兼任中国行为法学会法律风险防控委员会副会长、中国伦理学会法律伦理委员会副主任、中国计算机学会计算法学研究会执委、中国法学教育研究会理事、中国刑事诉讼法学研究会理事、中国民事诉讼法学研究会理事，长城军工独立董事。"
+            }
+          ]
+        }
+      ]
+    },
+    "error": null,
+    "cached": false
+  }
+}

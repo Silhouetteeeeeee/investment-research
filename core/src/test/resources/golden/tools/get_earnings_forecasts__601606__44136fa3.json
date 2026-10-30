@@ -1,0 +1,341 @@
+{
+  "tool": "get_earnings_forecasts",
+  "arguments": {},
+  "default_company": "601606",
+  "generated_on": "2026-10-30",
+  "result": {
+    "ok": true,
+    "company": "601606",
+    "as_of": "2026-07-14",
+    "sources": [
+      {
+        "id": "forecasts:601606:2026-07-14",
+        "label": "业绩预告",
+        "detail": "长城军工 业绩预告 2026-07-14",
+        "as_of": "2026-07-14",
+        "fetched_at": "2026-10-30 14:56:16",
+        "url": "https://data.eastmoney.com/bbsj/yjyg.html?code=601606"
+      }
+    ],
+    "data": {
+      "code": "601606",
+      "name": "长城军工",
+      "as_of": "2026-07-14",
+      "window_start": "2024-01-01",
+      "window_end": "2026-10-31",
+      "years": 3,
+      "has_forecasts": true,
+      "latest": {
+        "report_date": "2026-06-30",
+        "notice_date": "2026-07-14",
+        "year": 2026,
+        "type": "增亏",
+        "metrics": [
+          {
+            "finance_code": "004",
+            "label": "归母净利润",
+            "unit": "亿元",
+            "type": "增亏",
+            "lower": -0.96,
+            "upper": -0.96,
+            "yoy_low": -250.35,
+            "yoy_high": -250.35,
+            "prior": -0.27,
+            "mid": -0.96
+          },
+          {
+            "finance_code": "005",
+            "label": "扣非净利润",
+            "unit": "亿元",
+            "type": "增亏",
+            "lower": -1.05,
+            "upper": -1.05,
+            "yoy_low": -178.2,
+            "yoy_high": -178.2,
+            "prior": -0.38,
+            "mid": -1.05
+          }
+        ],
+        "reason": "报告期内,公司业绩下降主要原因为:部分总装产品受合同签订进度影响及部分产品受客户需求变化延期交付,收入下降;同时叠加部分金属原材料价格上涨影响,导致利润总额下降。"
+      },
+      "events": [
+        {
+          "report_date": "2026-06-30",
+          "notice_date": "2026-07-14",
+          "year": 2026,
+          "type": "增亏",
+          "metrics": [
+            {
+              "finance_code": "004",
+              "label": "归母净利润",
+              "unit": "亿元",
+              "type": "增亏",
+              "lower": -0.96,
+              "upper": -0.96,
+              "yoy_low": -250.35,
+              "yoy_high": -250.35,
+              "prior": -0.27,
+              "mid": -0.96
+            },
+            {
+              "finance_code": "005",
+              "label": "扣非净利润",
+              "unit": "亿元",
+              "type": "增亏",
+              "lower": -1.05,
+              "upper": -1.05,
+              "yoy_low": -178.2,
+              "yoy_high": -178.2,
+              "prior": -0.38,
+              "mid": -1.05
+            }
+          ],
+          "reason": "报告期内,公司业绩下降主要原因为:部分总装产品受合同签订进度影响及部分产品受客户需求变化延期交付,收入下降;同时叠加部分金属原材料价格上涨影响,导致利润总额下降。"
+        },
+        {
+          "report_date": "2025-12-31",
+          "notice_date": "2026-01-31",
+          "year": 2025,
+          "type": "扭亏",
+          "metrics": [
+            {
+              "finance_code": "004",
+              "label": "归母净利润",
+              "unit": "亿元",
+              "type": "扭亏",
+              "lower": 0.07,
+              "upper": 0.1,
+              "yoy_low": 101.95,
+              "yoy_high": 102.78,
+              "prior": -3.63,
+              "mid": 0.09
+            },
+            {
+              "finance_code": "005",
+              "label": "扣非净利润",
+              "unit": "亿元",
+              "type": "减亏",
+              "lower": -0.16,
+              "upper": -0.12,
+              "yoy_low": 95.77,
+              "yoy_high": 96.83,
+              "prior": -3.78,
+              "mid": -0.14
+            }
+          ],
+          "reason": "(一)主营业务的影响,一是积极开拓市场,营业收入稳步增长;二是聚焦强军首责,加强产品生产过程管控,持续优化成本控制能力,积极开展降本增效工作,盈利能力提升。(二)非经常性损益的影响,报告期内确认的部分非经常性损益对当期归属于母公司所有者的净利润产生了积极影响,主要来源于计入当期损益的政府补助等。"
+        },
+        {
+          "report_date": "2025-06-30",
+          "notice_date": "2025-07-11",
+          "year": 2025,
+          "type": "减亏",
+          "metrics": [
+            {
+              "finance_code": "004",
+              "label": "归母净利润",
+              "unit": "亿元",
+              "type": "减亏",
+              "lower": -0.29,
+              "upper": -0.25,
+              "yoy_low": 25.55,
+              "yoy_high": 36.91,
+              "prior": -0.4,
+              "mid": -0.27
+            },
+            {
+              "finance_code": "005",
+              "label": "扣非净利润",
+              "unit": "亿元",
+              "type": "减亏",
+              "lower": -0.41,
+              "upper": -0.35,
+              "yoy_low": 14.02,
+              "yoy_high": 26.61,
+              "prior": -0.48,
+              "mid": -0.38
+            }
+          ],
+          "reason": "报告期内,公司业绩预计亏损主要原因:一是公司所属某子公司本年度部分产品订单尚未落实,其营收及利润同比下降较大;二是公司持续加大研发投入,研发费用同比增长约19%。"
+        },
+        {
+          "report_date": "2024-12-31",
+          "notice_date": "2025-01-18",
+          "year": 2024,
+          "type": "首亏",
+          "metrics": [
+            {
+              "finance_code": "004",
+              "label": "归母净利润",
+              "unit": "亿元",
+              "type": "首亏",
+              "lower": -3.96,
+              "upper": -2.7,
+              "yoy_low": -1580.73,
+              "yoy_high": -1109.59,
+              "prior": 0.27,
+              "mid": -3.33
+            },
+            {
+              "finance_code": "005",
+              "label": "扣非净利润",
+              "unit": "亿元",
+              "type": "首亏",
+              "lower": -4.3,
+              "upper": -3.04,
+              "yoy_low": -3445.08,
+              "yoy_high": -2464.89,
+              "prior": 0.13,
+              "mid": -3.67
+            }
+          ],
+          "reason": "报告期内,公司业务经营情况正常,生产经营未出现重大不利变化,主营业务保持增长,受特品价格调整、管理费用上升和研发投入加大等因素影响,预计归属于上市公司股东的净利润、扣除非经常性损益后的净利润出现亏损,具体如下:(一)特品价格调整公司所处行业为国家特品行业,主要通过向特品客户销售特种装备产品获得收入。根据相关规定,公司销售的部分产品需由特品客户组织审价,在审价完成前,公司结合类似产品价格或依据审价进…"
+        },
+        {
+          "report_date": "2024-06-30",
+          "notice_date": "2024-07-09",
+          "year": 2024,
+          "type": "首亏",
+          "metrics": [
+            {
+              "finance_code": "004",
+              "label": "归母净利润",
+              "unit": "亿元",
+              "type": "首亏",
+              "lower": -0.42,
+              "upper": -0.42,
+              "yoy_low": -2063.63,
+              "yoy_high": -2063.63,
+              "prior": 0.02,
+              "mid": -0.42
+            },
+            {
+              "finance_code": "005",
+              "label": "扣非净利润",
+              "unit": "亿元",
+              "type": "增亏",
+              "lower": -0.5,
+              "upper": -0.5,
+              "yoy_low": -610.22,
+              "yoy_high": -610.22,
+              "prior": -0.07,
+              "mid": -0.5
+            }
+          ],
+          "reason": "报告期内,公司业绩下降主要原因为:(一)公司营业收入规模同比下降约20%,主要系产品结构变化及配套件供应不及时,特品营业收入同比下降约29%;(二)公司研发费用同比增长约24%,主要系公司持续加大研发投入,加快发展新质生产力,加快科技成果转化和新产品、新技术迭代速度,推动公司可持续发展。(三)公司将坚持稳中求进工作总基调,完整准确全面贯彻新发展理念,聚焦主责主业,强化改革创新,优化公司治理,精细化…"
+        },
+        {
+          "report_date": "2023-12-31",
+          "notice_date": "2024-01-27",
+          "year": 2023,
+          "type": "预减",
+          "metrics": [
+            {
+              "finance_code": "004",
+              "label": "归母净利润",
+              "unit": "亿元",
+              "type": "预减",
+              "lower": 0.2,
+              "upper": 0.28,
+              "yoy_low": -74.99,
+              "yoy_high": -64.99,
+              "prior": 0.8,
+              "mid": 0.24
+            },
+            {
+              "finance_code": "005",
+              "label": "扣非净利润",
+              "unit": "亿元",
+              "type": "预减",
+              "lower": 0.12,
+              "upper": 0.2,
+              "yoy_low": -67.04,
+              "yoy_high": -45.73,
+              "prior": 0.38,
+              "mid": 0.16
+            }
+          ],
+          "reason": "报告期内,公司业绩下降主要原因:一是非经常性损益影响。本期公司收到的政府补助较上期大幅下降。二是某子公司营业收入及毛利下降的影响。公司某子公司主营产品结构发生变化,导致其综合毛利率下降;某型产品延期交付,导致其营收规模大幅下降。报告期内,公司持续深化三项制度改革,狠抓科技创新、市场开拓、精益管理,多措并举推动提质增效工作,努力降低不利因素对公司经营业绩的影响。"
+        }
+      ],
+      "annual": [
+        {
+          "year": 2023,
+          "events": 1,
+          "report_dates": [
+            "2023-12-31"
+          ]
+        },
+        {
+          "year": 2024,
+          "events": 2,
+          "report_dates": [
+            "2024-12-31",
+            "2024-06-30"
+          ]
+        },
+        {
+          "year": 2025,
+          "events": 2,
+          "report_dates": [
+            "2025-12-31",
+            "2025-06-30"
+          ]
+        },
+        {
+          "year": 2026,
+          "events": 1,
+          "report_dates": [
+            "2026-06-30"
+          ]
+        }
+      ],
+      "type_counts": [
+        {
+          "type": "首亏",
+          "events": 2
+        },
+        {
+          "type": "减亏",
+          "events": 1
+        },
+        {
+          "type": "增亏",
+          "events": 1
+        },
+        {
+          "type": "扭亏",
+          "events": 1
+        },
+        {
+          "type": "预减",
+          "events": 1
+        }
+      ],
+      "events_truncated": 0,
+      "counts": {
+        "events": 6,
+        "latest_report_date": "2026-06-30",
+        "latest_notice_date": "2026-07-14",
+        "latest_type": "增亏",
+        "latest_net_profit_low_yi": -0.96,
+        "latest_net_profit_high_yi": -0.96,
+        "latest_net_profit_yoy_low": -250.35,
+        "latest_net_profit_yoy_high": -250.35,
+        "latest_eps_low": null,
+        "latest_eps_high": null,
+        "latest_revenue_low_yi": null,
+        "latest_revenue_high_yi": null
+      },
+      "notes": [
+        "业绩预告是公司初步测算，可能被修订，最终以定期报告为准",
+        "预告多为区间或约数，不是确定值，同比基数受非经常性损益影响",
+        "只含已披露预告，未覆盖未发布预告的期间",
+        "亏损公司的同比增速方向可能失真"
+      ],
+      "stale": false
+    },
+    "error": null,
+    "cached": false
+  }
+}
