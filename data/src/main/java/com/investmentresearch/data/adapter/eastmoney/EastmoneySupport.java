@@ -22,7 +22,6 @@ final class EastmoneySupport {
     static final ObjectMapper MAPPER = new ObjectMapper();
     static final DateTimeFormatter TIMESTAMP =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    static final int MAX_PAGES = 5;
     static final double MAX_AGE_HOURS = 6;
 
     private EastmoneySupport() {}
@@ -135,8 +134,10 @@ final class EastmoneySupport {
     }
 
     /**
-     * 取一个 datacenter 报表的全部分页行（最多 5 页）。信封校验照 {@code StockMasterSync.fetchPage}：
-     * 空 body、HTML/WAF、截断 JSON、success 不为真、result/data 形状不对，都按上游失败抛出。
+     * 取一个 datacenter 报表的全部分页行，页数上限由调用方给——Python 各模块不同：
+     * 机构调研 30 页、其余报表 20 页、分红 3 页、同业 5 页、单页接口 1 页。
+     * 信封校验照 {@code StockMasterSync.fetchPage}：空 body、HTML/WAF、截断 JSON、
+     * success 不为真、result/data 形状不对，都按上游失败抛出。
      */
     static List<JsonNode> fetchRows(
             UpstreamClient upstreamClient,
@@ -145,13 +146,50 @@ final class EastmoneySupport {
             String filter,
             String sort,
             int pageSize,
+            int maxPages,
+            String family) {
+        return fetchPaged(
+                        upstreamClient,
+                        endpoint,
+                        reportName,
+                        filter,
+                        sort,
+                        "ALL",
+                        pageSize,
+                        maxPages,
+                        family)
+                .rows();
+    }
+
+    /** 一页数据的取数结果；{@code truncated} 对应 Python 的 {@code while ... else}。 */
+    record PagedRows(List<JsonNode> rows, boolean truncated) {}
+
+    static PagedRows fetchPaged(
+            UpstreamClient upstreamClient,
+            String endpoint,
+            String reportName,
+            String filter,
+            String sort,
+            String columns,
+            int pageSize,
+            int maxPages,
             String family) {
         String[] sortParts = sort.split(":", 2);
         List<JsonNode> rows = new ArrayList<>();
         int page = 1;
         int pages = 1;
-        while (page <= MAX_PAGES) {
-            String url = url(endpoint, reportName, filter, page, pageSize, sortParts[0], sortParts[1]);
+        boolean truncated = false;
+        while (page <= maxPages) {
+            String url =
+                    url(
+                            endpoint,
+                            reportName,
+                            columns,
+                            filter,
+                            page,
+                            pageSize,
+                            sortParts[0],
+                            sortParts[1]);
             JsonNode root;
             try {
                 root = MAPPER.readTree(upstreamClient.get(url, Map.of()));
@@ -182,8 +220,11 @@ final class EastmoneySupport {
                 break;
             }
             page++;
+            if (page > maxPages) {
+                truncated = true;
+            }
         }
-        return rows;
+        return new PagedRows(rows, truncated);
     }
 
     private static String errorMessage(JsonNode message) {
@@ -208,6 +249,7 @@ final class EastmoneySupport {
     private static String url(
             String endpoint,
             String reportName,
+            String columns,
             String filter,
             int page,
             int pageSize,
@@ -216,7 +258,9 @@ final class EastmoneySupport {
         return endpoint
                 + "?reportName="
                 + encode(reportName)
-                + "&columns=ALL&quoteColumns=&filter="
+                + "&columns="
+                + encode(columns)
+                + "&quoteColumns=&filter="
                 + encode(filter)
                 + "&pageNumber="
                 + page

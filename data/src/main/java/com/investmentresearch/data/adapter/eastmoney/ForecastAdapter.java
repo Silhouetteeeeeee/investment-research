@@ -162,6 +162,7 @@ public class ForecastAdapter implements ForecastPort {
                         "(SECURITY_CODE=\"" + code + "\")",
                         "NOTICE_DATE:-1",
                         100,
+                        20,
                         "业绩预告");
         List<Map<String, Object>> metrics = new ArrayList<>();
         for (JsonNode row : rows) {

@@ -30,6 +30,10 @@ public class ResearchAdapter implements ResearchPort {
     static final int MAX_EVENTS = 20;
     static final int MAX_INSTITUTIONS = 20;
     static final int MAX_CONTENT_CHARS = 4000;
+    /** Python {@code _get_page} 的 {@code columns}：不含 CONTENT。 */
+    static final String COLUMNS =
+            "SECURITY_CODE,SECURITY_NAME_ABBR,NOTICE_DATE,RECEIVE_START_DATE,RECEIVE_PLACE,"
+                    + "RECEIVE_WAY_EXPLAIN,RECEPTIONIST,RECEIVE_OBJECT,ORG_TYPE,INVESTIGATORS,SUM,NUM";
 
     private final ResearchCacheStore store;
     private final StockMapper stockMapper;
@@ -157,20 +161,36 @@ public class ResearchAdapter implements ResearchPort {
 
     private JsonNode fetch(String code, int years) {
         String start = (LocalDate.now(clock).getYear() - years + 1) + "-01-01";
-        List<JsonNode> rows =
-                EastmoneySupport.fetchRows(
-                        upstream,
-                        endpoint,
-                        REPORT_NAME,
-                        "(SECURITY_CODE=\"" + code + "\")(NOTICE_DATE>='" + start + "')",
-                        "NOTICE_DATE:-1",
-                        80,
-                        "机构调研");
+        String filter = "(SECURITY_CODE=\"" + code + "\")(NOTICE_DATE>='" + start + "')";
+        // 列清单刻意不带 CONTENT：正文很长，只给最近一场单独取一次。
+        EastmoneySupport.PagedRows paged =
+                EastmoneySupport.fetchPaged(
+                        upstream, endpoint, REPORT_NAME, filter, "NOTICE_DATE:-1", COLUMNS, 80, 30, "机构调研");
         List<Map<String, Object>> events = new ArrayList<>();
-        for (JsonNode row : rows) {
+        for (JsonNode row : paged.rows()) {
             Map<String, Object> event = normalize(row);
             if (event != null) {
                 events.add(event);
+            }
+        }
+        if (!events.isEmpty()) {
+            Map<String, Object> first = events.get(0);
+            String content =
+                    DatacenterSupport.fetchContent(
+                            upstream,
+                            endpoint,
+                            REPORT_NAME,
+                            "(SECURITY_CODE=\""
+                                    + code
+                                    + "\")(NOTICE_DATE='"
+                                    + first.get("notice_date")
+                                    + "')(RECEIVE_START_DATE='"
+                                    + first.get("date")
+                                    + "')");
+            if (content != null && !content.isEmpty()) {
+                first.put(
+                        "content",
+                        content.substring(0, Math.min(MAX_CONTENT_CHARS, content.length())));
             }
         }
         ObjectNode payload = EastmoneySupport.MAPPER.createObjectNode();
@@ -181,7 +201,7 @@ public class ResearchAdapter implements ResearchPort {
             array.add(EastmoneySupport.MAPPER.valueToTree(event));
         }
         payload.put("count", array.size());
-        payload.put("truncated", false);
+        payload.put("truncated", paged.truncated());
         return payload;
     }
 

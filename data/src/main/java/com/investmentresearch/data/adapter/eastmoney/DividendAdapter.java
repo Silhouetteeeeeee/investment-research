@@ -170,6 +170,7 @@ public class DividendAdapter implements DividendPort {
                         "(SECURITY_CODE=\"" + code + "\")",
                         "-1:REPORT_DATE",
                         100,
+                        3,
                         "分红");
         List<Map<String, Object>> events = new ArrayList<>();
         for (JsonNode row : rows) {
@@ -245,7 +246,12 @@ public class DividendAdapter implements DividendPort {
     private record Financials(
             Map<Integer, Object[]> byYear, java.util.Set<Integer> completed) {}
 
-    /** {@code _annual_financials}：只认年报（-12-31）的归母净利润。 */
+    /**
+     * {@code _annual_financials}：只认年报（-12-31）的归母净利润。
+     *
+     * <p>shortcut: Python {@code build_dividends} 先 {@code ensure_financials} 补抓一次财报，这里直接读库；
+     * 财报从未同步时分红率留空而不报错。分红率缺失被投诉时改走 {@code FinanceAdapter.freshHistory}。
+     */
     private Financials financials(String code) {
         Map<Integer, Object[]> byYear = new TreeMap<>();
         java.util.Set<Integer> completed = new java.util.HashSet<>();

@@ -233,6 +233,7 @@ public class LockupAdapter implements LockupPort {
                         "(SECURITY_CODE=\"" + code + "\")",
                         "FREE_DATE:-1",
                         100,
+                        20,
                         "限售解禁");
         List<Map<String, Object>> events = new ArrayList<>();
         for (JsonNode row : rows) {
@@ -614,7 +615,8 @@ public class LockupAdapter implements LockupPort {
 
     private static Integer scaledInt(JsonNode node, int scale) {
         Double value = EastmoneySupport.num(node);
-        return value == null ? null : (int) Math.round(value * scale);
+        // Python int(round(x)) 走银行家舍入，Math.round 是四舍五入。
+        return value == null ? null : (int) Math.rint(value * scale);
     }
 
     private static String date(JsonNode node) {

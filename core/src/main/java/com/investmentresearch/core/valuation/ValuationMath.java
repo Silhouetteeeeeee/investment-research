@@ -1,6 +1,7 @@
 package com.investmentresearch.core.valuation;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,6 +13,10 @@ public final class ValuationMath {
     static final double PASS_PCT = 1;
     static final double WARN_PCT = 5;
     static final double MIN_SPREAD_PCT = 5;
+    /** Python Decimal 的默认上下文：28 位有效数字、HALF_EVEN。 */
+    private static final MathContext MC = new MathContext(28, RoundingMode.HALF_EVEN);
+    private static final BigDecimal ONE = BigDecimal.ONE;
+    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 
     private ValuationMath() {}
 
@@ -104,12 +109,24 @@ public final class ValuationMath {
             throw new ValuationInputError("股价必须大于 0");
         }
 
-        double futureValue = baseValue * Math.pow(1 + growthPct / 100, years);
-        double futurePrice = futureValue * exitPe;
-        Double upside = price == null ? null : (futurePrice / price - 1) * 100;
+        // Python 全程用 Decimal（默认 28 位、HALF_EVEN）；双精度会把末位算歪。
+        BigDecimal base = decimal(baseValue);
+        BigDecimal growth = decimal(growthPct);
+        BigDecimal pe = decimal(exitPe);
+        BigDecimal futureValue =
+                base.multiply(ONE.add(growth.divide(HUNDRED, MC), MC).pow(years, MC), MC);
+        BigDecimal futurePrice = futureValue.multiply(pe, MC);
+        Double upside =
+                price == null
+                        ? null
+                        : futurePrice
+                                .divide(decimal(price), MC)
+                                .subtract(ONE)
+                                .multiply(HUNDRED, MC)
+                                .doubleValue();
         Map<String, Object> out = new LinkedHashMap<>();
-        out.put("future_value", futureValue);
-        out.put("future_price", futurePrice);
+        out.put("future_value", futureValue.doubleValue());
+        out.put("future_price", futurePrice.doubleValue());
         out.put("upside_pct", upside);
         return out;
     }
@@ -146,16 +163,19 @@ public final class ValuationMath {
             add(checks, "永续增速", "warn", "永续负增长不常见，确认假设");
         }
 
-        Double pe = null;
-        Double payout = null;
+        BigDecimal pe = null;
+        BigDecimal payout = null;
         if (valid) {
-            payout = (1 - gPct / roicPct) * 100;
-            pe = (1 - gPct / roicPct) / ((rPct - gPct) / 100);
-            if (pe <= 0) {
+            BigDecimal roic = decimal(roicPct);
+            BigDecimal growth = decimal(gPct);
+            BigDecimal retain = ONE.subtract(growth.divide(roic, MC), MC);
+            payout = retain.multiply(HUNDRED, MC);
+            pe = retain.divide(decimal(rPct).subtract(growth).divide(HUNDRED, MC), MC);
+            if (pe.signum() <= 0) {
                 add(checks, "终值 PE", "fail", "算出的终值 PE 非正，假设不成立");
                 valid = false;
                 pe = null;
-            } else if (pe > 50) {
+            } else if (pe.compareTo(BigDecimal.valueOf(50)) > 0) {
                 add(checks, "终值 PE", "warn", "终值 PE 高于 50 倍，确认 ROIC 与 g 的假设");
             } else {
                 add(checks, "终值 PE", "pass", "永续增长模型可用");
@@ -163,12 +183,17 @@ public final class ValuationMath {
         }
         boolean warned = checks.stream().anyMatch(item -> "warn".equals(item.get("status")));
         Map<String, Object> out = new LinkedHashMap<>();
-        out.put("terminal_pe", pe);
-        out.put("payout_ratio_pct", payout);
+        out.put("terminal_pe", pe == null ? null : pe.doubleValue());
+        out.put("payout_ratio_pct", payout == null ? null : payout.doubleValue());
         out.put("valid", valid);
         out.put("status", !valid ? "fail" : (warned ? "warn" : "pass"));
         out.put("checks", checks);
         return out;
+    }
+
+    /** Python {@code Decimal(str(value))}：按 double 的最短十进制表示构造，不做二进制展开。 */
+    private static BigDecimal decimal(double value) {
+        return BigDecimal.valueOf(value);
     }
 
     private static void add(List<Map<String, Object>> checks, String name, String status, String message) {

@@ -29,6 +29,21 @@ class ValuationMathTest {
                 .contains("永续增速不低于 ROIC，留存率为负");
     }
 
+    /** Python 用 Decimal 计算；双精度在这几组输入上会把末位算歪。 */
+    @Test
+    void arithmetic_matches_the_decimal_reference() {
+        assertThat(ValuationMath.round((Double) ValuationMath.scenario(17.5, 7.8, 5.1, 1, 87.08).get("future_value"), 2))
+                .isEqualTo(18.86);
+        assertThat(ValuationMath.round((Double) ValuationMath.scenario(5.27, 50.0, 48.0, 1, null).get("future_value"), 2))
+                .isEqualTo(7.91);
+        assertThat(ValuationMath.round((Double) ValuationMath.scenario(19.08, 50.0, 64.5, 2, null).get("future_price"), 2))
+                .isEqualTo(2768.99);
+        assertThat(ValuationMath.round((Double) ValuationMath.terminalPe(32.0, 25.2, 32.7).get("payout_ratio_pct"), 1))
+                .isEqualTo(21.2);
+        assertThat(ValuationMath.round((Double) ValuationMath.terminalPe(62.5, 31.1, 37.5).get("terminal_pe"), 1))
+                .isEqualTo(7.8);
+    }
+
     @SuppressWarnings("unchecked")
     private static List<String> messages(Map<String, Object> result) {
         return ((List<Map<String, Object>>) result.get("checks"))

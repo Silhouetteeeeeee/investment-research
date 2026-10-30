@@ -3,6 +3,7 @@ package com.investmentresearch.data.adapter.eastmoney;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.investmentresearch.data.persistence.ResearchCache;
 import com.investmentresearch.data.persistence.ResearchCacheStore;
+import com.investmentresearch.data.upstream.UpstreamClient;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -86,6 +87,31 @@ final class DatacenterSupport {
             return EastmoneySupport.MAPPER.writeValueAsString(node);
         } catch (com.fasterxml.jackson.core.JsonProcessingException error) {
             throw new EastmoneySupport.EastmoneyException("缓存写入失败：" + error.getMessage());
+        }
+    }
+
+    /** Python {@code stock/research.py:_request_content}：单独取一条纪要原文，失败就返回 null。 */
+    static String fetchContent(
+            UpstreamClient upstream,
+            String endpoint,
+            String reportName,
+            String filter) {
+        try {
+            List<JsonNode> rows =
+                    EastmoneySupport.fetchPaged(
+                                    upstream,
+                                    endpoint,
+                                    reportName,
+                                    filter,
+                                    "NOTICE_DATE:-1",
+                                    "CONTENT",
+                                    1,
+                                    1,
+                                    "调研纪要")
+                            .rows();
+            return rows.isEmpty() ? null : EastmoneySupport.text(rows.get(0).get("CONTENT"));
+        } catch (RuntimeException error) {
+            return null;
         }
     }
 

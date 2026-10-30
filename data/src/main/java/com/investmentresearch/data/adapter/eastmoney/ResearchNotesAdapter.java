@@ -1,6 +1,5 @@
 package com.investmentresearch.data.adapter.eastmoney;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.investmentresearch.core.domain.Source;
 import com.investmentresearch.core.domain.ToolResult;
 import com.investmentresearch.core.port.ResearchNotesPort;
@@ -214,21 +213,11 @@ public class ResearchNotesAdapter implements ResearchNotesPort {
         if (receiveDate != null) {
             filter += "(RECEIVE_START_DATE='" + receiveDate + "')";
         }
-        try {
-            List<JsonNode> rows =
-                    EastmoneySupport.fetchRows(
-                            upstream, endpoint, REPORT_NAME, filter, "NOTICE_DATE:-1", 1, "调研纪要");
-            if (rows.isEmpty()) {
-                return null;
-            }
-            String content = EastmoneySupport.text(rows.get(0).get("CONTENT"));
-            if (content == null) {
-                return null;
-            }
-            return content.substring(0, Math.min(MAX_NOTE_CHARS, content.length()));
-        } catch (RuntimeException error) {
-            return null;
-        }
+        String content =
+                DatacenterSupport.fetchContent(upstream, endpoint, REPORT_NAME, filter);
+        return content == null
+                ? null
+                : content.substring(0, Math.min(MAX_NOTE_CHARS, content.length()));
     }
 
     // ---------------------------------------------------------------- 纪要切分
@@ -278,7 +267,11 @@ public class ResearchNotesAdapter implements ResearchNotesPort {
                 omitted = 1;
                 continue;
             }
+            // Python _answer_of 缺答案时给空串；text() 会把空串折成 null，这里补回来。
             String body = text(block.get("text"));
+            if (body == null) {
+                body = "";
+            }
             String answer = body.substring(0, Math.min(room, ANSWER_CLIP));
             Map<String, Object> pair = new LinkedHashMap<>();
             pair.put("question", question);

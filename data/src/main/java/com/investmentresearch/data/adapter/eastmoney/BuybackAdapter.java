@@ -183,6 +183,7 @@ public class BuybackAdapter implements BuybackPort {
                         "(DIM_SCODE=\"" + code + "\")",
                         "UPD,DIM_DATE,DIM_SCODE:-1,-1,1",
                         100,
+                        20,
                         "股票回购");
         List<Map<String, Object>> plans = new ArrayList<>();
         for (JsonNode row : rows) {

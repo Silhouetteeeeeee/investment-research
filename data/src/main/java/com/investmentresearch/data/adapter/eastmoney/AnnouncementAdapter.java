@@ -29,6 +29,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Repository
 public class AnnouncementAdapter implements AnnouncementPort {
     static final int PAGE_SIZE = 100;
+    /** Python {@code DEFAULT_PAGES}。 */
+    static final int MAX_PAGES = 5;
     static final int RETENTION_DAYS = 400;
     static final int TOOL_ITEMS = 20;
     static final int DEFAULT_DAYS = 180;
@@ -151,7 +153,7 @@ public class AnnouncementAdapter implements AnnouncementPort {
         String cutoff = LocalDate.now(clock).minusDays(RETENTION_DAYS).toString();
         String fetchedAt = LocalDateTime.now(clock).format(EastmoneySupport.TIMESTAMP);
         Map<String, AnnouncementEntity> rows = new LinkedHashMap<>();
-        for (int page = 1; page <= EastmoneySupport.MAX_PAGES; page++) {
+        for (int page = 1; page <= MAX_PAGES; page++) {
             List<JsonNode> items = fetchPage(code, page);
             if (items.isEmpty()) {
                 break;

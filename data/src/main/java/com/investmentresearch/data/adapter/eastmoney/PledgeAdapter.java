@@ -157,6 +157,7 @@ public class PledgeAdapter implements PledgePort {
                         "(SECURITY_CODE=\"" + code + "\")",
                         "TRADE_DATE:-1",
                         500,
+                        20,
                         "股权质押");
         List<Map<String, Object>> events = new ArrayList<>();
         for (JsonNode row : rows) {

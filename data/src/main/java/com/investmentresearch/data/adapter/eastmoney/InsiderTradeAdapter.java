@@ -163,6 +163,7 @@ public class InsiderTradeAdapter implements InsiderTradePort {
                         "(SECURITY_CODE=\"" + code + "\")",
                         "CHANGE_DATE,SECURITY_CODE,PERSON_NAME:-1,1,1",
                         100,
+                        20,
                         "高管增减持");
         List<Map<String, Object>> events = new ArrayList<>();
         for (JsonNode row : rows) {
@@ -261,9 +262,9 @@ public class InsiderTradeAdapter implements InsiderTradePort {
         Map<String, Object> metrics = new LinkedHashMap<>();
         metrics.put("buy_events", buy.size());
         metrics.put("sell_events", sell.size());
-        metrics.put("buy_shares", (int) buyShares);
-        metrics.put("sell_shares", (int) sellShares);
-        metrics.put("net_shares", (int) (buyShares - sellShares));
+        metrics.put("buy_shares", buyShares);
+        metrics.put("sell_shares", sellShares);
+        metrics.put("net_shares", buyShares - sellShares);
         metrics.put("buy_amount", buyAmount);
         metrics.put("sell_amount", sellAmount);
         metrics.put("net_amount", EastmoneySupport.round(buyAmount - sellAmount, 2));

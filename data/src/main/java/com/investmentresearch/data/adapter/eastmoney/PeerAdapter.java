@@ -247,6 +247,7 @@ public class PeerAdapter implements PeerPort {
                                 "(SECURITY_CODE=\"" + code + "\")",
                                 "-1:REPORTDATE",
                                 40,
+                                5,
                                 "同业"));
         subjectRows.sort(
                 Comparator.comparing(
@@ -302,6 +303,7 @@ public class PeerAdapter implements PeerPort {
                                                     + "')",
                                             "-1:TOTAL_OPERATE_INCOME",
                                             500,
+                                            5,
                                             "同业")));
             cohort.removeIf(
                     item ->
