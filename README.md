@@ -50,3 +50,54 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 ./mvnw -q test
 ./mvnw -q spotless:check
 ```
+
+## 容器部署（Docker Compose）
+
+```bash
+cp .env.example .env          # 填 APP_API_TOKEN 和 DEEPSEEK_API_KEY
+docker compose up -d --build
+curl -s http://127.0.0.1/health   # ok
+```
+
+- 只发布 `80:8080`。管理端口 `8081` 不对外发布，容器健康检查走容器内的
+  `http://127.0.0.1:8081/actuator/health`（`HEALTHCHECK` 每 30s 一次）。
+- `APP_API_TOKEN` **至少 32 个 ASCII 字符**（如 `openssl rand -hex 32`）。非 ASCII
+  令牌会被启动期直接拒绝：Tomcat 按 ISO-8859-1 解码请求头，非 ASCII 令牌永远匹配不上。
+  `DEEPSEEK_API_KEY`、`XQ_TOKEN` 也只从环境读取，不要写进镜像或提交仓库。
+- 卷：`./var` → `/app/var`（SQLite 在 `./var/app.db`，重启后数据仍在）；
+  `./skills` → `/app/skills`（只读，可在宿主机覆盖镜像内的技能目录）。
+- `frontend/` 随镜像打包到 `/app/frontend`，镜像 `WORKDIR /app`，与应用里
+  `file:./frontend/` 的相对路径一致。
+- 镜像多阶段构建（`maven:3.9-eclipse-temurin-21` → `eclipse-temurin:21-jre`），
+  以非 root 用户运行，`JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75`。
+- 收到 `SIGTERM` 后优雅停机：`server.shutdown=graceful`，单阶段最长等待 30s
+  （`spring.lifecycle.timeout-per-shutdown-phase=30s`）；compose 的
+  `stop_grace_period: 35s` 给进行中的 SSE 请求留出收尾时间。
+- `redis`、`rabbitmq`、`otel-collector` 只在 `--profile future` 下定义，
+  本阶段不启动，应用也不依赖它们（`docker compose --profile future up -d`）。
+
+## 管理端口
+
+`management.server.port=8081`，只暴露 `health`（`management.endpoints.web.exposure.include=health`）。
+宿主机上可以直接 `curl http://127.0.0.1:8081/actuator/health`；compose 没有发布
+该端口，容器外不可达。应用端口上不再提供 `/actuator/health`。
+
+## 备份
+
+`scripts/backup.sh` 用 `sqlite3 .backup` 生成一致性快照，数据目录可用 `DATA_DIR`
+覆盖（默认 `./var`），方便在仓库根目录之外执行：
+
+```bash
+bash scripts/backup.sh
+DATA_DIR=/srv/investment-research/var bash scripts/backup.sh
+```
+
+- 输出 `$DATA_DIR/backups/app-YYYYMMDD.db`；同一天重复执行会覆盖当天文件，不会重复生成。
+- 只保留最近 7 份（按文件名日期，超出的自动删除）。
+- 宿主机 cron 每天 03:00 执行：
+
+```cron
+0 3 * * * cd /srv/investment-research && DATA_DIR=./var bash scripts/backup.sh >> /var/log/investment-research-backup.log 2>&1
+```
+
+快照是普通 SQLite 文件，恢复时停掉应用、把它复制回 `$DATA_DIR/app.db` 即可。

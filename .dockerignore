@@ -1,0 +1,13 @@
+.git
+.gitignore
+.idea
+.env
+docs
+.superpowers
+tmp
+target
+**/target
+var
+*.db
+node_modules
+**/node_modules

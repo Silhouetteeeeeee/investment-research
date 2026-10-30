@@ -13,10 +13,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalManagementPort;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +31,16 @@ import org.springframework.web.bind.annotation.RestController;
         properties = {
             "app.api-token=test-token",
             "spring.datasource.url=jdbc:sqlite:file:target/token-auth-test.db?busy_timeout=5000",
-            "spring.web.resources.static-locations=classpath:/test-web/"
+            "spring.web.resources.static-locations=classpath:/test-web/",
+            // random management port so tests never collide with a running app on 8081
+            "management.server.port=0"
         })
 @AutoConfigureMockMvc
 @Import(TokenAuthTest.TestApi.class)
 class TokenAuthTest {
     @Autowired MockMvc mvc;
+    @Autowired TestRestTemplate rest;
+    @LocalManagementPort int managementPort;
 
     @Test
     void api_without_token_returns_401_json() throws Exception {
@@ -73,7 +81,17 @@ class TokenAuthTest {
         mvc.perform(get("/app.js")).andExpect(status().isOk());
         mvc.perform(get("/boot.js")).andExpect(status().isOk());
         mvc.perform(get("/assets/x.js")).andExpect(status().isOk());
-        mvc.perform(get("/actuator/health")).andExpect(status().isOk());
+    }
+
+    // Actuator only lives on the management port now; the app port must not serve it.
+    @Test
+    void management_health_is_public_and_absent_from_app_port() throws Exception {
+        ResponseEntity<String> response =
+                rest.getForEntity(
+                        "http://127.0.0.1:" + managementPort + "/actuator/health", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("\"status\":\"UP\"");
+        mvc.perform(get("/actuator/health")).andExpect(status().isNotFound());
     }
 
     @Test

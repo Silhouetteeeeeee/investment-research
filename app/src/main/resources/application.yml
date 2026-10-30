@@ -1,4 +1,6 @@
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
   datasource:
     url: jdbc:sqlite:file:${APP_DATA_DIR:./var}/app.db?busy_timeout=5000
     driver-class-name: org.sqlite.JDBC
@@ -13,6 +15,19 @@ spring:
 app:
   # 静态访问令牌；未设置时启动失败（ApiTokenProperties 校验）
   api-token: ${APP_API_TOKEN:}
+
+server:
+  # SIGTERM 后停止接收新请求并等待进行中的请求（含 SSE）结束
+  shutdown: graceful
+
+management:
+  server:
+    # 管理端口独立，compose 不发布；容器健康检查走 127.0.0.1:8081
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: health
 
 mybatis-plus:
   configuration:
