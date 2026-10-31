@@ -48,6 +48,11 @@ function escapeAttr(value) {
     .replace(/>/g, "&gt;");
 }
 
+// 联网搜索的来源 id 以 web: 开头（WebSearchAdapter 的约定），用来和库内结构化来源区分
+function isWebSource(source) {
+  return String((source && source.id) || "").startsWith("web:");
+}
+
 function renderBody(text, sources, streaming) {
   const map = new Map();
   (sources || []).forEach((source) => {
@@ -71,7 +76,8 @@ function renderBody(text, sources, streaming) {
         `data-asof="${escapeAttr(source.as_of || "")}"`,
       ];
       if (source.url) attrs.push(`data-url="${escapeAttr(source.url)}"`);
-      return `<sup class="cite" ${attrs.join(" ")}>[${number}]</sup>`;
+      const cls = isWebSource(source) ? "cite web" : "cite";
+      return `<sup class="${cls}" ${attrs.join(" ")}>[${number}]</sup>`;
     });
   }
   const html = marked.parse(src, { gfm: true, breaks: true });
@@ -624,6 +630,7 @@ const ChatPane = {
         detail: source.detail || "",
         asof: source.as_of || "",
         url: source.url || "",
+        web: isWebSource(source),
       }));
     },
     // 来源详情放在页面最右侧的全局侧栏里，这里只负责把点击转给页面
@@ -778,6 +785,12 @@ const ChatPane = {
       const id = cite.dataset.id || "";
       const index = message.sources.findIndex((source) => String(source.id || "") === id);
       if (index < 0) return;
+      const source = message.sources[index];
+      // 网页来源点角标直接开原文；要看完整来源信息仍可点下方来源行
+      if (isWebSource(source) && source.url) {
+        window.open(source.url, "_blank", "noopener,noreferrer");
+        return;
+      }
       this.requestSource(message, index);
     },
     showTip(event) {
@@ -792,6 +805,7 @@ const ChatPane = {
         detail: cite.dataset.detail || "",
         asof: cite.dataset.asof || "",
         url: cite.dataset.url || "",
+        web: String(cite.dataset.id || "").startsWith("web:"),
         left: this.tipAnchor.left,
         top: this.tipAnchor.top,
         ready: false,
@@ -1176,6 +1190,7 @@ createApp({
         asof: source.as_of || "",
         fetched: source.fetched_at || "",
         url: source.url || "",
+        web: isWebSource(source),
         id,
         steps: this.sourceSteps(message, id),
       };

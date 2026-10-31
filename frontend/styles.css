@@ -748,6 +748,8 @@ a { color: #8fb4ff; }
   transition: background 0.12s ease, color 0.12s ease;
 }
 .cite:hover { background: rgba(91, 140, 255, 0.26); color: #d3e0ff; }
+/* 联网搜索的来源角标加虚线下划线，正文里也能一眼区分库内数据 */
+.cite.web { text-decoration: underline dotted rgba(143, 180, 255, 0.7); text-underline-offset: 2px; }
 
 .sources {
   margin-top: 16px;
@@ -786,6 +788,15 @@ a { color: #8fb4ff; }
   font-size: 10px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+.web-tag {
+  flex: 0 0 auto;
+  padding: 0 4px;
+  border-radius: 4px;
+  border: 1px solid rgba(91, 140, 255, 0.35);
+  color: #8fb4ff;
+  font-size: 10px;
+  line-height: 15px;
 }
 .src-label { color: #cfd8e8; flex: 0 0 auto; }
 .src-detail { color: var(--dim); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

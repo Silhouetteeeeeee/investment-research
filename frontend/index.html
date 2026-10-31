@@ -333,10 +333,12 @@
     <div class="source-side-body">
       <div class="sp-head">
         <span class="src-num">{{ sourceView.n }}</span>
+        <span class="web-tag" v-if="sourceView.web">网页</span>
         <span class="sp-label">{{ sourceView.label }}</span>
       </div>
       <p class="sp-detail" v-if="sourceView.detail">{{ sourceView.detail }}</p>
       <dl class="sp-meta">
+        <div v-if="sourceView.web"><dt>来源类型</dt><dd>网络搜索（网页）</dd></div>
         <div><dt>数据日期</dt><dd>{{ sourceView.asof || "未标注" }}</dd></div>
         <div><dt>抓取时间</dt><dd>{{ sourceView.fetched || "未知" }}</dd></div>
         <div><dt>来源编号</dt><dd class="mono">{{ sourceView.id || "--" }}</dd></div>
@@ -443,6 +445,7 @@
                     @keydown.enter.stop="requestSource(message, row.index)"
                   >
                     <span class="src-num">{{ row.n }}</span>
+                    <span class="web-tag" v-if="row.web">网页</span>
                     <span class="src-label">{{ row.label }}</span>
                     <span class="src-detail" v-if="row.detail">{{ row.detail }}</span>
                     <span class="src-asof" v-if="row.asof">{{ row.asof }}</span>
@@ -605,6 +608,7 @@
     >
       <div class="tip-head">
         <span class="tip-num">{{ tip.n }}</span>
+        <span class="web-tag" v-if="tip.web">网页</span>
         <span class="tip-label">{{ tip.label }}</span>
       </div>
       <div class="tip-detail" v-if="tip.detail">{{ tip.detail }}</div>
