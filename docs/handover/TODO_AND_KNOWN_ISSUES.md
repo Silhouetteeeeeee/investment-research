@@ -80,7 +80,7 @@
 
 **阶段 4 硬化**
 
-1. 全量对照测试（补金标准缺口、真实上游 live 测试的定期跑法）。
+1. 全量对照测试（补金标准缺口、真实上游 live 测试的定期跑法）。当前只有可选的 `LiveSkillSmoke` 覆盖 skill 路由，完整问答仍靠人工。
 2. 慢查询与并发压测（SQLite 写并发、SSE 并发、上游并发 4 是否够）。
 3. 日志 JSON + traceId/conversationId/runId、指标（HTTP/Agent 轮次/工具耗时/模型 token）、Tracing/OTLP。
 4. 备份恢复演练。
@@ -96,6 +96,6 @@
 
 ## 6. 交接后第一件该做的事
 
-1. 先跑 `./mvnw verify` + `./mvnw spotless:check`，确认与本文记录一致（core 127 / data 119 / app 56）。若数字变了，先看 `git log` 有没有新提交。
+1. 先跑 `./mvnw verify` + `./mvnw spotless:check`，确认与本文记录一致（core 127 / data 119 / app 65）。若数字变了，先看 `git log` 有没有新提交。
 2. 用真实 `DEEPSEEK_API_KEY` + 真实网络跑一次完整问答（离线环境无法代跑），重点看：引用 id 是否出现、运行详情是否有模型/工具阶段、刷新后能否回放。
 3. 再决定是否动 §2 的技术债；**不要**在没有实跑基线前重构 `AgentEngine` 或适配器。

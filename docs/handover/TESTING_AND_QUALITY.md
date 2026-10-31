@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（阶段 3 收尾 + 评审修复后，见 `.superpowers/sdd/2026-10-31-java-migration-phase3/progress.md`）：`./mvnw verify` 通过，**core 121 / data 119 / app 54**；`spotless:check` 退出 0。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-10-31 评测题库后）：`./mvnw verify` 通过，**core 127 / data 119 / app 65**；`spotless:check` 退出 0。新增覆盖：`ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 
@@ -76,7 +76,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `upstream/RecordedFixtureTest` | 2 | 118 个录制映射可回放解码；56 页股票列表覆盖全 A 股 |
 | `upstream/UpstreamClientTest` | 7 | 字符集、500 重试、404 不重试、查询串/头脱敏、信号量不死锁、UTF-8 默认 |
 
-### app（16 类，56 个用例）
+### app（18 类，65 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -85,8 +85,10 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `e2e/AskFlowTest` | 5 | 完整 SSE + 落库 + 回放；重启后读回；运行详情工具阶段；管理层 skill→工具；大盘 skill→取数 |
 | `api/AskControllerTest` | 4 | 空问题 400、state/text/done + 落库、断连不中断落库、引擎错误带 run 并落库 |
 | `api/SseWriterTest` | 4 | 帧格式、中文不转义、JSR-310 ISO、断连吞异常 |
-| `api/AuditLogFilterTest` | 4 | 成功请求字段、401 标 `auth=missing/invalid`、异常记录 failure、非 `/api` 不记录 |
+| `api/AuditLogFilterTest` | 5 | 成功请求字段、401 标 `auth=missing/invalid`、异常记录 failure、非 `/api` 不记录、`/api/metrics` 轮询不记审计 |
 | `api/MetricsControllerTest` | 1 | 系统内存/CPU 与工具统计字段齐全 |
+| `eval/QuestionBankTest` | 4 | 20 题数量/唯一性、公司与 skill 存在、期望工具已注册、facts 与 golden 冻结值一致 |
+| `eval/VersionStampTest` | 5 | prompt 哈希与换行归一、逐 skill 哈希、dataset/tools 哈希、git 版本、真实技能目录 |
 | `api/MemoryApiTest` | 4 | 导入公司列表、详情分节/计数、分节分页、坏 section/code |
 | `SkillContentTest` | 3 | skill 正文与 Python 快照一致、frontmatter name 与目录一致、引用的工具存在 |
 | `api/AskStreamAuthTest` | 2 | 带令牌异步流派 200 全量；无令牌 401 |
@@ -120,6 +122,28 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 - `601318` 在 8 张缓存表里没有数据；`600600`/`601606` 缺回购；`600600`/`601318` 缺限售解禁；`601606` 缺内部人交易。
 - 换一家公司回放时可能取不到数据——这是快照缺口，不是取数错误。
 
+### 4.3 可选：真实链路 skill 路由冒烟
+
+`app/src/test/java/com/investmentresearch/app/e2e/LiveSkillSmoke.java`。类名不带 `Test`，默认 `mvn verify` 不执行；需要 `LIVE_SMOKE=1` 和真实 `DEEPSEEK_API_KEY`：
+
+```bash
+LIVE_SMOKE=1 ./mvnw -pl app -am test -Dtest=LiveSkillSmoke -Dsurefire.failIfNoSpecifiedTests=false
+```
+
+用三个问题（商业模式 / 经营历史 / 估值）各问一次真实模型，从 AgentScope 会话状态 `sessions/default/<id>/agent_state.json` 读出实际加载的 `skillId`，断言目标 skill 在列；不比对回答文本（上游数据和模型措辞每天变）。摘要写 `app/target/live-smoke/skills-latest.json`，便于改 prompt/skill 前后 diff。成本约 2 分钟、3 次真实问答，会访问真实上游。
+
+### 4.4 评测题库与版本戳
+
+`eval/questions.json` 是 20 道固定题（5 家冻结公司 × 4 类问题），由 `QuestionBankTest` 校验；`VersionStamp` 生成 `agent_version` / `prompt_version` / `skills_version` / `tools_version` / `dataset_version` 五个版本身份。
+
+执行器 `app/src/test/java/.../eval/QuestionBankEval.java` 逐题调用真实模型，断言 skill 已加载、期望工具成功调用、无失败工具、关键事实与本次工具结果一致、无未知引用，报告写 `eval/results/<agent_version>-<prompt_version>.json`（git 忽略）。类名不带 `Test`，默认不跑，需 `LIVE_EVAL=1` + key：
+
+```bash
+LIVE_EVAL=1 ./mvnw -pl app -am test -Dtest=QuestionBankEval -Dsurefire.failIfNoSpecifiedTests=false -Deval.limit=3
+```
+
+LLM Judge、历史对比尚未实现。字段与维护方式见 `eval/README.md`。
+
 ## 5. 质量门禁
 
 | 门禁 | 命令/机制 | 现状 |
@@ -133,7 +157,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 
 ## 6. 测试风险与缺口
 
-1. **上游只测回放，不测真实网络**：所有适配器验证的是「录下来的响应能解析」，接口改版、反爬、限流都没有自动化兜底。交接后应先跑一次真实链路的 smoke（见下）。
+1. **上游只测回放，不测真实网络**：所有适配器验证的是「录下来的响应能解析」，接口改版、反爬、限流都没有自动化兜底。交接后应先跑一次真实链路的 smoke；目前可选的只有 §4.3 的 `LiveSkillSmoke`（覆盖 skill 路由，不覆盖取数与回答质量）。
 2. **金标准是快照，不是等价证明**：Python 侧行为若有 bug，Java 照抄也算「一致」；反过来 Python 未覆盖的分支，Java 没有对照。
 3. **并发只覆盖研究档案写入**：`ResearchMemoryStoreTest.concurrent_appends...`；上游并发、SSE 并发、SQLite 写并发没有压力测试。
 4. **无 MySQL 验证**：迁移目录只有 SQLite，设计文档中的 Testcontainers 计划未落地。

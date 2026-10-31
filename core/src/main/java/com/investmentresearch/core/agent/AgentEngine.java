@@ -600,6 +600,8 @@ public final class AgentEngine implements AssistantEngine {
             Map<String, Object> message = new LinkedHashMap<>();
             message.put("role", "tool");
             message.put("tool_call_id", callId == null ? "" : callId);
+            // 并行工具调用时 trace 与 raw 的追加顺序不保证一致；带上名字才能可靠关联
+            message.put("name", name);
             message.put("content", result.toMessageJson());
             raw.add(message);
             recorder.toolStage(

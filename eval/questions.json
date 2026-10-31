@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-30",
+  "description": "20 道固定题 = 5 家冻结公司 × 4 类问题。facts 的值取自 core/src/test/resources/golden/tools 的冻结输出，由 QuestionBankTest 校验。",
+  "questions": [
+    {
+      "id": "q01",
+      "code": "605499",
+      "name": "东鹏饮料",
+      "skill": "business_model",
+      "question": "东鹏饮料靠什么赚钱？请拆解它的商业模式。",
+      "required_tools_any": [
+        "get_company_profile",
+        "get_finance",
+        "get_segments"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q02",
+      "code": "605499",
+      "name": "东鹏饮料",
+      "skill": "operating_history",
+      "question": "东鹏饮料过去五年的经营表现怎么样？利润含金量如何？",
+      "required_tools_any": [
+        "get_financial_history",
+        "get_finance"
+      ],
+      "facts": [
+        {
+          "tool": "get_finance",
+          "field": "period",
+          "value": "2026-09-30"
+        },
+        {
+          "tool": "get_finance",
+          "field": "revenue_yi",
+          "value": 185.96
+        },
+        {
+          "tool": "get_finance",
+          "field": "net_profit_yi",
+          "value": 41.46
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "code": "605499",
+      "name": "东鹏饮料",
+      "skill": "valuation",
+      "question": "东鹏饮料现在的估值贵不贵？",
+      "required_tools_any": [
+        "get_valuation",
+        "get_finance"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q04",
+      "code": "605499",
+      "name": "东鹏饮料",
+      "skill": "financial_safety",
+      "question": "东鹏饮料的财务安全吗？如果遇到坏年份撑得住吗？",
+      "required_tools_any": [
+        "get_finance"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q05",
+      "code": "600600",
+      "name": "青岛啤酒",
+      "skill": "business_model",
+      "question": "青岛啤酒靠什么赚钱？请拆解它的商业模式。",
+      "required_tools_any": [
+        "get_company_profile",
+        "get_finance",
+        "get_segments"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q06",
+      "code": "600600",
+      "name": "青岛啤酒",
+      "skill": "operating_history",
+      "question": "青岛啤酒过去五年的经营表现怎么样？利润含金量如何？",
+      "required_tools_any": [
+        "get_financial_history",
+        "get_finance"
+      ],
+      "facts": [
+        {
+          "tool": "get_finance",
+          "field": "period",
+          "value": "2026-06-30"
+        },
+        {
+          "tool": "get_finance",
+          "field": "revenue_yi",
+          "value": 196.55
+        },
+        {
+          "tool": "get_finance",
+          "field": "net_profit_yi",
+          "value": 39.87
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "code": "600600",
+      "name": "青岛啤酒",
+      "skill": "valuation",
+      "question": "青岛啤酒现在的估值贵不贵？",
+      "required_tools_any": [
+        "get_valuation",
+        "get_finance"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q08",
+      "code": "600600",
+      "name": "青岛啤酒",
+      "skill": "financial_safety",
+      "question": "青岛啤酒的财务安全吗？如果遇到坏年份撑得住吗？",
+      "required_tools_any": [
+        "get_finance"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q09",
+      "code": "000858",
+      "name": "五粮液",
+      "skill": "business_model",
+      "question": "五粮液靠什么赚钱？请拆解它的商业模式。",
+      "required_tools_any": [
+        "get_company_profile",
+        "get_finance",
+        "get_segments"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q10",
+      "code": "000858",
+      "name": "五粮液",
+      "skill": "operating_history",
+      "question": "五粮液过去五年的经营表现怎么样？利润含金量如何？",
+      "required_tools_any": [
+        "get_financial_history",
+        "get_finance"
+      ],
+      "facts": [
+        {
+          "tool": "get_finance",
+          "field": "period",
+          "value": "2026-09-30"
+        },
+        {
+          "tool": "get_finance",
+          "field": "revenue_yi",
+          "value": 328.58
+        },
+        {
+          "tool": "get_finance",
+          "field": "net_profit_yi",
+          "value": 99.69
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "code": "000858",
+      "name": "五粮液",
+      "skill": "valuation",
+      "question": "五粮液现在的估值贵不贵？",
+      "required_tools_any": [
+        "get_valuation",
+        "get_finance"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q12",
+      "code": "000858",
+      "name": "五粮液",
+      "skill": "financial_safety",
+      "question": "五粮液的财务安全吗？如果遇到坏年份撑得住吗？",
+      "required_tools_any": [
+        "get_finance"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q13",
+      "code": "601318",
+      "name": "中国平安",
+      "skill": "business_model",
+      "question": "中国平安靠什么赚钱？请拆解它的商业模式。",
+      "required_tools_any": [
+        "get_company_profile",
+        "get_finance",
+        "get_segments"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q14",
+      "code": "601318",
+      "name": "中国平安",
+      "skill": "operating_history",
+      "question": "中国平安过去五年的经营表现怎么样？利润含金量如何？",
+      "required_tools_any": [
+        "get_financial_history",
+        "get_finance"
+      ],
+      "facts": [
+        {
+          "tool": "get_finance",
+          "field": "period",
+          "value": "2026-09-30"
+        },
+        {
+          "tool": "get_finance",
+          "field": "revenue_yi",
+          "value": 7281.34
+        },
+        {
+          "tool": "get_finance",
+          "field": "net_profit_yi",
+          "value": 1185.67
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "code": "601318",
+      "name": "中国平安",
+      "skill": "valuation",
+      "question": "中国平安现在的估值贵不贵？",
+      "required_tools_any": [
+        "get_valuation",
+        "get_finance"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q16",
+      "code": "601318",
+      "name": "中国平安",
+      "skill": "financial_safety",
+      "question": "中国平安的财务安全吗？如果遇到坏年份撑得住吗？",
+      "required_tools_any": [
+        "get_finance"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q17",
+      "code": "601606",
+      "name": "长城军工",
+      "skill": "business_model",
+      "question": "长城军工靠什么赚钱？请拆解它的商业模式。",
+      "required_tools_any": [
+        "get_company_profile",
+        "get_finance",
+        "get_segments"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q18",
+      "code": "601606",
+      "name": "长城军工",
+      "skill": "operating_history",
+      "question": "长城军工过去五年的经营表现怎么样？利润含金量如何？",
+      "required_tools_any": [
+        "get_financial_history",
+        "get_finance"
+      ],
+      "facts": [
+        {
+          "tool": "get_finance",
+          "field": "period",
+          "value": "2026-09-30"
+        },
+        {
+          "tool": "get_finance",
+          "field": "revenue_yi",
+          "value": 8.94
+        },
+        {
+          "tool": "get_finance",
+          "field": "net_profit_yi",
+          "value": -1.19
+        }
+      ]
+    },
+    {
+      "id": "q19",
+      "code": "601606",
+      "name": "长城军工",
+      "skill": "valuation",
+      "question": "长城军工现在的估值贵不贵？",
+      "required_tools_any": [
+        "get_valuation",
+        "get_finance"
+      ],
+      "facts": []
+    },
+    {
+      "id": "q20",
+      "code": "601606",
+      "name": "长城军工",
+      "skill": "financial_safety",
+      "question": "长城军工的财务安全吗？如果遇到坏年份撑得住吗？",
+      "required_tools_any": [
+        "get_finance"
+      ],
+      "facts": []
+    }
+  ]
+}
