@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -25,6 +27,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 /** 东财 F10 公司概况：上游 → 解析 → 覆盖写入 → 输出。 */
 @Repository
 public class CompanyProfileAdapter implements CompanyProfilePort {
+    private static final Logger LOG = LoggerFactory.getLogger(CompanyProfileAdapter.class);
     static final int SCOPE_MAX_CHARS = 200;
     // 30 天是任务规格；Python 侧 7 天常量是缓存 TTL，这里有意偏离
     static final long MAX_AGE_DAYS = 30;
@@ -87,8 +90,16 @@ public class CompanyProfileAdapter implements CompanyProfilePort {
             } catch (RuntimeException error) {
                 // 抓取失败但有旧缓存时按 Python 的做法继续用旧数据
                 if (cached != null) {
+                    LOG.warn(
+                            "公司概况上游取数失败，回退本地缓存：code={} reason={}",
+                            code,
+                            error.getMessage());
                     return toResult(cached);
                 }
+                LOG.warn(
+                        "公司概况上游取数失败且无缓存：code={} reason={}",
+                        code,
+                        error.getMessage());
                 return ToolResult.failure(code, error.getMessage());
             }
         } catch (RuntimeException error) {
@@ -144,6 +155,7 @@ public class CompanyProfileAdapter implements CompanyProfilePort {
             LocalDateTime fetched = LocalDateTime.parse(row.getFetchedAt(), TIMESTAMP);
             return Duration.between(fetched, LocalDateTime.now(clock)).toDays() < MAX_AGE_DAYS;
         } catch (RuntimeException error) {
+            LOG.debug("公司概况缓存时间无法解析，按过期处理：code={}", row.getCode());
             return false;
         }
     }

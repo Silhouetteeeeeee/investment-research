@@ -4,6 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.investmentresearch.core.domain.Source;
 import com.investmentresearch.core.domain.ToolResult;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -62,6 +67,80 @@ class ToolCallCacheTest {
 
         assertThat(cache.get(1, "get_company_profile", Map.of(), "605499")).isEmpty();
         assertThat(cache.get(2, "get_company_profile", Map.of(), "605499")).isPresent();
+    }
+
+    @Test
+    void per_conversation_capacity_evicts_the_least_recently_used_entry() {
+        ToolCallCache bounded = boundedCache(2, 10, new MutableClock(Instant.parse(NOW)));
+
+        bounded.put(1, "tool_a", Map.of(), "605499", result());
+        bounded.put(1, "tool_b", Map.of(), "605499", result());
+        assertThat(bounded.get(1, "tool_a", Map.of(), "605499")).isPresent();
+        bounded.put(1, "tool_c", Map.of(), "605499", result());
+
+        assertThat(bounded.get(1, "tool_b", Map.of(), "605499")).isEmpty();
+        assertThat(bounded.get(1, "tool_a", Map.of(), "605499")).isPresent();
+        assertThat(bounded.get(1, "tool_c", Map.of(), "605499")).isPresent();
+    }
+
+    @Test
+    void conversation_capacity_evicts_the_least_recently_used_conversation() {
+        ToolCallCache bounded = boundedCache(10, 2, new MutableClock(Instant.parse(NOW)));
+
+        bounded.put(1, "tool_a", Map.of(), "605499", result());
+        bounded.put(2, "tool_a", Map.of(), "605499", result());
+        assertThat(bounded.get(1, "tool_a", Map.of(), "605499")).isPresent();
+        bounded.put(3, "tool_a", Map.of(), "605499", result());
+
+        assertThat(bounded.get(1, "tool_a", Map.of(), "605499")).isPresent();
+        assertThat(bounded.get(2, "tool_a", Map.of(), "605499")).isEmpty();
+        assertThat(bounded.get(3, "tool_a", Map.of(), "605499")).isPresent();
+    }
+
+    @Test
+    void entries_expire_after_ttl() {
+        MutableClock clock = new MutableClock(Instant.parse(NOW));
+        ToolCallCache bounded = boundedCache(10, 10, clock);
+
+        bounded.put(1, "tool_a", Map.of(), "605499", result());
+        clock.advance(Duration.ofMinutes(29));
+        assertThat(bounded.get(1, "tool_a", Map.of(), "605499")).isPresent();
+
+        clock.advance(Duration.ofMinutes(1).plusSeconds(1));
+        assertThat(bounded.get(1, "tool_a", Map.of(), "605499")).isEmpty();
+    }
+
+    private static final String NOW = "2026-10-31T00:00:00Z";
+
+    private static ToolCallCache boundedCache(int maxEntries, int maxConversations, Clock clock) {
+        return new ToolCallCache(maxEntries, maxConversations, Duration.ofMinutes(30), clock);
+    }
+
+    private static final class MutableClock extends Clock {
+        private Instant instant;
+
+        MutableClock(Instant instant) {
+            this.instant = instant;
+        }
+
+        void advance(Duration duration) {
+            instant = instant.plus(duration);
+        }
+
+        @Override
+        public ZoneId getZone() {
+            return ZoneOffset.UTC;
+        }
+
+        @Override
+        public Clock withZone(ZoneId zone) {
+            return this;
+        }
+
+        @Override
+        public Instant instant() {
+            return instant;
+        }
     }
 
     private static ToolResult result() {

@@ -19,6 +19,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -28,6 +30,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 /** 东财公告：按页抓取 → 入库 → 读回 → 输出，解析照抄 {@code stock/announcements.py}。 */
 @Repository
 public class AnnouncementAdapter implements AnnouncementPort {
+    private static final Logger LOG = LoggerFactory.getLogger(AnnouncementAdapter.class);
     static final int PAGE_SIZE = 100;
     /** Python {@code DEFAULT_PAGES}。 */
     static final int MAX_PAGES = 5;
@@ -127,9 +130,12 @@ public class AnnouncementAdapter implements AnnouncementPort {
                 try {
                     fetched = fetch(code);
                 } catch (RuntimeException error) {
+                    String reason = reason(error);
                     if (cached.isEmpty()) {
-                        return ToolResult.failure(code, reason(error));
+                        LOG.warn("公告上游取数失败且无缓存：code={} reason={}", code, reason);
+                        return ToolResult.failure(code, reason);
                     }
+                    LOG.warn("公告上游取数失败，回退本地缓存：code={} reason={}", code, reason);
                     return assemble(code, cached, window);
                 }
                 if (fetched.isEmpty()) {

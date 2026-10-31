@@ -18,6 +18,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Repository;
 /** 东财股权质押，照抄 {@code stock/pledges.py} 与 {@code assistant/tools.py:_pledges}。 */
 @Repository
 public class PledgeAdapter implements PledgePort {
+    private static final Logger LOG = LoggerFactory.getLogger(PledgeAdapter.class);
     static final String REPORT_NAME = "RPT_CSDC_LIST";
     static final String PAGE_URL = "https://data.eastmoney.com/gpzy/detail/%s.html";
     static final double MAX_AGE_HOURS = 24;
@@ -515,6 +518,7 @@ public class PledgeAdapter implements PledgePort {
         try {
             return ChronoUnit.DAYS.between(LocalDate.parse(value), LocalDate.now());
         } catch (RuntimeException error) {
+            LOG.debug("质押日期无法解析：{}", value);
             return null;
         }
     }

@@ -32,7 +32,7 @@
 | `AskResult` | 一次问答结果 | record `(text, sources, trace, issues, run, raw)` |
 | `EngineFailure` | 带运行记录的引擎异常 | `RunRecord run()` |
 | `StreamListener` | 流式回调 | `text(String)`、`discard()`、`tool(ToolEvent)` |
-| `ToolCallCache` | 会话内工具结果缓存 | `get/put/clear`；key = 工具名 + 规范化参数（去 `company`）+ 公司 |
+| `ToolCallCache` | 会话内工具结果缓存 | `get/put/clear`；key = 工具名 + 规范化参数（去 `company`）+ 公司；每会话 200 条、500 会话、30 分钟 TTL，LRU 淘汰 |
 | `ToolEvent` | 工具事件 | record `(name, company, ok, cached, durationMs)` |
 
 `buildAgent` 关键参数：name `research-assistant`、system=`prompts/system.md`、`maxIters(maxTurns)`、`temperature(0.3)`、`skillRepository(FileSystemSkillRepository)`、`workspace(dataDir/workspace)`、`stateStore(JsonFileAgentStateStore(dataDir/sessions))`、`compaction(triggerTokens(80_000))`；关闭文件系统/Shell/Web/记忆/转写/子代理/动态 skill 等能力；最后移除 harness 自带异步工具，只保留注册表工具 + `load_skill_through_path`。

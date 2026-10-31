@@ -16,6 +16,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,6 +29,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 /** 研究档案：{@code assistant/research_memory.py} 的 SQLite 实现换成 JdbcTemplate。 */
 @Component
 public class ResearchMemoryStore implements ResearchMemoryPort {
+    private static final Logger LOG = LoggerFactory.getLogger(ResearchMemoryStore.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final DateTimeFormatter NOW =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
@@ -869,6 +872,7 @@ public class ResearchMemoryStore implements ResearchMemoryPort {
             List<Object> items = MAPPER.readValue(raw, new TypeReference<List<Object>>() {});
             return items == null ? new ArrayList<>() : items;
         } catch (Exception error) {
+            LOG.warn("研究档案 JSON 无法解析，按空列表处理", error);
             return new ArrayList<>();
         }
     }

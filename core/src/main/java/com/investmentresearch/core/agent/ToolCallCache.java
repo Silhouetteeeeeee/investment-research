@@ -4,42 +4,96 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.investmentresearch.core.domain.ToolResult;
+    import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Per-conversation session cache for identical tool calls. In memory only: a restart re-fetches.
+ *
+ * <p>Bounded so a long-lived process cannot grow without limit: each conversation keeps at most
+ * {@value #DEFAULT_MAX_ENTRIES_PER_CONVERSATION} results (LRU), the process keeps at most
+ * {@value #DEFAULT_MAX_CONVERSATIONS} conversations (LRU), and entries expire after 30 minutes.
  */
 public final class ToolCallCache {
+    static final int DEFAULT_MAX_ENTRIES_PER_CONVERSATION = 200;
+    static final int DEFAULT_MAX_CONVERSATIONS = 500;
+    static final Duration DEFAULT_TTL = Duration.ofMinutes(30);
 
     private final ObjectMapper mapper =
             new ObjectMapper().enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
-    private final Map<Long, Map<String, ToolResult>> conversations = new ConcurrentHashMap<>();
+    private final int maxEntriesPerConversation;
+    private final int maxConversations;
+    private final Duration ttl;
+    private final Clock clock;
+    /** Access-order at both levels, so eviction drops the least recently used entry/conversation. */
+    private final Map<Long, Map<String, Entry>> conversations =
+            new LinkedHashMap<>(16, 0.75f, true);
 
-    public Optional<ToolResult> get(
+    public ToolCallCache() {
+        this(
+                DEFAULT_MAX_ENTRIES_PER_CONVERSATION,
+                DEFAULT_MAX_CONVERSATIONS,
+                DEFAULT_TTL,
+                Clock.systemUTC());
+    }
+
+    ToolCallCache(int maxEntriesPerConversation, int maxConversations, Duration ttl, Clock clock) {
+        this.maxEntriesPerConversation = maxEntriesPerConversation;
+        this.maxConversations = maxConversations;
+        this.ttl = ttl;
+        this.clock = clock;
+    }
+
+    public synchronized Optional<ToolResult> get(
             long conversationId, String tool, Map<String, Object> args, String company) {
-        Map<String, ToolResult> cached = conversations.get(conversationId);
+        Map<String, Entry> cached = conversations.get(conversationId);
         if (cached == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(cached.get(key(tool, args, company)));
+        String key = key(tool, args, company);
+        Entry entry = cached.get(key);
+        if (entry == null) {
+            return Optional.empty();
+        }
+        if (!clock.instant().isBefore(entry.cachedAt().plus(ttl))) {
+            cached.remove(key);
+            return Optional.empty();
+        }
+        return Optional.of(entry.result());
     }
 
-    public void put(
+    public synchronized void put(
             long conversationId,
             String tool,
             Map<String, Object> args,
             String company,
             ToolResult result) {
-        conversations
-                .computeIfAbsent(conversationId, id -> new ConcurrentHashMap<>())
-                .put(key(tool, args, company), result);
+        Map<String, Entry> cached = conversations.get(conversationId);
+        if (cached == null) {
+            if (conversations.size() >= maxConversations) {
+                Iterator<Long> oldest = conversations.keySet().iterator();
+                oldest.next();
+                oldest.remove();
+            }
+            cached =
+                    new LinkedHashMap<>(16, 0.75f, true) {
+                        @Override
+                        protected boolean removeEldestEntry(Map.Entry<String, Entry> eldest) {
+                            return size() > maxEntriesPerConversation;
+                        }
+                    };
+            conversations.put(conversationId, cached);
+        }
+        cached.put(key(tool, args, company), new Entry(result, clock.instant()));
     }
 
-    public void clear(long conversationId) {
+    public synchronized void clear(long conversationId) {
         conversations.remove(conversationId);
     }
 
@@ -65,4 +119,6 @@ public final class ToolCallCache {
             return new LinkedHashMap<>(rest).toString();
         }
     }
+
+    private record Entry(ToolResult result, Instant cachedAt) {}
 }

@@ -18,6 +18,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Repository;
 /** 东财限售解禁，照抄 {@code stock/lockups.py} 与 {@code assistant/tools.py:_lockup_expiries}。 */
 @Repository
 public class LockupAdapter implements LockupPort {
+    private static final Logger LOG = LoggerFactory.getLogger(LockupAdapter.class);
     static final String REPORT_NAME = "RPT_LIFT_STAGE";
     static final String PAGE_URL = "https://data.eastmoney.com/dxf/detail.html?code=%s";
     static final double MAX_AGE_HOURS = 24;
@@ -575,6 +578,7 @@ public class LockupAdapter implements LockupPort {
         try {
             return LocalDate.parse(value);
         } catch (RuntimeException error) {
+            LOG.debug("解禁日期无法解析：{}", value);
             return null;
         }
     }
