@@ -190,7 +190,7 @@ public class DividendAdapter implements DividendPort {
     }
 
     /** {@code stock/dividends.py:_normalize_row}。 */
-    private static Map<String, Object> normalize(JsonNode row) {
+    static Map<String, Object> normalize(JsonNode row) {
         String reportDate = date(row.get("REPORT_DATE"));
         if (reportDate == null) {
             return null;
@@ -201,8 +201,13 @@ public class DividendAdapter implements DividendPort {
         Double transfer = EastmoneySupport.num(row.get("IT_RATIO"));
         Double shareBonus = EastmoneySupport.num(row.get("BONUS_IT_RATIO"));
         if (shareBonus == null) {
-            // 送转合计数缺失时按送股 + 转增相加
-            shareBonus = bonus == null ? transfer : transfer == null ? bonus : bonus + transfer;
+            // 送转合计数缺失时按送股 + 转增相加；两者都缺就是 None。不能写成
+            // `bonus == null ? transfer : bonus + transfer`：另一分支是 double，会把 Double 自动拆箱。
+            if (bonus == null || transfer == null) {
+                shareBonus = bonus == null ? transfer : bonus;
+            } else {
+                shareBonus = bonus + transfer;
+            }
         }
         if (cash == null && !(shareBonus != null && shareBonus != 0) && plan == null) {
             return null;
