@@ -129,6 +129,24 @@ class RecordedFixtureTest {
         if (path.contains("stock-list-p")) {
             return "\"diff\"";
         }
+        if (path.contains("/market/sina-index-spot")) {
+            return "hq_str_sh000001";
+        }
+        if (path.contains("/market/tencent-trend-")) {
+            return "\"code\":0,\"msg\":\"\",\"data\":{\"";
+        }
+        if (path.contains("/market/legu-breadth")) {
+            return "上涨";
+        }
+        if (path.contains("/market/ths-sectors-")) {
+            return "板块";
+        }
+        if (path.contains("/market/em-zt-pool")) {
+            return "lbc";
+        }
+        if (path.contains("/market/cls-news")) {
+            return "roll_data";
+        }
         throw new AssertionError("未知 fixture family: " + file);
     }
 

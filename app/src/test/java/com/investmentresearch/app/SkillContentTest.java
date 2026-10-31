@@ -27,6 +27,7 @@ class SkillContentTest {
                     "management",
                     "valuation",
                     "margin_of_safety",
+                    "market_view",
                     "research_memory");
     private static final Pattern TOOL =
             Pattern.compile("\\b(get_[a-z_]+|calc_[a-z_]+)\\b");

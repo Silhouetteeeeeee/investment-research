@@ -8,3 +8,4 @@ var/
 # AgentScope 会话状态与工具缓存（运行时数据）
 .agentscope/
 core/.agentscope/
+__pycache__/

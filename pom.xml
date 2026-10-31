@@ -28,6 +28,7 @@
     <caffeine.version>3.3.1</caffeine.version>
     <wiremock.version>3.13.2</wiremock.version>
     <archunit.version>1.5.1</archunit.version>
+    <jsoup.version>1.17.2</jsoup.version>
 
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
@@ -104,6 +105,11 @@
         <artifactId>archunit-junit5</artifactId>
         <version>${archunit.version}</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jsoup</groupId>
+        <artifactId>jsoup</artifactId>
+        <version>${jsoup.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

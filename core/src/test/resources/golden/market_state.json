@@ -1,0 +1,497 @@
+{
+  "overview": {
+    "as_of": "2026-10-30 15:00:00",
+    "session": {
+      "state": "最近交易日",
+      "progress": 1.0
+    },
+    "indices": [
+      {
+        "code": "sh000001",
+        "name": "上证指数",
+        "price": 3599.02,
+        "chg": -52.42,
+        "chg_pct": -1.44,
+        "open": 3605.65,
+        "high": 3660.21,
+        "low": 3595.26,
+        "prev_close": 3651.43,
+        "amount_yi": 7642.3
+      },
+      {
+        "code": "sz399001",
+        "name": "深证成指",
+        "price": 10833.78,
+        "chg": -304.41,
+        "chg_pct": -2.73,
+        "open": 10871.13,
+        "high": 11171.58,
+        "low": 10833.78,
+        "prev_close": 11138.2,
+        "amount_yi": 9102.4
+      },
+      {
+        "code": "sz399006",
+        "name": "创业板指",
+        "price": 2413.63,
+        "chg": -103.96,
+        "chg_pct": -4.13,
+        "open": 2434.8,
+        "high": 2518.24,
+        "low": 2413.63,
+        "prev_close": 2517.59,
+        "amount_yi": 4522.1
+      },
+      {
+        "code": "sh000300",
+        "name": "沪深300",
+        "price": 3985.5,
+        "chg": -56.34,
+        "chg_pct": -1.39,
+        "open": 3985.24,
+        "high": 4046.87,
+        "low": 3968.86,
+        "prev_close": 4041.84,
+        "amount_yi": 4568.6
+      },
+      {
+        "code": "sh000905",
+        "name": "中证500",
+        "price": 6266.19,
+        "chg": -187.53,
+        "chg_pct": -2.91,
+        "open": 6318.16,
+        "high": 6483.01,
+        "low": 6266.19,
+        "prev_close": 6453.72,
+        "amount_yi": 2850.4
+      },
+      {
+        "code": "sh000852",
+        "name": "中证1000",
+        "price": 6161.23,
+        "chg": -217.55,
+        "chg_pct": -3.41,
+        "open": 6243.98,
+        "high": 6428.58,
+        "low": 6161.23,
+        "prev_close": 6378.78,
+        "amount_yi": 3384.4
+      },
+      {
+        "code": "sh000688",
+        "name": "科创50",
+        "price": 1160.84,
+        "chg": -67.25,
+        "chg_pct": -5.48,
+        "open": 1190.95,
+        "high": 1218.8,
+        "low": 1159.57,
+        "prev_close": 1228.09,
+        "amount_yi": 703.7
+      }
+    ],
+    "turnover": {
+      "sh_yi": 7642.3,
+      "sz_yi": 9102.4,
+      "total_yi": 16744.6,
+      "today_shares_yi": 1106.3,
+      "avg20_shares_yi": 992.5,
+      "pace_ratio": 1.11,
+      "progress": 1.0,
+      "note": "pace_ratio 是按盘中成交速度折算全天的估算值"
+    },
+    "breadth": {
+      "up": 854.0,
+      "down": 4290.0,
+      "flat": 73.0,
+      "limit_up": 49.0,
+      "limit_down": 93.0,
+      "real_limit_up": 44.0,
+      "real_limit_down": 83.0,
+      "suspended": 6.0,
+      "activity_pct": 16.35,
+      "up_ratio_pct": 16.4
+    },
+    "trend": [
+      {
+        "code": "sh000001",
+        "name": "上证指数",
+        "date": "2026-10-30",
+        "close": 3599.02,
+        "price": 3599.02,
+        "ma5": 3655.55,
+        "ma10": 3680.56,
+        "ma20": 3735.83,
+        "ma60": 3857.55,
+        "above_ma20": false,
+        "above_ma60": false,
+        "ma20_distance_pct": -3.66,
+        "chg_5d_pct": -2.48,
+        "chg_20d_pct": -7.44,
+        "high_20d": 3842.2,
+        "low_20d": 3599.02,
+        "volatility_20d_pct": 13.14
+      },
+      {
+        "code": "sz399001",
+        "name": "深证成指",
+        "date": "2026-10-30",
+        "close": 10833.78,
+        "price": 10833.78,
+        "ma5": 11245.05,
+        "ma10": 11457.95,
+        "ma20": 11947.95,
+        "ma60": 13220.92,
+        "above_ma20": false,
+        "above_ma60": false,
+        "ma20_distance_pct": -9.33,
+        "chg_5d_pct": -7.2,
+        "chg_20d_pct": -18.65,
+        "high_20d": 12901.95,
+        "low_20d": 10833.78,
+        "volatility_20d_pct": 26.95
+      },
+      {
+        "code": "sz399006",
+        "name": "创业板指",
+        "date": "2026-10-30",
+        "close": 2413.63,
+        "price": 2413.63,
+        "ma5": 2550.47,
+        "ma10": 2619.36,
+        "ma20": 2801.79,
+        "ma60": 3221.49,
+        "above_ma20": false,
+        "above_ma60": false,
+        "ma20_distance_pct": -13.85,
+        "chg_5d_pct": -10.08,
+        "chg_20d_pct": -26.61,
+        "high_20d": 3142.56,
+        "low_20d": 2413.63,
+        "volatility_20d_pct": 38.75
+      },
+      {
+        "code": "sh000300",
+        "name": "沪深300",
+        "date": "2026-10-30",
+        "close": 3985.5,
+        "price": 3985.5,
+        "ma5": 4052.86,
+        "ma10": 4084.45,
+        "ma20": 4181.68,
+        "ma60": 4450.63,
+        "above_ma20": false,
+        "above_ma60": false,
+        "ma20_distance_pct": -4.69,
+        "chg_5d_pct": -2.92,
+        "chg_20d_pct": -10.22,
+        "high_20d": 4357.62,
+        "low_20d": 3985.5,
+        "volatility_20d_pct": 15.2
+      }
+    ],
+    "sectors": {
+      "top": [
+        {
+          "name": "白酒",
+          "chg_pct": 5.28,
+          "amount_yi": 244.7,
+          "inflow_yi": 25.35,
+          "up": 18.0,
+          "down": 0.0,
+          "leader": "皇台酒业",
+          "leader_chg_pct": 10.01
+        },
+        {
+          "name": "医疗服务",
+          "chg_pct": 1.56,
+          "amount_yi": 350.2,
+          "inflow_yi": -1.97,
+          "up": 32.0,
+          "down": 23.0,
+          "leader": "万邦医药",
+          "leader_chg_pct": 20.0
+        },
+        {
+          "name": "港口航运",
+          "chg_pct": 1.44,
+          "amount_yi": 134.1,
+          "inflow_yi": 9.86,
+          "up": 24.0,
+          "down": 7.0,
+          "leader": "锦江航运",
+          "leader_chg_pct": 10.03
+        },
+        {
+          "name": "银行",
+          "chg_pct": 0.77,
+          "amount_yi": 412.2,
+          "inflow_yi": 31.81,
+          "up": 29.0,
+          "down": 10.0,
+          "leader": "西安银行",
+          "leader_chg_pct": 8.63
+        },
+        {
+          "name": "机场航运",
+          "chg_pct": 0.76,
+          "amount_yi": 28.6,
+          "inflow_yi": 2.25,
+          "up": 10.0,
+          "down": 2.0,
+          "leader": "春秋航空",
+          "leader_chg_pct": 4.86
+        },
+        {
+          "name": "饮料制造",
+          "chg_pct": 0.21,
+          "amount_yi": 119.4,
+          "inflow_yi": 3.41,
+          "up": 27.0,
+          "down": 18.0,
+          "leader": "新乳业",
+          "leader_chg_pct": 10.01
+        },
+        {
+          "name": "医药商业",
+          "chg_pct": 0.21,
+          "amount_yi": 62.0,
+          "inflow_yi": 0.34,
+          "up": 16.0,
+          "down": 16.0,
+          "leader": "百洋医药",
+          "leader_chg_pct": 14.84
+        },
+        {
+          "name": "中药",
+          "chg_pct": -0.03,
+          "amount_yi": 107.8,
+          "inflow_yi": 3.24,
+          "up": 35.0,
+          "down": 30.0,
+          "leader": "羚锐制药",
+          "leader_chg_pct": 10.0
+        }
+      ],
+      "bottom": [
+        {
+          "name": "影视院线",
+          "chg_pct": -7.34,
+          "amount_yi": 93.7,
+          "inflow_yi": -10.09,
+          "up": 0.0,
+          "down": 20.0,
+          "leader": "中国电影",
+          "leader_chg_pct": -2.07
+        },
+        {
+          "name": "游戏",
+          "chg_pct": -6.37,
+          "amount_yi": 104.6,
+          "inflow_yi": -9.34,
+          "up": 1.0,
+          "down": 22.0,
+          "leader": "吉比特",
+          "leader_chg_pct": 0.0
+        },
+        {
+          "name": "文化传媒",
+          "chg_pct": -6.2,
+          "amount_yi": 345.0,
+          "inflow_yi": -26.45,
+          "up": 7.0,
+          "down": 78.0,
+          "leader": "智度股份",
+          "leader_chg_pct": 9.98
+        },
+        {
+          "name": "软件开发",
+          "chg_pct": -6.18,
+          "amount_yi": 397.6,
+          "inflow_yi": -37.76,
+          "up": 6.0,
+          "down": 133.0,
+          "leader": "麦迪科技",
+          "leader_chg_pct": 2.55
+        },
+        {
+          "name": "通信设备",
+          "chg_pct": -5.87,
+          "amount_yi": 1076.2,
+          "inflow_yi": 18.31,
+          "up": 5.0,
+          "down": 88.0,
+          "leader": "云里物里",
+          "leader_chg_pct": 3.29
+        }
+      ],
+      "up_count": 7,
+      "down_count": 83,
+      "total": 90
+    },
+    "limit_up": {
+      "count": 47,
+      "max_streak": 5,
+      "streaks": [
+        {
+          "boards": 5,
+          "count": 1
+        },
+        {
+          "boards": 3,
+          "count": 2
+        },
+        {
+          "boards": 2,
+          "count": 6
+        },
+        {
+          "boards": 1,
+          "count": 38
+        }
+      ],
+      "top_industries": [
+        {
+          "name": "白酒Ⅱ",
+          "count": 4
+        },
+        {
+          "name": "休闲食品",
+          "count": 3
+        },
+        {
+          "name": "元件",
+          "count": 3
+        },
+        {
+          "name": "医疗服务",
+          "count": 3
+        },
+        {
+          "name": "通用设备",
+          "count": 2
+        }
+      ]
+    },
+    "news": [
+      {
+        "time": "2026-10-31 10:01:53",
+        "title": "伊朗称4艘违规穿越海峡油轮爆炸"
+      },
+      {
+        "time": "2026-10-31 10:07:32",
+        "title": "聚焦前沿技术、工程实践等 第七届载人航天学术大会开幕"
+      },
+      {
+        "time": "2026-10-31 10:07:52",
+        "title": "航行警告 黄海南部实弹射击"
+      },
+      {
+        "time": "2026-10-31 10:09:49",
+        "title": "我国铼、金、镍、锆等保有资源量大幅增加"
+      },
+      {
+        "time": "2026-10-31 10:18:39",
+        "title": "机构：十月土拍“秋意”浓 300城平均溢价率跌至年内低点"
+      },
+      {
+        "time": "2026-10-31 10:29:48",
+        "title": "新疆发现特大型锆（铪）砂矿 大幅提高我国锆矿自给能力"
+      },
+      {
+        "time": "2026-10-31 10:52:35",
+        "title": "数据要素流通交易系列标准发布"
+      },
+      {
+        "time": "2026-10-31 10:54:56",
+        "title": "中企承建乌拉圭500千伏输变电环网正式交付"
+      },
+      {
+        "time": "2026-10-31 10:59:47",
+        "title": "中方对美国强推西撒问题安理会决议草案表决表示遗憾"
+      },
+      {
+        "time": "2026-10-31 11:14:49",
+        "title": "新建天蒲铁路今天开通运营 线路全长约82公里"
+      }
+    ],
+    "errors": {}
+  },
+  "classified": {
+    "state": "极端风险",
+    "score": -5.5,
+    "risk_level": "极高",
+    "confidence": "高",
+    "benchmark": "沪深300",
+    "basis": [
+      {
+        "factor": "趋势",
+        "reading": "0/4 个宽基在 MA20 上方，0/4 个在 MA60 上方",
+        "signal": "negative",
+        "score": -2.0,
+        "above_ma20": 0,
+        "above_ma60": 0
+      },
+      {
+        "factor": "市场宽度",
+        "reading": "上涨 854.0 家、下跌 4290.0 家，上涨占比 16.4%；涨停 49.0 家、跌停 93.0 家",
+        "signal": "negative",
+        "score": -2.0,
+        "up_ratio_pct": 16.4,
+        "limit_up": 49.0,
+        "limit_down": 93.0
+      },
+      {
+        "factor": "量能",
+        "reading": "两市成交额 16744.6 亿元，按当前节奏折算为近 20 日均量的 1.11 倍",
+        "signal": "neutral",
+        "score": 0.0,
+        "total_yi": 16744.6,
+        "pace_ratio": 1.11
+      },
+      {
+        "factor": "波动",
+        "reading": "主要宽基 20 日年化波动率中位数 21.1%",
+        "signal": "neutral",
+        "score": 0.0,
+        "volatility_20d_pct": 21.1
+      },
+      {
+        "factor": "结构",
+        "reading": "7.0/90.0 个行业上涨；涨停 47.0 家、最高 5.0 连板；跌停 93.0 家",
+        "signal": "negative",
+        "score": -1.5
+      }
+    ],
+    "extreme_flags": [
+      "上涨家数占比不足 25%",
+      "跌停家数达到 60 家"
+    ],
+    "contradictions": [],
+    "invalidation": [
+      "跌停家数回落到 30 家以下、上涨家数占比回到 35% 以上，极端风险可降级",
+      "沪深300不再创新低并重新站上 MA20（4181.68），才谈得上修复",
+      "成交额缩到近 20 日均量以下且指数止跌，说明抛压开始释放"
+    ],
+    "missing": [],
+    "metrics": {
+      "index_chg_pct": -1.39,
+      "up_ratio_pct": 16.4,
+      "limit_up": 49.0,
+      "limit_down": 93.0,
+      "total_yi": 16744.6,
+      "pace_ratio": 1.11,
+      "volatility_20d_pct": 21.1,
+      "trend_score": -2.0,
+      "breadth_score": -2.0,
+      "volume_score": 0.0,
+      "volatility_score": 0.0,
+      "structure_score": -1.5
+    },
+    "notes": [
+      "状态由趋势、宽度、量能、波动与结构五项规则打分得出；极端信号出现两项以上时直接覆盖为极端风险",
+      "盘中量能是按当前成交速度折算的估算值，收盘后应重新判断"
+    ]
+  }
+}

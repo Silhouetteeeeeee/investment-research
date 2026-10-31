@@ -147,8 +147,10 @@ def simple_cases() -> list[tuple[str, str, str]]:
     return cases
 
 
-def fetch(url: str) -> tuple[int, str | None, bytes]:
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+def fetch(url: str, headers: dict[str, str] | None = None) -> tuple[int, str | None, bytes]:
+    request = urllib.request.Request(
+        url, headers={"User-Agent": USER_AGENT, **(headers or {})}
+    )
     with _OPENER.open(request, timeout=TIMEOUT_SECONDS) as response:
         body = response.read()
         encoding = (response.headers.get("Content-Encoding") or "").lower()
@@ -183,11 +185,18 @@ def to_mapping(url: str, status: int, content_type: str | None, body: bytes, cha
     }
 
 
-def record_one(case: str, url: str, charset: str, out_root: Path, failures: list[str]) -> str | None:
+def record_one(
+    case: str,
+    url: str,
+    charset: str,
+    out_root: Path,
+    failures: list[str],
+    headers: dict[str, str] | None = None,
+) -> str | None:
     status, content_type, body = 0, None, b""
     for attempt in (1, 2):
         try:
-            status, content_type, body = fetch(url)
+            status, content_type, body = fetch(url, headers)
             break
         except Exception as error:  # noqa: BLE001 - 录制失败要逐条报告，不能中断整批
             if attempt == 2:
@@ -341,7 +350,9 @@ def main() -> int:
     parser.add_argument("--out", required=True, help="单条模式为文件路径，--case 模式为目录")
     parser.add_argument("--charset", default="utf-8", choices=("gbk", "utf-8"))
     parser.add_argument("--case", help="'all' 或 simple_cases() 中的 case 名")
+    parser.add_argument("--header", action="append", default=[], metavar="Name:Value")
     args = parser.parse_args()
+    headers = dict(item.split(":", 1) for item in args.header)
 
     out = Path(args.out)
     failures: list[str] = []
@@ -353,7 +364,7 @@ def main() -> int:
         target.parent.mkdir(parents=True, exist_ok=True)
         temporary_root = target.parent
         case = target.stem
-        text = record_one(case, args.url, args.charset, temporary_root, failures)
+        text = record_one(case, args.url, args.charset, temporary_root, failures, headers)
         if text is not None:
             recorded = temporary_root / f"{case}.json"
             if recorded != target:
