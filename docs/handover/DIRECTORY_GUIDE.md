@@ -37,10 +37,10 @@
 | `core/research` | `MarketState`、`MemoryRules`、`MemoryException`、`NewsEvents`、`Review`、`Screening`、`SectorRotation`、`Strategy` | 与 Python 对齐的纯计算规则 |
 | `core/run` | `FileRunStore`、`RunRecord`、`RunRecorder`、`RunSummary` | 运行原文生成与落盘 |
 | `core/service` | `AskService`、`CompanyResolver`、`ContextMeter`、`EventSink`、`QuestionRouter`、`ResolvedCompany`、`Route` | 路由、编排、上下文占用 |
-| `core/tool` | 32 个工具类 + `ToolRegistry`、`ToolSchemas`、`ToolMetrics`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport` | 模型可调用的工具与执行统计 |
+| `core/tool` | 33 个工具类（含 Java 新增的 `WebSearchTool`）+ `ToolRegistry`、`ToolSchemas`、`ToolMetrics`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport` | 模型可调用的工具与执行统计 |
 | `core/valuation` | `ValuationMath`、`ValuationInputError` | Decimal 估值计算 |
 
-资源：`core/src/main/resources/tool-schemas.json`（33 条 schema，生成物）、`prompts/system.md`（系统提示词）。
+资源：`core/src/main/resources/tool-schemas.json`（34 条 schema；33 条是生成物，`web_search` 为 Java 新增手工追加）、`prompts/system.md`（系统提示词）。
 
 ## 3. `data/`（87 文件，约 17.7k 行）
 
@@ -52,6 +52,7 @@
 | `data/adapter/finance` | `FinanceAdapter`、`FinancialHistoryAdapter`、`FinanceSnapshot`、`FinanceMetrics`、`FinanceStatements`、`FinanceSupport`、`FinanceException` | 新浪财报三表 → 快照/趋势 |
 | `data/adapter/market` | 19 个类 | 6 个适配器（大盘、新闻、板块、选股、策略、复盘）+ 12 个新闻/行情源 + `MarketSupport` |
 | `data/adapter/memory` | `ResearchMemoryStore` | 研究档案读写与旧库导入 |
+| `data/adapter/search` | `WebSearchAdapter` | 联网搜索：百度千帆优先、DeepSeek 回落 |
 | `data/config` | `UpstreamConfig`、`MybatisPlusConfig` | RestClient 与 Mapper 扫描 |
 | `data/persistence` | 31 个类 | MyBatis 实体/Mapper、`ConversationRepositoryImpl`、`ResearchCache`/`ResearchCacheStore`、`DailyReportStore` |
 | `data/sync` | `StockMasterSync` | 每日 06:00 刷新股票主表 |

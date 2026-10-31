@@ -62,7 +62,7 @@
 | `CompanyTool` | 公司类工具基类：解析 `company`、钳位、错误文案 |
 | `ToolArguments` | int/double/text 解析 |
 | `MemoryToolSupport` | 记忆工具共用的 section/必填字段/时间格式 |
-| 32 个具体工具 | 见 `API_AND_INTERFACE.md` §3.3；`CalcValuationTool` 支持 check/scenario/terminal |
+| 33 个具体工具 | 见 `API_AND_INTERFACE.md` §3.3；`CalcValuationTool` 支持 check/scenario/terminal；`WebSearchTool` 是唯一非 Python 移植工具 |
 
 公司类工具的参数默认值与钳位统一写在各自的 `CompanyTool` 子类里（见 `API_AND_INTERFACE.md` 表）。
 

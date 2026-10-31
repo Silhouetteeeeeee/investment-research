@@ -14,7 +14,7 @@ graph TD
     subgraph core["core（领域与编排，无框架 Web/DB 依赖）"]
         C1["service: AskService / QuestionRouter / ContextMeter / CompanyResolver"]
         C2["agent: AgentEngine / AgentFactory / ToolCallCache / StreamListener"]
-        C3["tool: ToolRegistry / 32 个 ResearchTool / ToolSchemas"]
+        C3["tool: ToolRegistry / 33 个 ResearchTool / ToolSchemas"]
         C4["port: 29 个端口接口"]
         C5["domain / citation / run / research / valuation"]
     end
@@ -84,7 +84,7 @@ graph LR
 | `askExecutor` | `app.api.ApiConfig` | `newVirtualThreadPerTaskExecutor()`，SSE 工作线程 |
 | `toolSchemas` | `AssistantConfig` | `ToolSchemas.loadDefault()` 读 `/tool-schemas.json` |
 | `companyResolver` | `AssistantConfig` | 包 `CompanyDirectory`（data 的 `StockDirectoryAdapter`） |
-| `toolRegistry` | `AssistantConfig` | 按 Python 顺序注册 32 个工具 |
+| `toolRegistry` | `AssistantConfig` | 前 32 个按 Python 顺序注册，末尾追加 Java 新增的 `web_search` |
 | `agentProperties` | `AssistantConfig` | 读 `APP_SKILLS_DIR` / `APP_DATA_DIR`；默认模型 `deepseek:deepseek-v4-flash`、`maxTurns=10` |
 | `runStore` | `AssistantConfig` | `FileRunStore(dataDir/runs)`，保留 200 份 |
 | `questionRouter` / `contextMeter` | `AssistantConfig` | 路由与占用估算 |

@@ -28,6 +28,7 @@ import com.investmentresearch.core.port.PledgePort;
 import com.investmentresearch.core.port.ResearchNotesPort;
 import com.investmentresearch.core.port.ResearchPort;
 import com.investmentresearch.core.port.ScreenPort;
+import com.investmentresearch.core.port.SearchPort;
 import com.investmentresearch.core.port.SectorPort;
 import com.investmentresearch.core.port.SegmentPort;
 import com.investmentresearch.core.port.ShareholderPort;
@@ -74,6 +75,7 @@ import com.investmentresearch.core.tool.ToolMetrics;
 import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.core.tool.ToolSchemas;
 import com.investmentresearch.core.tool.ValuationTool;
+import com.investmentresearch.core.tool.WebSearchTool;
 import java.nio.file.Path;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -126,7 +128,8 @@ public class AssistantConfig {
             ScreenPort screen,
             StrategyPort strategy,
             ReviewPort review,
-            ResearchMemoryPort memory) {
+            ResearchMemoryPort memory,
+            SearchPort search) {
         return new ToolRegistry(
                 List.of(
                         new ResolveCompanyTool(directory, resolver, schemas),
@@ -160,7 +163,9 @@ public class AssistantConfig {
                         new ReadResearchMemoryTool(memory, resolver, schemas),
                         new AppendResearchRecordTool(memory, directory, resolver, schemas),
                         new UpdateResearchRecordTool(memory, resolver, schemas),
-                        new RecordConclusionChangeTool(memory, resolver, schemas)),
+                        new RecordConclusionChangeTool(memory, resolver, schemas),
+                        // Java 新增工具，Python 侧没有同名实现
+                        new WebSearchTool(search, schemas)),
                 new ToolMetrics());
     }
 

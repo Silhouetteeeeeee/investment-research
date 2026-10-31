@@ -97,7 +97,7 @@ TokenAuthFilter.doFilterInternal                     app/security/TokenAuthFilte
 
 **注册**
 
-1. `AssistantConfig.toolRegistry(...)` 接收 `CompanyDirectory` + 26 个数据端口 Bean（共 29 个端口中的这些），`new` 出 32 个工具，按 Python 顺序放进 `List<ResearchTool>`。
+1. `AssistantConfig.toolRegistry(...)` 接收 `CompanyDirectory` + 27 个数据端口 Bean（共 30 个端口中的这些），`new` 出 33 个工具，前 32 个按 Python 顺序放进 `List<ResearchTool>`，末尾追加 `web_search`。
 2. `new ToolRegistry(list)`：拒绝 null 与重名；`schemas()` 按注册顺序返回。
 3. `AgentEngine.buildAgent`：`Toolkit` 注册注册表工具 + AgentScope 的 `SkillLoadTool`；之后移除 harness 自带的异步工具，只留这两类。
 

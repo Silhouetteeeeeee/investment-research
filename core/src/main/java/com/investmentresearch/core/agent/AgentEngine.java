@@ -93,7 +93,8 @@ public final class AgentEngine implements AssistantEngine {
                     "read_research_memory",
                     "append_research_record",
                     "update_research_record",
-                    "record_conclusion_change");
+                    "record_conclusion_change",
+                    "web_search");
 
     private final ToolRegistry tools;
     private final AgentProperties properties;

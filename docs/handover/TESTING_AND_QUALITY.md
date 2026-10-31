@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（2026-10-31 评测题库后）：`./mvnw verify` 通过，**core 127 / data 119 / app 72**；`spotless:check` 退出 0。新增覆盖：`ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-10-31 联网搜索后）：`./mvnw verify` 通过，**core 130 / data 124 / app 72**；`spotless:check` 退出 0。新增覆盖：`WebSearchToolTest`、`WebSearchAdapterTest`。新增覆盖：`ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 
@@ -47,7 +47,9 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `tool/ToolMetricsTest` | 5 | 空快照、计数与近秩百分位、仅用最近样本、负耗时钳零、按工具名排序 |
 | `tool/ToolRegistryTest` | 18 | schema 顺序、未知工具、默认公司/显式公司/解析失败、端口异常、非字符串 company、null 参数、重复/null 工具、参数钳位、执行统计（含失败） |
 | `tool/ToolSchemaParityTest` | 2 | 与 Python schema 逐字段一致；注册顺序一致 |
-| `tool/ToolSchemasTest` | 2 | 33 条 schema 可加载；未知名称抛错 |
+| `tool/ToolSchemasTest` | 2 | 34 条 schema 可加载；未知名称抛错 |
+| `tool/WebSearchToolTest` | 3 | 空 query 拒绝、去空白、count 钳到 1..10 |
+| `adapter/search/WebSearchAdapterTest` | 5 | 百度成功、429 回落 DeepSeek、无百度 key 直连 DS、两家都失败、无 key 报错 |
 | `valuation/ValuationMathTest` | 3 | 非法增长/ROIC、Decimal 算术参照 |
 
 `ScriptedModel`（无 `@Test`）是测试用假模型：按脚本返回文本/工具调用，并记录收到的消息，供 Agent 循环类测试使用。
@@ -110,7 +112,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `core/src/test/resources/golden/tools/*.json` | 99 个工具输出黄金（`<tool>__<code>__<args-hash>.json`） | `tools/golden/gen_golden.py` |
 | `core/src/test/resources/golden/rows/*.json` | 102 个数据库行黄金 | 同上 |
 | `core/src/test/resources/golden/{tool-messages,screening,strategy,review,sector_rotation,market_state,news_events}.json` | 结构/场景金标准 | 同上 |
-| `core/src/main/resources/tool-schemas.json` | 33 条工具 schema | 同上（**生成物，不改手写**） |
+| `core/src/main/resources/tool-schemas.json` | 34 条工具 schema（`web_search` 手工追加） | 同上（**生成物，不改手写**；Java 独有工具除外） |
 | `core/src/test/resources/fixtures/stock-snapshot.db` | 冻结行情/财报库（5 家公司） | 同上 |
 | `core/src/test/resources/fixtures/research-memory.db` | 旧研究档案样本 | 从 Python 库复制 |
 | `core/src/test/resources/skills-python/*.md` | 14 个 Python skill 原文（`business_model` 无快照） | 从 `assistant/skills.py` 导出 |

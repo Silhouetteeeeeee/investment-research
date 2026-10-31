@@ -7,7 +7,7 @@
 | 配置来源 | 文件/位置 | 说明 |
 | --- | --- | --- |
 | Spring 配置 | `app/src/main/resources/application.yml` | 主配置，所有 `spring.*` 项 |
-| 环境变量 | `APP_API_TOKEN`、`DEEPSEEK_API_KEY`、`XQ_TOKEN`、`APP_DATA_DIR`、`APP_SKILLS_DIR`、`APP_MEMORY_IMPORT` | 通过 `${...}` 注入 `application.yml` 或 `Environment`/`@Value` 读取 |
+| 环境变量 | `APP_API_TOKEN`、`DEEPSEEK_API_KEY`、`BAIDU_API_KEY`、`XQ_TOKEN`、`APP_DATA_DIR`、`APP_SKILLS_DIR`、`APP_MEMORY_IMPORT` | 通过 `${...}` 注入 `application.yml` 或 `Environment`/`@Value` 读取 |
 | 上游地址 | `app.datacenter-url`、`app.announcement-url`、`app.finance-url`、`app.f10-profile-url`、`app.f10-segments-url`、`app.stock-list-url` | **默认值写在适配器的 `@Value("${app.xxx-url:<默认URL>}")` 里，`application.yml` 没有这几项**；可用同名环境变量/系统属性覆盖（relaxed binding） |
 | MyBatis-Plus | `application.yml` 的 `mybatis-plus.*` | 下划线转驼峰、主键 `auto` |
 | Compose | `compose.yaml` + `.env` | 容器环境变量、卷、端口 |
@@ -19,6 +19,7 @@
 | --- | --- | --- | --- | --- |
 | `APP_API_TOKEN` | 是 | 无（缺失/空白 → 启动失败 `APP_API_TOKEN 未配置`） | 页面与 `/api/**` 的访问令牌，`Authorization: Bearer <token>` | `app/.../security/ApiTokenProperties.java` |
 | `DEEPSEEK_API_KEY` | 运行时需要 | 空 | 模型调用密钥；为空时应用照常启动，但引擎换成 `UnavailableEngine`，`/api/ask` 返回错误事件 | `app/.../config/AssistantConfig.java`（`MISSING_KEY`） |
+| `BAIDU_API_KEY` | 否 | 空 | 百度千帆 AI 搜索密钥，`web_search` 优先使用（每日 100 次免费）；为空或调用失败时回落 `DEEPSEEK_API_KEY`（DeepSeek Search 按次计费） | `data/.../config/SearchConfig.java` |
 | `XQ_TOKEN` | 否 | 无 | 设计文档中的雪球 `xq_a_token`。**当前 Java 代码没有任何地方读取它**（见 §9） | 仅 `.env.example`、`compose.yaml`、`README.md` 出现 |
 | `APP_DATA_DIR` | 否 | `./var` | 运行数据根目录：`app.db`、`runs/`、`sessions/`、`workspace/` | `app/.../Application.java`、`AssistantConfig`、`application.yml` |
 | `APP_SKILLS_DIR` | 否 | `./skills` | `skills/<name>/SKILL.md` 所在目录 | `AssistantConfig.agentProperties` |
@@ -56,6 +57,7 @@
 export JAVA_HOME=/path/to/jdk-21
 export APP_API_TOKEN="$(openssl rand -hex 32)"
 export DEEPSEEK_API_KEY="sk-..."        # 不填也能启动，只是问答会报“助手不可用”
+export BAIDU_API_KEY="..."              # 可选：web_search 优先走百度，超限回落 DeepSeek
 export APP_DATA_DIR=./var
 
 # 多模块 reactor 下 -am 不能和 spring-boot:run 同一条命令，先 install 一次
@@ -149,7 +151,7 @@ curl -s http://127.0.0.1/health   # ok
 
 | 问题 | 证据 | 影响 |
 | --- | --- | --- |
-| `XQ_TOKEN` 只出现在 `.env.example`/`compose.yaml`/README，没有代码读取 | 全仓 grep 只有这三处 | 雪球相关工具（若有）拿不到 token；当前 32 个工具里没有直接依赖雪球的实现，属于**部分实现/待确认** |
+| `XQ_TOKEN` 只出现在 `.env.example`/`compose.yaml`/README，没有代码读取 | 全仓 grep 只有这三处 | 雪球相关工具（若有）拿不到 token；当前 33 个工具里没有直接依赖雪球的实现，属于**部分实现/待确认** |
 | `micrometer-registry-prometheus` 已引入但只暴露 `health` | `app/pom.xml`、`application.yml` | 指标端点不可用；Prometheus 采集在阶段 4 才规划 |
 | `.env.example` 说令牌「至少 32 字符」，代码只校验非空 + ASCII | `ApiTokenProperties.java` | 弱令牌能启动，安全靠文档约束 |
 | 静态文件白名单逐个硬编码 | `SecurityConfig.PUBLIC_PATHS` | 新增顶层静态文件要同时改安全配置，否则被 401 |
