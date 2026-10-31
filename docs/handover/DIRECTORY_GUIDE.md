@@ -37,7 +37,7 @@
 | `core/research` | `MarketState`、`MemoryRules`、`MemoryException`、`NewsEvents`、`Review`、`Screening`、`SectorRotation`、`Strategy` | 与 Python 对齐的纯计算规则 |
 | `core/run` | `FileRunStore`、`RunRecord`、`RunRecorder`、`RunSummary` | 运行原文生成与落盘 |
 | `core/service` | `AskService`、`CompanyResolver`、`ContextMeter`、`EventSink`、`QuestionRouter`、`ResolvedCompany`、`Route` | 路由、编排、上下文占用 |
-| `core/tool` | 32 个工具类 + `ToolRegistry`、`ToolSchemas`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport` | 模型可调用的工具 |
+| `core/tool` | 32 个工具类 + `ToolRegistry`、`ToolSchemas`、`ToolMetrics`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport` | 模型可调用的工具与执行统计 |
 | `core/valuation` | `ValuationMath`、`ValuationInputError` | Decimal 估值计算 |
 
 资源：`core/src/main/resources/tool-schemas.json`（33 条 schema，生成物）、`prompts/system.md`（系统提示词）。
@@ -63,7 +63,7 @@
 | 包 | 类 | 职责 |
 | --- | --- | --- |
 | `app` | `Application` | 启动；创建 `APP_DATA_DIR`；`@EnableScheduling` |
-| `app/api` | `AskController`、`ConversationController`、`ResearchController`、`HealthController`、`SseWriter`、`ApiConfig` | HTTP/SSE |
+| `app/api` | `AskController`、`ConversationController`、`ResearchController`、`MetricsController`、`HealthController`、`SseWriter`、`ApiConfig` | HTTP/SSE |
 | `app/config` | `AssistantConfig`、`MemoryImportRunner` | 全部 Bean 装配、旧档案导入 |
 | `app/security` | `SecurityConfig`、`TokenAuthFilter`、`ApiTokenProperties` | 令牌鉴权 |
 

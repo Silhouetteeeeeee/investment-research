@@ -117,7 +117,10 @@ function formatOffset(value) {
 }
 
 function percentText(share) {
-  return `${Math.round((Number(share) || 0) * 100)}%`;
+  const value = Number(share);
+  // JDK 在拿不到 CPU 采样时会返回 -1
+  if (!Number.isFinite(value) || value < 0) return "—";
+  return `${Math.round(value * 100)}%`;
 }
 
 function shortDate(value) {
@@ -861,6 +864,10 @@ createApp({
       archiveLoading: false,
       archiveError: "",
       archiveQuery: "",
+      metricsOpen: false,
+      metrics: null,
+      metricsError: "",
+      metricsTimer: null,
     };
   },
   computed: {
@@ -964,6 +971,28 @@ createApp({
       }
       return groups;
     },
+    heapShare() {
+      const system = (this.metrics && this.metrics.system) || {};
+      return system.heapMax > 0 ? system.heapUsed / system.heapMax : 0;
+    },
+    memoryShare() {
+      const system = (this.metrics && this.metrics.system) || {};
+      return system.memoryTotal > 0 ? system.memoryUsed / system.memoryTotal : 0;
+    },
+    uptimeText() {
+      const ms = ((this.metrics && this.metrics.system && this.metrics.system.uptimeMs) || 0);
+      const seconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      if (hours) return `${hours} 小时 ${minutes % 60} 分`;
+      if (minutes) return `${minutes} 分 ${seconds % 60} 秒`;
+      return `${seconds} 秒`;
+    },
+    sortedTools() {
+      return [...((this.metrics && this.metrics.tools) || [])].sort(
+        (a, b) => b.count - a.count || String(a.name).localeCompare(String(b.name))
+      );
+    },
   },
   methods: {
     metaLine(item) {
@@ -977,6 +1006,9 @@ createApp({
     },
 
     shortDate,
+    percentText,
+    fileSize,
+    formatDuration,
 
     async refresh() {
       const archives = this.loadArchives();
@@ -1001,6 +1033,7 @@ createApp({
     },
     openArchive(code = "") {
       this.closeSource();
+      this.closeMetrics();
       this.archiveOpen = true;
       if (!this.archiveList.length) this.loadArchives();
       if (code) {
@@ -1025,6 +1058,44 @@ createApp({
       this.archiveCode = null;
       this.archiveError = "";
       this.archiveLoading = false;
+    },
+
+    // ---------------- 系统监控 ----------------
+    openMetrics() {
+      this.closeSource();
+      this.archiveOpen = false;
+      this.metricsOpen = true;
+      this.loadMetrics();
+      this.stopMetricsTimer();
+      this.metricsTimer = setInterval(() => this.loadMetrics(), 3000);
+    },
+    closeMetrics() {
+      this.metricsOpen = false;
+      this.stopMetricsTimer();
+    },
+    stopMetricsTimer() {
+      if (this.metricsTimer) {
+        clearInterval(this.metricsTimer);
+        this.metricsTimer = null;
+      }
+    },
+    async loadMetrics() {
+      try {
+        const response = await apiFetch("/api/metrics");
+        if (!response.ok) {
+          this.metricsError = "监控读取失败，请稍后重试";
+          return;
+        }
+        this.metrics = await response.json();
+        this.metricsError = "";
+      } catch (error) {
+        this.metricsError = "监控读取失败，请稍后重试";
+      }
+    },
+    barWidth(share) {
+      const value = Number(share);
+      if (!Number.isFinite(value) || value <= 0) return "0%";
+      return `${Math.min(100, Math.round(value * 100))}%`;
     },
     async loadArchiveDetail(code) {
       const requested = code;

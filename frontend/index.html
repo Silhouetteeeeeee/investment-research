@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>投资助手</title>
 <!-- 改样式或脚本后把 v 加一，避免浏览器继续用旧缓存 -->
-<link rel="stylesheet" href="/styles.css?v=20261029c" />
+<link rel="stylesheet" href="/styles.css?v=20261031a" />
 </head>
 <body>
 <div class="boot" id="boot" role="dialog" aria-label="启动动画">
@@ -30,6 +30,9 @@
     <button class="new-btn" @click="newChat"><span class="plus">+</span>新对话</button>
     <button class="archive-entry" @click="openArchive()">
       <span>研究档案</span><span class="count">{{ archiveList.length }}</span>
+    </button>
+    <button class="archive-entry" @click="openMetrics()">
+      <span>系统监控</span>
     </button>
 
     <div class="side-sec">
@@ -65,7 +68,7 @@
   </aside>
 
   <main class="main" @dragover.prevent @drop.prevent="onDrop">
-    <div class="panes" ref="panes" v-show="!archiveOpen">
+    <div class="panes" ref="panes" v-show="!archiveOpen && !metricsOpen">
       <chat-pane
         ref="leftPane"
         :style="leftStyle"
@@ -247,6 +250,70 @@
         </div>
       </template>
     </section>
+
+    <section class="archive-view" v-if="metricsOpen">
+      <header class="archive-head">
+        <button class="archive-back" @click="closeMetrics">← 返回对话</button>
+        <span class="archive-title">系统监控</span>
+        <span class="metrics-status" v-if="metricsError">{{ metricsError }}</span>
+        <span class="metrics-status" v-else>每 3 秒刷新 · 进程启动以来</span>
+      </header>
+      <div class="metrics-body" v-if="metrics">
+        <div class="metrics-cards">
+          <div class="metric-card">
+            <div class="metric-label">系统 CPU</div>
+            <div class="metric-value">{{ percentText(metrics.system.cpu) }}</div>
+            <div class="metric-bar"><i :style="{ width: barWidth(metrics.system.cpu) }"></i></div>
+            <div class="metric-note">进程 {{ percentText(metrics.system.processCpu) }} · {{ metrics.system.cores }} 核</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">JVM 堆内存</div>
+            <div class="metric-value">{{ fileSize(metrics.system.heapUsed) }}</div>
+            <div class="metric-bar"><i :style="{ width: barWidth(heapShare) }"></i></div>
+            <div class="metric-note">上限 {{ fileSize(metrics.system.heapMax) }} · 非堆 {{ fileSize(metrics.system.nonHeapUsed) }}</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">物理内存</div>
+            <div class="metric-value">{{ fileSize(metrics.system.memoryUsed) }}</div>
+            <div class="metric-bar"><i :style="{ width: barWidth(memoryShare) }"></i></div>
+            <div class="metric-note">总量 {{ fileSize(metrics.system.memoryTotal) }}</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">运行时长</div>
+            <div class="metric-value">{{ uptimeText }}</div>
+            <div class="metric-note">{{ metrics.system.threads }} 个线程</div>
+          </div>
+        </div>
+        <div class="metrics-table-wrap">
+          <table class="metrics-table">
+            <thead>
+              <tr>
+                <th>工具</th>
+                <th>调用次数</th>
+                <th>成功率</th>
+                <th>平均</th>
+                <th>P95</th>
+                <th>P99</th>
+                <th>最近</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="tool in sortedTools" :key="tool.name">
+                <td class="metric-tool">{{ tool.name }}</td>
+                <td>{{ tool.count }}</td>
+                <td>{{ percentText(tool.successRate) }}</td>
+                <td>{{ formatDuration(tool.avgMs) }}</td>
+                <td>{{ formatDuration(tool.p95Ms) }}</td>
+                <td>{{ formatDuration(tool.p99Ms) }}</td>
+                <td>{{ formatDuration(tool.lastMs) }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="side-empty" v-if="!sortedTools.length">还没有工具调用记录</div>
+        </div>
+      </div>
+    </section>
+
     <div class="drop-hint" v-if="dragging">
       <div class="drop-card">松开 → 在右侧打开这段对话</div>
     </div>
@@ -552,6 +619,6 @@
 <script src="/assets/marked.umd.js"></script>
 <script src="/assets/purify.min.js"></script>
 <script src="/boot.js?v=20261029c"></script>
-<script src="/app.js?v=20261030a"></script>
+<script src="/app.js?v=20261031b"></script>
 </body>
 </html>

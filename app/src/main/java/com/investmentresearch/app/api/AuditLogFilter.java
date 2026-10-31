@@ -38,7 +38,9 @@ public final class AuditLogFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !request.getRequestURI().startsWith("/api/");
+        String path = request.getRequestURI();
+        // 监控页每 3 秒轮询一次，记审计只会挤掉真正的操作记录。
+        return !path.startsWith("/api/") || "/api/metrics".equals(path);
     }
 
     @Override

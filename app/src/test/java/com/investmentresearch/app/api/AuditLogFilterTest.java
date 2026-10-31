@@ -91,4 +91,13 @@ class AuditLogFilterTest {
 
         assertThat(logs.list).isEmpty();
     }
+
+    @Test
+    void metrics_polling_is_not_audited() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/metrics");
+
+        filter.doFilter(request, new MockHttpServletResponse(), (req, res) -> {});
+
+        assertThat(logs.list).isEmpty();
+    }
 }

@@ -6,7 +6,7 @@
 
 鉴权：除公开路径外，所有请求必须带 `Authorization: Bearer <APP_API_TOKEN>`，否则 401 `{"error":"unauthorized"}`（UTF-8）。公开路径见 `app/.../security/SecurityConfig.java:20-33`。
 
-审计：每个 `/api/**` 请求由 `AuditLogFilter` 写一行 JSON 到 `var/logs/audit.log`（方法、路径、状态、耗时、来源 IP、鉴权结果、是否异步），不记录请求体、查询串和 `Authorization` 头。
+审计：除 `/api/metrics`（监控页 3 秒轮询，避免刷屏）外，每个 `/api/**` 请求由 `AuditLogFilter` 写一行 JSON 到 `var/logs/audit.log`（方法、路径、状态、耗时、来源 IP、鉴权结果、是否异步），不记录请求体、查询串和 `Authorization` 头。
 
 | 方法 | 路径 | 控制器 | 说明 |
 | --- | --- | --- | --- |
@@ -20,8 +20,13 @@
 | POST | `/api/conversations/{id}/delete` | `ConversationController` | 删除会话：消息 → 运行文件 → Agent 会话 |
 | GET | `/api/research/companies?query=` | `ResearchController` | 研究档案公司列表 |
 | GET | `/api/research/companies/{code}?section=&limit=&offset=&status=` | `ResearchController` | 档案详情/分页；`code` 必须 `\d{6}` 否则 404；未知 `section` → 400 `{"error":"unknown section"}`；`limit` 夹到 1..500，默认 200 |
+| GET | `/api/metrics` | `MetricsController` | 系统 CPU/内存 + 各工具调用次数、成功率、平均/P95/P99；进程内存、启动以来，缓存命中不计入 |
 
 会话不存在时统一 404 `{"error":"not found"}`。
+
+### `GET /api/metrics`
+
+返回 `system` 与 `tools` 两段：`system` 含 `cpu`、`processCpu`（均 0..1，-1 表示 JDK 暂不可用）、`cores`、`heapUsed`、`heapMax`、`nonHeapUsed`、`memoryUsed`、`memoryTotal`、`uptimeMs`、`threads`（字节/毫秒/个数）；`tools[]` 含 `name`、`count`、`successes`、`successRate`、`lastMs`、`avgMs`、`p95Ms`、`p99Ms`。统计只覆盖真实执行（缓存命中不经过 `ToolRegistry.run`），百分位取每个工具最近 500 次样本，进程重启清零。
 
 ### `POST /api/ask`
 

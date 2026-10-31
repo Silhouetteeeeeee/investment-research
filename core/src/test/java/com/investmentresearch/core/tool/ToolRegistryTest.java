@@ -77,6 +77,30 @@ class ToolRegistryTest {
     }
 
     @Test
+    void records_execution_stats_including_failures() {
+        ToolMetrics metrics = new ToolMetrics();
+        ToolRegistry success =
+                new ToolRegistry(
+                        List.of(new CompanyProfileTool(profilePort(null), resolver, SCHEMAS)),
+                        metrics);
+        success.run("get_company_profile", Map.of("company", "605499"), null);
+
+        CompanyProfilePort broken =
+                code -> {
+                    throw new IllegalStateException("上游挂了");
+                };
+        ToolRegistry failure =
+                new ToolRegistry(
+                        List.of(new CompanyProfileTool(broken, resolver, SCHEMAS)), metrics);
+        failure.run("get_company_profile", Map.of("company", "605499"), null);
+
+        ToolMetrics.ToolStat stat = metrics.snapshot().get(0);
+        assertThat(stat.count()).isEqualTo(2);
+        assertThat(stat.successes()).isEqualTo(1);
+        assertThat(stat.successRate()).isEqualTo(0.5);
+    }
+
+    @Test
     void unknown_tool_with_valid_company_still_leaves_company_null() {
         ToolRegistry registry = new ToolRegistry(List.of());
 

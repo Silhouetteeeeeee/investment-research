@@ -56,7 +56,8 @@
 | 类 | 职责 |
 | --- | --- |
 | `ResearchTool` | 接口：`ToolSchema schema()`、`ToolResult execute(Map args, String defaultCompany)` |
-| `ToolRegistry` | 注册/校验/分发；重复或 null 抛 `IllegalArgumentException`；未知工具返回 `ToolResult.failure(null,"未知工具：X")`；工具异常转 failure |
+| `ToolRegistry` | 注册/校验/分发；重复或 null 抛 `IllegalArgumentException`；未知工具返回 `ToolResult.failure(null,"未知工具：X")`；工具异常转 failure；每次真实执行写入 `ToolMetrics` |
+| `ToolMetrics` | 进程内工具执行统计；`record(name, ms, ok)`、`snapshot()`；每工具保留最近 500 个耗时样本算 P95/P99 |
 | `ToolSchemas` | 读 `/tool-schemas.json`；未知 schema 抛 `IllegalStateException` |
 | `CompanyTool` | 公司类工具基类：解析 `company`、钳位、错误文案 |
 | `ToolArguments` | int/double/text 解析 |
@@ -160,6 +161,7 @@
 | `AskController` | `POST /api/ask`；`TIMEOUT_MS=600_000`；空问题 400；`X-Accel-Buffering: no` |
 | `ConversationController` | 5 个路由；`RECENT_LIMIT=50`；`RUN_ID` 正则；删除顺序：消息 → 运行文件 → Agent 会话 |
 | `ResearchController` | 列表/详情；`code` 必须六位；`limit` 1..500（默认 200） |
+| `MetricsController` | `GET /api/metrics`；JDK `OperatingSystemMXBean` / `MemoryMXBean` + `ToolRegistry.metrics()` |
 | `HealthController` | `/health` → `ok` |
 | `SseWriter` | `data: <json>\n\n`；断连后静默 |
 | `AssistantConfig` | 全部核心 Bean；缺 key → `UnavailableEngine("请先设置环境变量 DEEPSEEK_API_KEY")` |

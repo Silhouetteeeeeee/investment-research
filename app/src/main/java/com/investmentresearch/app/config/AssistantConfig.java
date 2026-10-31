@@ -70,6 +70,7 @@ import com.investmentresearch.core.tool.SegmentsTool;
 import com.investmentresearch.core.tool.ShareholdersTool;
 import com.investmentresearch.core.tool.StrategyPlanTool;
 import com.investmentresearch.core.tool.UpdateResearchRecordTool;
+import com.investmentresearch.core.tool.ToolMetrics;
 import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.core.tool.ToolSchemas;
 import com.investmentresearch.core.tool.ValuationTool;
@@ -159,7 +160,8 @@ public class AssistantConfig {
                         new ReadResearchMemoryTool(memory, resolver, schemas),
                         new AppendResearchRecordTool(memory, directory, resolver, schemas),
                         new UpdateResearchRecordTool(memory, resolver, schemas),
-                        new RecordConclusionChangeTool(memory, resolver, schemas)));
+                        new RecordConclusionChangeTool(memory, resolver, schemas)),
+                new ToolMetrics());
     }
 
     @Bean

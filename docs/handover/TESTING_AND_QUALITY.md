@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（阶段 3 收尾 + 评审修复后，见 `.superpowers/sdd/2026-10-31-java-migration-phase3/progress.md`）：`./mvnw verify` 通过，**core 118 / data 119 / app 50**；`spotless:check` 退出 0。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-10-31 系统监控功能后）：`./mvnw verify` 通过，**core 124 / data 119 / app 56**；`spotless:check` 退出 0。新增覆盖：`ToolMetricsTest`、`ToolRegistryTest#records_execution_stats_including_failures`、`MetricsControllerTest`、`AuditLogFilterTest#metrics_polling_is_not_audited`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 

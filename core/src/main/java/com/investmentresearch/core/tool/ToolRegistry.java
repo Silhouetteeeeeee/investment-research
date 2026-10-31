@@ -2,17 +2,25 @@ package com.investmentresearch.core.tool;
 
 import com.investmentresearch.core.domain.ToolResult;
 import com.investmentresearch.core.domain.ToolSchema;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /** Dispatches tool calls by name; unknown names and unexpected failures become failed results. */
 public final class ToolRegistry {
     private final Map<String, ResearchTool> tools;
     private final List<ToolSchema> schemas;
+    private final ToolMetrics metrics;
 
+    /** Keeps the old no-metrics constructor for tests and callers that do not monitor. */
     public ToolRegistry(List<ResearchTool> tools) {
+        this(tools, new ToolMetrics());
+    }
+
+    public ToolRegistry(List<ResearchTool> tools, ToolMetrics metrics) {
         Map<String, ResearchTool> byName = new LinkedHashMap<>();
         List<ToolSchema> ordered = new ArrayList<>();
         for (ResearchTool tool : tools) {
@@ -27,10 +35,15 @@ public final class ToolRegistry {
         }
         this.tools = Map.copyOf(byName);
         this.schemas = List.copyOf(ordered);
+        this.metrics = Objects.requireNonNull(metrics, "metrics");
     }
 
     public List<ToolSchema> schemas() {
         return schemas;
+    }
+
+    public ToolMetrics metrics() {
+        return metrics;
     }
 
     public ToolResult run(String name, Map<String, Object> arguments, String defaultCompany) {
@@ -46,11 +59,16 @@ public final class ToolRegistry {
             // Python 在此还会回填已解析出的代码；这里按 Task 14 的约定不回填
             return ToolResult.failure(null, "未知工具：" + name);
         }
+        long started = System.nanoTime();
+        ToolResult result;
         try {
-            return tool.execute(args, defaultCompany);
+            result = tool.execute(args, defaultCompany);
         } catch (RuntimeException error) {
             // 工具自己已兜底；走到这里说明在解析出代码之前就失败了（Python 此时 code 也是 None）
-            return ToolResult.failure(null, CompanyTool.message(error));
+            result = ToolResult.failure(null, CompanyTool.message(error));
         }
+        metrics.record(
+                name, Duration.ofNanos(System.nanoTime() - started).toMillis(), result.ok());
+        return result;
     }
 }

@@ -28,7 +28,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10        # 本机 JDK 21 位置
-./mvnw verify                    # 期望 core 118 / data 119 / app 50，BUILD SUCCESS
+./mvnw verify                    # 期望 core 124 / data 119 / app 56，BUILD SUCCESS
 ./mvnw -q spotless:check         # 期望退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```
@@ -56,7 +56,7 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 | --- | --- |
 | 应用端口 / 管理端口 | 8080 / 8081（仅回环，仅 `health`） |
 | 唯一编排入口 | `core.service.AskService.ask(Long, String, EventSink)`（`AskService.java:60`） |
-| HTTP | `POST /api/ask`（SSE）、`/api/conversations/*`、`/api/research/companies*`、`/health` |
+| HTTP | `POST /api/ask`（SSE）、`/api/conversations/*`、`/api/research/companies*`、`/api/metrics`、`/health` |
 | SSE 事件 | `state` `text` `discard` `tool` `meter` `done` `error` `warning`（`SseEmitter` 600s，虚拟线程） |
 | Agent | `core.agent.AgentEngine` → `HarnessAgent.streamEvents`，`maxIters=10`、`temperature=0.3`、`CompactionConfig.triggerTokens(80_000)` |
 | 模型 | 默认 `deepseek:deepseek-v4-flash`（`AgentProperties.DEFAULT_MODEL`）；无 key → `UnavailableEngine` |
