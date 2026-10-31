@@ -30,7 +30,10 @@ class SkillContentTest {
                     "market_view",
                     "research_memory",
                     "news_events",
-                    "sector_rotation");
+                    "sector_rotation",
+                    "stock_screening",
+                    "strategy_risk",
+                    "review_eval");
     private static final Pattern TOOL =
             Pattern.compile("\\b(get_[a-z_]+|calc_[a-z_]+)\\b");
 

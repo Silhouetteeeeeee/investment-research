@@ -26,6 +26,11 @@ public record ToolResult(
         return new ToolResult(false, company, null, List.of(), null, error, false);
     }
 
+    /** Python 的失败结果可以带 data（如复盘、存档），消息里仍只有 error。 */
+    public static ToolResult failure(String company, String error, Map<String, Object> data) {
+        return new ToolResult(false, company, null, List.of(), data, error, false);
+    }
+
     /** Session cache hit: same fields, only the flag changes; the note is written by the serializer. */
     public ToolResult asCached() {
         return new ToolResult(ok, company, asOf, sources, data, error, true);
