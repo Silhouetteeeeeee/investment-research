@@ -28,7 +28,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10        # 本机 JDK 21 位置
-./mvnw verify                    # 期望 core 127 / data 119 / app 56，BUILD SUCCESS
+./mvnw verify                    # 期望 core 127 / data 119 / app 72，BUILD SUCCESS
 ./mvnw -q spotless:check         # 期望退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```
@@ -70,7 +70,7 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 阶段 0–3 **已实现**（骨架与鉴权、第一问纵向切片、公司研究技能、大盘/新闻/板块/选股/策略/复盘/档案）；阶段 4（硬化：MySQL/Testcontainers、指标/追踪、CI、备份演练）与阶段 5（切换部署）**计划实现，尚未开始**。
 
-**唯一没有自动化覆盖的关键路径**：真实 `DEEPSEEK_API_KEY` + 真实上游的完整问答。新会话接手后第一件值得做的事就是实跑一次（提问 → 引用 → 运行详情 → 刷新回放）。
+**真实链路覆盖**：有一个可选的 `LiveSkillSmoke`（`LIVE_SMOKE=1` + `DEEPSEEK_API_KEY` 才跑，默认 `verify` 不执行）检查真实模型的 skill 路由；完整问答（引用 → 运行详情 → 刷新回放）仍靠人工实跑，新会话接手后第一件值得做的事就是跑一次。
 
 ## 6. 改动怎么做（摘要，详见 `docs/handover/CLAUDE_HANDOVER.md`）
 

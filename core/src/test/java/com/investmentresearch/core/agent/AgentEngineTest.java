@@ -140,9 +140,15 @@ class AgentEngineTest {
 
     @Test
     void engine_loads_skill_before_first_tool_call() throws Exception {
+        // 文件系统返回顺序因平台而异，不能假定第一个就是 business_model
         String skillId;
         try (FileSystemSkillRepository repository = new FileSystemSkillRepository(skillsDir)) {
-            skillId = repository.getAllSkills().get(0).getSkillId();
+            skillId =
+                    repository.getAllSkills().stream()
+                            .map(skill -> skill.getSkillId())
+                            .filter(id -> id.startsWith("business_model"))
+                            .findFirst()
+                            .orElseThrow();
         }
         ScriptedModel model =
                 new ScriptedModel(
