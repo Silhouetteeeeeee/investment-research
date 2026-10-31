@@ -168,7 +168,8 @@ public class DividendAdapter implements DividendPort {
                         endpoint,
                         REPORT_NAME,
                         "(SECURITY_CODE=\"" + code + "\")",
-                        "-1:REPORT_DATE",
+                        "-1",
+                        "REPORT_DATE",
                         100,
                         3,
                         "分红");

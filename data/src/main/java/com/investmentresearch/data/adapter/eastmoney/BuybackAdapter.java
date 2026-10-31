@@ -181,7 +181,8 @@ public class BuybackAdapter implements BuybackPort {
                         endpoint,
                         REPORT_NAME,
                         "(DIM_SCODE=\"" + code + "\")",
-                        "UPD,DIM_DATE,DIM_SCODE:-1,-1,1",
+                        "-1,-1,1",
+                        "UPD,DIM_DATE,DIM_SCODE",
                         100,
                         20,
                         "股票回购");

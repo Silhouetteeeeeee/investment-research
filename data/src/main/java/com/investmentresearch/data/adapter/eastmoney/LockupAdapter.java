@@ -234,7 +234,8 @@ public class LockupAdapter implements LockupPort {
                         endpoint,
                         REPORT_NAME,
                         "(SECURITY_CODE=\"" + code + "\")",
-                        "FREE_DATE:-1",
+                        "-1",
+                        "FREE_DATE",
                         100,
                         20,
                         "限售解禁");

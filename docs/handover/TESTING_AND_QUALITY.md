@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（2026-10-31 联网搜索后）：`./mvnw verify` 通过，**core 130 / data 124 / app 72**；`spotless:check` 退出 0。新增覆盖：`WebSearchToolTest`、`WebSearchAdapterTest`。新增覆盖：`ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-10-31 修复 datacenter 排序参数后）：`./mvnw verify` 通过，**core 130 / data 130 / app 72**；`spotless:check` 退出 0。新增覆盖：`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest`。另有 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 
@@ -54,11 +54,12 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 
 `ScriptedModel`（无 `@Test`）是测试用假模型：按脚本返回文本/工具调用，并记录收到的消息，供 Agent 循环类测试使用。
 
-### data（28 类，119 个执行用例）
+### data（29 类，130 个执行用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
 | `StockDirectoryAdapterTest` | 11 | 代码/名称解析、前后缀、懒加载、幂等刷新、畸形/空 200/WAF 响应、60s 冷却、3 个 golden |
+| `eastmoney/DatacenterSortQueryTest` | 6 | 预报/质押/解禁/高管/调研/回购的 `sortTypes`、`sortColumns` 参数顺序（对调时上游只回「-1 参数校验失败」） |
 | `eastmoney/AnnouncementAdapterTest` | 11 | 2 golden、天数钳位/排序、空/新鲜空失败、截断、5xx 缓存回退、坏时间戳、坏日期行、缓存/重抓页停止、回滚、迁移列一致性 |
 | `eastmoney/ValuationAdapterTest` | 5 | 2 golden、上一交易日回退、取数/落库列、重复 key、空 payload 失败 |
 | `eastmoney/PeerAdapterTest` | 3 | 2 golden、排名/中位数稳定、迁移列一致性 |

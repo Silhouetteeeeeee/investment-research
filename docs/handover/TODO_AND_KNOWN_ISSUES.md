@@ -96,6 +96,6 @@
 
 ## 6. 交接后第一件该做的事
 
-1. 先跑 `./mvnw verify` + `./mvnw spotless:check`，确认与本文记录一致（core 130 / data 124 / app 72）。若数字变了，先看 `git log` 有没有新提交。
+1. 先跑 `./mvnw verify` + `./mvnw spotless:check`，确认与本文记录一致（core 130 / data 130 / app 72）。若数字变了，先看 `git log` 有没有新提交。
 2. 用真实 `DEEPSEEK_API_KEY` + 真实网络跑一次完整问答（离线环境无法代跑），重点看：引用 id 是否出现、运行详情是否有模型/工具阶段、刷新后能否回放。
 3. 再决定是否动 §2 的技术债；**不要**在没有实跑基线前重构 `AgentEngine` 或适配器。

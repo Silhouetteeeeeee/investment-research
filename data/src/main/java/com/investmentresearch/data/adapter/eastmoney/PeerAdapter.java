@@ -245,7 +245,8 @@ public class PeerAdapter implements PeerPort {
                                 endpoint,
                                 REPORT_NAME,
                                 "(SECURITY_CODE=\"" + code + "\")",
-                                "-1:REPORTDATE",
+                                "-1",
+                                "REPORTDATE",
                                 40,
                                 5,
                                 "同业"));
@@ -301,7 +302,8 @@ public class PeerAdapter implements PeerPort {
                                                     + "\")(REPORTDATE='"
                                                     + candidate.period()
                                                     + "')",
-                                            "-1:TOTAL_OPERATE_INCOME",
+                                            "-1",
+                                            "TOTAL_OPERATE_INCOME",
                                             500,
                                             5,
                                             "同业")));

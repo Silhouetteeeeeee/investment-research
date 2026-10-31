@@ -161,7 +161,8 @@ public class InsiderTradeAdapter implements InsiderTradePort {
                         endpoint,
                         REPORT_NAME,
                         "(SECURITY_CODE=\"" + code + "\")",
-                        "CHANGE_DATE,SECURITY_CODE,PERSON_NAME:-1,1,1",
+                        "-1,1,1",
+                        "CHANGE_DATE,SECURITY_CODE,PERSON_NAME",
                         100,
                         20,
                         "高管增减持");
