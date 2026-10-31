@@ -1,0 +1,95 @@
+name: Eval
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+      - 'core/src/main/resources/prompts/**'
+      - 'core/src/main/resources/tool-schemas.json'
+      - 'core/src/main/java/com/investmentresearch/core/agent/**'
+      - 'eval/**'
+      - 'app/src/test/java/com/investmentresearch/app/eval/**'
+      - '.github/workflows/eval.yml'
+  pull_request:
+    paths:
+      - 'skills/**'
+      - 'core/src/main/resources/prompts/**'
+      - 'core/src/main/resources/tool-schemas.json'
+      - 'core/src/main/java/com/investmentresearch/core/agent/**'
+      - 'eval/**'
+      - 'app/src/test/java/com/investmentresearch/app/eval/**'
+      - '.github/workflows/eval.yml'
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # fork PR 拿不到 secret；缺 key 时跳过而不是失败
+      - id: key
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          if [ -n "$DEEPSEEK_API_KEY" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::DEEPSEEK_API_KEY 未配置，跳过真实评测"
+          fi
+
+      - name: Run question bank
+        if: steps.key.outputs.present == 'true'
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          LIVE_EVAL=1 ./mvnw -B -pl app -am test \
+            -Dtest=QuestionBankEval \
+            -Dsurefire.failIfNoSpecifiedTests=false \
+            -Deval.min-pass-rate=0.9 \
+            -Deval.min-judge-average=3.8
+
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: eval/results/*.json
+          if-no-files-found: ignore
+
+      - name: Write job summary
+        if: always()
+        run: |
+          latest=$(ls -t eval/results/*.json 2>/dev/null | head -1 || true)
+          if [ -z "$latest" ]; then
+            echo "没有评测报告（secret 未配置或评测未执行）" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          python3 - "$latest" > /tmp/eval-summary.md <<'PY'
+          import json, sys
+
+          d = json.load(open(sys.argv[1], encoding="utf-8"))
+          print("### 评测结果")
+          print(f"- 版本：agent `{d.get('agent_version')}` / prompt `{d.get('prompt_version')}` / skills `{d.get('skills_version')}` / tools `{d.get('tools_version')}`")
+          print(f"- 模型：`{d.get('model_version')}`；数据快照 {d.get('as_of')}；题库 `{d.get('dataset_version')}`")
+          print(f"- 通过 **{d.get('passed')}/{d.get('executed')}**；Judge 均分 **{d.get('judge_average')}**；待复核 {d.get('judge_reviews')}")
+          print(f"- 工具错误 {d.get('tool_errors')} / 上游警告 {d.get('tool_warnings')}")
+          delta = d.get("delta")
+          if delta:
+              baseline = d.get("baseline") or {}
+              print(f"- 对比 `{baseline.get('file')}`：通过 {delta.get('passed_before')}→{delta.get('passed_after')}，Judge {delta.get('judge_average_before')}→{delta.get('judge_average_after')}")
+              if delta.get("regressions"):
+                  print(f"- ⚠️ 回归：{', '.join(delta['regressions'])}")
+          failed = [q["id"] for q in d.get("questions", []) if not q.get("passed")]
+          if failed:
+              print(f"- ❌ 失败题目：{', '.join(failed)}")
+          PY
+          cat /tmp/eval-summary.md >> "$GITHUB_STEP_SUMMARY"

@@ -107,16 +107,38 @@ class QuestionBankEval {
         long elapsedMs = (System.nanoTime() - started) / 1_000_000;
 
         Path report = writeReport(bank, stamp, results, limit, elapsedMs);
+        long passed = results.size() - failures.size();
         System.out.println(
                 "eval report: "
                         + report.toAbsolutePath()
                         + " ("
-                        + (results.size() - failures.size())
+                        + passed
                         + "/"
                         + results.size()
                         + " passed)");
 
-        assertThat(failures).as("评测失败的题目见报告 %s", report).isEmpty();
+        // CI 用阈值门禁；本地默认仍然要求零失败
+        Double minPassRate = doubleProperty("eval.min-pass-rate");
+        Double minJudgeAverage = doubleProperty("eval.min-judge-average");
+        if (minPassRate == null) {
+            assertThat(failures).as("评测失败的题目见报告 %s", report).isEmpty();
+        } else {
+            double passRate = (double) passed / results.size();
+            assertThat(passRate)
+                    .as("通过率 %.2f 低于阈值 %.2f（报告 %s）", passRate, minPassRate, report)
+                    .isGreaterThanOrEqualTo(minPassRate);
+        }
+        if (minJudgeAverage != null) {
+            assertThat(judgeAverage(results))
+                    .as("Judge 均分低于阈值 %.2f（报告 %s）", minJudgeAverage, report)
+                    .isNotNull()
+                    .isGreaterThanOrEqualTo(minJudgeAverage);
+        }
+    }
+
+    private static Double doubleProperty(String name) {
+        String value = System.getProperty(name);
+        return value == null || value.isBlank() ? null : Double.parseDouble(value);
     }
 
     private Map<String, Object> runOne(JsonNode question, int index, AnswerJudge judge)

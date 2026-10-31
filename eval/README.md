@@ -94,6 +94,15 @@ LIVE_EVAL=1 ./mvnw -pl app -am test -Dtest=QuestionBankEval -Dsurefire.failIfNoS
 
 文件名带模型和题库哈希，所以换 prompt、换模型、换题库都会生成新文件，不会互相覆盖。
 
+## CI 门禁
+
+`.github/workflows/eval.yml` 在改动 `skills/`、prompt、`tool-schemas.json`、`core/agent/`、`eval/` 的 PR、push 到 main（或手动触发）上跑全量 20 题：
+
+- 需要仓库 secret `DEEPSEEK_API_KEY`，没有就跳过并留一条 notice（fork PR 不会失败）。
+- 门禁参数：`-Deval.min-pass-rate=0.9 -Deval.min-judge-average=3.8`；报告总是先落盘再判定，失败仍能下载 artifact。
+- 报告作为 `eval-report` artifact 保存，`$GITHUB_STEP_SUMMARY` 里写版本、通过数、Judge 均分和回归题号。
+- 代码层只负责让 job 变红；「阻止合并」要在 GitHub 分支保护里把 `verify` / `eval` 设为 required checks。
+
 ## 下一步（尚未实现）
 
 - 引用与事实的关联检查（现在只查「引用不存在」和「事实值」）。

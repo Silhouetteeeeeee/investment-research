@@ -146,6 +146,8 @@ LIVE_EVAL=1 ./mvnw -pl app -am test -Dtest=QuestionBankEval -Dsurefire.failIfNoS
 
 LLM Judge 按 `eval/judge-prompt.md` 打 grounding/coverage/reasoning/clarity 四项分，分数只进报告（模型评审有噪声），`verdict=review` 的样本留给人工复核。每次运行自动找同题库、不同版本配置的上一份报告做对比，结果写在报告的 `baseline`/`delta` 里。字段与维护方式见 `eval/README.md`。
 
+本地默认要求零失败；传 `-Deval.min-pass-rate=0.9 -Deval.min-judge-average=3.8` 时改为阈值门禁（CI 用这两个值），报告先落盘再判定，失败也能看详情。
+
 ## 5. 质量门禁
 
 | 门禁 | 命令/机制 | 现状 |
@@ -155,7 +157,9 @@ LLM Judge 按 `eval/judge-prompt.md` 打 grounding/coverage/reasoning/clarity �
 | 格式 | Spotless 2.44.2：UNIX 换行、去未用 import、去尾空白、文件末尾换行 | `spotless:check` 通过 |
 | 架构 | ArchUnit 1.5.1 | 4 条规则 |
 | Schema 一致性 | `ToolSchemaParityTest` | 与 Python 逐字段 |
-| CI | 无 `.github/`、无 Jenkinsfile | **没有** |
+| CI（提交/PR） | `.github/workflows/ci.yml` | `./mvnw verify` + `spotless:check`，push `main`/`feat/**` 与所有 PR |
+| CI（评测） | `.github/workflows/eval.yml` | 仅改动 prompt/skill/工具/题库/agent 的 PR、push 到 main 或手动触发；需仓库 secret `DEEPSEEK_API_KEY`，缺 key 跳过；通过率 < 90% 或 Judge 均分 < 3.8 判失败；报告作为 artifact 保存并写 job summary |
+| 合并拦截 | GitHub 分支保护 | **需手工配置**：把 `verify`、`eval` 设为 required status checks |
 
 ## 6. 测试风险与缺口
 
