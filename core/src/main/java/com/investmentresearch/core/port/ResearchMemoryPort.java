@@ -8,6 +8,9 @@ public interface ResearchMemoryPort {
     /** Python {@code MEMORY.companies(query)}：按代码/简称模糊匹配。 */
     List<Map<String, Object>> companies(String query);
 
+    /** Python {@code MEMORY.company(code)}：精确取一家公司的索引，没有返回 null。 */
+    Map<String, Object> company(String code);
+
     /** 档案页用；{@code limit} 为 null 表示不分页。没有档案返回 null。 */
     Map<String, Object> detail(String code, String status, Integer limit);
 

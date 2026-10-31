@@ -26,7 +26,8 @@ class SkillContentTest {
                     "growth_outlook",
                     "management",
                     "valuation",
-                    "margin_of_safety");
+                    "margin_of_safety",
+                    "research_memory");
     private static final Pattern TOOL =
             Pattern.compile("\\b(get_[a-z_]+|calc_[a-z_]+)\\b");
 
@@ -59,7 +60,8 @@ class SkillContentTest {
             while (matcher.find()) {
                 referenced.add(matcher.group(1));
             }
-            assertThat(referenced).as(name).isNotEmpty().isSubsetOf(names);
+            // research_memory 只引用记忆工具，正文里没有 get_/calc_ 工具也是对的
+            assertThat(referenced).as(name).isSubsetOf(names);
         }
     }
 

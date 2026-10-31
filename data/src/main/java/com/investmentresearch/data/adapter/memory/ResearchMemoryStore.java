@@ -73,6 +73,11 @@ public class ResearchMemoryStore implements ResearchMemoryPort {
     }
 
     @Override
+    public Map<String, Object> company(String code) {
+        return companyRow(MemoryRules.code(code));
+    }
+
+    @Override
     public List<Map<String, Object>> companies(String query) {
         String pattern = "%" + (query == null ? "" : query.strip()) + "%";
         return jdbc.query(
