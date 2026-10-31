@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（2026-10-31 评测题库后）：`./mvnw verify` 通过，**core 127 / data 119 / app 69**；`spotless:check` 退出 0。新增覆盖：`ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-10-31 评测题库后）：`./mvnw verify` 通过，**core 127 / data 119 / app 72**；`spotless:check` 退出 0。新增覆盖：`ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 
@@ -76,7 +76,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `upstream/RecordedFixtureTest` | 2 | 118 个录制映射可回放解码；56 页股票列表覆盖全 A 股 |
 | `upstream/UpstreamClientTest` | 7 | 字符集、500 重试、404 不重试、查询串/头脱敏、信号量不死锁、UTF-8 默认 |
 
-### app（19 类，69 个用例）
+### app（20 类，72 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -90,6 +90,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `eval/QuestionBankTest` | 4 | 20 题数量/唯一性、公司与 skill 存在、期望工具已注册、facts 与 golden 冻结值一致 |
 | `eval/VersionStampTest` | 5 | prompt 哈希与换行归一、逐 skill 哈希、dataset/tools 哈希、git 版本、真实技能目录 |
 | `eval/AnswerJudgeTest` | 4 | 从围栏/闲聊中抽取 JSON、总分与 pass 判定、单项低分转 review、越界分数拒绝 |
+| `eval/EvalHistoryTest` | 3 | 通过/分数变化与回归/改善列表、只比较两边都有的题、双侧无 judge 不算变化 |
 | `api/MemoryApiTest` | 4 | 导入公司列表、详情分节/计数、分节分页、坏 section/code |
 | `SkillContentTest` | 3 | skill 正文与 Python 快照一致、frontmatter name 与目录一致、引用的工具存在 |
 | `api/AskStreamAuthTest` | 2 | 带令牌异步流派 200 全量；无令牌 401 |
@@ -143,7 +144,7 @@ LIVE_SMOKE=1 ./mvnw -pl app -am test -Dtest=LiveSkillSmoke -Dsurefire.failIfNoSp
 LIVE_EVAL=1 ./mvnw -pl app -am test -Dtest=QuestionBankEval -Dsurefire.failIfNoSpecifiedTests=false -Deval.limit=3
 ```
 
-LLM Judge 按 `eval/judge-prompt.md` 打 grounding/coverage/reasoning/clarity 四项分，分数只进报告（模型评审有噪声），`verdict=review` 的样本留给人工复核。历史对比尚未实现。字段与维护方式见 `eval/README.md`。
+LLM Judge 按 `eval/judge-prompt.md` 打 grounding/coverage/reasoning/clarity 四项分，分数只进报告（模型评审有噪声），`verdict=review` 的样本留给人工复核。每次运行自动找同题库、不同版本配置的上一份报告做对比，结果写在报告的 `baseline`/`delta` 里。字段与维护方式见 `eval/README.md`。
 
 ## 5. 质量门禁
 

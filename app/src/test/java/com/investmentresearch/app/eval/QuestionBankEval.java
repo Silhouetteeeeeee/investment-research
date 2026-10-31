@@ -12,13 +12,17 @@ import com.investmentresearch.core.agent.AssistantEngine;
 import com.investmentresearch.core.agent.StreamListener;
 import com.investmentresearch.core.agent.ToolEvent;
 import com.investmentresearch.core.domain.TraceStep;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -353,9 +357,190 @@ class QuestionBankEval {
         report.put("questions", results);
 
         Files.createDirectories(RESULTS);
-        Path file = RESULTS.resolve(stamp.agentVersion() + "-" + stamp.promptVersion() + ".json");
+        Path file = RESULTS.resolve(fileName(stamp));
+        Map<String, Object> comparison = comparison(stamp, file, results);
+        report.putAll(comparison);
         json.writerWithDefaultPrettyPrinter().writeValue(file.toFile(), report);
+        if (comparison.get("delta") instanceof Map<?, ?> delta) {
+            System.out.printf(
+                    "eval compare vs %s: passed %s->%s, judge %s->%s, regressions=%s%n",
+                    comparison.get("baseline") instanceof Map<?, ?> base
+                            ? base.get("file")
+                            : "?",
+                    delta.get("passed_before"),
+                    delta.get("passed_after"),
+                    delta.get("judge_average_before"),
+                    delta.get("judge_average_after"),
+                    delta.get("regressions"));
+        }
         return file;
+    }
+
+    /** 文件名带上模型和题库版本，换模型/换题库不会互相覆盖，才能做历史对比。 */
+    private String fileName(VersionStamp stamp) {
+        return stamp.agentVersion()
+                + "-"
+                + stamp.promptVersion()
+                + "-"
+                + properties.model().replaceAll("[^A-Za-z0-9._-]", "_")
+                + "-"
+                + stamp.datasetVersion()
+                + ".json";
+    }
+
+    /**
+     * 找同题库、不同版本配置的上一份报告。同一配置重跑只覆盖自己，不拿来对比（那只是随机波动）。
+     */
+    private Map<String, Object> comparison(
+            VersionStamp stamp, Path self, List<Map<String, Object>> results) throws IOException {
+        if (!Files.isDirectory(RESULTS)) {
+            return Map.of();
+        }
+        Path baseline;
+        try (Stream<Path> files = Files.list(RESULTS)) {
+            baseline =
+                    files.filter(file -> file.getFileName().toString().endsWith(".json"))
+                            .filter(file -> !file.equals(self))
+                            .filter(file -> sameDataset(file, stamp.datasetVersion()))
+                            .filter(file -> !sameIdentity(file, stamp))
+                            .max(Comparator.comparingLong(QuestionBankEval::lastModified))
+                            .orElse(null);
+        }
+        if (baseline == null) {
+            return Map.of();
+        }
+        JsonNode old = json.readTree(baseline.toFile());
+        Map<String, Object> info = new LinkedHashMap<>();
+        info.put("file", baseline.getFileName().toString());
+        for (String key :
+                List.of(
+                        "generated_at",
+                        "agent_version",
+                        "prompt_version",
+                        "model_version",
+                        "skills_version",
+                        "tools_version",
+                        "executed",
+                        "passed",
+                        "judge_average")) {
+            if (old.has(key)) {
+                info.put(key, json.convertValue(old.get(key), Object.class));
+            }
+        }
+        Map<String, Object> comparison = new LinkedHashMap<>();
+        comparison.put("baseline", info);
+        comparison.put("delta", compare(old, results));
+        return comparison;
+    }
+
+    private boolean sameDataset(Path file, String datasetVersion) {
+        try {
+            return datasetVersion.equals(json.readTree(file.toFile()).path("dataset_version").asText());
+        } catch (IOException error) {
+            return false;
+        }
+    }
+
+    private boolean sameIdentity(Path file, VersionStamp stamp) {
+        try {
+            JsonNode old = json.readTree(file.toFile());
+            return stamp.agentVersion().equals(old.path("agent_version").asText())
+                    && stamp.promptVersion().equals(old.path("prompt_version").asText())
+                    && stamp.skillsVersion().equals(old.path("skills_version").asText())
+                    && stamp.toolsVersion().equals(old.path("tools_version").asText())
+                    && properties.model().equals(old.path("model_version").asText());
+        } catch (IOException error) {
+            return false;
+        }
+    }
+
+    private static long lastModified(Path file) {
+        try {
+            return Files.getLastModifiedTime(file).toMillis();
+        } catch (IOException error) {
+            return Long.MIN_VALUE;
+        }
+    }
+
+    /**
+     * 只在两边都有的题目上比较通过数，避免 partial 运行（eval.limit）被当成退步。
+     * 总分差值直接取报告头部的 judge_average；某项 judge 缺失时该字段留 null。
+     */
+    static Map<String, Object> compare(
+            JsonNode baseline, List<Map<String, Object>> current) {
+        Map<String, JsonNode> before = new LinkedHashMap<>();
+        baseline.path("questions").forEach(question -> before.put(question.path("id").asText(), question));
+
+        int matched = 0;
+        int passedBefore = 0;
+        int passedNow = 0;
+        List<String> regressions = new ArrayList<>();
+        List<String> improvements = new ArrayList<>();
+        List<Map<String, Object>> changed = new ArrayList<>();
+        for (Map<String, Object> item : current) {
+            String id = String.valueOf(item.get("id"));
+            JsonNode old = before.get(id);
+            if (old == null) {
+                continue;
+            }
+            matched++;
+            boolean wasPassed = old.path("passed").asBoolean();
+            boolean isPassed = Boolean.TRUE.equals(item.get("passed"));
+            if (wasPassed) {
+                passedBefore++;
+            }
+            if (isPassed) {
+                passedNow++;
+            }
+            Double judgeBefore = judgeTotal(old.path("judge"));
+            Double judgeNow = judgeTotal(item.get("judge"));
+            if (wasPassed != isPassed || !Objects.equals(judgeBefore, judgeNow)) {
+                if (wasPassed && !isPassed) {
+                    regressions.add(id);
+                }
+                if (!wasPassed && isPassed) {
+                    improvements.add(id);
+                }
+                Map<String, Object> change = new LinkedHashMap<>();
+                change.put("id", id);
+                change.put("passed_before", wasPassed);
+                change.put("passed_after", isPassed);
+                change.put("judge_before", judgeBefore);
+                change.put("judge_after", judgeNow);
+                changed.add(change);
+            }
+        }
+
+        Double averageBefore =
+                baseline.hasNonNull("judge_average") ? baseline.get("judge_average").asDouble() : null;
+        Double averageNow = judgeAverage(current);
+        Map<String, Object> delta = new LinkedHashMap<>();
+        delta.put("matched", matched);
+        delta.put("passed_before", passedBefore);
+        delta.put("passed_after", passedNow);
+        delta.put(
+                "judge_average_before", averageBefore);
+        delta.put("judge_average_after", averageNow);
+        delta.put(
+                "judge_average_change",
+                averageBefore == null || averageNow == null
+                        ? null
+                        : Math.round((averageNow - averageBefore) * 100) / 100.0);
+        delta.put("regressions", regressions);
+        delta.put("improvements", improvements);
+        delta.put("changed", changed);
+        return delta;
+    }
+
+    private static Double judgeTotal(JsonNode judge) {
+        return judge.path("total").isNumber() ? judge.path("total").asDouble() : null;
+    }
+
+    private static Double judgeTotal(Object judge) {
+        if (judge instanceof Map<?, ?> map && map.get("total") instanceof Number total) {
+            return total.doubleValue();
+        }
+        return null;
     }
 
     /** 工具执行前的参数/业务校验失败算模型的调用错误；上游报错才算环境警告。 */

@@ -69,7 +69,7 @@ LIVE_EVAL=1 ./mvnw -pl app -am test -Dtest=QuestionBankEval -Dsurefire.failIfNoS
 
 每题自动判五项：正常作答、期望 skill 已加载、`required_tools_any` 至少一个成功调用、没有失败的工具调用、
 `facts` 与本次工具结果一致；出现 `unknown_citation` 也算失败。报告写到
-`eval/results/<agent_version>-<prompt_version>.json`（已 git 忽略），头部是版本戳、`model_version`、`as_of`，
+`eval/results/<agent>-<prompt>-<model>-<dataset>.json`（已 git 忽略），头部是版本戳、`model_version`、`as_of`，
 正文逐题记录 trace、事实核对结果和回答原文。跑之前先跑 `QuestionBankTest`，避免把题库错误算到模型头上。
 
 工具失败分两类：参数/业务校验失败算模型调用错误（判失败）；上游接口报错只记 `tool_warnings`。
@@ -83,7 +83,18 @@ LIVE_EVAL=1 ./mvnw -pl app -am test -Dtest=QuestionBankEval -Dsurefire.failIfNoS
 - 报告头部多一个 `judge_prompt_version`（judge prompt 的内容哈希）；改了评分标准，这个值会变，历史对比时能区分。
 - Judge 复用 `AgentProperties.model()` 和 `DEEPSEEK_API_KEY`，没有额外配置。
 
+## 历史版本对比
+
+每次运行结束后自动在 `eval/results/` 里找**同一 `dataset_version`、配置不同**的上一份报告（agent / prompt / skills / tools / model 任一不同），
+结果写进本次报告的 `baseline` 和 `delta`，并在控制台打印一行。同一配置重跑只覆盖自己、不参与对比——那只是随机波动。
+
+- `delta.passed_before` / `passed_after` 只统计两边都有的题（`matched`），partial 运行（`-Deval.limit`）不会被误判成退步。
+- `regressions` / `improvements` 是通过状态翻转的题号；`changed` 列出每题前后通过状态与 Judge 总分。
+- `judge_average_change` 是两次报告 `judge_average` 的差，任一侧缺失则为 null。
+
+文件名带模型和题库哈希，所以换 prompt、换模型、换题库都会生成新文件，不会互相覆盖。
+
 ## 下一步（尚未实现）
 
 - 引用与事实的关联检查（现在只查「引用不存在」和「事实值」）。
-- 历史报告对比（同一 `dataset_version` 下比较 `prompt_version` / `model_version` 的分数变化）。
+- 低分样本的人工复核清单（`verdict=review` 现在只在报告里标记）。
