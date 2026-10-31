@@ -101,3 +101,4 @@
 | `var/runs/<run_id>.json` | 运行原文，`run_id` 形如 `20261031T111246-0da539f0`，保留最新 200 份 |
 | `var/sessions/default/**` | AgentScope 会话状态 |
 | `var/workspace/` | HarnessAgent 工作区 |
+| `var/logs/audit.log` | `/api/**` 请求审计日志（JSON Lines），按 10MB/天滚动，保留 30 天 |

@@ -14,7 +14,7 @@
 | 6 | 自选股/watchlist、桌面端、Streamlit、CLI、`stock/briefing.py`、`finance_scheduler.py` 未迁 | 已确认（按设计非目标或延期） | 迁移设计「非目标」 | 除 `finance_scheduler` 外均为明确非目标 |
 | 7 | 金标准覆盖不完整：`get_research_notes` 仅 2 家；`601318` 缺 8 张缓存表；`600600`/`601606` 缺回购；`600600`/`601318` 缺解禁；`601606` 缺内部人 | 已确认 | README；`golden/tools` 文件清单 | 换公司回放会「缺数据」，不是 bug |
 | 8 | MySQL 方言迁移、Testcontainers、Redis/RabbitMQ 实际接入 | 计划实现（阶段 4） | 迁移设计「阶段 4」；无代码 | 见 §5 |
-| 9 | 日志 JSON、指标、Tracing、OTLP | 计划实现（阶段 4） | 只有 actuator health；`micrometer-registry-prometheus` 引入但未暴露 | 见 §5 |
+| 9 | 应用日志 JSON、指标、Tracing、OTLP | 部分实现（阶段 4） | `/api/**` 审计日志已写 `var/logs/audit.log`（JSON Lines）；应用日志仍非 JSON，无指标/Tracing/OTLP | 见 §5 |
 
 ## 2. 已知缺陷与技术债
 

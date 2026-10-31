@@ -143,6 +143,7 @@ curl -s http://127.0.0.1/health   # ok
 - 401 响应：`{"error":"unauthorized"}`，UTF-8。
 - 管理端口只暴露 `health`，且只听 `127.0.0.1`。
 - 密钥不入库、不写日志：`ApiTokenProperties.toString()` 脱敏；上游 URL 不含密钥。
+- 审计日志：`AuditLogFilter` 为每个 `/api/**` 请求写一行 JSON 到 `${APP_DATA_DIR:-./var}/logs/audit.log`，字段为 `ts/method/path/status/duration_ms/ip/auth/async`（401 时 `auth=missing|invalid`）。按 10MB/天滚动、保留 30 天；**不记录请求体、查询串和 `Authorization` 头**。容器部署时随 `var/` 一起挂载。
 
 ## 9. 已知配置问题与风险
 

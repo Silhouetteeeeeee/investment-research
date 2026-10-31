@@ -6,6 +6,8 @@
 
 鉴权：除公开路径外，所有请求必须带 `Authorization: Bearer <APP_API_TOKEN>`，否则 401 `{"error":"unauthorized"}`（UTF-8）。公开路径见 `app/.../security/SecurityConfig.java:20-33`。
 
+审计：每个 `/api/**` 请求由 `AuditLogFilter` 写一行 JSON 到 `var/logs/audit.log`（方法、路径、状态、耗时、来源 IP、鉴权结果、是否异步），不记录请求体、查询串和 `Authorization` 头。
+
 | 方法 | 路径 | 控制器 | 说明 |
 | --- | --- | --- | --- |
 | GET | `/health` | `HealthController` | `text/plain` 返回 `ok`，免鉴权 |
