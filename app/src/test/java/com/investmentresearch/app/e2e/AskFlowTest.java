@@ -15,6 +15,9 @@ import com.investmentresearch.core.agent.AskResult;
 import com.investmentresearch.core.agent.AssistantEngine;
 import com.investmentresearch.core.agent.ScriptedModel;
 import com.investmentresearch.core.agent.StreamListener;
+import com.investmentresearch.core.domain.Source;
+import com.investmentresearch.core.domain.ToolResult;
+import com.investmentresearch.core.port.MarketPort;
 import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.data.persistence.StockEntity;
 import com.investmentresearch.data.persistence.ResearchCache;
@@ -77,6 +80,8 @@ import org.springframework.test.context.DynamicPropertySource;
 class AskFlowTest {
     private static final String QUESTION = "东鹏饮料靠什么赚钱";
     private static final String MANAGEMENT_QUESTION = "东鹏饮料管理层怎么样";
+    private static final String MARKET_QUESTION = "今天大盘怎么样";
+    private static final String MARKET_SOURCE = "market:index:202610301500";
     private static final String MANAGEMENT_SOURCE = "management:605499";
     private static final String MANAGEMENT_CACHE =
             "{\"as_of\":\"2026-06-30\",\"salary_year\":2025,\"count\":1,"
@@ -297,6 +302,22 @@ class AskFlowTest {
         assertThat(managementStage).isTrue();
     }
 
+    @Test
+    void market_question_loads_the_skill_then_the_overview() throws Exception {
+        List<JsonNode> events = ask(MARKET_QUESTION);
+        assertThat(toolNames(events))
+                .containsExactly("load_skill_through_path", "get_market_overview");
+        assertThat(events.stream().filter(event -> "tool".equals(type(event))))
+                .allSatisfy(event -> assertThat(event.get("ok").asBoolean()).isTrue());
+
+        long id = eventsConversationId(events);
+        String runId = events.get(events.size() - 1).get("message").get("run").get("id").asText();
+        JsonNode assistant = getJson("/api/conversations/" + id).get("messages").get(1);
+        assertThat(sourceIds(assistant.get("sources"))).contains(MARKET_SOURCE);
+        assertThat(getJson("/api/conversations/" + id + "/runs/" + runId).get("stop_reason").asText())
+                .isEqualTo("answered");
+    }
+
     private List<JsonNode> ask(String question) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth("test-token");
@@ -426,6 +447,32 @@ class AskFlowTest {
         AssistantEngine scriptedEngine(ToolRegistry tools, AgentProperties properties) {
             return new ScriptedEngine(tools, properties);
         }
+
+        /** 大盘适配器的上游地址是常量，WireMock 改不到；测试里直接给一份固定盘面。 */
+        @Bean
+        @Primary
+        MarketPort scriptedMarket() {
+            return () ->
+                    ToolResult.ok(
+                            null,
+                            "2026-10-30 15:00",
+                            List.of(
+                                    new Source(
+                                            MARKET_SOURCE,
+                                            "指数行情",
+                                            "新浪财经",
+                                            "2026-10-30 15:00",
+                                            "2026-10-30 15:00")),
+                            Map.of(
+                                    "as_of", "2026-10-30 15:00",
+                                    "session", "closed",
+                                    "indices",
+                                            List.of(
+                                                    Map.of(
+                                                            "name", "上证指数",
+                                                            "price", 3200.5,
+                                                            "change_pct", 0.62))));
+        }
     }
 
     /** A fresh AgentEngine per question so each test gets the same scripted reply sequence. */
@@ -459,20 +506,32 @@ class AskFlowTest {
                 String name,
                 String question,
                 StreamListener listener) {
-            ScriptedModel model =
-                    MANAGEMENT_QUESTION.equals(question)
-                            ? new ScriptedModel(
-                                    ScriptedModel.toolCall(
-                                            "load_skill_through_path",
-                                            Map.of("skillId", skillId("management"), "path", "SKILL.md")),
-                                    ScriptedModel.toolCall("get_management", Map.of()),
-                                    ScriptedModel.text(
-                                            "管理层信息见 [[" + MANAGEMENT_SOURCE + "]]。"))
-                            : new ScriptedModel(
-                                    ScriptedModel.toolCall("get_company_profile", Map.of()),
-                                    ScriptedModel.toolCall("get_finance", Map.of()),
-                                    ScriptedModel.toolCall("get_segments", Map.of()),
-                                    ScriptedModel.text(ANSWER));
+            ScriptedModel model;
+            if (MARKET_QUESTION.equals(question)) {
+                model =
+                        new ScriptedModel(
+                                ScriptedModel.toolCall(
+                                        "load_skill_through_path",
+                                        Map.of("skillId", skillId("market_view"), "path", "SKILL.md")),
+                                ScriptedModel.toolCall("get_market_overview", Map.of()),
+                                ScriptedModel.text("大盘状态见 [[" + MARKET_SOURCE + "]]。"));
+            } else if (MANAGEMENT_QUESTION.equals(question)) {
+                model =
+                        new ScriptedModel(
+                                ScriptedModel.toolCall(
+                                        "load_skill_through_path",
+                                        Map.of("skillId", skillId("management"), "path", "SKILL.md")),
+                                ScriptedModel.toolCall("get_management", Map.of()),
+                                ScriptedModel.text(
+                                        "管理层信息见 [[" + MANAGEMENT_SOURCE + "]]。"));
+            } else {
+                model =
+                        new ScriptedModel(
+                                ScriptedModel.toolCall("get_company_profile", Map.of()),
+                                ScriptedModel.toolCall("get_finance", Map.of()),
+                                ScriptedModel.toolCall("get_segments", Map.of()),
+                                ScriptedModel.text(ANSWER));
+            }
             return new AgentEngine(tools, properties, () -> model)
                     .ask(conversationId, code, name, question, listener);
         }

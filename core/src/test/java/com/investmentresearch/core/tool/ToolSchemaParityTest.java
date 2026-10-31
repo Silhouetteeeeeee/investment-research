@@ -18,10 +18,17 @@ import com.investmentresearch.core.port.ForecastPort;
 import com.investmentresearch.core.port.InsiderTradePort;
 import com.investmentresearch.core.port.LockupPort;
 import com.investmentresearch.core.port.ManagementPort;
+import com.investmentresearch.core.port.MarketPort;
+import com.investmentresearch.core.port.NewsPort;
 import com.investmentresearch.core.port.PledgePort;
+import com.investmentresearch.core.port.ResearchMemoryPort;
 import com.investmentresearch.core.port.ResearchNotesPort;
 import com.investmentresearch.core.port.ResearchPort;
+import com.investmentresearch.core.port.ReviewPort;
+import com.investmentresearch.core.port.ScreenPort;
+import com.investmentresearch.core.port.SectorPort;
 import com.investmentresearch.core.port.ShareholderPort;
+import com.investmentresearch.core.port.StrategyPort;
 import com.investmentresearch.core.port.ValuationCheckPort;
 import com.investmentresearch.core.port.ValuationPort;
 import com.investmentresearch.core.service.CompanyResolver;
@@ -97,7 +104,19 @@ class ToolSchemaParityTest {
                         "get_analyst_views",
                         "get_announcements",
                         "get_valuation",
-                        "calc_valuation"),
+                        "calc_valuation",
+                        "get_market_overview",
+                        "get_news_events",
+                        "get_sector_rotation",
+                        "screen_candidates",
+                        "build_strategy_plan",
+                        "save_daily_judgment",
+                        "review_research_reports",
+                        "list_research_memory",
+                        "read_research_memory",
+                        "append_research_record",
+                        "update_research_record",
+                        "record_conclusion_change"),
                 registry().schemas().stream().map(ToolSchema::name).toList());
     }
 
@@ -105,6 +124,7 @@ class ToolSchemaParityTest {
         ToolSchemas schemas = ToolSchemas.loadDefault();
         CompanyResolver resolver = new CompanyResolver(DIRECTORY);
         ValuationPort valuation = unusedValuation();
+        ResearchMemoryPort memory = org.mockito.Mockito.mock(ResearchMemoryPort.class);
         return new ToolRegistry(
                 List.of(
                         new ResolveCompanyTool(DIRECTORY, resolver, schemas),
@@ -126,7 +146,19 @@ class ToolSchemaParityTest {
                         new AnalystViewsTool(unusedAnalyst(), resolver, schemas),
                         new AnnouncementsTool(unusedAnnouncement(), resolver, schemas),
                         new ValuationTool(valuation, resolver, schemas),
-                        new CalcValuationTool(valuation, unusedCheck(), resolver, schemas)));
+                        new CalcValuationTool(valuation, unusedCheck(), resolver, schemas),
+                        new MarketOverviewTool(unusedMarket(), schemas),
+                        new NewsEventsTool(unusedNews(), schemas),
+                        new SectorRotationTool(unusedSector(), schemas),
+                        new ScreenCandidatesTool(unusedScreen(), schemas),
+                        new StrategyPlanTool(unusedStrategy(), schemas),
+                        new SaveJudgmentTool(unusedReview(), schemas),
+                        new ReviewReportsTool(unusedReview(), schemas),
+                        new ListResearchMemoryTool(memory, resolver, schemas),
+                        new ReadResearchMemoryTool(memory, resolver, schemas),
+                        new AppendResearchRecordTool(memory, DIRECTORY, resolver, schemas),
+                        new UpdateResearchRecordTool(memory, resolver, schemas),
+                        new RecordConclusionChangeTool(memory, resolver, schemas)));
     }
 
     private static Map<String, Map<String, Object>> readExport() throws IOException {
@@ -234,5 +266,39 @@ class ToolSchemaParityTest {
 
     private static ValuationCheckPort unusedCheck() {
         return code -> ToolResult.failure(code, "unused");
+    }
+
+    private static MarketPort unusedMarket() {
+        return () -> ToolResult.failure(null, "unused");
+    }
+
+    private static NewsPort unusedNews() {
+        return limit -> ToolResult.failure(null, "unused");
+    }
+
+    private static SectorPort unusedSector() {
+        return limit -> ToolResult.failure(null, "unused");
+    }
+
+    private static ScreenPort unusedScreen() {
+        return (limit, minAmountYi) -> ToolResult.failure(null, "unused");
+    }
+
+    private static StrategyPort unusedStrategy() {
+        return (profile, marketState, riskLevel, holdings) -> ToolResult.failure(null, "unused");
+    }
+
+    private static ReviewPort unusedReview() {
+        return new ReviewPort() {
+            @Override
+            public ToolResult save(java.util.Map<String, Object> strategy) {
+                return ToolResult.failure(null, "unused");
+            }
+
+            @Override
+            public ToolResult review(int limit, int horizon) {
+                return ToolResult.failure(null, "unused");
+            }
+        };
     }
 }

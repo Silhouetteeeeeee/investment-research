@@ -18,13 +18,20 @@ import com.investmentresearch.core.port.ForecastPort;
 import com.investmentresearch.core.port.InsiderTradePort;
 import com.investmentresearch.core.port.LockupPort;
 import com.investmentresearch.core.port.ManagementPort;
+import com.investmentresearch.core.port.MarketPort;
+import com.investmentresearch.core.port.NewsPort;
 import com.investmentresearch.core.port.PeerPort;
+import com.investmentresearch.core.port.ResearchMemoryPort;
+import com.investmentresearch.core.port.ReviewPort;
 import com.investmentresearch.core.port.RunStore;
 import com.investmentresearch.core.port.PledgePort;
 import com.investmentresearch.core.port.ResearchNotesPort;
 import com.investmentresearch.core.port.ResearchPort;
+import com.investmentresearch.core.port.ScreenPort;
+import com.investmentresearch.core.port.SectorPort;
 import com.investmentresearch.core.port.SegmentPort;
 import com.investmentresearch.core.port.ShareholderPort;
+import com.investmentresearch.core.port.StrategyPort;
 import com.investmentresearch.core.port.ValuationCheckPort;
 import com.investmentresearch.core.port.ValuationPort;
 import com.investmentresearch.core.run.FileRunStore;
@@ -34,6 +41,7 @@ import com.investmentresearch.core.service.ContextMeter;
 import com.investmentresearch.core.service.QuestionRouter;
 import com.investmentresearch.core.tool.AnalystViewsTool;
 import com.investmentresearch.core.tool.AnnouncementsTool;
+import com.investmentresearch.core.tool.AppendResearchRecordTool;
 import com.investmentresearch.core.tool.BuybacksTool;
 import com.investmentresearch.core.tool.CalcValuationTool;
 import com.investmentresearch.core.tool.CompanyProfileTool;
@@ -43,14 +51,25 @@ import com.investmentresearch.core.tool.FinanceTool;
 import com.investmentresearch.core.tool.FinancialHistoryTool;
 import com.investmentresearch.core.tool.InsiderTradesTool;
 import com.investmentresearch.core.tool.InstitutionalResearchTool;
+import com.investmentresearch.core.tool.ListResearchMemoryTool;
 import com.investmentresearch.core.tool.LockupExpiriesTool;
 import com.investmentresearch.core.tool.ManagementTool;
+import com.investmentresearch.core.tool.MarketOverviewTool;
+import com.investmentresearch.core.tool.NewsEventsTool;
 import com.investmentresearch.core.tool.PeersTool;
 import com.investmentresearch.core.tool.PledgesTool;
+import com.investmentresearch.core.tool.ReadResearchMemoryTool;
+import com.investmentresearch.core.tool.RecordConclusionChangeTool;
 import com.investmentresearch.core.tool.ResearchNotesTool;
 import com.investmentresearch.core.tool.ResolveCompanyTool;
+import com.investmentresearch.core.tool.ReviewReportsTool;
+import com.investmentresearch.core.tool.SaveJudgmentTool;
+import com.investmentresearch.core.tool.ScreenCandidatesTool;
+import com.investmentresearch.core.tool.SectorRotationTool;
 import com.investmentresearch.core.tool.SegmentsTool;
 import com.investmentresearch.core.tool.ShareholdersTool;
+import com.investmentresearch.core.tool.StrategyPlanTool;
+import com.investmentresearch.core.tool.UpdateResearchRecordTool;
 import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.core.tool.ToolSchemas;
 import com.investmentresearch.core.tool.ValuationTool;
@@ -99,7 +118,14 @@ public class AssistantConfig {
             AnalystViewPort analystViews,
             AnnouncementPort announcements,
             ValuationPort valuation,
-            ValuationCheckPort valuationCheck) {
+            ValuationCheckPort valuationCheck,
+            MarketPort market,
+            NewsPort news,
+            SectorPort sectors,
+            ScreenPort screen,
+            StrategyPort strategy,
+            ReviewPort review,
+            ResearchMemoryPort memory) {
         return new ToolRegistry(
                 List.of(
                         new ResolveCompanyTool(directory, resolver, schemas),
@@ -121,7 +147,19 @@ public class AssistantConfig {
                         new AnalystViewsTool(analystViews, resolver, schemas),
                         new AnnouncementsTool(announcements, resolver, schemas),
                         new ValuationTool(valuation, resolver, schemas),
-                        new CalcValuationTool(valuation, valuationCheck, resolver, schemas)));
+                        new CalcValuationTool(valuation, valuationCheck, resolver, schemas),
+                        new MarketOverviewTool(market, schemas),
+                        new NewsEventsTool(news, schemas),
+                        new SectorRotationTool(sectors, schemas),
+                        new ScreenCandidatesTool(screen, schemas),
+                        new StrategyPlanTool(strategy, schemas),
+                        new SaveJudgmentTool(review, schemas),
+                        new ReviewReportsTool(review, schemas),
+                        new ListResearchMemoryTool(memory, resolver, schemas),
+                        new ReadResearchMemoryTool(memory, resolver, schemas),
+                        new AppendResearchRecordTool(memory, directory, resolver, schemas),
+                        new UpdateResearchRecordTool(memory, resolver, schemas),
+                        new RecordConclusionChangeTool(memory, resolver, schemas)));
     }
 
     @Bean

@@ -21,7 +21,6 @@ import java.util.Map;
 /** Port of {@code assistant/api.py:stream_answer}: route, persist, stream, save the run. */
 public final class AskService {
     static final String UNKNOWN_COMPANY_WARNING = "没认出你问的是哪家公司，请在问题里带上公司名或六位代码。";
-    static final String MARKET_WARNING = "暂时不支持大盘问题，请指定公司。";
 
     private static final long METER_INTERVAL_MS = 400;
     private static final int TITLE_LIMIT = 30;
@@ -78,13 +77,6 @@ public final class AskService {
             out.complete();
             return;
         }
-        if (QuestionRouter.MARKET_CODE.equals(route.code())) {
-            // 阶段 1 没有大盘工具；不建会话，也不下发 state（见 README 差异说明）
-            out.send(event("type", "warning", "text", MARKET_WARNING));
-            out.complete();
-            return;
-        }
-
         if (current == null) {
             current =
                     repository.create(

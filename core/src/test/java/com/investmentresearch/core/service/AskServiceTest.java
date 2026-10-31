@@ -138,15 +138,22 @@ class AskServiceTest {
     }
 
     @Test
-    void market_question_emits_warning_in_phase_1() {
+    void market_question_opens_a_market_conversation() {
+        engine.result = answer();
         CapturingSink sink = new CapturingSink();
 
         service().ask(null, "大盘怎么样", sink);
 
-        assertThat(types(sink)).containsExactly("warning");
-        assertThat(sink.events.get(0)).containsEntry("text", "暂时不支持大盘问题，请指定公司。");
-        assertThat(repository.conversations).isEmpty();
-        assertThat(engine.calls).isZero();
+        Conversation created = repository.conversations.get(1L);
+        assertThat(created.title()).isEqualTo("大盘 · 大盘怎么样");
+        assertThat(created.primaryCode()).isEqualTo(QuestionRouter.MARKET_CODE);
+        assertThat(created.primaryName()).isEqualTo("大盘");
+        assertThat(sink.events.get(0))
+                .containsEntry("conversation_id", 1L)
+                .containsEntry("code", "MARKET")
+                .containsEntry("name", "大盘");
+        assertThat(engine.calls).isEqualTo(1);
+        assertThat(engine.seenCode).isEqualTo(QuestionRouter.MARKET_CODE);
     }
 
     @Test
@@ -246,15 +253,18 @@ class AskServiceTest {
         long current = seed("贵州茅台 · 上一轮", "600519", "贵州茅台");
         repository.append(current, "user", new LinkedHashMap<>(Map.of("text", "旧问题")));
         List<StoredMessage> before = List.copyOf(repository.stored(current));
+        engine.result = answer();
         CapturingSink sink = new CapturingSink();
 
         service().ask(current, "大盘走势怎么样", sink);
 
-        assertThat(types(sink)).containsExactly("warning");
-        assertThat(repository.conversations).hasSize(1);
+        assertThat(sink.events.get(0))
+                .containsEntry("code", "MARKET")
+                .containsEntry("notice", "已切换到 大盘（MARKET），开始新对话。");
+        assertThat(repository.conversations).hasSize(2);
         assertThat(repository.stored(current)).isEqualTo(before);
-        assertThat(repository.usages).isEmpty();
-        assertThat(engine.calls).isZero();
+        assertThat(repository.usages).doesNotContainKey(current);
+        assertThat(engine.seenCode).isEqualTo(QuestionRouter.MARKET_CODE);
     }
 
     @Test

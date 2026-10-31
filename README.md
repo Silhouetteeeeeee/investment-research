@@ -13,6 +13,7 @@
 | `DEEPSEEK_API_KEY` | 运行时需要 | 模型调用密钥。只从环境读取，不要写进仓库或提交。 |
 | `APP_DATA_DIR` | 否 | SQLite 和运行数据目录，默认 `./var`（相对启动目录）。 |
 | `APP_SKILLS_DIR` | 否 | `skills/` 所在目录，默认 `./skills`（相对启动目录）。 |
+| `APP_MEMORY_IMPORT` | 否 | Python 版研究档案（JSON）目录，启动时一次性导入 SQLite；不设置就从空档案开始。 |
 
 `.env`、`*.db`、`var/` 已在 `.gitignore` 中，密钥不要提交。
 
@@ -56,6 +57,22 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 `https://push2test.eastmoney.com/api/qt/clist/get`，可用 `app.stock-list-url`
 （环境变量 `APP_STOCK_LIST_URL`）改指其他可用主机；上游不可用时解析按“找不到公司”返回，不影响启动。
 
+大盘、新闻与选股的上游：
+
+| 数据 | 来源 |
+| --- | --- |
+| 指数、A 股全量行情 | 新浪 `hq.sinajs.cn` |
+| 个股与指数日线 | 东财 `push2his`（不复权）、腾讯 `ifzq.gtimg.cn` |
+| 涨跌家数 / 市场活跃度 | 乐咕乐股 `legulegu.com` |
+| 行业板块与板块日线 | 同花顺 `q.10jqka.com.cn` 页面分页、`d.10jqka.com.cn/v6/line` |
+| 快讯 / 新闻 | 财联社 `cls.cn`、东财 `np-weblist`、新浪财经、CCTV 新闻联播 |
+| 涨停池 | 东财 `push2ex` |
+
+盘后取到的 `as_of` 可能是上一交易日，这是上游数据的发布节奏，不是取数错误。
+同花顺板块走页面分页而不是 akshare 的 `/ajax/1/`，两者数据一致，但后者要 `v` cookie；
+板块日线用 `v6/line/.../last.js`，同样免 cookie。东财 `push2` 的实时板块接口在本机网络被拦，
+所以板块数据只走同花顺。
+
 ## 测试
 
 ```bash
@@ -65,27 +82,27 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 
 ## 工具
 
-注册顺序与 Python `assistant.tools.schemas()` 一致，共 20 个：
+注册顺序与 Python `assistant.tools.schemas()` 一致，共 32 个：
 
 `resolve_company`、`get_company_profile`、`get_finance`、`get_financial_history`、
 `get_segments`、`get_management`、`get_shareholders`、`get_peers`、`get_dividends`、
 `get_insider_trades`、`get_buybacks`、`get_lockup_expiries`、`get_pledges`、
 `get_earnings_forecasts`、`get_institutional_research`、`get_research_notes`、
-`get_analyst_views`、`get_announcements`、`get_valuation`、`calc_valuation`。
+`get_analyst_views`、`get_announcements`、`get_valuation`、`calc_valuation`、
+`get_market_overview`、`get_news_events`、`get_sector_rotation`、`screen_candidates`、
+`build_strategy_plan`、`save_daily_judgment`、`review_research_reports`、
+`list_research_memory`、`read_research_memory`、`append_research_record`、
+`update_research_record`、`record_conclusion_change`。
 
 `calc_valuation` 有 `check` / `scenario` / `terminal` 三种 `mode`；`skills/` 下
-`business_model` 之外的七个公司研究 skill（`moat`、`operating_history`、
-`financial_safety`、`growth_outlook`、`management`、`valuation`、`margin_of_safety`）
-正文与 Python 逐字一致。
+`business_model` 之外的十四个 skill 正文与 Python 逐字一致（`business_model` 没有快照用例）。
 
-## 阶段 1 已知差异
+## 已知差异
 
-迁移阶段只保证核心问答链路；以下与 Python 版仍有差距，先记录在这里：
+以下与 Python 版仍有差距，先记录在这里：
 
-- **大盘问题**：`/api/ask` 直接返回 `{"type":"warning","text":"暂时不支持大盘问题，请指定公司。"}`，
-  不建会话、不落库、不调用模型；大盘工具在阶段 3 补齐。
-- **研究档案页**：`/api/research/*` 仍是占位实现——`GET /api/research/companies` 恒返回空列表，
-  `GET /api/research/companies/{code}` 恒 404；页面可打开但没有真实记忆数据，阶段 3 接通。
+- **研究档案迁移**：历史记忆不在 SQLite 里时，用 `APP_MEMORY_IMPORT` 指向 Python 版的
+  JSON 档案目录，启动时一次性导入；不设置就只从空档案开始。
 - **token 用量估算**：没有真实模型用量时，运行记录与页面占用都按字符估算
   （`usage_source: "estimate"`），只适合看趋势，不能当作计费依据；上游返回 usage 时才标 `"api"`。
 - **缺 key 时的问题不落历史**：未设置 `DEEPSEEK_API_KEY` 时应用照常启动，`/api/ask` 返回
@@ -96,9 +113,6 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 - 运行记录缺少 `stream`、`message_count`、`input_chars`、`system_share`、`tool_share`、
   `system_prompt_hash`、`tools_hash`；详情页因此不显示流式标记，并会出现
   “消息 0 条 · system 0%”。`prompts`、`skills`、`calls` 目前也只保留空数组。
-- 系统提示词保留了 `research_memory` 以及行情、新闻、选股等工具的描述，但这些工具
-  尚未注册（阶段 3 补齐），真实模型可能先尝试加载失败的工具，浪费一轮；`stock_screening`
-  skill 同样延到阶段 3。公司研究的 20 个工具已全部注册。
 - 金标准与快照库的覆盖面并不完整：`get_research_notes` 只有 2 家公司的用例；`601318`
   在 8 张缓存表里没有数据；`600600`/`601606` 缺回购，`600600`/`601318` 缺限售解禁，
   `601606` 缺内部人交易。换一家公司回放时可能取不到数据，这是快照缺口，不是取数错误。
