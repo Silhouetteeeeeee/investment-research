@@ -14,7 +14,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10
-./mvnw verify                    # 期望：core 130 / data 130 / app 72，BUILD SUCCESS
+./mvnw verify                    # 期望：core 130 / data 134 / app 75，BUILD SUCCESS
 ./mvnw -q spotless:check         # 期望：退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```
@@ -58,7 +58,7 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 ### 5.2 新增一张表 / 迁移
 
-1. 新建 `data/src/main/resources/db/migration/sqlite/V12__xxx.sql`；**不要改已发布的 V1–V11**。
+1. 新建 `data/src/main/resources/db/migration/sqlite/V13__xxx.sql`；**不要改已发布的 V1–V12**。
 2. 复合主键表用 `TransactionTemplate` delete+insert；单主键表可用 `BaseMapper.insertOrUpdate`。
 3. 复杂/动态 SQL 放 Mapper 注解或 JdbcTemplate，不要拼用户输入。
 4. 补 `ConversationRepositoryTest` 式的「新库 schema」断言。

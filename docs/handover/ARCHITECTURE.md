@@ -23,7 +23,7 @@ graph TD
         D2["persistence: MyBatis-Plus Mapper/Entity、会话仓库、缓存库"]
         D3["upstream: RestClientUpstreamClient"]
         D4["sync: StockMasterSync"]
-        D5["db/migration/sqlite: Flyway V1–V11"]
+        D5["db/migration/sqlite: Flyway V1–V12"]
     end
     A1 --> C1
     A1 --> C2
@@ -195,7 +195,7 @@ flowchart LR
 | 持久化 | `data/persistence/**`：MyBatis-Plus Mapper 做 CRUD，JdbcTemplate/TransactionTemplate 做 upsert、动态 SQL、多语句事务 |
 | 进程内缓存 | 各适配器的 `ConcurrentHashMap` 短 TTL；`ToolCallCache` 按会话缓存工具结果（17 个时效性工具除外），有容量与 30 分钟 TTL 上限 |
 | 文件 | `var/runs/*.json`（运行原文）、`var/sessions/**`（AgentScope 状态）、`var/workspace/`（harness 工作区） |
-| 数据库 | `var/app.db`（Flyway V1–V11） |
+| 数据库 | `var/app.db`（Flyway V1–V12） |
 
 ## 7. 架构问题与技术债（代码可见）
 

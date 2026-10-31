@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>投资助手</title>
 <!-- 改样式或脚本后把 v 加一，避免浏览器继续用旧缓存 -->
-<link rel="stylesheet" href="/styles.css?v=20261031a" />
+<link rel="stylesheet" href="/styles.css?v=20261031d" />
 </head>
 <body>
 <div class="boot" id="boot" role="dialog" aria-label="启动动画">
@@ -21,8 +21,8 @@
 <div id="app" v-cloak>
 <div
   class="app"
-  :class="{ 'has-source': sourceView, 'resizing-source': sourceResizing, 'resizing-side': sideResizing }"
-  :style="{ '--source-w': sourceWidth + 'px', '--side-w': sideWidth + 'px' }"
+  :class="{ 'has-source': sourceView, 'has-kline': klineOpen, 'resizing-source': sourceResizing, 'resizing-side': sideResizing, 'resizing-kline': klineResizing }"
+  :style="{ '--source-w': sourceWidth + 'px', '--side-w': sideWidth + 'px', '--kline-w': klineWidth + 'px' }"
 >
   <aside class="side">
     <div class="side-resizer" :class="{ active: sideResizing }" @mousedown.prevent="startSideResize" title="拖动调整侧栏宽度"></div>
@@ -318,6 +318,18 @@
       <div class="drop-card">松开 → 在右侧打开这段对话</div>
     </div>
   </main>
+
+  <!-- 当前对话的公司日 K；来源详情打开时由来源栏占用同一位置 -->
+  <aside class="kline-side" v-if="klineOpen" aria-label="日K线">
+    <div class="kline-resizer" :class="{ active: klineResizing }" @mousedown.prevent="startKlineResize" title="拖动调整宽度"></div>
+    <kline-chart
+      :code="kline.code"
+      :name="kline.name"
+      :bars="kline.bars"
+      :loading="kline.loading"
+      :error="kline.error"
+    ></kline-chart>
+  </aside>
 
   <aside class="source-side" v-if="sourceView" role="dialog" aria-label="来源详情">
     <div class="source-resizer" :class="{ active: sourceResizing }" @mousedown.prevent="startSourceResize" title="拖动调整侧栏宽度"></div>
@@ -623,6 +635,6 @@
 <script src="/assets/marked.umd.js"></script>
 <script src="/assets/purify.min.js"></script>
 <script src="/boot.js?v=20261029c"></script>
-<script src="/app.js?v=20261031b"></script>
+<script src="/app.js?v=20261031e"></script>
 </body>
 </html>

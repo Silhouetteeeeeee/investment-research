@@ -140,12 +140,13 @@
 | `ScreenAdapter` | `ScreenPort` | 新浪全市场快照 + 东财日线；`HISTORY_DAYS=140`、`MAX_WORKERS=10`、进程内 900s |
 | `StrategyAdapter` | `StrategyPort` | 纯计算；市场状态缺省时调 `MarketPort.overview()` |
 | `ReviewAdapter` | `ReviewPort` | 存档 + 复盘；`MAX_WORKERS=8`、`HISTORY_LIMIT=400`、进程内 900s |
+| `KlineAdapter` | `KlinePort` | 腾讯 `fqkline` 优先（前复权，500 根/次）、东财 `fqt=1` 兜底；落 `kline_daily`，同一天最多请求一次，收盘后刷新；两家都挂时返回旧缓存 |
 | `ResearchMemoryStore` | `ResearchMemoryPort` | 档案六表；`append` 串行化 |
 
 ### 2.3 持久化
 
 - MyBatis-Plus：`BaseMapper` 做 CRUD，`@TableId(INPUT)`（仅 `ConversationEntity` 用 AUTO）；`StockMasterSync` 与 `PeerAdapter` 用 `insertOrUpdate`；复合主键表（`val_*`、`biz_segment`、`fin_*`、`company_profile`）用 `TransactionTemplate` 里 delete+insert。
-- `JdbcTemplate` 存储：`ResearchCacheStore`（白名单表名，`ResearchCache` 枚举 10 项）、`DailyReportStore`、`ResearchMemoryStore`。
+- `JdbcTemplate` 存储：`ResearchCacheStore`（白名单表名，`ResearchCache` 枚举 10 项）、`DailyReportStore`、`ResearchMemoryStore`、`KlineDailyStore`（`kline_daily`，按 `code + trade_date` upsert）。
 - `ConversationRepositoryImpl`：`create/find/recent/messages/append/updateUsage/delete`；`append` 在事务里用 `INSERT ... SELECT MAX(seq)+1 ... RETURNING seq` 取序号并 touch 会话；读消息时跳过无法解析的 payload。
 
 ### 2.4 定时任务
@@ -161,6 +162,7 @@
 | `AskController` | `POST /api/ask`；`TIMEOUT_MS=600_000`；空问题 400；`X-Accel-Buffering: no` |
 | `ConversationController` | 5 个路由；`RECENT_LIMIT=50`；`RUN_ID` 正则；删除顺序：消息 → 运行文件 → Agent 会话 |
 | `ResearchController` | 列表/详情；`code` 必须六位；`limit` 1..500（默认 200） |
+| `StockChartController` | `GET /api/stocks/{code}/kline`；`code` 必须六位；`days` 夹到 20..500（默认 120）；上游异常 → 502 |
 | `MetricsController` | `GET /api/metrics`；JDK `OperatingSystemMXBean` / `MemoryMXBean` + `ToolRegistry.metrics()` |
 | `HealthController` | `/health` → `ok` |
 | `SseWriter` | `data: <json>\n\n`；断连后静默 |
@@ -172,7 +174,7 @@
 
 | 文件 | 关键点 |
 | --- | --- |
-| `app.js` | 令牌 `localStorage["ir_token"]` + 401 重试；markdown + DOMPurify + `[[id]]` 渲染；`ChatPane`；运行详情 timeline/prompt/context 三个标签；档案页只读 |
+| `app.js` | 令牌 `localStorage["ir_token"]` + 401 重试；markdown + DOMPurify + `[[id]]` 渲染；`ChatPane`；运行详情 timeline/prompt/context 三个标签；档案页只读；`KlineChart`（SVG 蜡烛 + 成交量 + MA5/10/20），跟随左侧会话公司，悬停显示 OHLC/量额；一次取 500 根，默认窗口最近 120 根，拖动平移、滚轮缩放、双击回到最新；左边缘可拖宽（`localStorage["klineWidth"]`） |
 | `index.html` | 左会话列表、分栏聊天、档案页、全局来源侧栏、`<chat-pane>` 模板、运行详情面板 |
 | `boot.js` | 启动视频，Esc/空格/回车跳过，12s 兜底，5s 卡顿检测 |
 | `styles.css` | 全部样式 |

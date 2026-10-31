@@ -849,10 +849,372 @@ const ChatPane = {
 };
 
 // ---------------------------------------------------------------------------
+// 日 K 面板：不引图表库，直接算坐标画 SVG。
+// ---------------------------------------------------------------------------
+function klineMA(bars, period) {
+  const out = new Array(bars.length).fill(null);
+  let sum = 0;
+  for (let i = 0; i < bars.length; i += 1) {
+    sum += bars[i].close;
+    if (i >= period) sum -= bars[i - period].close;
+    if (i >= period - 1) out[i] = sum / period;
+  }
+  return out;
+}
+
+function klineLayout(rawBars, series) {
+  const bars = (rawBars || []).filter(
+    (bar) => bar && [bar.open, bar.close, bar.high, bar.low].every((v) => Number.isFinite(v))
+  );
+  if (!bars.length) return null;
+
+  const W = 320;
+  const TOP = 8;
+  const PRICE_H = 300;
+  const GAP = 18;
+  const VOL_H = 70;
+  const LEFT = 2;
+  const RIGHT = 46;
+  const BOTTOM = 20;
+  const H = TOP + PRICE_H + GAP + VOL_H + BOTTOM;
+  const step = (W - LEFT - RIGHT) / bars.length;
+  const bodyW = Math.max(1, step * 0.62);
+  const x = (i) => LEFT + (i + 0.5) * step;
+
+  // 均线要在完整序列上算好再切窗口，否则平移后窗口左边缘的 MA 会偏
+  const ma5 = series && series.ma5 ? series.ma5 : klineMA(bars, 5);
+  const ma10 = series && series.ma10 ? series.ma10 : klineMA(bars, 10);
+  const ma20 = series && series.ma20 ? series.ma20 : klineMA(bars, 20);
+  let lo = Infinity;
+  let hi = -Infinity;
+  bars.forEach((bar, i) => {
+    lo = Math.min(lo, bar.low);
+    hi = Math.max(hi, bar.high);
+    [ma5, ma10, ma20].forEach((values) => {
+      if (values[i] != null) {
+        lo = Math.min(lo, values[i]);
+        hi = Math.max(hi, values[i]);
+      }
+    });
+  });
+  if (!(hi > lo)) {
+    hi = lo + 1;
+    lo -= 1;
+  }
+  const yPrice = (value) => TOP + ((hi - value) / (hi - lo)) * PRICE_H;
+  const maxVol = Math.max(1, ...bars.map((bar) => bar.volume || 0));
+  const volTop = TOP + PRICE_H + GAP;
+
+  const candles = bars.map((bar, i) => {
+    const top = yPrice(Math.max(bar.open, bar.close));
+    const bottom = yPrice(Math.min(bar.open, bar.close));
+    return {
+      date: bar.date,
+      up: bar.close >= bar.open,
+      x: x(i) - bodyW / 2,
+      cx: x(i),
+      bodyY: top,
+      bodyH: Math.max(1, bottom - top),
+      wickTop: yPrice(bar.high),
+      wickBottom: yPrice(bar.low),
+      closeY: yPrice(bar.close),
+      width: bodyW,
+    };
+  });
+  const volumes = bars.map((bar, i) => {
+    const height = ((bar.volume || 0) / maxVol) * VOL_H;
+    return {
+      x: x(i) - bodyW / 2,
+      y: volTop + VOL_H - height,
+      width: bodyW,
+      height: Math.max(1, height),
+      up: bar.close >= bar.open,
+    };
+  });
+  const line = (values) =>
+    values
+      .map((value, i) => (value == null ? null : `${x(i).toFixed(1)},${yPrice(value).toFixed(1)}`))
+      .filter(Boolean)
+      .join(" ");
+  const lastDate = bars[bars.length - 1].date || "";
+
+  return {
+    W,
+    H,
+    bars,
+    candles,
+    volumes,
+    step,
+    plotLeft: LEFT,
+    plotRight: W - RIGHT,
+    priceTop: TOP,
+    priceBottom: TOP + PRICE_H,
+    volTop,
+    volBottom: volTop + VOL_H,
+    ma5: line(ma5),
+    ma10: line(ma10),
+    ma20: line(ma20),
+    ma5Last: ma5[ma5.length - 1],
+    ma10Last: ma10[ma10.length - 1],
+    ma20Last: ma20[ma20.length - 1],
+    grid: [hi, (hi + lo) / 2, lo].map((value) => ({ y: yPrice(value), label: value.toFixed(2) })),
+    firstDate: (bars[0].date || "").slice(5),
+    lastDate: lastDate.slice(5),
+    dateX1: LEFT,
+    dateX2: W - RIGHT,
+    dateY: H - 3,
+  };
+}
+
+const KlineChart = {
+  props: {
+    code: { type: String, default: "" },
+    name: { type: String, default: "" },
+    bars: { type: Array, default: () => [] },
+    loading: { type: Boolean, default: false },
+    error: { type: String, default: "" },
+  },
+  data() {
+    // end = 窗口右端（不含）；null 表示跟着最新一根走
+    return { hover: null, zoom: 120, end: null, dragging: false };
+  },
+  computed: {
+    fullBars() {
+      return (this.bars || []).filter(
+        (bar) => bar && [bar.open, bar.close, bar.high, bar.low].every((v) => Number.isFinite(v))
+      );
+    },
+    mas() {
+      const bars = this.fullBars;
+      return { ma5: klineMA(bars, 5), ma10: klineMA(bars, 10), ma20: klineMA(bars, 20) };
+    },
+    windowSize() {
+      return Math.min(this.fullBars.length, Math.max(20, this.zoom));
+    },
+    windowEnd() {
+      const len = this.fullBars.length;
+      if (this.end == null) return len;
+      return Math.max(this.windowSize, Math.min(len, this.end));
+    },
+    windowStart() {
+      return this.windowEnd - this.windowSize;
+    },
+    visible() {
+      const start = this.windowStart;
+      const end = this.windowEnd;
+      const mas = this.mas;
+      return {
+        start,
+        end,
+        bars: this.fullBars.slice(start, end),
+        ma5: mas.ma5.slice(start, end),
+        ma10: mas.ma10.slice(start, end),
+        ma20: mas.ma20.slice(start, end),
+      };
+    },
+    layout() {
+      return klineLayout(this.visible.bars, this.visible);
+    },
+    rangeText() {
+      const bars = this.visible.bars;
+      if (!bars.length) return "";
+      return `${bars[0].date} ~ ${bars[bars.length - 1].date}`;
+    },
+    quote() {
+      const bars = this.bars || [];
+      if (bars.length < 2) return null;
+      const last = bars[bars.length - 1];
+      const prev = bars[bars.length - 2];
+      if (!Number.isFinite(last.close) || !Number.isFinite(prev.close) || !prev.close) return null;
+      const change = last.close - prev.close;
+      return { close: last.close, change, pct: (change / prev.close) * 100 };
+    },
+    hoverBar() {
+      const layout = this.layout;
+      if (!layout || this.hover == null) return null;
+      const index = Math.min(this.hover, layout.bars.length - 1);
+      const bar = layout.bars[index];
+      const candle = layout.candles[index];
+      const prev = index > 0 ? layout.bars[index - 1] : null;
+      const change = prev && Number.isFinite(prev.close) ? bar.close - prev.close : null;
+      return {
+        ...bar,
+        cx: candle.cx,
+        closeY: candle.closeY,
+        change,
+        pct: change != null && prev.close ? (change / prev.close) * 100 : null,
+      };
+    },
+    hoverLeft() {
+      if (!this.hoverBar || !this.layout) return 50;
+      return Math.min(84, Math.max(16, (this.hoverBar.cx / this.layout.W) * 100));
+    },
+  },
+  methods: {
+    maText(value) {
+      return Number.isFinite(value) ? value.toFixed(2) : "--";
+    },
+    priceText(value) {
+      return Number.isFinite(value) ? value.toFixed(2) : "--";
+    },
+    volText(value) {
+      // KlineBar.volume 单位是股；÷1e6 就是万手
+      return Number.isFinite(value) ? `${(value / 1e6).toFixed(1)} 万手` : "--";
+    },
+    amountText(value) {
+      return Number.isFinite(value) ? `${(value / 1e8).toFixed(2)} 亿` : "--";
+    },
+    onMove(event) {
+      const layout = this.layout;
+      if (!layout || this.dragging) return;
+      const rect = event.currentTarget.getBoundingClientRect();
+      const vbX = ((event.clientX - rect.left) / rect.width) * layout.W;
+      // 第 i 根的中心在 plotLeft + (i + 0.5) * step
+      const index = Math.round((vbX - layout.plotLeft) / layout.step - 0.5);
+      this.hover = Math.max(0, Math.min(layout.bars.length - 1, index));
+    },
+    clearHover() {
+      this.hover = null;
+    },
+    // 拖动平移：往右拖看更早的行情
+    startDrag(event) {
+      const layout = this.layout;
+      if (!layout || this.fullBars.length <= this.windowSize) return;
+      const rect = event.currentTarget.getBoundingClientRect();
+      const pxPerBar = (rect.width * layout.step) / layout.W;
+      const startX = event.clientX;
+      const startEnd = this.windowEnd;
+      this.hover = null;
+      this.dragging = true;
+      const move = (e) => {
+        const delta = Math.round((startX - e.clientX) / pxPerBar);
+        this.end = Math.max(this.windowSize, Math.min(this.fullBars.length, startEnd + delta));
+      };
+      const up = () => {
+        this.dragging = false;
+        window.removeEventListener("mousemove", move);
+        window.removeEventListener("mouseup", up);
+      };
+      window.addEventListener("mousemove", move);
+      window.addEventListener("mouseup", up);
+    },
+    // 滚轮缩放：以光标所在的交易日为锚点
+    onWheel(event) {
+      const layout = this.layout;
+      const all = this.fullBars;
+      if (!layout || all.length <= 1) return;
+      const rect = event.currentTarget.getBoundingClientRect();
+      const vbX = ((event.clientX - rect.left) / rect.width) * layout.W;
+      const raw = this.windowStart + Math.round((vbX - layout.plotLeft) / layout.step - 0.5);
+      const anchor = Math.max(0, Math.min(all.length - 1, raw));
+      const next = Math.min(all.length, Math.max(20, Math.round(this.windowSize * (event.deltaY > 0 ? 1.25 : 0.8))));
+      if (next === this.windowSize) return;
+      const ratio = (anchor - this.windowStart + 0.5) / this.windowSize;
+      let start = Math.round(anchor - ratio * next);
+      start = Math.max(0, Math.min(all.length - next, start));
+      this.zoom = next;
+      this.end = start + next;
+      this.hover = null;
+    },
+    resetView() {
+      this.zoom = 120;
+      this.end = null;
+      this.hover = null;
+    },
+  },
+  watch: {
+    code() {
+      this.zoom = 120;
+      this.end = null;
+      this.hover = null;
+    },
+  },
+  template: `
+    <div class="kline-wrap">
+      <header class="kline-head">
+        <div class="kline-co">
+          <span class="kline-name">{{ name || code }}</span>
+          <span class="kline-code">{{ code }}</span>
+        </div>
+        <div class="kline-quote" v-if="quote">
+          <span class="kline-price">{{ quote.close.toFixed(2) }}</span>
+          <span class="kline-chg" :class="quote.change >= 0 ? 'up' : 'down'">
+            {{ quote.change >= 0 ? "+" : "" }}{{ quote.change.toFixed(2) }} · {{ quote.pct.toFixed(2) }}%
+          </span>
+        </div>
+      </header>
+
+      <p class="kline-status" v-if="loading">正在加载日线…</p>
+      <p class="kline-status error" v-else-if="error">{{ error }}</p>
+      <template v-else-if="layout">
+        <div class="kline-legend">
+          <span class="ma ma5">MA5 {{ maText(layout.ma5Last) }}</span>
+          <span class="ma ma10">MA10 {{ maText(layout.ma10Last) }}</span>
+          <span class="ma ma20">MA20 {{ maText(layout.ma20Last) }}</span>
+        </div>
+        <svg
+          class="kline-svg"
+          :class="{ dragging: dragging }"
+          :viewBox="'0 0 ' + layout.W + ' ' + layout.H"
+          role="img"
+          :aria-label="(name || code) + ' 日K线'"
+          @mousemove="onMove"
+          @mouseleave="clearHover"
+          @mousedown.prevent="startDrag"
+          @wheel.prevent="onWheel"
+          @dblclick="resetView"
+        >
+          <g class="kline-grid">
+            <line v-for="row in layout.grid" :key="'g' + row.y" x1="0" :x2="layout.W - 46" :y1="row.y" :y2="row.y" />
+            <text v-for="row in layout.grid" :key="'t' + row.y" :x="layout.W - 40" :y="row.y" dominant-baseline="middle">{{ row.label }}</text>
+          </g>
+          <g v-for="bar in layout.candles" :key="'c' + bar.date">
+            <line class="wick" :class="bar.up ? 'up' : 'down'" :x1="bar.cx" :x2="bar.cx" :y1="bar.wickTop" :y2="bar.wickBottom" />
+            <rect class="body" :class="bar.up ? 'up' : 'down'" :x="bar.x" :y="bar.bodyY" :width="bar.width" :height="bar.bodyH" />
+          </g>
+          <polyline class="ma-line ma5" :points="layout.ma5" />
+          <polyline class="ma-line ma10" :points="layout.ma10" />
+          <polyline class="ma-line ma20" :points="layout.ma20" />
+          <g class="kline-vol">
+            <rect v-for="(bar, index) in layout.volumes" :key="'v' + index" :class="bar.up ? 'up' : 'down'" :x="bar.x" :y="bar.y" :width="bar.width" :height="bar.height" />
+          </g>
+          <g class="kline-cross" v-if="hoverBar">
+            <line :x1="hoverBar.cx" :x2="hoverBar.cx" :y1="layout.priceTop" :y2="layout.volBottom" />
+            <line class="h" x1="0" :x2="layout.plotRight" :y1="hoverBar.closeY" :y2="hoverBar.closeY" />
+          </g>
+          <g class="kline-dates">
+            <text :x="layout.dateX1" :y="layout.dateY" text-anchor="start">{{ layout.firstDate }}</text>
+            <text :x="layout.dateX2" :y="layout.dateY" text-anchor="end">{{ layout.lastDate }}</text>
+          </g>
+        </svg>
+        <div class="kline-tip" v-if="hoverBar" :style="{ left: hoverLeft + '%' }">
+          <div class="kline-tip-date">{{ hoverBar.date }}</div>
+          <div class="kline-tip-grid">
+            <span>开</span><b>{{ priceText(hoverBar.open) }}</b>
+            <span>高</span><b>{{ priceText(hoverBar.high) }}</b>
+            <span>收</span><b>{{ priceText(hoverBar.close) }}</b>
+            <span>低</span><b>{{ priceText(hoverBar.low) }}</b>
+          </div>
+          <div class="kline-tip-meta">量 {{ volText(hoverBar.volume) }} · 额 {{ amountText(hoverBar.amount) }}</div>
+          <div class="kline-tip-meta" v-if="hoverBar.pct != null" :class="hoverBar.pct >= 0 ? 'up' : 'down'">
+            {{ hoverBar.pct >= 0 ? "+" : "" }}{{ hoverBar.pct.toFixed(2) }}%
+          </div>
+        </div>
+        <div class="kline-foot">
+          {{ rangeText }} · 共 {{ fullBars.length }} 根<br />
+          拖动平移 · 滚轮缩放 · 双击回到最新
+        </div>
+      </template>
+      <p class="kline-status" v-else>暂无日线数据</p>
+    </div>
+  `,
+};
+
+// ---------------------------------------------------------------------------
 // 页面：左边常驻一个对话栏，右边按需再开一个。
 // ---------------------------------------------------------------------------
 createApp({
-  components: { ChatPane, EvidenceView },
+  components: { ChatPane, EvidenceView, KlineChart },
   data() {
     return {
       conversations: [],
@@ -867,6 +1229,10 @@ createApp({
       sideResizing: false,
       sourceView: null,
       sourceWidth: 380,
+      // 日 K 面板跟随左侧对话的公司；来源详情打开时让位给它
+      kline: { code: "", name: "", bars: [], loading: false, error: "" },
+      klineWidth: 340,
+      klineResizing: false,
       sourceResizing: false,
       evidence: null,
       evidenceState: "idle",
@@ -918,6 +1284,9 @@ createApp({
         return "";
       }
       return text.length > 12000 ? `${text.slice(0, 12000)}\n…（已截断）` : text;
+    },
+    klineOpen() {
+      return Boolean(this.kline.code) && !this.sourceView && !this.archiveOpen && !this.metricsOpen;
     },
     archiveCodes() {
       return this.archiveList.map((item) => item.code);
@@ -1241,6 +1610,31 @@ createApp({
       window.addEventListener("mousemove", move);
       window.addEventListener("mouseup", up);
     },
+    klineWidthLimit() {
+      // 中间对话区至少留 520px，K 线面板最宽 640px
+      return Math.max(280, Math.min(640, window.innerWidth - 520));
+    },
+    // 拖 K 线面板左边缘调宽：往左拖变宽，宽度记在 localStorage
+    startKlineResize(event) {
+      event.preventDefault();
+      const startX = event.clientX;
+      const startWidth = this.klineWidth;
+      const move = (moveEvent) => {
+        const next = startWidth + (startX - moveEvent.clientX);
+        this.klineWidth = Math.min(Math.max(next, 280), this.klineWidthLimit());
+      };
+      const up = () => {
+        this.klineResizing = false;
+        window.removeEventListener("mousemove", move);
+        window.removeEventListener("mouseup", up);
+        try {
+          localStorage.setItem("klineWidth", String(Math.round(this.klineWidth)));
+        } catch (error) { /* 存不下来也不影响使用 */ }
+      };
+      this.klineResizing = true;
+      window.addEventListener("mousemove", move);
+      window.addEventListener("mouseup", up);
+    },
     // 拖侧栏左边缘调宽：往左拖变宽，宽度记在 localStorage
     startSourceResize(event) {
       event.preventDefault();
@@ -1369,11 +1763,44 @@ createApp({
     },
 
     // ---------------- 两栏状态 ----------------
+    // 只在换公司时取一次；notify 在流式回复里会被多次触发，同一代码不重复请求
+    showKline(state) {
+      const code = /^\d{6}$/.test(state.code || "") ? state.code : "";
+      if (!code) {
+        if (this.kline.code) this.kline = { code: "", name: "", bars: [], loading: false, error: "" };
+        return;
+      }
+      if (code === this.kline.code) {
+        if (state.name) this.kline.name = state.name;
+        return;
+      }
+      this.kline = { code, name: state.name || "", bars: [], loading: true, error: "" };
+      const seq = ++this.klineSeq;
+      apiFetch(`/api/stocks/${code}/kline?days=500`)
+        .then(async (response) => {
+          if (!response.ok) {
+            const body = await response.json().catch(() => ({}));
+            throw new Error(body.error || `HTTP ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (seq !== this.klineSeq) return;
+          this.kline.bars = data.bars || [];
+          this.kline.loading = false;
+        })
+        .catch((error) => {
+          if (seq !== this.klineSeq) return;
+          this.kline.loading = false;
+          this.kline.error = error.message || "日线加载失败";
+        });
+    },
     onLeftState(state) {
       this.leftCid = state.id;
       if (state.id) localStorage.setItem(STORAGE_KEY, String(state.id));
       else localStorage.removeItem(STORAGE_KEY);
       document.title = state.name ? `投资助手 · ${state.name}` : "投资助手";
+      this.showKline(state);
     },
     onRightState(state) {
       this.rightCid = state.id;
@@ -1384,6 +1811,7 @@ createApp({
   created() {
     this.sourceMsg = null;
     this.sourceIndex = -1;
+    this.klineSeq = 0;
     const savedWidth = Number(localStorage.getItem("sourceWidth"));
     if (Number.isFinite(savedWidth) && savedWidth >= 300) {
       this.sourceWidth = Math.min(savedWidth, this.sourceWidthLimit());
@@ -1391,6 +1819,10 @@ createApp({
     const savedSide = Number(localStorage.getItem("sideWidth"));
     if (Number.isFinite(savedSide) && savedSide >= 220) {
       this.sideWidth = Math.min(savedSide, this.sideWidthLimit());
+    }
+    const savedKline = Number(localStorage.getItem("klineWidth"));
+    if (Number.isFinite(savedKline) && savedKline >= 280) {
+      this.klineWidth = Math.min(savedKline, this.klineWidthLimit());
     }
     this.onEscape = (event) => {
       if (event.key === "Escape") this.closeSource();

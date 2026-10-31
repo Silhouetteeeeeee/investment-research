@@ -21,8 +21,15 @@
 | GET | `/api/research/companies?query=` | `ResearchController` | 研究档案公司列表 |
 | GET | `/api/research/companies/{code}?section=&limit=&offset=&status=` | `ResearchController` | 档案详情/分页；`code` 必须 `\d{6}` 否则 404；未知 `section` → 400 `{"error":"unknown section"}`；`limit` 夹到 1..500，默认 200 |
 | GET | `/api/metrics` | `MetricsController` | 系统 CPU/内存 + 各工具调用次数、成功率、平均/P95/P99；进程内存、启动以来，缓存命中不计入 |
+| GET | `/api/stocks/{code}/kline?days=120` | `StockChartController` | 个股日线（前复权）；`code` 必须 `\d{6}` 否则 404；`days` 夹到 20..500，非法值按 120；优先腾讯、东财兜底，结果落 `kline_daily`；两家都失败且有旧缓存时返回旧缓存 |
 
 会话不存在时统一 404 `{"error":"not found"}`。
+
+### `GET /api/stocks/{code}/kline`
+
+供会话右侧日 K 面板直接读，不经过模型。响应 `{"code":"600519","days":120,"bars":[{date,open,close,high,low,volume,amount}]}`，`date` 为 `YYYY-MM-DD`，价格为前复权，`volume` 单位是股。
+
+数据源顺序：腾讯 `fqkline`（一次最多 800 根，这里固定取 500 根）→ 东财 `push2his`（`fqt=1`）。取回后按 `code + trade_date` upsert 进 `kline_daily`；同一只股票当天只请求一次，15:00 前抓过的收盘后再刷新一次。腾讯不返回成交额，此时 `amount` 为 `null`。
 
 ### `GET /api/metrics`
 

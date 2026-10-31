@@ -39,7 +39,7 @@ Python 仓库**保持不动**，作为金标准对照基准（含 `data/stock.db
 | 阶段 4 | 硬化：全量对照、慢查询与并发、日志/指标/追踪、备份恢复演练、MySQL profile（Testcontainers）、Redis/RabbitMQ profile 可启动 | **计划实现** | 无代码证据；`docs/` 中无阶段 4 计划 |
 | 阶段 5 | 切换：云服务器部署、Python 版停服、保留金标准夹具 | **计划实现** | 未开始 |
 
-当前分支 `main`，HEAD 见 `git log`。`./mvnw verify` 现状：core 130 / data 130 / app 72 全绿。
+当前分支 `main`，HEAD 见 `git log`。`./mvnw verify` 现状：core 130 / data 134 / app 75 全绿。
 
 ## 4. 技术栈
 
