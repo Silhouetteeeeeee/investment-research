@@ -31,10 +31,12 @@ export APP_DATA_DIR=./var
 
 ```bash
 ./mvnw -pl app -am install -DskipTests
-APP_SKILLS_DIR=../skills ./mvnw -pl app spring-boot:run
+APP_SKILLS_DIR=../skills ./mvnw -pl app spring-boot:run \
+  -Dspring-boot.run.arguments=--spring.web.resources.static-locations=file:../frontend/
 ```
 
-`spring-boot:run` 的工作目录是 `app/`，所以 `skills` 要用 `APP_SKILLS_DIR` 指回仓库根。
+`spring-boot:run` 的工作目录是 `app/`，所以 `skills` 要用 `APP_SKILLS_DIR` 指回仓库根，
+静态页也要用 `static-locations` 指回仓库根（默认 `./frontend` 会落到 `app/frontend`，页面 404）。
 
 或打包成可执行 jar 后运行：
 
