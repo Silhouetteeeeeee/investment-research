@@ -10,6 +10,7 @@ import com.investmentresearch.core.domain.ToolSchema;
 import com.investmentresearch.core.domain.TraceStep;
 import com.investmentresearch.core.run.RunRecorder;
 import com.investmentresearch.core.run.RunRecord;
+import com.investmentresearch.core.service.QuestionRouter;
 import com.investmentresearch.core.tool.ToolRegistry;
 import io.agentscope.core.agent.Agent;
 import io.agentscope.core.agent.RuntimeContext;
@@ -131,12 +132,14 @@ public final class AgentEngine implements AssistantEngine {
                         properties.maxTurns(),
                         toolSchemas);
         recorder.start(conversationId, question);
-        RunState state = new RunState(conversationId, code, listener, recorder);
+        // Python api.py:71 —— 大盘问题不绑公司，否则工具会把「MARKET」当成公司名去解析
+        String defaultCompany = QuestionRouter.MARKET_CODE.equals(code) ? "" : code;
+        RunState state = new RunState(conversationId, defaultCompany, listener, recorder);
         RuntimeContext context =
                 RuntimeContext.builder()
                         .userId(USER_ID)
                         .sessionId(Long.toString(conversationId))
-                        .put(COMPANY_KEY, code == null ? "" : code)
+                        .put(COMPANY_KEY, defaultCompany == null ? "" : defaultCompany)
                         .put(RunState.class, state)
                         .build();
 

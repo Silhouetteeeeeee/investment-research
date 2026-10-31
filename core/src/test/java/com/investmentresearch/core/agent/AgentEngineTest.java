@@ -88,6 +88,20 @@ class AgentEngineTest {
     }
 
     @Test
+    void market_conversation_has_no_default_company() {
+        ScriptedModel model =
+                new ScriptedModel(
+                        ScriptedModel.toolCall("get_market_overview", Map.of()),
+                        ScriptedModel.text("大盘偏强[[market:index:202610301500]]。"));
+        FakeMarketTool tool = new FakeMarketTool();
+
+        engine(model, tool).ask(1, "MARKET", "大盘", "今天大盘怎么样", new RecordingListener());
+
+        assertThat(tool.defaultCompanies).containsExactly("");
+        assertThat(allText(model.calls().get(0))).contains("未指定（大盘/市场问题不需要公司）");
+    }
+
+    @Test
     void run_payload_can_be_persisted_with_model_and_tool_stages() {
         ScriptedModel model =
                 new ScriptedModel(
@@ -461,6 +475,36 @@ class AgentEngineTest {
                                     "2026-06-30",
                                     "2026-06-30T10:00:00Z")),
                     Map.of("name", "东鹏饮料"));
+        }
+    }
+
+    private static final class FakeMarketTool implements ResearchTool {
+        private final List<String> defaultCompanies = new ArrayList<>();
+        private final ToolSchema schema =
+                new ToolSchema(
+                        "get_market_overview",
+                        "大盘全景",
+                        Map.of("type", "object", "properties", Map.of()));
+
+        @Override
+        public ToolSchema schema() {
+            return schema;
+        }
+
+        @Override
+        public ToolResult execute(Map<String, Object> arguments, String defaultCompany) {
+            defaultCompanies.add(defaultCompany);
+            return ToolResult.ok(
+                    null,
+                    "2026-10-30 15:00",
+                    List.of(
+                            new Source(
+                                    "market:index:202610301500",
+                                    "指数行情",
+                                    "新浪财经",
+                                    "2026-10-30 15:00",
+                                    "2026-10-30 15:01")),
+                    Map.of("state", "强势"));
         }
     }
 

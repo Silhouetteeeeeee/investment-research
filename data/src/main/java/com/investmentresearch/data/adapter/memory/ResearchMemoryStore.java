@@ -167,7 +167,11 @@ public class ResearchMemoryStore implements ResearchMemoryPort {
     }
 
     @Override
-    public Map<String, Object> append(
+    /**
+     * 单实例部署，串行化写入：并发 append 会同时 SELECT MAX 再 INSERT，SQLite 只会回 SQLITE_BUSY
+     * 或主键冲突，不会自己变成「已存在」。串行比在每个分支重试便宜，也更接近 Python 的单写者。
+     */
+    public synchronized Map<String, Object> append(
             String code, String section, Map<String, Object> record, String name) {
         String key = MemoryRules.code(code);
         if (!MemoryRules.SECTIONS.contains(section)) {
@@ -465,28 +469,15 @@ public class ResearchMemoryStore implements ResearchMemoryPort {
                             if (subject.isEmpty()) {
                                 subject = (String) company.get("name");
                             }
-                            try {
-                                jdbc.update(
-                                        "INSERT INTO memory_fact (code, fact_id, subject, fact_type, content, "
-                                                + "metrics_json, report_period, published_at, source_id, source_label, "
-                                                + "source_locator, source_url, verification_status, dedupe_key, created_at, updated_at) "
-                                                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                        code, factId, subject, fact.get("fact_type"), fact.get("content"),
-                                        json(fact.get("metrics")), fact.get("report_period"), fact.get("published_at"),
-                                        fact.get("source_id"), fact.get("source_label"), fact.get("source_locator"),
-                                        fact.get("source_url"), fact.get("verification_status"), dedupeKey, now, now);
-                            } catch (org.springframework.dao.DuplicateKeyException duplicate) {
-                                // 并发重复：另一个请求已插入同一 dedupe_key。
-                                return new Object[] {
-                                    rows(
-                                                    "SELECT * FROM memory_fact WHERE code = ? AND dedupe_key = ?",
-                                                    ResearchMemoryStore::factRow,
-                                                    code,
-                                                    dedupeKey)
-                                            .get(0),
-                                    false
-                                };
-                            }
+                            jdbc.update(
+                                    "INSERT INTO memory_fact (code, fact_id, subject, fact_type, content, "
+                                            + "metrics_json, report_period, published_at, source_id, source_label, "
+                                            + "source_locator, source_url, verification_status, dedupe_key, created_at, updated_at) "
+                                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    code, factId, subject, fact.get("fact_type"), fact.get("content"),
+                                    json(fact.get("metrics")), fact.get("report_period"), fact.get("published_at"),
+                                    fact.get("source_id"), fact.get("source_label"), fact.get("source_locator"),
+                                    fact.get("source_url"), fact.get("verification_status"), dedupeKey, now, now);
                             touchCompany(code, now, false);
                             return new Object[] {fact(code, factId), true};
                         });

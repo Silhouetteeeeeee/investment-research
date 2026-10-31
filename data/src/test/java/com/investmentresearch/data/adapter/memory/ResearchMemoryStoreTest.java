@@ -6,8 +6,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.investmentresearch.core.research.MemoryException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,6 +88,38 @@ class ResearchMemoryStoreTest {
         assertThat(first).containsEntry("created", true);
         assertThat(second).containsEntry("created", false);
         assertThat(count("memory_fact")).isEqualTo(1);
+    }
+
+    @Test
+    void concurrent_appends_of_the_same_fact_keep_one_row() throws Exception {
+        Map<String, Object> fact =
+                Map.of(
+                        "fact_type", "经营数据",
+                        "content", "2026 年前三季度营收 12.3 亿元",
+                        "report_period", "2026-09-30",
+                        "source_id", "finance:600519:2026-09-30");
+        int threads = 4;
+        CyclicBarrier start = new CyclicBarrier(threads);
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+        try {
+            List<Future<Map<String, Object>>> futures = new ArrayList<>();
+            for (int i = 0; i < threads; i++) {
+                futures.add(
+                        pool.submit(
+                                () -> {
+                                    start.await();
+                                    return store.append("600519", "facts", fact, "贵州茅台");
+                                }));
+            }
+            List<Map<String, Object>> results = new ArrayList<>();
+            for (Future<Map<String, Object>> future : futures) {
+                results.add(future.get(10, TimeUnit.SECONDS));
+            }
+            assertThat(results).filteredOn(row -> Boolean.TRUE.equals(row.get("created"))).hasSize(1);
+            assertThat(count("memory_fact")).isEqualTo(1);
+        } finally {
+            pool.shutdownNow();
+        }
     }
 
     @Test

@@ -13,7 +13,7 @@
 | `DEEPSEEK_API_KEY` | 运行时需要 | 模型调用密钥。只从环境读取，不要写进仓库或提交。 |
 | `APP_DATA_DIR` | 否 | SQLite 和运行数据目录，默认 `./var`（相对启动目录）。 |
 | `APP_SKILLS_DIR` | 否 | `skills/` 所在目录，默认 `./skills`（相对启动目录）。 |
-| `APP_MEMORY_IMPORT` | 否 | Python 版研究档案（JSON）目录，启动时一次性导入 SQLite；不设置就从空档案开始。 |
+| `APP_MEMORY_IMPORT` | 否 | Python 版 `research_memory.db` 的文件路径；启动时在档案为空的前提下一次性导入。 |
 
 `.env`、`*.db`、`var/` 已在 `.gitignore` 中，密钥不要提交。
 
@@ -101,8 +101,8 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 
 以下与 Python 版仍有差距，先记录在这里：
 
-- **研究档案迁移**：历史记忆不在 SQLite 里时，用 `APP_MEMORY_IMPORT` 指向 Python 版的
-  JSON 档案目录，启动时一次性导入；不设置就只从空档案开始。
+- **研究档案迁移**：用 `APP_MEMORY_IMPORT` 指向 Python 版的研究档案库文件
+  （`research_memory.db`），启动时导入；档案非空或路径不是文件就跳过，不设置则从空档案开始。
 - **token 用量估算**：没有真实模型用量时，运行记录与页面占用都按字符估算
   （`usage_source: "estimate"`），只适合看趋势，不能当作计费依据；上游返回 usage 时才标 `"api"`。
 - **缺 key 时的问题不落历史**：未设置 `DEEPSEEK_API_KEY` 时应用照常启动，`/api/ask` 返回
