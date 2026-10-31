@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -32,6 +34,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 /** 东财 F10 主营构成：上游 → 解析 → 整份替换 → 读回 → 输出。 */
 @Repository
 public class SegmentAdapter implements SegmentPort {
+    private static final Logger LOG = LoggerFactory.getLogger(SegmentAdapter.class);
     static final String[] PREFERRED_KINDS = {"2", "3", "1"};
     private static final String[][] SLICE_KINDS = {{"2", "product"}, {"3", "region"}};
     private static final Map<String, String> KIND_LABELS =
@@ -109,11 +112,20 @@ public class SegmentAdapter implements SegmentPort {
                     }
                 } catch (RuntimeException error) {
                     if (cached.isEmpty()) {
+                        LOG.warn(
+                                "主营构成上游取数失败且无缓存：code={} reason={}",
+                                code,
+                                error.getMessage());
                         return ToolResult.failure(code, error.getMessage());
                     }
+                    LOG.warn(
+                            "主营构成上游取数失败，回退本地缓存：code={} reason={}",
+                            code,
+                            error.getMessage());
                     rows = cached;
                 }
                 if (rows.isEmpty() && !cached.isEmpty()) {
+                    LOG.warn("主营构成上游返回空数据，回退本地缓存：code={}", code);
                     rows = cached;
                 }
             }
@@ -505,6 +517,7 @@ public class SegmentAdapter implements SegmentPort {
             Duration age = Duration.between(LocalDateTime.parse(fetchedAt, TIMESTAMP), now);
             return age.compareTo(Duration.ofHours(24)) < 0;
         } catch (RuntimeException error) {
+            LOG.debug("主营构成缓存时间无法解析，按过期处理：fetched_at={}", fetchedAt);
             return false;
         }
     }
@@ -559,6 +572,7 @@ public class SegmentAdapter implements SegmentPort {
             int year = Integer.parseInt(reportDate.substring(0, 4));
             return (year - 1) + reportDate.substring(4);
         } catch (RuntimeException error) {
+            LOG.debug("主营构成报告期无法解析：{}", reportDate);
             return "";
         }
     }

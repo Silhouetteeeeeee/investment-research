@@ -9,7 +9,7 @@
 | Agent 会话状态 | `${APP_DATA_DIR}/sessions/default/**` | AgentScope `JsonFileAgentStateStore` | 删除会话时一起删 |
 | Agent 工作区 | `${APP_DATA_DIR}/workspace/` | HarnessAgent 工作区 | 不清理 |
 | 进程内缓存 | 各适配器 `ConcurrentHashMap` | 行情/板块/筛选/复盘的短 TTL 结果 | 重启即失；见 §5 |
-| 工具结果缓存 | `core.agent.ToolCallCache` | 按会话的 `ToolResult` | 删会话时清；17 个时效性工具不入缓存 |
+| 工具结果缓存 | `core.agent.ToolCallCache` | 按会话的 `ToolResult` | 删会话时清，另有 500 会话 / 200 条每会话 / 30 分钟 TTL 上限；17 个时效性工具不入缓存 |
 
 连接：`jdbc:sqlite:file:${APP_DATA_DIR:./var}/app.db?busy_timeout=5000`，Hikari `maximum-pool-size: 4`。单写者模型，写并发靠 `busy_timeout` + 业务层串行（`ResearchMemoryStore.append` 为 `synchronized`）。
 
@@ -79,7 +79,7 @@
 | 研报观点 | 24 小时 | `AnalystViewAdapter` |
 | 调研纪要 | 30 天 | `ResearchNotesAdapter.NOTE_MAX_AGE_HOURS=720` |
 | 大盘/新闻/板块/筛选/复盘（进程内） | 板块 600s、筛选 900s、复盘 900s | `SectorAdapter`、`ScreenAdapter`、`ReviewAdapter` |
-| 工具结果（会话内） | 会话生命周期，17 个时效工具除外 | `ToolCallCache`、`AgentEngine.UNCACHED_TOOLS` |
+| 工具结果（会话内） | 30 分钟 TTL，每会话最多 200 条、最多 500 个会话，LRU 淘汰；17 个时效工具不入缓存 | `ToolCallCache`、`AgentEngine.UNCACHED_TOOLS` |
 
 ## 5. 数据源矩阵
 

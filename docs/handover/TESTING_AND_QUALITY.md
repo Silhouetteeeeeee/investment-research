@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（阶段 3 收尾 + 评审修复后，见 `.superpowers/sdd/2026-10-31-java-migration-phase3/progress.md`）：`./mvnw verify` 通过，**core 118 / data 119 / app 50**；`spotless:check` 退出 0。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（阶段 3 收尾 + 评审修复后，见 `.superpowers/sdd/2026-10-31-java-migration-phase3/progress.md`）：`./mvnw verify` 通过，**core 121 / data 119 / app 54**；`spotless:check` 退出 0。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 
@@ -28,12 +28,12 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 
 ## 3. 测试清单
 
-### core（16 类 + 1 个假模型，118 个用例）
+### core（16 类 + 1 个假模型，121 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
 | `agent/AgentEngineTest` | 14 | 流式顺序、大盘无默认公司、运行记录落盘、skill 加载、引用清洗、会话复用、缓存/不缓存、未知工具、轮次用尽、工具异常、参数校验失败 trace、失败运行记录 |
-| `agent/ToolCallCacheTest` | 4 | 会话隔离、key 规范化、cached 标记、清理范围 |
+| `agent/ToolCallCacheTest` | 7 | 会话隔离、key 规范化、cached 标记、清理范围、每会话 LRU 容量、会话数上限、TTL 过期 |
 | `citation/CitationValidatorTest` | 16 | 已知/未知/重复 id、无引用数字、嵌套、裁剪、大小写、Unicode 数字、null |
 | `domain/ToolResultTest` | 6 | 字段省略、cached note、失败形状、Python 数值/字符串表示、工具消息金标准 |
 | `research/ResearchScoringTest` | 3 | 筛选/策略/复盘金标准 |
@@ -75,7 +75,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `upstream/RecordedFixtureTest` | 2 | 118 个录制映射可回放解码；56 页股票列表覆盖全 A 股 |
 | `upstream/UpstreamClientTest` | 7 | 字符集、500 重试、404 不重试、查询串/头脱敏、信号量不死锁、UTF-8 默认 |
 
-### app（14 类，50 个用例）
+### app（15 类，54 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -84,6 +84,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `e2e/AskFlowTest` | 5 | 完整 SSE + 落库 + 回放；重启后读回；运行详情工具阶段；管理层 skill→工具；大盘 skill→取数 |
 | `api/AskControllerTest` | 4 | 空问题 400、state/text/done + 落库、断连不中断落库、引擎错误带 run 并落库 |
 | `api/SseWriterTest` | 4 | 帧格式、中文不转义、JSR-310 ISO、断连吞异常 |
+| `api/AuditLogFilterTest` | 4 | 成功请求字段、401 标 `auth=missing/invalid`、异常记录 failure、非 `/api` 不记录 |
 | `api/MemoryApiTest` | 4 | 导入公司列表、详情分节/计数、分节分页、坏 section/code |
 | `SkillContentTest` | 3 | skill 正文与 Python 快照一致、frontmatter name 与目录一致、引用的工具存在 |
 | `api/AskStreamAuthTest` | 2 | 带令牌异步流派 200 全量；无令牌 401 |

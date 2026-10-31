@@ -13,11 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ConversationRepositoryImpl implements ConversationRepository {
+    private static final Logger LOG = LoggerFactory.getLogger(ConversationRepositoryImpl.class);
     private static final DateTimeFormatter TIMESTAMP =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
 
@@ -75,6 +78,13 @@ public class ConversationRepositoryImpl implements ConversationRepository {
             Map<String, Object> payload = readMap(row.getPayloadJson());
             return payload == null ? null : new StoredMessage(row.getRole(), payload);
         } catch (RuntimeException e) {
+            // 单条坏 payload 仍按 Python 的做法跳过，但留下定位线索。
+            LOG.warn(
+                    "跳过无法解析的消息：conversation={} seq={} role={}",
+                    row.getConversationId(),
+                    row.getSeq(),
+                    row.getRole(),
+                    e);
             return null;
         }
     }

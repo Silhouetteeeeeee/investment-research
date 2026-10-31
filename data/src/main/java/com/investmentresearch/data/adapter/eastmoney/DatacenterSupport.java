@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 阶段 2 各研究工具共用的缓存与数值小工具。Python 里十三份 {@code _age_hours/_yi/_num} 是复制的，
  * 这里合成一份；口径照 {@code stock/dividends.py} 等模块。
  */
 final class DatacenterSupport {
+    private static final Logger LOG = LoggerFactory.getLogger(DatacenterSupport.class);
+
     private DatacenterSupport() {}
 
     /** Python {@code _age_hours}：没有或解析不了的时间戳视为无限旧。 */
@@ -29,6 +33,7 @@ final class DatacenterSupport {
             LocalDateTime fetched = LocalDateTime.parse(fetchedAt, EastmoneySupport.TIMESTAMP);
             return Duration.between(fetched, LocalDateTime.now(clock)).toMillis() / 3_600_000.0;
         } catch (RuntimeException error) {
+            LOG.debug("缓存时间戳无法解析，按过期处理：fetched_at={}", fetchedAt);
             return Double.POSITIVE_INFINITY;
         }
     }
@@ -111,6 +116,7 @@ final class DatacenterSupport {
                             .rows();
             return rows.isEmpty() ? null : EastmoneySupport.text(rows.get(0).get("CONTENT"));
         } catch (RuntimeException error) {
+            LOG.debug("调研纪要取数失败，按无数据处理", error);
             return null;
         }
     }
@@ -122,6 +128,7 @@ final class DatacenterSupport {
         try {
             return EastmoneySupport.MAPPER.readTree(json);
         } catch (Exception error) {
+            LOG.debug("上游 JSON 无法解析，按空对象处理", error);
             return EastmoneySupport.MAPPER.createObjectNode();
         }
     }

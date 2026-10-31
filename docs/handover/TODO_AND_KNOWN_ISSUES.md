@@ -34,11 +34,11 @@
 | --- | --- | --- | --- |
 | 6 | `AgentEngine` 694 行上帝类，事件映射/缓存/引用/运行记录耦合 | `core/agent/AgentEngine.java` | 中 |
 | 7 | 工具层重复解析帮助函数；两个 memory 工具重复 map 强转 | `CompanyTool` vs `ResolveCompanyTool`；`AppendResearchRecordTool`/`UpdateResearchRecordTool` | 低 |
-| 8 | `ToolCallCache` 无容量/TTL 上限 | `core/agent/ToolCallCache.java` | 中（长会话内存） |
+| 8 | ~~`ToolCallCache` 无容量/TTL 上限~~ **已修**：每会话 200 条、最多 500 个会话、30 分钟 TTL，均按 LRU/访问时间淘汰 | `core/agent/ToolCallCache.java`；`ToolCallCacheTest` 7 个用例 | — |
 | 9 | `FileRunStore.prune` 把目录内所有 `*.json` 当运行文件 | `FileRunStore.java:100` | 低 |
 | 10 | 大盘词用宽泛子串匹配，无关问题可能被路由成大盘会话 | `QuestionRouter.java:21-35` | 中（影响用户体验） |
 | 11 | `ConversationController` 每请求多次 `find`/`messages`，无事务 | `ConversationController.java` | 低 |
-| 12 | 数据层 `catch (RuntimeException)` 多达 66 处，部分吞掉 DB/上游异常 | `data/src/main` | 中（排障困难） |
+| 12 | 数据层 `catch (RuntimeException)` 约 71 处；多数会 `throw` 或写进 `ToolResult.errors`（已暴露给调用方），真正静默吞掉的约 11 处**已补日志**（退化到缓存/空值处用 WARN，纯解析兜底用 DEBUG）。剩余宽泛 catch 是有意的降级路径，不再逐处改窄 | `data/src/main` | 低（排障已可定位） |
 | 13 | `PledgeAdapter.daysSince` 用 `LocalDate.now()` 而非注入的 `Clock` | `PledgeAdapter.java:516` | 低（测试时钟与 stale 判断可能不一致） |
 | 14 | `DividendAdapter` 直接读 `fin_income`，不先确保财报新鲜 | `DividendAdapter.java:257` 的 `shortcut:` | 低（分红率可能用旧利润） |
 | 15 | 公司代码/交易所前缀归一化有 4+ 份重复实现 | `StockDirectoryAdapter`、`F10Support`、`FinanceSupport`、`EastmoneySupport` | 低 |
@@ -62,7 +62,7 @@
 | 3 | `APP_API_TOKEN` 只校验非空 + ASCII，不校验最小长度 | `ApiTokenProperties`；`.env.example` 说 ≥32 | 部署时用 `openssl rand -hex 32`；代码层可补长度校验 |
 | 4 | 管理端口 8081 只听回环且只暴露 health | `application.yml` | 保持；不要在 compose 里发布 |
 | 5 | `XQ_TOKEN` 通过 compose 注入但无人使用 | 见 §1 #4 | 要么删，要么实现，避免「以为配了就生效」 |
-| 6 | 无速率限制、无审计日志 | 代码中无相关实现 | 单用户场景可接受；公网暴露前评估 |
+| 6 | 无速率限制；审计日志已补（`/api/**` 单行 JSON 写 `var/logs/audit.log`） | `AuditLogFilter`；代码中无速率限制 | 单用户场景可接受；公网暴露前评估限流 |
 | 7 | 运行原文与消息 payload 含原始上游数据，可能含敏感信息 | `var/runs`、`message.payload_json` | 备份/导出时注意脱敏 |
 
 ## 4. 文档与配置不一致

@@ -16,9 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** datacenter 适配器共用的小工具，逐个对应 Python 的 {@code stock.peers} / {@code stock.valuation}。 */
 final class EastmoneySupport {
+    private static final Logger LOG = LoggerFactory.getLogger(EastmoneySupport.class);
+
     static final ObjectMapper MAPPER = new ObjectMapper();
     static final DateTimeFormatter TIMESTAMP =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -127,6 +131,7 @@ final class EastmoneySupport {
         try {
             fetched = LocalDateTime.parse(newest, TIMESTAMP);
         } catch (RuntimeException error) {
+            LOG.debug("缓存时间戳无法解析，按过期处理：newest={}", newest);
             return false;
         }
         Duration age = Duration.between(fetched, LocalDateTime.now(clock));
