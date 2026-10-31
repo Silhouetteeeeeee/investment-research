@@ -141,6 +141,8 @@ final class EastmoneySupport {
     /**
      * 取一个 datacenter 报表的全部分页行，页数上限由调用方给——Python 各模块不同：
      * 机构调研 30 页、其余报表 20 页、分红 3 页、同业 5 页、单页接口 1 页。
+     * {@code sortTypes}（如 {@code -1,1}）与 {@code sortColumns}（如 {@code NOTICE_DATE}）
+     * 必须是两个独立参数：上游对调后只报「-1 参数校验失败」。
      * 信封校验照 {@code StockMasterSync.fetchPage}：空 body、HTML/WAF、截断 JSON、
      * success 不为真、result/data 形状不对，都按上游失败抛出。
      */
@@ -149,7 +151,8 @@ final class EastmoneySupport {
             String endpoint,
             String reportName,
             String filter,
-            String sort,
+            String sortTypes,
+            String sortColumns,
             int pageSize,
             int maxPages,
             String family) {
@@ -158,7 +161,8 @@ final class EastmoneySupport {
                         endpoint,
                         reportName,
                         filter,
-                        sort,
+                        sortTypes,
+                        sortColumns,
                         "ALL",
                         pageSize,
                         maxPages,
@@ -174,12 +178,12 @@ final class EastmoneySupport {
             String endpoint,
             String reportName,
             String filter,
-            String sort,
+            String sortTypes,
+            String sortColumns,
             String columns,
             int pageSize,
             int maxPages,
             String family) {
-        String[] sortParts = sort.split(":", 2);
         List<JsonNode> rows = new ArrayList<>();
         int page = 1;
         int pages = 1;
@@ -193,8 +197,8 @@ final class EastmoneySupport {
                             filter,
                             page,
                             pageSize,
-                            sortParts[0],
-                            sortParts[1]);
+                            sortTypes,
+                            sortColumns);
             JsonNode root;
             try {
                 root = MAPPER.readTree(upstreamClient.get(url, Map.of()));

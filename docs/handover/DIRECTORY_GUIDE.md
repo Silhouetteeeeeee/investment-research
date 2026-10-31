@@ -37,10 +37,10 @@
 | `core/research` | `MarketState`、`MemoryRules`、`MemoryException`、`NewsEvents`、`Review`、`Screening`、`SectorRotation`、`Strategy` | 与 Python 对齐的纯计算规则 |
 | `core/run` | `FileRunStore`、`RunRecord`、`RunRecorder`、`RunSummary` | 运行原文生成与落盘 |
 | `core/service` | `AskService`、`CompanyResolver`、`ContextMeter`、`EventSink`、`QuestionRouter`、`ResolvedCompany`、`Route` | 路由、编排、上下文占用 |
-| `core/tool` | 32 个工具类 + `ToolRegistry`、`ToolSchemas`、`ToolMetrics`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport` | 模型可调用的工具与执行统计 |
+| `core/tool` | 33 个工具类（含 Java 新增的 `WebSearchTool`）+ `ToolRegistry`、`ToolSchemas`、`ToolMetrics`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport` | 模型可调用的工具与执行统计 |
 | `core/valuation` | `ValuationMath`、`ValuationInputError` | Decimal 估值计算 |
 
-资源：`core/src/main/resources/tool-schemas.json`（33 条 schema，生成物）、`prompts/system.md`（系统提示词）。
+资源：`core/src/main/resources/tool-schemas.json`（34 条 schema；33 条是生成物，`web_search` 为 Java 新增手工追加）、`prompts/system.md`（系统提示词）。
 
 ## 3. `data/`（87 文件，约 17.7k 行）
 
@@ -50,20 +50,21 @@
 | `data/adapter/eastmoney` | 18 个类 | 15 个适配器（东财 datacenter/F10/研报/估值）+ `EastmoneySupport`、`DatacenterSupport`、`ValuationSupport` |
 | `data/adapter/f10` | `CompanyProfileAdapter`、`SegmentAdapter`、`F10Support` | 东财 F10 概况/主营构成 |
 | `data/adapter/finance` | `FinanceAdapter`、`FinancialHistoryAdapter`、`FinanceSnapshot`、`FinanceMetrics`、`FinanceStatements`、`FinanceSupport`、`FinanceException` | 新浪财报三表 → 快照/趋势 |
-| `data/adapter/market` | 19 个类 | 6 个适配器（大盘、新闻、板块、选股、策略、复盘）+ 12 个新闻/行情源 + `MarketSupport` |
+| `data/adapter/market` | 21 个类 | 7 个适配器（大盘、新闻、板块、选股、策略、复盘、日 K）+ 13 个新闻/行情源 + `MarketSupport` |
 | `data/adapter/memory` | `ResearchMemoryStore` | 研究档案读写与旧库导入 |
+| `data/adapter/search` | `WebSearchAdapter` | 联网搜索：百度千帆优先、DeepSeek 回落 |
 | `data/config` | `UpstreamConfig`、`MybatisPlusConfig` | RestClient 与 Mapper 扫描 |
-| `data/persistence` | 31 个类 | MyBatis 实体/Mapper、`ConversationRepositoryImpl`、`ResearchCache`/`ResearchCacheStore`、`DailyReportStore` |
+| `data/persistence` | 32 个类 | MyBatis 实体/Mapper、`ConversationRepositoryImpl`、`ResearchCache`/`ResearchCacheStore`、`DailyReportStore`、`KlineDailyStore` |
 | `data/sync` | `StockMasterSync` | 每日 06:00 刷新股票主表 |
 | `data/upstream` | `UpstreamClient`、`RestClientUpstreamClient`、`UpstreamException` | 统一 HTTP（禁代理、UA、60s、2 次、并发 4） |
-| `data/src/main/resources/db/migration/sqlite` | `V1`–`V11` | Flyway 迁移 |
+| `data/src/main/resources/db/migration/sqlite` | `V1`–`V12` | Flyway 迁移 |
 
 ## 4. `app/`（12 文件，约 1.1k 行）
 
 | 包 | 类 | 职责 |
 | --- | --- | --- |
 | `app` | `Application` | 启动；创建 `APP_DATA_DIR`；`@EnableScheduling` |
-| `app/api` | `AskController`、`ConversationController`、`ResearchController`、`MetricsController`、`HealthController`、`SseWriter`、`ApiConfig` | HTTP/SSE |
+| `app/api` | `AskController`、`ConversationController`、`ResearchController`、`StockChartController`、`MetricsController`、`HealthController`、`SseWriter`、`ApiConfig` | HTTP/SSE |
 | `app/config` | `AssistantConfig`、`MemoryImportRunner` | 全部 Bean 装配、旧档案导入 |
 | `app/security` | `SecurityConfig`、`TokenAuthFilter`、`ApiTokenProperties` | 令牌鉴权 |
 
@@ -74,8 +75,8 @@
 | 路径 | 内容 |
 | --- | --- |
 | `core/src/test/java/.../{agent,citation,domain,research,run,service,tool,valuation}` | 16 个测试类 + `ScriptedModel` 假模型 |
-| `data/src/test/java/.../{adapter,eastmoney,f10,finance,market,memory,persistence,upstream}` | 28 个测试类 + `EastmoneyTestSupport`、`F10TestSupport` |
-| `app/src/test/java/.../{api,e2e,security}` | 14 个测试类（含 `ModuleBoundaryTest`（ArchUnit）、`SkillContentTest`、`AssistantWiringTest`） |
+| `data/src/test/java/.../{adapter,eastmoney,f10,finance,market,memory,persistence,upstream}` | 31 个测试类 + `EastmoneyTestSupport`、`F10TestSupport` |
+| `app/src/test/java/.../{api,e2e,security}` | 21 个测试类（含 `ModuleBoundaryTest`（ArchUnit）、`SkillContentTest`、`AssistantWiringTest`） |
 | `core/src/test/resources/golden/` | 7 个场景金标准 + `tools/`（99 个工具黄金）+ `rows/`（102 个数据库行黄金） |
 | `core/src/test/resources/fixtures/` | `stock-snapshot.db`（冻结行情/财报库）、`research-memory.db`（旧档案样本） |
 | `core/src/test/resources/skills-python/` | 14 个 Python 原文快照（`business_model` 无快照），用于 skill 正文逐字比对 |
@@ -86,10 +87,10 @@
 
 ## 6. 其他
 
-- `frontend/app.js`（1327 行）：令牌输入、markdown + 引用渲染、会话/聊天/运行详情/档案页逻辑。
-- `frontend/index.html`（557 行）：页面结构，含 `<chat-pane>` 模板。
+- `frontend/app.js`（1845 行）：令牌输入、markdown + 引用渲染、会话/聊天/运行详情/档案页逻辑、日 K 面板（`KlineChart`，SVG + MA5/10/20 + 悬停十字线 + 拖动平移/滚轮缩放，默认取 500 根、显示最近 120 根）。
+- `frontend/index.html`（640 行）：页面结构，含 `<chat-pane>` 模板与可拖宽的日 K 侧栏。
 - `frontend/boot.js`（185 行）：启动动画，Esc/空格跳过，12s 兜底。
-- `frontend/styles.css`（1421 行）。
+- `frontend/styles.css`（1588 行）。
 - `frontend/assets/`：本地内置 Vue 3.5.44、marked 18.1.1、DOMPurify 3.4.17、启动视频 `boot/1.mp4`。
 - `frontend/README.md`：**已过时**（仍写 Streamlit 8502 / `data/run_logs/`），以本目录的文档为准。
 

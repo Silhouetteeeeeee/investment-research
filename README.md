@@ -10,7 +10,8 @@
 | 变量 | 必填 | 说明 |
 | --- | --- | --- |
 | `APP_API_TOKEN` | 是 | 页面与 API 的访问令牌；浏览器首次请求时输入。 |
-| `DEEPSEEK_API_KEY` | 运行时需要 | 模型调用密钥。只从环境读取，不要写进仓库或提交。 |
+| `DEEPSEEK_API_KEY` | 运行时需要 | 模型调用密钥；也是联网搜索在百度额度用尽后的回落通道。只从环境读取，不要写进仓库或提交。 |
+| `BAIDU_API_KEY` | 否 | 百度千帆 AI 搜索密钥（每日 100 次免费）。为空时联网搜索直接走 DeepSeek Search。 |
 | `APP_DATA_DIR` | 否 | SQLite 和运行数据目录，默认 `./var`（相对启动目录）。 |
 | `APP_SKILLS_DIR` | 否 | `skills/` 所在目录，默认 `./skills`（相对启动目录）。 |
 | `APP_MEMORY_IMPORT` | 否 | Python 版 `research_memory.db` 的文件路径；启动时在档案为空的前提下一次性导入。 |
@@ -21,6 +22,7 @@
 export JAVA_HOME=/path/to/jdk-21
 export APP_API_TOKEN="$(openssl rand -hex 32)"
 export DEEPSEEK_API_KEY="sk-..."
+export BAIDU_API_KEY="..."            # 可选：联网搜索优先用它
 export APP_DATA_DIR=./var
 ```
 
@@ -82,7 +84,7 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 
 ## 工具
 
-注册顺序与 Python `assistant.tools.schemas()` 一致，共 32 个：
+前 32 个的注册顺序与 Python `assistant.tools.schemas()` 一致；第 33 个 `web_search` 是 Java 新增的联网搜索工具：
 
 `resolve_company`、`get_company_profile`、`get_finance`、`get_financial_history`、
 `get_segments`、`get_management`、`get_shareholders`、`get_peers`、`get_dividends`、
@@ -92,7 +94,7 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 `get_market_overview`、`get_news_events`、`get_sector_rotation`、`screen_candidates`、
 `build_strategy_plan`、`save_daily_judgment`、`review_research_reports`、
 `list_research_memory`、`read_research_memory`、`append_research_record`、
-`update_research_record`、`record_conclusion_change`。
+`update_research_record`、`record_conclusion_change`、`web_search`。
 
 `calc_valuation` 有 `check` / `scenario` / `terminal` 三种 `mode`；`skills/` 下
 `business_model` 之外的十四个 skill 正文与 Python 逐字一致（`business_model` 没有快照用例）。

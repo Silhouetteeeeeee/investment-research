@@ -21,8 +21,15 @@
 | GET | `/api/research/companies?query=` | `ResearchController` | 研究档案公司列表 |
 | GET | `/api/research/companies/{code}?section=&limit=&offset=&status=` | `ResearchController` | 档案详情/分页；`code` 必须 `\d{6}` 否则 404；未知 `section` → 400 `{"error":"unknown section"}`；`limit` 夹到 1..500，默认 200 |
 | GET | `/api/metrics` | `MetricsController` | 系统 CPU/内存 + 各工具调用次数、成功率、平均/P95/P99；进程内存、启动以来，缓存命中不计入 |
+| GET | `/api/stocks/{code}/kline?days=120` | `StockChartController` | 个股日线（前复权）；`code` 必须 `\d{6}` 否则 404；`days` 夹到 20..500，非法值按 120；优先腾讯、东财兜底，结果落 `kline_daily`；两家都失败且有旧缓存时返回旧缓存 |
 
 会话不存在时统一 404 `{"error":"not found"}`。
+
+### `GET /api/stocks/{code}/kline`
+
+供会话右侧日 K 面板直接读，不经过模型。响应 `{"code":"600519","days":120,"bars":[{date,open,close,high,low,volume,amount}]}`，`date` 为 `YYYY-MM-DD`，价格为前复权，`volume` 单位是股。
+
+数据源顺序：腾讯 `fqkline`（一次最多 800 根，这里固定取 500 根）→ 东财 `push2his`（`fqt=1`）。取回后按 `code + trade_date` upsert 进 `kline_daily`；同一只股票当天只请求一次，15:00 前抓过的收盘后再刷新一次。腾讯不返回成交额，此时 `amount` 为 `null`。
 
 ### `GET /api/metrics`
 
@@ -103,9 +110,10 @@ interface ResearchTool {
 }
 ```
 
-- schema 单一来源：`core/src/main/resources/tool-schemas.json`，由 `tools/golden/gen_golden.py` 从 Python `assistant.tools.schemas()` 生成，**禁止手改**。
-- 注册顺序与 Python 完全一致，由 `ToolSchemaParityTest` 校验：`resolve_company`、`get_company_profile`、`get_finance`、`get_financial_history`、`get_segments`、`get_management`、`get_shareholders`、`get_peers`、`get_dividends`、`get_insider_trades`、`get_buybacks`、`get_lockup_expiries`、`get_pledges`、`get_earnings_forecasts`、`get_institutional_research`、`get_research_notes`、`get_analyst_views`、`get_announcements`、`get_valuation`、`calc_valuation`、`get_market_overview`、`get_news_events`、`get_sector_rotation`、`screen_candidates`、`build_strategy_plan`、`save_daily_judgment`、`review_research_reports`、`list_research_memory`、`read_research_memory`、`append_research_record`、`update_research_record`、`record_conclusion_change`（32 个）。
-- `load_skill` 只是 `tool-schemas.json` 里的第 33 条 schema；实际执行由 AgentScope 的 `SkillLoadTool` 提供，模型侧名字是 `load_skill_through_path`（`AgentEngine` 的 `UNCACHED_TOOLS` 仍按 Python 名 `load_skill` 屏蔽缓存）。
+- schema 单一来源：`core/src/main/resources/tool-schemas.json`，由 `tools/golden/gen_golden.py` 从 Python `assistant.tools.schemas()` 生成，**禁止手改**。唯一例外是 Python 侧不存在的 Java 新工具 `web_search`（第 34 条），只能手工追加，`ToolSchemasTest` 里有注明。
+- 前 32 个的注册顺序与 Python 完全一致，由 `ToolSchemaParityTest` 校验：`resolve_company`、`get_company_profile`、`get_finance`、`get_financial_history`、`get_segments`、`get_management`、`get_shareholders`、`get_peers`、`get_dividends`、`get_insider_trades`、`get_buybacks`、`get_lockup_expiries`、`get_pledges`、`get_earnings_forecasts`、`get_institutional_research`、`get_research_notes`、`get_analyst_views`、`get_announcements`、`get_valuation`、`calc_valuation`、`get_market_overview`、`get_news_events`、`get_sector_rotation`、`screen_candidates`、`build_strategy_plan`、`save_daily_judgment`、`review_research_reports`、`list_research_memory`、`read_research_memory`、`append_research_record`、`update_research_record`、`record_conclusion_change`（32 个）。第 33 个是 Java 新增的 `web_search`，追加在末尾。
+- `load_skill` 只是 `tool-schemas.json` 里的 schema，没有 Java 执行类；实际执行由 AgentScope 的 `SkillLoadTool` 提供，模型侧名字是 `load_skill_through_path`（`AgentEngine` 的 `UNCACHED_TOOLS` 仍按 Python 名 `load_skill` 屏蔽缓存）。
+- `web_search`：`query` 必填、`count` 默认 5 钳到 1..10；百度千帆优先（`BAIDU_API_KEY`），任何失败回落 DeepSeek Search（`DEEPSEEK_API_KEY`）。结果归一成 `{title,url,snippet,content,date,site}`，每条生成 `web:<query-hash>:<n>` 的可引用 source；`content` 截断到 1000 字。`web_search` 在 `UNCACHED_TOOLS` 里。前端靠 source id 的 `web:` 前缀把这类引用标成「网页」（来源列表、悬停卡、来源详情侧栏），点正文角标直接新标签打开原文；改前缀会丢标记和跳转。
 
 ### 3.3 参数与钳位
 
@@ -143,6 +151,7 @@ interface ResearchTool {
 | `append_research_record` | `section*`, `record*`, `company` | — |
 | `update_research_record` | `section*`, `record_id*`, `patch*`, `company` | — |
 | `record_conclusion_change` | `company`、`conclusion_id*`、`operation*`、`old_conclusion*`、`new_conclusion*`、`new_title`、`trigger_event*`、`trigger_date*`、`evidence_ids*`、`reason*`、`impact*`、`review_status`、`confidence`、`based_on_fact_ids`、`based_on_hypothesis_ids` | — |
+| `web_search` | `query*`、`count` | 5，1..10 |
 
 公司参数由 `CompanyTool` 统一处理：未传时用会话默认公司（大盘会话为空串）；解析失败返回 `ToolResult.failure`，文案如「没有找到「X」」。
 
@@ -165,5 +174,6 @@ interface ResearchTool {
 | `ManagementPort` / `ShareholderPort` / `DividendPort` / `InsiderTradePort` / `BuybackPort` / `LockupPort` / `PledgePort` / `ForecastPort` / `ResearchPort` / `ResearchNotesPort` / `AnalystViewPort` | 同上 | 阶段 2 数据 |
 | `MarketPort` / `NewsPort` / `SectorPort` / `ScreenPort` / `StrategyPort` / `ReviewPort` / `ValuationCheckPort` | 大盘/新闻/板块/筛选/策略/复盘 | 阶段 3 数据 |
 | `ResearchMemoryPort` | `companies`、`company`、`detail`、`read`、`append`、`update`、`change` | 研究档案 |
+| `SearchPort` | `search(query, count)` | 联网搜索：百度优先、DeepSeek 回落 |
 
 端口统一返回 `ToolResult`，异常在适配器内转成 `failure`，不向 Agent 外抛（`ToolRegistry` 兜底除外）。

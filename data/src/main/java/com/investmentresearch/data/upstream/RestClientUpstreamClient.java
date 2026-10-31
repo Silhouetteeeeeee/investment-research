@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestClient;
@@ -50,10 +51,20 @@ public class RestClientUpstreamClient implements UpstreamClient {
 
     @Override
     public String get(String url, Charset charset, Map<String, String> headers) {
+        return send("GET", url, headers, null, charset);
+    }
+
+    @Override
+    public String post(String url, Map<String, String> headers, String body) {
+        return send("POST", url, headers, body, StandardCharsets.UTF_8);
+    }
+
+    private String send(
+            String method, String url, Map<String, String> headers, String body, Charset charset) {
         for (int attempt = 1; ; attempt++) {
             RawResponse response;
             try {
-                response = attempt(url, headers);
+                response = attempt(method, url, headers, body);
             } catch (RestClientException e) {
                 if (attempt < MAX_ATTEMPTS) {
                     sleepBeforeRetry(url);
@@ -72,7 +83,8 @@ public class RestClientUpstreamClient implements UpstreamClient {
     }
 
     /** 单次尝试；信号量在返回或抛错前释放。 */
-    private RawResponse attempt(String url, Map<String, String> headers) {
+    private RawResponse attempt(
+            String method, String url, Map<String, String> headers, String body) {
         try {
             PERMITS.acquire();
         } catch (InterruptedException e) {
@@ -87,23 +99,26 @@ public class RestClientUpstreamClient implements UpstreamClient {
             } catch (IllegalArgumentException e) {
                 throw new UpstreamException(0, url, e);
             }
-            return restClient
-                    .get()
-                    // URI 重载不再二次编码；字符串重载会把 %28 变成 %2528
-                    .uri(uri)
-                    .headers(
-                            h -> {
-                                h.set("User-Agent", USER_AGENT);
-                                safeHeaders.forEach(h::set);
-                            })
-                    .exchange(
-                            (request, response) ->
-                                    new RawResponse(
-                                            response.getStatusCode().value(),
-                                            response.getBody() == null
-                                                    ? new byte[0]
-                                                    : StreamUtils.copyToByteArray(
-                                                            response.getBody())));
+            RestClient.RequestBodySpec request =
+                    restClient
+                            .method(HttpMethod.valueOf(method))
+                            // URI 重载不再二次编码；字符串重载会把 %28 变成 %2528
+                            .uri(uri)
+                            .headers(
+                                    h -> {
+                                        h.set("User-Agent", USER_AGENT);
+                                        safeHeaders.forEach(h::set);
+                                    });
+            if (body != null) {
+                request.body(body);
+            }
+            return request.exchange(
+                    (sent, response) ->
+                            new RawResponse(
+                                    response.getStatusCode().value(),
+                                    response.getBody() == null
+                                            ? new byte[0]
+                                            : StreamUtils.copyToByteArray(response.getBody())));
         } finally {
             PERMITS.release();
         }

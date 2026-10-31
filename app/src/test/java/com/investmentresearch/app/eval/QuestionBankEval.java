@@ -570,6 +570,12 @@ class QuestionBankEval {
         if (error == null) {
             return false;
         }
+        // 东财会把上游业务错误包装成「…接口返回错误：-1参数校验失败」，不能按调用方错误算
+        if (error.contains("接口返回错误")
+                || error.contains("接口返回格式异常")
+                || error.contains("数据失败")) {
+            return false;
+        }
         return error.contains("参数校验")
                 || error.contains("校验未通过")
                 || error.contains("不是合法")

@@ -160,7 +160,8 @@ public class ForecastAdapter implements ForecastPort {
                         endpoint,
                         REPORT_NAME,
                         "(SECURITY_CODE=\"" + code + "\")",
-                        "NOTICE_DATE:-1",
+                        "-1",
+                        "NOTICE_DATE",
                         100,
                         20,
                         "业绩预告");

@@ -19,7 +19,7 @@
 | `agent.py` 运行记录 | 时间线 JSON | `core.run.RunRecorder` + `RunRecord`/`RunSummary` | 重写，字段部分缺失 | **部分实现** | `RunRecorder.java:41-58` |
 | `assistant/runlog.py` | 运行文件读写、id 校验、保留 200 份 | `core.run.FileRunStore` | 重写（原子写、按 mtime 剪枝） | 已实现 | `FileRunStore.java` |
 | `assistant/store.py` | 会话/消息 SQLite | `ConversationRepositoryImpl` + `ConversationMapper`/`MessageMapper` + `V1` | MyBatis-Plus + JdbcTemplate | 已实现 | `ConversationRepositoryImpl.java`、`V1__conversation.sql` |
-| `assistant/tools.py` 33 个 schema | 工具 schema 与分发 | `ToolSchemas`（导出 JSON）+ `ToolRegistry` + 32 个 `*Tool` 类 | schema 由 Python 生成，Java 只实现执行 | 已实现（32 注册 + 框架 `load_skill_through_path`） | `core/src/main/resources/tool-schemas.json`、`AssistantConfig.java:98-163` |
+| `assistant/tools.py` 33 个 schema | 工具 schema 与分发 | `ToolSchemas`（导出 JSON）+ `ToolRegistry` + 32 个 `*Tool` 类（另加 Java 新增 `WebSearchTool`） | schema 由 Python 生成，Java 只实现执行；`web_search` 为 Java 独有，schema 手工追加 | 已实现（33 注册 + 框架 `load_skill_through_path`） | `core/src/main/resources/tool-schemas.json`、`AssistantConfig.java:98-166` |
 | `assistant/tools.py` 结果整形 | `ToolResult` 结构 | `core.domain.ToolResult` + 各 Tool 类 | 重写，JSON 形状对拍 | 已实现 | `ToolResult.java`、`ToolResultTest` |
 | `assistant/skills.py`（15 个 Python 常量） | skill 判据正文 | `skills/<name>/SKILL.md`（15 个）+ `FileSystemSkillRepository` | 改为 Markdown 目录 | 已实现（正文逐字一致，`business_model` 无快照用例） | `SkillContentTest`、`README.md:97-98` |
 | `assistant/prompts.py` | 系统提示词 | `core/src/main/resources/prompts/system.md` | 抄写并改工具名 | 已实现 | `system.md`、`AgentEngine.java:72` |
@@ -93,7 +93,7 @@ Python 有四个 SQLite：
 | 自选股 / watchlist | `db_service.py` 有 | 无 | 非目标 |
 | skill 路由审计 | `audit.py` 检查是否加载 skill | 只有引用校验 | 待确认是否有意省略 |
 | 缺模型 key 的行为 | 可能仍建会话 | 不建会话、不落历史，只回 error 事件 | 有意（README 已记） |
-| 工具数 | 33 个 schema（含 `load_skill`） | 32 个 Java 工具 + 框架 `load_skill_through_path` | 等价，名字不同 |
+| 工具数 | 33 个 schema（含 `load_skill`） | 33 个 Java 工具 + 框架 `load_skill_through_path`；其中 `web_search` 为 Java 新增 | Python 的 32 个等价，另多一个联网搜索 |
 
 ## 4. Java 独有（Python 无对应物）
 

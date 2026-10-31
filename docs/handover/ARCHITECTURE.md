@@ -14,7 +14,7 @@ graph TD
     subgraph core["core（领域与编排，无框架 Web/DB 依赖）"]
         C1["service: AskService / QuestionRouter / ContextMeter / CompanyResolver"]
         C2["agent: AgentEngine / AgentFactory / ToolCallCache / StreamListener"]
-        C3["tool: ToolRegistry / 32 个 ResearchTool / ToolSchemas"]
+        C3["tool: ToolRegistry / 33 个 ResearchTool / ToolSchemas"]
         C4["port: 29 个端口接口"]
         C5["domain / citation / run / research / valuation"]
     end
@@ -23,7 +23,7 @@ graph TD
         D2["persistence: MyBatis-Plus Mapper/Entity、会话仓库、缓存库"]
         D3["upstream: RestClientUpstreamClient"]
         D4["sync: StockMasterSync"]
-        D5["db/migration/sqlite: Flyway V1–V11"]
+        D5["db/migration/sqlite: Flyway V1–V12"]
     end
     A1 --> C1
     A1 --> C2
@@ -84,7 +84,7 @@ graph LR
 | `askExecutor` | `app.api.ApiConfig` | `newVirtualThreadPerTaskExecutor()`，SSE 工作线程 |
 | `toolSchemas` | `AssistantConfig` | `ToolSchemas.loadDefault()` 读 `/tool-schemas.json` |
 | `companyResolver` | `AssistantConfig` | 包 `CompanyDirectory`（data 的 `StockDirectoryAdapter`） |
-| `toolRegistry` | `AssistantConfig` | 按 Python 顺序注册 32 个工具 |
+| `toolRegistry` | `AssistantConfig` | 前 32 个按 Python 顺序注册，末尾追加 Java 新增的 `web_search` |
 | `agentProperties` | `AssistantConfig` | 读 `APP_SKILLS_DIR` / `APP_DATA_DIR`；默认模型 `deepseek:deepseek-v4-flash`、`maxTurns=10` |
 | `runStore` | `AssistantConfig` | `FileRunStore(dataDir/runs)`，保留 200 份 |
 | `questionRouter` / `contextMeter` | `AssistantConfig` | 路由与占用估算 |
@@ -195,7 +195,7 @@ flowchart LR
 | 持久化 | `data/persistence/**`：MyBatis-Plus Mapper 做 CRUD，JdbcTemplate/TransactionTemplate 做 upsert、动态 SQL、多语句事务 |
 | 进程内缓存 | 各适配器的 `ConcurrentHashMap` 短 TTL；`ToolCallCache` 按会话缓存工具结果（17 个时效性工具除外），有容量与 30 分钟 TTL 上限 |
 | 文件 | `var/runs/*.json`（运行原文）、`var/sessions/**`（AgentScope 状态）、`var/workspace/`（harness 工作区） |
-| 数据库 | `var/app.db`（Flyway V1–V11） |
+| 数据库 | `var/app.db`（Flyway V1–V12） |
 
 ## 7. 架构问题与技术债（代码可见）
 

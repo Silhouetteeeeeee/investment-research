@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>投资助手</title>
 <!-- 改样式或脚本后把 v 加一，避免浏览器继续用旧缓存 -->
-<link rel="stylesheet" href="/styles.css?v=20261031a" />
+<link rel="stylesheet" href="/styles.css?v=20261031d" />
 </head>
 <body>
 <div class="boot" id="boot" role="dialog" aria-label="启动动画">
@@ -21,8 +21,8 @@
 <div id="app" v-cloak>
 <div
   class="app"
-  :class="{ 'has-source': sourceView, 'resizing-source': sourceResizing, 'resizing-side': sideResizing }"
-  :style="{ '--source-w': sourceWidth + 'px', '--side-w': sideWidth + 'px' }"
+  :class="{ 'has-source': sourceView, 'has-kline': klineOpen, 'resizing-source': sourceResizing, 'resizing-side': sideResizing, 'resizing-kline': klineResizing }"
+  :style="{ '--source-w': sourceWidth + 'px', '--side-w': sideWidth + 'px', '--kline-w': klineWidth + 'px' }"
 >
   <aside class="side">
     <div class="side-resizer" :class="{ active: sideResizing }" @mousedown.prevent="startSideResize" title="拖动调整侧栏宽度"></div>
@@ -319,6 +319,18 @@
     </div>
   </main>
 
+  <!-- 当前对话的公司日 K；来源详情打开时由来源栏占用同一位置 -->
+  <aside class="kline-side" v-if="klineOpen" aria-label="日K线">
+    <div class="kline-resizer" :class="{ active: klineResizing }" @mousedown.prevent="startKlineResize" title="拖动调整宽度"></div>
+    <kline-chart
+      :code="kline.code"
+      :name="kline.name"
+      :bars="kline.bars"
+      :loading="kline.loading"
+      :error="kline.error"
+    ></kline-chart>
+  </aside>
+
   <aside class="source-side" v-if="sourceView" role="dialog" aria-label="来源详情">
     <div class="source-resizer" :class="{ active: sourceResizing }" @mousedown.prevent="startSourceResize" title="拖动调整侧栏宽度"></div>
     <header class="source-side-head">
@@ -333,10 +345,12 @@
     <div class="source-side-body">
       <div class="sp-head">
         <span class="src-num">{{ sourceView.n }}</span>
+        <span class="web-tag" v-if="sourceView.web">网页</span>
         <span class="sp-label">{{ sourceView.label }}</span>
       </div>
       <p class="sp-detail" v-if="sourceView.detail">{{ sourceView.detail }}</p>
       <dl class="sp-meta">
+        <div v-if="sourceView.web"><dt>来源类型</dt><dd>网络搜索（网页）</dd></div>
         <div><dt>数据日期</dt><dd>{{ sourceView.asof || "未标注" }}</dd></div>
         <div><dt>抓取时间</dt><dd>{{ sourceView.fetched || "未知" }}</dd></div>
         <div><dt>来源编号</dt><dd class="mono">{{ sourceView.id || "--" }}</dd></div>
@@ -443,6 +457,7 @@
                     @keydown.enter.stop="requestSource(message, row.index)"
                   >
                     <span class="src-num">{{ row.n }}</span>
+                    <span class="web-tag" v-if="row.web">网页</span>
                     <span class="src-label">{{ row.label }}</span>
                     <span class="src-detail" v-if="row.detail">{{ row.detail }}</span>
                     <span class="src-asof" v-if="row.asof">{{ row.asof }}</span>
@@ -605,6 +620,7 @@
     >
       <div class="tip-head">
         <span class="tip-num">{{ tip.n }}</span>
+        <span class="web-tag" v-if="tip.web">网页</span>
         <span class="tip-label">{{ tip.label }}</span>
       </div>
       <div class="tip-detail" v-if="tip.detail">{{ tip.detail }}</div>
@@ -619,6 +635,6 @@
 <script src="/assets/marked.umd.js"></script>
 <script src="/assets/purify.min.js"></script>
 <script src="/boot.js?v=20261029c"></script>
-<script src="/app.js?v=20261031b"></script>
+<script src="/app.js?v=20261031e"></script>
 </body>
 </html>

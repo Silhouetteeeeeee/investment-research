@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（2026-10-31 评测题库后）：`./mvnw verify` 通过，**core 127 / data 119 / app 72**；`spotless:check` 退出 0。新增覆盖：`ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-10-31 日 K 改为腾讯优先 + 落库后）：`./mvnw verify` 通过，**core 130 / data 134 / app 75**；`spotless:check` 退出 0。新增覆盖：`KlineAdapterTest`（腾讯优先、东财 qfq 兜底、当日缓存、收盘后刷新、全挂回退旧缓存）、`StockChartControllerTest`（days 钳位、404/502）、`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest`。另有 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 
@@ -47,16 +47,19 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `tool/ToolMetricsTest` | 5 | 空快照、计数与近秩百分位、仅用最近样本、负耗时钳零、按工具名排序 |
 | `tool/ToolRegistryTest` | 18 | schema 顺序、未知工具、默认公司/显式公司/解析失败、端口异常、非字符串 company、null 参数、重复/null 工具、参数钳位、执行统计（含失败） |
 | `tool/ToolSchemaParityTest` | 2 | 与 Python schema 逐字段一致；注册顺序一致 |
-| `tool/ToolSchemasTest` | 2 | 33 条 schema 可加载；未知名称抛错 |
+| `tool/ToolSchemasTest` | 2 | 34 条 schema 可加载；未知名称抛错 |
+| `tool/WebSearchToolTest` | 3 | 空 query 拒绝、去空白、count 钳到 1..10 |
+| `adapter/search/WebSearchAdapterTest` | 5 | 百度成功、429 回落 DeepSeek、无百度 key 直连 DS、两家都失败、无 key 报错 |
 | `valuation/ValuationMathTest` | 3 | 非法增长/ROIC、Decimal 算术参照 |
 
 `ScriptedModel`（无 `@Test`）是测试用假模型：按脚本返回文本/工具调用，并记录收到的消息，供 Agent 循环类测试使用。
 
-### data（28 类，119 个执行用例）
+### data（31 类，134 个执行用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
 | `StockDirectoryAdapterTest` | 11 | 代码/名称解析、前后缀、懒加载、幂等刷新、畸形/空 200/WAF 响应、60s 冷却、3 个 golden |
+| `eastmoney/DatacenterSortQueryTest` | 6 | 预报/质押/解禁/高管/调研/回购的 `sortTypes`、`sortColumns` 参数顺序（对调时上游只回「-1 参数校验失败」） |
 | `eastmoney/AnnouncementAdapterTest` | 11 | 2 golden、天数钳位/排序、空/新鲜空失败、截断、5xx 缓存回退、坏时间戳、坏日期行、缓存/重抓页停止、回滚、迁移列一致性 |
 | `eastmoney/ValuationAdapterTest` | 5 | 2 golden、上一交易日回退、取数/落库列、重复 key、空 payload 失败 |
 | `eastmoney/PeerAdapterTest` | 3 | 2 golden、排名/中位数稳定、迁移列一致性 |
@@ -67,6 +70,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `f10/SegmentAdapterTest` | 8 | 5/3 年 golden、历史顺序、HTML 失败、落后口径 24h、回滚、行业回退、仅地区缓存、报告期截止日参数化 |
 | `finance/FinanceAdapterTest` | 10 | 5 个 golden、短趋势窗口、披露触发刷新、空表 30 分钟重试、迁移一致性、部分缺表、HTML 失败、幂等、回滚、指标一致性 |
 | `finance/FinancialHistoryAdapterTest` | 1 | 默认与 5 年 golden |
+| `market/KlineAdapterTest` | 4 | 腾讯 `qfqday` 优先并落库、同日二次读取零请求、东财 `fqt=1` 兜底、15:00 后刷新、两家全挂返回旧缓存 |
 | `market/MarketAdapterTest` | 12 | 新浪指数、腾讯手数、乐咕、同花顺板块、涨停、财联社时间、分类 golden、overview/as_of、时钟 session、部分失败、全失败、端口委派 |
 | `market/NewsSectorAdapterTest` | 4 | 新闻 golden、央视清洗、缺源容忍、板块排名/缺历史 |
 | `memory/ResearchMemoryStoreTest` | 5 | 旧库导入计数/id/时间戳、幂等导入、重复事实、并发重复事实、未知 section/缺公司 |
@@ -76,7 +80,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `upstream/RecordedFixtureTest` | 2 | 118 个录制映射可回放解码；56 页股票列表覆盖全 A 股 |
 | `upstream/UpstreamClientTest` | 7 | 字符集、500 重试、404 不重试、查询串/头脱敏、信号量不死锁、UTF-8 默认 |
 
-### app（20 类，72 个用例）
+### app（21 类，75 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -87,6 +91,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `api/SseWriterTest` | 4 | 帧格式、中文不转义、JSR-310 ISO、断连吞异常 |
 | `api/AuditLogFilterTest` | 5 | 成功请求字段、401 标 `auth=missing/invalid`、异常记录 failure、非 `/api` 不记录、`/api/metrics` 轮询不记审计 |
 | `api/MetricsControllerTest` | 1 | 系统内存/CPU 与工具统计字段齐全 |
+| `api/StockChartControllerTest` | 3 | days 钳位 20..500/非法回 120、非六位代码 404、上游异常 502 带消息 |
 | `eval/QuestionBankTest` | 4 | 20 题数量/唯一性、公司与 skill 存在、期望工具已注册、facts 与 golden 冻结值一致 |
 | `eval/VersionStampTest` | 5 | prompt 哈希与换行归一、逐 skill 哈希、dataset/tools 哈希、git 版本、真实技能目录 |
 | `eval/AnswerJudgeTest` | 4 | 从围栏/闲聊中抽取 JSON、总分与 pass 判定、单项低分转 review、越界分数拒绝 |
@@ -110,7 +115,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `core/src/test/resources/golden/tools/*.json` | 99 个工具输出黄金（`<tool>__<code>__<args-hash>.json`） | `tools/golden/gen_golden.py` |
 | `core/src/test/resources/golden/rows/*.json` | 102 个数据库行黄金 | 同上 |
 | `core/src/test/resources/golden/{tool-messages,screening,strategy,review,sector_rotation,market_state,news_events}.json` | 结构/场景金标准 | 同上 |
-| `core/src/main/resources/tool-schemas.json` | 33 条工具 schema | 同上（**生成物，不改手写**） |
+| `core/src/main/resources/tool-schemas.json` | 34 条工具 schema（`web_search` 手工追加） | 同上（**生成物，不改手写**；Java 独有工具除外） |
 | `core/src/test/resources/fixtures/stock-snapshot.db` | 冻结行情/财报库（5 家公司） | 同上 |
 | `core/src/test/resources/fixtures/research-memory.db` | 旧研究档案样本 | 从 Python 库复制 |
 | `core/src/test/resources/skills-python/*.md` | 14 个 Python skill 原文（`business_model` 无快照） | 从 `assistant/skills.py` 导出 |

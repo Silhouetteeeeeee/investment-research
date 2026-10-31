@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 class ToolSchemasTest {
 
     @Test
-    void loads_all_33_schemas_from_python_export() throws IOException {
+    void loads_all_34_schemas_from_export() throws IOException {
         Map<String, Map<String, Object>> exported;
         try (InputStream in = ToolSchemas.class.getResourceAsStream("/tool-schemas.json")) {
             assertNotNull(in);
@@ -25,7 +25,8 @@ class ToolSchemasTest {
                                     in,
                                     new TypeReference<Map<String, Map<String, Object>>>() {});
         }
-        assertEquals(33, exported.size());
+        // 33 条来自 Python schemas()，第 34 条 web_search 是 Java 新增工具（Python 无实现）
+        assertEquals(34, exported.size());
 
         ToolSchemas schemas = ToolSchemas.loadDefault();
         for (String name : exported.keySet()) {

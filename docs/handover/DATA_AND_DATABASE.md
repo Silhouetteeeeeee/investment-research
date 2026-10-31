@@ -4,7 +4,7 @@
 
 | 存储 | 路径 | 内容 | 清理/保留 |
 | --- | --- | --- | --- |
-| SQLite | `${APP_DATA_DIR:./var}/app.db` | 32 张业务表 + Flyway 历史（共 34 张） | 长期；每日备份保留 7 份 |
+| SQLite | `${APP_DATA_DIR:./var}/app.db` | 33 张业务表 + Flyway 历史（共 35 张） | 长期；每日备份保留 7 份 |
 | 运行原文 | `${APP_DATA_DIR}/runs/<run_id>.json` | 一次问答的时间线、阶段、问题、模型 | 保留最新 200 份（按 mtime 剪枝） |
 | Agent 会话状态 | `${APP_DATA_DIR}/sessions/default/**` | AgentScope `JsonFileAgentStateStore` | 删除会话时一起删 |
 | Agent 工作区 | `${APP_DATA_DIR}/workspace/` | HarnessAgent 工作区 | 不清理 |
@@ -28,6 +28,7 @@
 | V9 | `V9__research_cache.sql` | 11 张缓存表 | 8 张同形表 `company_management/shareholders/dividends/insider_trades/buybacks/lockups/pledges/forecasts`（`code PK, data, fetched_at`）；`company_research(code,years PK,data,fetched_at)`；`research_notes(code,note_key PK,content,fetched_at)`；`company_reports(code,days PK,data,fetched_at)` |
 | V10 | `V10__research_memory.sql` | `company_memory`、`memory_fact`、`memory_hypothesis`、`memory_conclusion`、`memory_question`、`memory_change` | 每张记忆表 `id` 自增 + `UNIQUE(code, <x>_id)`；`memory_fact` 另 `UNIQUE(code, dedupe_key)`；`memory_change` 外键指向 `memory_conclusion(code,conclusion_id)`；索引若干；触发器 `memory_change_no_update` / `memory_change_no_delete` |
 | V11 | `V11__daily_reports.sql` | `daily_reports` | `trade_date PK, saved_at, payload` |
+| V12 | `V12__kline_daily.sql` | `kline_daily` | PK `(code, trade_date)`，`WITHOUT ROWID`；前复权 OHLCV/额 + `fetched_at`（epoch ms）；约 41 KB/只（500 根） |
 
 设计文档要求「SQLite / MySQL 双方言目录」，**目前只有 `sqlite` 目录**，MySQL 迁移与 Testcontainers 属阶段 4（未实现）。
 
@@ -48,6 +49,7 @@
 | `research_notes` | `ResearchNotesAdapter` | 同适配器 |
 | `memory_*` / `company_memory` | `ResearchMemoryStore`（`append` 只增，`update` 白名单，`change` 只增） | `ResearchMemoryStore`、`ResearchController`、记忆工具 |
 | `daily_reports` | `DailyReportStore`（`save` 按 `trade_date` upsert） | `DailyReportStore.load`、复盘工具 |
+| `kline_daily` | `KlineAdapter` 经 `KlineDailyStore`（按 `code + trade_date` upsert，一次取 500 根） | `KlineDailyStore.load`、日 K 面板 |
 
 ## 4. 读写路径
 
@@ -134,4 +136,4 @@
 
 ## 9. 本机开发库现状（`var/app.db`，仅供参考）
 
-34 张表 = 32 张业务表 + `flyway_schema_history` + `sqlite_sequence`。有数据的表：`stock` 5563、`val_history` 3456、`biz_segment` 400、`announcement` 218、`fin_balance` 88、`fin_income`/`fin_cashflow`/`fin_metrics` 各 90、`val_peer` 86、`message` 6、`conversation` 3、`company_profile` 1、`company_peers` 2、`company_memory` 1、`memory_fact` 3、`memory_conclusion` 1、`memory_question` 1；V9 缓存表与 `daily_reports`、`fin_disclosure` 为空。这只反映本机试跑，不是验收基线。
+35 张表 = 33 张业务表 + `flyway_schema_history` + `sqlite_sequence`。有数据的表：`stock` 5563、`val_history` 3456、`biz_segment` 400、`announcement` 218、`fin_balance` 88、`fin_income`/`fin_cashflow`/`fin_metrics` 各 90、`val_peer` 86、`message` 6、`conversation` 3、`company_profile` 1、`company_peers` 2、`company_memory` 1、`memory_fact` 3、`memory_conclusion` 1、`memory_question` 1；V9 缓存表与 `daily_reports`、`fin_disclosure` 为空。这只反映本机试跑，不是验收基线。

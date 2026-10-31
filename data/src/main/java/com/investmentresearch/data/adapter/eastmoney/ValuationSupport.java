@@ -136,7 +136,8 @@ class ValuationSupport {
                         endpoint,
                         REPORT_NAME,
                         "(SECURITY_CODE=\"" + code + "\")",
-                        "-1:TRADE_DATE",
+                        "-1",
+                        "TRADE_DATE",
                         3000,
                         1,
                         "估值");
@@ -170,7 +171,8 @@ class ValuationSupport {
                         endpoint,
                         REPORT_NAME,
                         "(BOARD_CODE=\"" + boardCode + "\")(TRADE_DATE='" + tradeDate + "')",
-                        "-1:TOTAL_MARKET_CAP",
+                        "-1",
+                        "TOTAL_MARKET_CAP",
                         500,
                         1,
                         "估值");

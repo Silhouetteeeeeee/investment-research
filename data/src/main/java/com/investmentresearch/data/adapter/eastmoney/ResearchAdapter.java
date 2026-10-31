@@ -165,7 +165,16 @@ public class ResearchAdapter implements ResearchPort {
         // 列清单刻意不带 CONTENT：正文很长，只给最近一场单独取一次。
         EastmoneySupport.PagedRows paged =
                 EastmoneySupport.fetchPaged(
-                        upstream, endpoint, REPORT_NAME, filter, "NOTICE_DATE:-1", COLUMNS, 80, 30, "机构调研");
+                        upstream,
+                        endpoint,
+                        REPORT_NAME,
+                        filter,
+                        "-1",
+                        "NOTICE_DATE",
+                        COLUMNS,
+                        80,
+                        30,
+                        "机构调研");
         List<Map<String, Object>> events = new ArrayList<>();
         for (JsonNode row : paged.rows()) {
             Map<String, Object> event = normalize(row);

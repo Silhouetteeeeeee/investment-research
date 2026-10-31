@@ -15,7 +15,7 @@ final class EmStockDailySource {
     private static final String URL =
             "https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=%s"
                     + "&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57,f61"
-                    + "&klt=101&fqt=0&lmt=%d&end=20500101";
+                    + "&klt=101&fqt=%d&lmt=%d&end=20500101";
 
     private final UpstreamClient client;
 
@@ -23,11 +23,19 @@ final class EmStockDailySource {
         this.client = client;
     }
 
-    /** {@code code} 是新浪式的 {@code sh600000}；返回按日期升序的日线。 */
+    /** 不复权，筛选与复盘的口径。 */
     List<Map<String, Object>> rows(String code, int days) {
+        return rows(code, days, 0);
+    }
+
+    /**
+     * {@code code} 是新浪式的 {@code sh600000}；返回按日期升序的日线。
+     * {@code fqt}：0 不复权、1 前复权、2 后复权。
+     */
+    List<Map<String, Object>> rows(String code, int days, int fqt) {
         String body =
                 client.get(
-                        String.format(URL, secid(code), Math.max(1, days)),
+                        String.format(URL, secid(code), fqt, Math.max(1, days)),
                         Map.of("User-Agent", MarketSupport.USER_AGENT, "Referer", "https://quote.eastmoney.com/"));
         JsonNode klines;
         try {

@@ -28,7 +28,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10        # 本机 JDK 21 位置
-./mvnw verify                    # 期望 core 127 / data 119 / app 72，BUILD SUCCESS
+./mvnw verify                    # 期望 core 130 / data 134 / app 75，BUILD SUCCESS
 ./mvnw -q spotless:check         # 期望退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```
@@ -42,7 +42,7 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 ## 3. 硬约束（违反即是事故）
 
-1. **密钥只从环境变量读**：`DEEPSEEK_API_KEY`、`XQ_TOKEN`、`APP_API_TOKEN`。不写进仓库、日志、错误消息、测试、文档。
+1. **密钥只从环境变量读**：`DEEPSEEK_API_KEY`、`BAIDU_API_KEY`、`XQ_TOKEN`、`APP_API_TOKEN`。不写进仓库、日志、错误消息、测试、文档。
 2. **Python 仓库只读**：`D:\Programming\PythonProject` 与 `data/stock.db` 都不改。
 3. **管理端口 8081 不对外**：`management.server.address=127.0.0.1`，只暴露 `health`；compose 不发布 8081。
 4. **`.env`、`*.db`、`var/` 不提交**（`.gitignore` 已覆盖，别绕开）。
@@ -56,12 +56,12 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 | --- | --- |
 | 应用端口 / 管理端口 | 8080 / 8081（仅回环，仅 `health`） |
 | 唯一编排入口 | `core.service.AskService.ask(Long, String, EventSink)`（`AskService.java:60`） |
-| HTTP | `POST /api/ask`（SSE）、`/api/conversations/*`、`/api/research/companies*`、`/api/metrics`、`/health` |
+| HTTP | `POST /api/ask`（SSE）、`/api/conversations/*`、`/api/research/companies*`、`/api/stocks/{code}/kline`、`/api/metrics`、`/health` |
 | SSE 事件 | `state` `text` `discard` `tool` `meter` `done` `error` `warning`（`SseEmitter` 600s，虚拟线程） |
 | Agent | `core.agent.AgentEngine` → `HarnessAgent.streamEvents`，`maxIters=10`、`temperature=0.3`、`CompactionConfig.triggerTokens(80_000)` |
 | 模型 | 默认 `deepseek:deepseek-v4-flash`（`AgentProperties.DEFAULT_MODEL`）；无 key → `UnavailableEngine` |
-| 工具 | 注册 32 个；`tool-schemas.json` 33 条（第 33 条 `load_skill` 由框架提供为 `load_skill_through_path`）；17 个时效工具不缓存 |
-| 数据 | `var/app.db`（Flyway V1–V11，32 张业务表 + 2 张系统表）、`var/runs/*.json`、`var/sessions/`、`var/workspace/` |
+| 工具 | 注册 33 个；`tool-schemas.json` 34 条（第 33 条 `load_skill` 由框架提供为 `load_skill_through_path`；第 34 条 `web_search` 为 Java 新增，schema 手写）；18 个时效工具不缓存 |
+| 数据 | `var/app.db`（Flyway V1–V12，33 张业务表 + 2 张系统表）、`var/runs/*.json`、`var/sessions/`、`var/workspace/` |
 | Prompt | `core/src/main/resources/prompts/system.md`；skill 正文 `skills/<name>/SKILL.md`（15 个） |
 | 金标准 | `core/src/test/resources/golden/**`、`fixtures/*.db`、`data/src/test/resources/wiremock/**`（由 `tools/golden/gen_golden.py`、`tools/fixtures/record.py` 生成） |
 | 已知差异 | 上下文压缩、运行记录字段、`fin_disclosure` 无写入者、`XQ_TOKEN` 无人读、`frontend/README.md` 过时 |
@@ -74,8 +74,8 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 ## 6. 改动怎么做（摘要，详见 `docs/handover/CLAUDE_HANDOVER.md`）
 
-- **新增工具**：Python 侧先有同名工具 → schema 由 `tools/golden/gen_golden.py` 生成（不手写）→ 在 `core/tool/` 新建类（公司类继承 `CompanyTool`）→ 需要新数据先加 `core/port` 再在 `data/adapter` 实现 → 在 `AssistantConfig.toolRegistry` 按 Python 顺序注册 → 补 skill 工具规则与测试。
-- **新增迁移**：新建 `data/src/main/resources/db/migration/sqlite/V12__xxx.sql`，**不改已发布的 V1–V11**。
+- **新增工具**：Python 侧先有同名工具 → schema 由 `tools/golden/gen_golden.py` 生成（不手写；Python 没有的 Java 新工具才手工追加 schema，并在 `ToolSchemasTest` 注明）→ 在 `core/tool/` 新建类（公司类继承 `CompanyTool`）→ 需要新数据先加 `core/port` 再在 `data/adapter` 实现 → 在 `AssistantConfig.toolRegistry` 按 Python 顺序注册 → 补 skill 工具规则与测试。
+- **新增迁移**：新建 `data/src/main/resources/db/migration/sqlite/V13__xxx.sql`，**不改已发布的 V1–V12**。
 - **改 SSE**：`core/service/AskService` 构造事件 → 同步改 `frontend/app.js` 解析分支与 `docs/handover/API_AND_INTERFACE.md` → `AskServiceTest` 断言事件顺序。
 - **工作方式**：TDD（先写失败测试）、小步提交（`feat(area): …` / `fix(area): …`）、改完 `./mvnw verify` + `spotless:check` 双绿；代码注释以中文为主，讲「为什么」；有分歧的决策记在本地台账 `.superpowers/sdd/<plan>/progress.md`（git 忽略）。
 

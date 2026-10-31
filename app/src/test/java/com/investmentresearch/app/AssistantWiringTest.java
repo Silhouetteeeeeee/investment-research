@@ -118,7 +118,9 @@ class AssistantWiringTest {
                         "read_research_memory",
                         "append_research_record",
                         "update_research_record",
-                        "record_conclusion_change");
+                        "record_conclusion_change",
+                        // Java 新增工具，Python 侧没有
+                        "web_search");
         assertThat(context.getBean(AskService.class)).isNotNull();
         assertThat(context.getBean(QuestionRouter.class)).isNotNull();
         assertThat(context.getBean(ContextMeter.class)).isNotNull();

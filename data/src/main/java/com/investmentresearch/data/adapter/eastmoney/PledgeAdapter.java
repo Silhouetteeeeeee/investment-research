@@ -158,7 +158,8 @@ public class PledgeAdapter implements PledgePort {
                         endpoint,
                         REPORT_NAME,
                         "(SECURITY_CODE=\"" + code + "\")",
-                        "TRADE_DATE:-1",
+                        "-1",
+                        "TRADE_DATE",
                         500,
                         20,
                         "股权质押");
