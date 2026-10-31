@@ -68,6 +68,11 @@ public record VersionStamp(
                 hash(normalize(Files.readAllBytes(questionsFile))));
     }
 
+    /** 供报告里的 judge prompt 等单个文件算版本。 */
+    public static String hashFile(Path file) throws IOException {
+        return hash(normalize(Files.readAllBytes(file)));
+    }
+
     /** 评测报告头部直接展开这个 map。 */
     public Map<String, Object> asMap() {
         Map<String, Object> map = new LinkedHashMap<>();

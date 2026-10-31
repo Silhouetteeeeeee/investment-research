@@ -82,21 +82,23 @@ class QuestionBankEval {
         bank.path("questions").forEach(questions::add);
         int limit = Math.min(Integer.getInteger("eval.limit", questions.size()), questions.size());
 
+        AnswerJudge judge = new AnswerJudge(properties, json, REPO);
         List<Map<String, Object>> results = new ArrayList<>();
         List<String> failures = new ArrayList<>();
         long started = System.nanoTime();
         for (int i = 0; i < limit; i++) {
             JsonNode question = questions.get(i);
-            Map<String, Object> result = runOne(question, i);
+            Map<String, Object> result = runOne(question, i, judge);
             results.add(result);
             if (!Boolean.TRUE.equals(result.get("passed"))) {
                 failures.add(question.path("id").asText() + ": " + result.get("failures"));
             }
             System.out.printf(
-                    "eval: %s %s -> %s%n",
+                    "eval: %s %s -> %s (judge=%s)%n",
                     question.path("id").asText(),
                     question.path("skill").asText(),
-                    Boolean.TRUE.equals(result.get("passed")) ? "PASS" : "FAIL");
+                    Boolean.TRUE.equals(result.get("passed")) ? "PASS" : "FAIL",
+                    judgeVerdict(result));
         }
         long elapsedMs = (System.nanoTime() - started) / 1_000_000;
 
@@ -113,7 +115,8 @@ class QuestionBankEval {
         assertThat(failures).as("评测失败的题目见报告 %s", report).isEmpty();
     }
 
-    private Map<String, Object> runOne(JsonNode question, int index) throws Exception {
+    private Map<String, Object> runOne(JsonNode question, int index, AnswerJudge judge)
+            throws Exception {
         String code = question.path("code").asText();
         String name = question.path("name").asText();
         String skill = question.path("skill").asText();
@@ -214,6 +217,14 @@ class QuestionBankEval {
         item.put("tool_warnings", upstreamFailures);
         item.put("facts", checkFacts(question.path("facts"), answer.raw(), failures));
 
+        try {
+            item.put("judge", judge.judge(question, answer, (List<?>) item.get("facts")));
+        } catch (RuntimeException error) {
+            Map<String, Object> judgeError = new LinkedHashMap<>();
+            judgeError.put("error", error.getMessage());
+            item.put("judge", judgeError);
+        }
+
         if (answer.issues().contains("unknown_citation")) {
             failures.add("引用了不存在的来源");
         }
@@ -270,6 +281,41 @@ class QuestionBankEval {
         return checked;
     }
 
+    private static Double judgeAverage(List<Map<String, Object>> results) {
+        List<Double> totals = new ArrayList<>();
+        for (Map<String, Object> item : results) {
+            if (item.get("judge") instanceof Map<?, ?> judge
+                    && judge.get("total") instanceof Number total) {
+                totals.add(total.doubleValue());
+            }
+        }
+        if (totals.isEmpty()) {
+            return null;
+        }
+        return Math.round(
+                        totals.stream().mapToDouble(Double::doubleValue).average().orElse(0) * 100)
+                / 100.0;
+    }
+
+    private static long judgeReviews(List<Map<String, Object>> results) {
+        return results.stream()
+                .filter(
+                        item ->
+                                item.get("judge") instanceof Map<?, ?> judge
+                                        && "review".equals(judge.get("verdict")))
+                .count();
+    }
+
+    private static String judgeVerdict(Map<String, Object> item) {
+        if (item.get("judge") instanceof Map<?, ?> judge) {
+            if (judge.get("verdict") == null) {
+                return "error";
+            }
+            return judge.get("verdict") + " " + judge.get("total");
+        }
+        return "-";
+    }
+
     private static long count(List<Map<String, Object>> results, String key) {
         return results.stream()
                 .mapToLong(
@@ -297,6 +343,11 @@ class QuestionBankEval {
         report.put("failed", results.size() - passed);
         report.put("tool_errors", errors);
         report.put("tool_warnings", warnings);
+        report.put("judge_average", judgeAverage(results));
+        report.put("judge_reviews", judgeReviews(results));
+        report.put(
+                "judge_prompt_version",
+                VersionStamp.hashFile(REPO.resolve("eval/judge-prompt.md")));
         report.put("elapsed_ms", elapsedMs);
         report.putAll(stamp.asMap());
         report.put("questions", results);

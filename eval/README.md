@@ -72,8 +72,18 @@ LIVE_EVAL=1 ./mvnw -pl app -am test -Dtest=QuestionBankEval -Dsurefire.failIfNoS
 `eval/results/<agent_version>-<prompt_version>.json`（已 git 忽略），头部是版本戳、`model_version`、`as_of`，
 正文逐题记录 trace、事实核对结果和回答原文。跑之前先跑 `QuestionBankTest`，避免把题库错误算到模型头上。
 
+工具失败分两类：参数/业务校验失败算模型调用错误（判失败）；上游接口报错只记 `tool_warnings`。
+
+## LLM Judge
+
+每题回答再交给 `eval/judge-prompt.md` 打分：grounding / coverage / reasoning / clarity 各 1-5 分，
+总分是四项平均，≥4 且每项 ≥3 为 `pass`，否则 `review`（人工复核）。总分与判定由 Java 计算，不信任模型自己的算术。
+
+- 分数只写进报告，不影响 `QuestionBankEval` 的 pass/fail——Judge 有噪声，当前只用来量化与筛低分样本。
+- 报告头部多一个 `judge_prompt_version`（judge prompt 的内容哈希）；改了评分标准，这个值会变，历史对比时能区分。
+- Judge 复用 `AgentProperties.model()` 和 `DEEPSEEK_API_KEY`，没有额外配置。
+
 ## 下一步（尚未实现）
 
 - 引用与事实的关联检查（现在只查「引用不存在」和「事实值」）。
-- LLM Judge 打分。
 - 历史报告对比（同一 `dataset_version` 下比较 `prompt_version` / `model_version` 的分数变化）。
