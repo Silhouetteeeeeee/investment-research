@@ -36,6 +36,11 @@ final class TencentTrendSource {
         return new Trend(daily, failures);
     }
 
+    /** 单只指数的日线，行业轮动用它算基准收盘价。 */
+    List<Map<String, Object>> barsOf(String code) {
+        return bars(code);
+    }
+
     /** 每根 K 线是 {@code [日期, 开, 收, 高, 低, 成交量(手)]}。 */
     private List<Map<String, Object>> bars(String code) {
         String body = client.get(URL + code + ",day,,," + BARS + ",qfq", Map.of());

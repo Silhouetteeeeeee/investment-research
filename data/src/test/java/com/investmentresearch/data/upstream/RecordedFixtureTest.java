@@ -147,6 +147,21 @@ class RecordedFixtureTest {
         if (path.contains("/market/cls-news")) {
             return "roll_data";
         }
+        if (path.contains("/market/em-news")) {
+            return "fastNewsList";
+        }
+        if (path.contains("/market/cctv-index-")) {
+            return "VIDE";
+        }
+        if (path.contains("/market/tencent-us-")) {
+            return "\"data\":{\"us";
+        }
+        if (path.contains("/market/sina-hk-index")) {
+            return "rt_hkHSI";
+        }
+        if (path.contains("/market/ths-board-")) {
+            return "quotebridge_v6_line_bk_";
+        }
         throw new AssertionError("未知 fixture family: " + file);
     }
 

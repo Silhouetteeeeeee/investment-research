@@ -5,6 +5,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,6 +23,7 @@ final class ThsSectorSource {
     private static final String PAGE =
             "http://q.10jqka.com.cn/thshy/index/field/199112/order/desc/page/%d/";
     private static final int COLUMNS = 12;
+    private static final Pattern CODE = Pattern.compile("code/(\\d+)/");
 
     private final UpstreamClient client;
 
@@ -54,6 +57,16 @@ final class ThsSectorSource {
         return pages == null ? 1 : (int) Math.max(1, Math.min(60, pages));
     }
 
+    /** 板块链接里的 {@code /thshy/detail/code/881121/} 就是板块指数代码，取日线要用。 */
+    private static String code(Element cell) {
+        Element link = cell.selectFirst("a[href*=code/]");
+        if (link == null) {
+            return "";
+        }
+        Matcher matcher = CODE.matcher(link.attr("href"));
+        return matcher.find() ? matcher.group(1) : "";
+    }
+
     /** 列：序号, 板块, 涨跌幅, 总成交量, 总成交额, 净流入, 上涨家数, 下跌家数, 均价, 领涨股, 领涨股-最新价, 领涨股-涨跌幅。 */
     private static List<Map<String, Object>> parse(Document doc) {
         List<Map<String, Object>> rows = new ArrayList<>();
@@ -64,6 +77,7 @@ final class ThsSectorSource {
             }
             rows.add(
                     MarketSupport.row(
+                            "代码", code(cells.get(1)),
                             "板块", cells.get(1).text().strip(),
                             "涨跌幅", MarketSupport.number(cells.get(2).text()),
                             "总成交量", MarketSupport.number(cells.get(3).text()),

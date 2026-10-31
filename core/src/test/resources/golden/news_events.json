@@ -1,0 +1,4931 @@
+{
+ "today": "2026-10-30",
+ "events": [
+  {
+   "title": "消费基建迎来政策组合拳 五部门发文促消费投资良性互动",
+   "summary": "10月30日，国家发展改革委联合交通运输部、商务部、文化和旅游部、市场监管总局等部门印发《关于加强消费基础设施建设促进消费投资良性互动的指导意见》，从完善城乡商业设施、提升服务消费设施、优化出行消费设施、健全流通设施网络、推进新型消费设施建设五方面部署20项重点任务，旨在促进消费和投资良性互动，扩大国内需求。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:34:11",
+   "url": "https://finance.eastmoney.com/a/202610313917303266.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917303266.html",
+     "published_at": "2026-10-31 07:34:11",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "建筑装饰",
+     "keywords": [
+      "基建"
+     ]
+    }
+   ],
+   "keywords": [
+    "商务部",
+    "市场监管",
+    "政策",
+    "意见",
+    "监管"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定",
+   "impact_path": "政策 → 基建投资与回款 → 新签订单、现金流",
+   "score": 5.2
+  },
+  {
+   "title": "中国人民银行进一步优化短端利率调控机制",
+   "summary": "在近期举行的2026金融街论坛年会上，中国人民银行行长潘功胜表示，从现在的情况看，银行间隔夜回购利率（DR001）实际上已成为货币政策调控的目标利率；但与此同时，公开市场操作主要品种和主要政策利率的期限还是7天，两者并不完全一致。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:44:00",
+   "url": "https://finance.eastmoney.com/a/202610313917306817.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917306817.html",
+     "published_at": "2026-10-31 04:44:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "银行",
+     "keywords": [
+      "银行"
+     ]
+    }
+   ],
+   "keywords": [
+    "人民银行",
+    "政策",
+    "回购"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定",
+   "impact_path": "政策 → 利率与信贷投放 → 净息差、资产质量",
+   "score": 5.1
+  },
+  {
+   "title": "山西前三季度煤层气产量创新高",
+   "summary": "记者10月31日从山西省统计局获悉，今年前三季度，山西省煤层气产量达到117.4亿立方米，创历史同期产量新高，约占全国产量的80.2%。与此同时，山西依托煤层气伴生资源，加快布局氦气提取产业，实现了从煤矿瓦斯到高纯战略资源的转化，为国家能源与战略资源安全提供了重要保障。作为全国首个能源革命综合改革试点省份，山西煤层气资源禀赋突出，埋深2000米以浅预测资源量约8.31万亿立方米，占全国近三分之一。近年来，山西持续推动煤层气增储上产，沁水盆地、鄂尔多斯盆地东缘两大基地协同发力，形成“中浅层稳产、深层上产”的发展格局。",
+   "category": "政策",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:51:16",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:40:19",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917574385.html",
+     "published_at": "2026-10-31 11:51:16",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "统计局",
+    "试点"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.7
+  },
+  {
+   "title": "总值21亿美元、盟友“买单” 美国批准对乌500枚“爱国者”导弹军售",
+   "summary": "据英国广播公司(BBC)报道，美国国务院当地时间10月30日发表声明称，已决定批准向乌克兰出售500枚“爱国者”导弹及相关设备，价值总额达21亿美元，费用“完全由合作伙伴和盟友承担”。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:02:40",
+   "url": "https://finance.eastmoney.com/a/202610313917525595.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917525595.html",
+     "published_at": "2026-10-31 10:02:40",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "军工装备",
+     "keywords": [
+      "导弹"
+     ]
+    }
+   ],
+   "keywords": [
+    "国务院",
+    "英国",
+    "美国",
+    "美元"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 订单与国防预算 → 主机厂、配套企业排产",
+   "score": 4.7
+  },
+  {
+   "title": "美国批准向乌克兰出售500枚“爱国者”导弹",
+   "summary": "当地时间10月30日获悉，美国国务院当日表示，已批准向乌克兰出售500枚“爱国者”PAC-3型导弹，交易总额预计为21亿美元。美国国务院在声明中指出，乌克兰将利用加拿大、德国和挪威提供的捐款，并结合欧盟“乌克兰支持贷款”所筹措的资金，来支付这批防御性拦截导弹的费用。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:23:07",
+   "url": "https://finance.eastmoney.com/a/202610313917315451.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917315451.html",
+     "published_at": "2026-10-31 04:23:07",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "军工装备",
+     "keywords": [
+      "导弹"
+     ]
+    }
+   ],
+   "keywords": [
+    "国务院",
+    "加拿大",
+    "美国",
+    "美元"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 订单与国防预算 → 主机厂、配套企业排产",
+   "score": 4.7
+  },
+  {
+   "title": "政策利率“换锚”迎来关键一步 央行：隔夜逆回购操作将于每个工作日开展",
+   "summary": "政策利率“换锚”迎来关键一步。中国人民银行10月30日发布公开市场业务公告称，为进一步优化短端利率调控机制，从2026年11月2日起，公开市场操作进行三项调整。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:16:04",
+   "url": "https://finance.eastmoney.com/a/202610313917324529.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917324529.html",
+     "published_at": "2026-10-31 07:16:04",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "央行",
+    "人民银行",
+    "政策",
+    "公告",
+    "回购"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.6
+  },
+  {
+   "title": "上海航运交易所：本周运输市场基本稳定 不同航线走势分化",
+   "summary": "据上海航运交易，本周，中国出口集装箱运输市场基本稳定，不同航线市场运价走势分化，综合指数小幅上涨。据国家统计局发布的数据显示，中国三季度GDP同比增长4.5%，国民经济平稳运行，对外贸易增势良好，呈现动能向新、结构向优的发展态势。10月30日，上海航运交易研究所（筹）发布的上海出口集装箱综合运价指数为3687.35点，较上期上涨0.2%。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:38:54",
+   "url": "https://finance.eastmoney.com/a/202610313917515261.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917515261.html",
+     "published_at": "2026-10-31 08:38:54",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "港口航运",
+     "keywords": [
+      "航运",
+      "运价"
+     ]
+    },
+    {
+     "name": "证券",
+     "keywords": [
+      "交易所"
+     ]
+    }
+   ],
+   "keywords": [
+    "统计局"
+   ],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 运价与吞吐量 → 集运、干散货盈利",
+   "score": 4.5
+  },
+  {
+   "title": "中国和南非两国央行续签双边本币互换协议",
+   "summary": "记者10月30日从中国人民银行获悉：近日中国人民银行与南非储备银行续签双边本币互换协议，互换规模为300亿元人民币/740亿南非兰特，协议有效期五年。中国人民银行表示，双方再次续签双边本币互换协议，有助于进一步深化两国货币金融合作，促进双边贸易和投资便利化，维护金融市场稳定。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 06:44:55",
+   "url": "https://finance.eastmoney.com/a/202610313917328814.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917328814.html",
+     "published_at": "2026-10-31 06:44:55",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "央行",
+    "人民银行"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.4
+  },
+  {
+   "title": "国家统计局：10月份非制造业商务活动指数为49.7%",
+   "summary": "据国家统计局，10月份，非制造业商务活动指数为49.7%，比上月下降0.5个百分点，非制造业景气水平有所下降。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:36:00",
+   "url": "https://finance.eastmoney.com/a/202610313917521958.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917521958.html",
+     "published_at": "2026-10-31 09:36:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "统计局"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.3
+  },
+  {
+   "title": "10月中国制造业采购经理指数公布 景气呈季节性回调",
+   "summary": "国家统计局服务业调查中心、中国物流与采购联合会今天公布10月中国采购经理指数。数据显示，制造业景气水平有所回调，制造业采购经理指数重回收缩区间，但新动能持续保持扩张，对制造业的支撑作用凸显。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:33:37",
+   "url": "https://finance.eastmoney.com/a/202610313917521873.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917521873.html",
+     "published_at": "2026-10-31 09:33:37",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "统计局"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.3
+  },
+  {
+   "title": "国家统计局：10月官方制造业PMI为49.3%",
+   "summary": "10月份，制造业采购经理指数（PMI）为49.3%，比上月下降0.8个百分点，制造业景气水平有所回落。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:30:42",
+   "url": "https://finance.eastmoney.com/a/202610313917521468.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917521468.html",
+     "published_at": "2026-10-31 09:30:42",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "统计局"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.3
+  },
+  {
+   "title": "陈荣辉履新国家数据集团总经理 不再任国家数据局副局长",
+   "summary": "据人社部网站10月30日消息，国务院任免国家工作人员，免去陈荣辉的国家数据局副局长职务。此次职务变动与其履新央企有关。十天前（10月20日），国家数据集团有限公司挂牌成立，陈荣辉出任该集团董事、总经理、党组副书记。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:23:46",
+   "url": "https://finance.eastmoney.com/a/202610303917053172.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917053172.html",
+     "published_at": "2026-10-31 08:23:46",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "国务院"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.3
+  },
+  {
+   "title": "哥伦比亚央行将隔夜利率维持在12.25%不变",
+   "summary": "哥伦比亚央行将隔夜利率维持在12.25%不变。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 02:24:08",
+   "url": "https://finance.eastmoney.com/a/202610313917303989.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917303989.html",
+     "published_at": "2026-10-31 02:24:08",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "央行"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.3
+  },
+  {
+   "title": "东方证券孙金霞：美国AI叙事面临高利率与投资回报双重约束，科技投资的可持续性正在受到检验",
+   "summary": "东方证券研究所副所长孙金霞认为，美国AI投资在产业层面仍具有广阔的发展前景，但其高度依赖资本密集型投资的增长模式，正在面临融资需求和成本上升、商业化回报滞后等多重压力。美国AI叙事正从过去的投资规模竞争，转向投资回报和可持续性的考验。孙金霞称，当前美国AI投资增长动能放缓，风险由债市向股市扩散。近期美国AI企业信用利差扩大，部分高杠杆算力企业出现融资压力，随后风险开始由债券市场向股票市场传导，科技股调整压力上升。",
+   "category": "海外",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:49:56",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:49:56",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917574120.html",
+     "published_at": "2026-10-31 11:46:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "证券",
+     "keywords": [
+      "证券",
+      "债市",
+      "债券"
+     ]
+    },
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI",
+      "算力"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 市场成交与政策 → 经纪、投行、自营收入",
+   "score": 4.1
+  },
+  {
+   "title": "日本央行维持利率不变并加快缩表 政策目标开始转向？",
+   "summary": "10月30日，日本央行结束为期两天的货币政策会议，决定将政策利率维持在1.25%，该利率仍为1995年以来最高水平。9月日本央行议息会议以7票赞成、2票反对通过加息决定，当时的反对票主要来自倾向于进一步收紧的委员。本次日本央行决议投票结果为8比1，一位委员主张将政策利率上调至1.5%，但该提议被委员会否决。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:08:00",
+   "url": "https://finance.eastmoney.com/a/202610303917171947.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917171947.html",
+     "published_at": "2026-10-31 08:08:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "央行",
+    "政策",
+    "日本央行",
+    "加息",
+    "日本"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.1
+  },
+  {
+   "title": "美国将“封杀”中国实验室 意在让“检测回流” 商务部回应",
+   "summary": "据了解，美东时间10月29日，美国联邦通信委员会（FCC）投票通过检测实验室限制措施，自2028年12月1日起，禁止授权位于中国等所谓“非互惠经济体”的检测实验室、电信认证机构及实验室认可机构，禁止在“非互惠经济体”开展涉FCC检测、认证或认可业务。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 11:04:00",
+   "url": "https://finance.eastmoney.com/a/202610313917563080.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917563080.html",
+     "published_at": "2026-10-31 11:04:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "商务部",
+    "美国"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 3.9
+  },
+  {
+   "title": "AI技术变量催生经济增量",
+   "summary": "当前，大模型加速迭代、智能体落地应用、算力建设全面铺开，人工智能正以前所未有的速度、广度与深度融入生产生活。国家统计局发布的前三季度经济数据显示，信息传输、软件和信息技术服务业增加值同比增长10.4%，人工智能是重要助推力量。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:55:51",
+   "url": "https://finance.eastmoney.com/a/202610313917327325.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917327325.html",
+     "published_at": "2026-10-31 07:55:51",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI",
+      "人工智能",
+      "大模型",
+      "软件",
+      "算力"
+     ]
+    }
+   ],
+   "keywords": [
+    "统计局"
+   ],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 3.9
+  },
+  {
+   "title": "年内17家港股公司被警示股权高度集中 “过山车”行情暗藏股价操纵风险",
+   "summary": "10月27日，遭香港证监会点名股权高度集中的上市公司——新吉奥房车的股价盘中闪崩，收盘大跌超33%，而该股年内累计最高涨幅一度接近15倍。今年以来，香港证监会已公示17家同类港股公司，这类个股筹码锁定超过九成，流通盘稀少，暴涨暴跌频发。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:28:27",
+   "url": "https://finance.eastmoney.com/a/202610313917302619.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917302619.html",
+     "published_at": "2026-10-31 07:28:27",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "证监会",
+    "港股"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 3.9
+  },
+  {
+   "title": "美使馆称美国务院已要求非紧急岗位人员离开沙特",
+   "summary": "当地时间10月30日，美国驻沙特大使馆表示，美国国务院下令非紧急岗位工作人员及其家属离开沙特阿拉伯，该命令自10月23日起生效。大使馆称，此举是出于安全风险。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 02:41:08",
+   "url": "https://finance.eastmoney.com/a/202610313917305460.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917305460.html",
+     "published_at": "2026-10-31 02:41:08",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "国务院",
+    "美国"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 3.9
+  },
+  {
+   "title": "惠誉对来自82只美国广义银团贷款CLO和2只美国中间市场CLO的109档债券评级进行了上调",
+   "summary": "惠誉对来自82只美国广义银团贷款（BSL）CLO和2只美国中间市场（MM）CLO的109档债券评级进行了上调，并确认了445档债券的评级。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 06:13:42",
+   "url": "https://finance.eastmoney.com/a/202610313917330457.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917330457.html",
+     "published_at": "2026-10-31 06:13:42",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "银行",
+     "keywords": [
+      "贷款"
+     ]
+    },
+    {
+     "name": "证券",
+     "keywords": [
+      "债券"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 利率与信贷投放 → 净息差、资产质量",
+   "score": 3.8
+  },
+  {
+   "title": "俄罗斯据悉正考虑对液化石油气（LPG）出口征收禁止性关税",
+   "summary": "俄罗斯据悉正考虑对液化石油气（LPG）出口征收禁止性关税。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 02:15:19",
+   "url": "https://finance.eastmoney.com/a/202610313917303844.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917303844.html",
+     "published_at": "2026-10-31 02:15:19",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "油气开采及服务",
+     "keywords": [
+      "石油",
+      "油气"
+     ]
+    }
+   ],
+   "keywords": [
+    "关税"
+   ],
+   "confidence": "低",
+   "uncertainty": "消息尚未获得官方确认；政策细则、执行力度与落地时间未定",
+   "impact_path": "政策 → 油价与资本开支 → 开采、油服订单",
+   "score": 3.7
+  },
+  {
+   "title": "印度将棉花进口关税豁免期限延长至12月31日",
+   "summary": "印度将棉花进口关税豁免期限延长至12月31日。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:57:34",
+   "url": "https://finance.eastmoney.com/a/202610313917302965.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917302965.html",
+     "published_at": "2026-10-31 01:57:34",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "纺织制造",
+     "keywords": [
+      "棉"
+     ]
+    }
+   ],
+   "keywords": [
+    "关税"
+   ],
+   "confidence": "中",
+   "uncertainty": "政策细则、执行力度与落地时间未定",
+   "impact_path": "政策 → 订单转移与棉价 → 代工毛利率",
+   "score": 3.7
+  },
+  {
+   "title": "北京：做强燃料电池汽车全产业链",
+   "summary": "北京市经济和信息化局近日印发《北京市氢能产业发展实施方案（2026—2030年）》。其中提出，做强燃料电池汽车全产业链。支持燃料电池整车、系统龙头企业完善全产业链布局，围绕整车正向开发，加快膜电极、催化剂、碳纸、瓶阀等关键材料部件协同创新。落地氢电一体化底盘等量产项目，形成万台级燃料电池整车产能以及动力系统、电堆、膜电极与关键材料配套能力，推动燃料电池整车与核心零部件综合成本下降超30%。",
+   "category": "产业",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:48:32",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:48:32",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917573569.html",
+     "published_at": "2026-10-31 11:40:20",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "汽车",
+      "整车"
+     ]
+    },
+    {
+     "name": "电池",
+     "keywords": [
+      "电池"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 3.5
+  },
+  {
+   "title": "聚焦前沿技术、工程实践等 第七届载人航天学术大会开幕",
+   "summary": "据中国载人航天工程办公室消息，2026年10月31日，第七届载人航天学术大会在北京开幕。来自载人航天相关领域的800余位专家学者齐聚一堂，以“智汇星河，数智赋能载人航天高质量发展”为主题，聚焦载人航天领域前沿技术、工程实践与发展需求，交流前沿成果、深化学术研讨，为数智技术与载人航天工程深度融合、推动工程高质量发展汇聚智慧和力量。",
+   "category": "产业",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 10:07:32",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 10:07:32",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917525813.html",
+     "published_at": "2026-10-31 10:07:32",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "军工装备",
+     "keywords": [
+      "航天"
+     ]
+    },
+    {
+     "name": "建筑装饰",
+     "keywords": [
+      "工程"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 订单与国防预算 → 主机厂、配套企业排产",
+   "score": 3.5
+  },
+  {
+   "title": "纳指收跌2.9% 芯片股重挫 英特尔跌28%",
+   "summary": "美股三大指数集体收跌，道琼斯指数跌1.09%，标普500指数跌1.82%，纳斯达克综合指数跌2.86%。芯片股遭重挫，费城半导体指数跌7.2%，英特尔跌28.58%，闪迪跌超13%，高通跌超11%，AMD跌超10%，ARM跌超9%，希捷科技、西部数据、应用材料跌超7%，阿斯麦、拉姆研究跌超6%，台积电、博通跌超5%。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:02:53",
+   "url": "https://finance.eastmoney.com/a/202610313917313656.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917313656.html",
+     "published_at": "2026-10-31 04:02:53",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "半导体",
+     "keywords": [
+      "芯片",
+      "半导体"
+     ]
+    }
+   ],
+   "keywords": [
+    "美股",
+    "纳指",
+    "纳斯达克",
+    "标普"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 半导体/芯片需求与国产替代预期 → 设计、制造、设备、材料",
+   "score": 3.5
+  },
+  {
+   "title": "AI交易显露疲态 欧洲股市10月跑赢美股",
+   "summary": "欧洲股市在10月最后一个交易日小幅下跌，不过随着人工智能交易显露疲态、推动资金轮动，欧洲股市近期表现优于美国股市。斯托克欧洲600指数收跌0.4%，本月涨幅收窄至约2%。科技股和矿业股表现落后，医疗保健以及食品饮料股领涨。周五全球股市遭遇抛售之际，欧洲股市再次相对抗跌。亚马逊和英特尔业绩令人失望，再度引发市场对巨额AI支出的担忧，纳斯达克100指数大跌。亚洲股市也走低，其中被视为AI交易情绪风向标的韩国Kospi指数下跌3.5%，投资者重新评估科技股前景。瑞银一篮子欧洲AI受益股下跌4.9%。斯托克欧洲600指数1",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:23:26",
+   "url": "https://finance.eastmoney.com/a/202610313917301562.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917301562.html",
+     "published_at": "2026-10-31 01:23:26",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI",
+      "人工智能"
+     ]
+    }
+   ],
+   "keywords": [
+    "业绩",
+    "美股",
+    "纳斯达克",
+    "欧洲",
+    "韩国",
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 3.5
+  },
+  {
+   "title": "售电市场低价竞争、履约风险大？国家能源局：将出台监管新政",
+   "summary": "有媒体报道，近期部分地区售电公司亏损退出市场，行业低价内卷、履约风险凸显，也给工商业用户带来交易隐患。在10月30日国家能源局举行的新闻发布会上，国家能源局市场监管司副司长王云波对此回应称，为进一步规范电力零售市场，国家能源局即将出台一系列的政策文件，比如《售电公司管理办法》《电力零售市场基本规则》《电力市场风险防控管理办法》等，引导售电公司“提质量、防风险、促转型”。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:27:00",
+   "url": "https://finance.eastmoney.com/a/202610303917160264.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917160264.html",
+     "published_at": "2026-10-31 08:27:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "市场监管",
+    "政策",
+    "监管",
+    "办法"
+   ],
+   "confidence": "中",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 3.4
+  },
+  {
+   "title": "85亿元全部押注AI相关项目！这只牛股还同步启动港股上市计划 年内涨幅超230%",
+   "summary": "10月30日晚间，科翔股份连发多份公告。公司董事会审议通过三项对外投资议案：在惠州大亚湾投资35亿元建设“科翔智算年产50万m2AI算力印制电路板项目”；在江西九江投资30亿元建设“AI算力服务器项目”；在惠州大亚湾响水河工业园投资约20亿元建设“高端AI算力用PCB基板项目”。三项投资合计85亿元。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:58:21",
+   "url": "https://finance.eastmoney.com/a/202610313917517076.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917517076.html",
+     "published_at": "2026-10-31 09:58:21",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI",
+      "算力"
+     ]
+    }
+   ],
+   "keywords": [
+    "公告",
+    "港股"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 3.3
+  },
+  {
+   "title": "两单房企公司债相继获批 140.5亿元明确投向“好房子”",
+   "summary": "交易所债券市场服务房地产高质量发展的系列政策措施正在加快落地，效果逐步显现。近日，华润置地、招商蛇口两家房企取得公司债券注册批复，拟募集资金合计366亿元，其中，约140.5亿元资金将用于符合政策要求的房地产项目。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:56:27",
+   "url": "https://finance.eastmoney.com/a/202610303917219573.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917219573.html",
+     "published_at": "2026-10-31 08:56:27",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "房地产",
+     "keywords": [
+      "房地产",
+      "地产"
+     ]
+    },
+    {
+     "name": "证券",
+     "keywords": [
+      "债券",
+      "交易所"
+     ]
+    }
+   ],
+   "keywords": [
+    "政策"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销售与融资政策 → 拿地、开工、竣工链",
+   "score": 3.3
+  },
+  {
+   "title": "“硬科技”三季报多点开花：算力链高增兑现 新赛道蓄力启航",
+   "summary": "随着A股上市公司2026年三季报披露收官，“硬科技”板块交出一份亮眼“成绩单”：在全球智算基础设施扩张与国产算力自主化的双重驱动下，AI算力产业链营收、利润延续高增长态势，行业景气度持续高企，成为本轮业绩兑现最充分的主线；消费电子板块虽受存储芯片涨价、终端需求走弱等冲击而整体承压，但一批企业正积极转型，开辟“第二增长曲线”。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:36:47",
+   "url": "https://finance.eastmoney.com/a/202610313917334683.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917334683.html",
+     "published_at": "2026-10-31 07:36:47",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "算力",
+      "AI"
+     ]
+    },
+    {
+     "name": "半导体",
+     "keywords": [
+      "芯片",
+      "存储芯片"
+     ]
+    }
+   ],
+   "keywords": [
+    "业绩"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 3.3
+  },
+  {
+   "title": "AI驱动业绩强劲增长 半导体产业景气度有望攀新高",
+   "summary": "百亿级营收和盈利并现，超过八成公司前三季度实现盈利，近五成公司前三季度业绩同比增长（剔除扭亏）……上市公司三季报显示，AI算力和周期复苏共振下，A股半导体公司正迎来前所未有的快速增长，半导体产业也成为今年三季报最亮眼的行业之一。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:06:03",
+   "url": "https://finance.eastmoney.com/a/202610313917325516.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917325516.html",
+     "published_at": "2026-10-31 07:06:03",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI",
+      "算力"
+     ]
+    },
+    {
+     "name": "半导体",
+     "keywords": [
+      "半导体"
+     ]
+    }
+   ],
+   "keywords": [
+    "业绩"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 3.3
+  },
+  {
+   "title": "美国已批准一项可能向乌克兰出售“爱国者”导弹的交易 价值约21亿美元",
+   "summary": "美国已批准一项可能向乌克兰出售“爱国者”导弹的交易，价值约21亿美元。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 02:59:31",
+   "url": "https://finance.eastmoney.com/a/202610313917309377.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917309377.html",
+     "published_at": "2026-10-31 02:59:31",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "军工装备",
+     "keywords": [
+      "导弹"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国",
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 订单与国防预算 → 主机厂、配套企业排产",
+   "score": 3.3
+  },
+  {
+   "title": "LME期铜收跌202美元",
+   "summary": "LME期铜收跌202美元，报14154美元/吨。LME期铝收跌10美元，报3069美元/吨。LME期锌收跌40美元，报3842美元/吨。LME期铅收跌6美元，报1910美元/吨。LME期镍收跌265美元，报15271美元/吨。LME期锡收跌824美元，报48873美元/吨。LME期钴收平，报33510美元/吨。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:56:10",
+   "url": "https://finance.eastmoney.com/a/202610313917303163.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917303163.html",
+     "published_at": "2026-10-31 01:56:10",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "工业金属",
+     "keywords": [
+      "铜",
+      "铝"
+     ]
+    },
+    {
+     "name": "能源金属",
+     "keywords": [
+      "钴",
+      "镍"
+     ]
+    }
+   ],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 地产与制造业需求 → 铜铝价格、加工费",
+   "score": 3.3
+  },
+  {
+   "title": "亚马逊借助800亿美元供应商贷款安排 为AI提供资金支持",
+   "summary": "亚马逊借助800亿美元供应商贷款安排，为AI提供资金支持。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 00:38:04",
+   "url": "https://finance.eastmoney.com/a/202610313917300461.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917300461.html",
+     "published_at": "2026-10-31 00:38:04",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "银行",
+     "keywords": [
+      "贷款"
+     ]
+    },
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 利率与信贷投放 → 净息差、资产质量",
+   "score": 3.3
+  },
+  {
+   "title": "牵手阿里千问 苹果智能即将登陆中国市场 迟到两年多 能否借AI撬动换机需求？",
+   "summary": "从设备支持范围来看，苹果智能首批适用于iPhone 16及后续机型、iPhone 15 Pro、iPhone 15 Pro Max、iPhone Air、iPhone Duo。此外，苹果在官网特别强调，本次首批上线不包含WWDC2026公布的新一代Siri AI以及其他下一代Apple智能功能。这一安排也反映出，苹果智能在中国市场的落地将是一个分阶段推进的过程。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 11:13:24",
+   "url": "https://finance.eastmoney.com/a/202610313917563682.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917563682.html",
+     "published_at": "2026-10-31 11:13:24",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    },
+    {
+     "name": "消费电子",
+     "keywords": [
+      "苹果"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 3.2
+  },
+  {
+   "title": "《三星堆：未来往事》之后 AI院线电影何去何从？",
+   "summary": "作为博纳推出的首部AI院线电影，它被赋予了某种超出普通电影项目的意义。按照主创在接受媒体采访时的说法，博纳并没有把票房设为第一目标，而是希望借这部电影摸索出一条AI进入电影工业的可行路径，为行业提供新的解决方案。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 11:08:00",
+   "url": "https://finance.eastmoney.com/a/202610313917565384.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917565384.html",
+     "published_at": "2026-10-31 11:08:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "影视院线",
+     "keywords": [
+      "电影",
+      "院线"
+     ]
+    },
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 票房与排片 → 院线、制片方分账",
+   "score": 3.2
+  },
+  {
+   "title": "半导体设备企业三季报：部分龙头三季度增速放缓",
+   "summary": "随着三季报披露收官，A股半导体设备板块集体交出成绩单。据记者统计，目前市值超500亿元的8家A股半导体设备公司中，有5家在今年前三季度实现营收、净利同比双增。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:00:28",
+   "url": "https://finance.eastmoney.com/a/202610313917523467.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917523467.html",
+     "published_at": "2026-10-31 10:00:28",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "半导体",
+     "keywords": [
+      "半导体"
+     ]
+    },
+    {
+     "name": "专用设备",
+     "keywords": [
+      "半导体设备"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 半导体/芯片需求与国产替代预期 → 设计、制造、设备、材料",
+   "score": 3.2
+  },
+  {
+   "title": "机构预测：2030年中国车企在欧洲销量将达270万辆，37%实现本土生产",
+   "summary": "在10月29—30日举办的2026全球华人汽车精英联合年会暨“中国拥抱世界”汽车产业国际发展论坛上，罗兰贝格（巴黎）公司合伙人EricEsperance预测，2030年中国车企在欧洲销量将达270万辆，其中37%实现本土生产，产能将通过绿地投资与盘活欧洲闲置产能双路径推进。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:18:00",
+   "url": "https://finance.eastmoney.com/a/202610313917519825.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917519825.html",
+     "published_at": "2026-10-31 09:18:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "车企",
+      "汽车"
+     ]
+    }
+   ],
+   "keywords": [
+    "欧洲"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 3.2
+  },
+  {
+   "title": "华为背景高管加盟 上纬新材如何逆转机器人业务0收入？",
+   "summary": "10月29日，上纬新材（688585.SH）发布2026年第三季度报告。其中显示，今年前三季度，该公司营收同比下滑5.51%至12.09亿元，扣非归母净利润同比下滑878.57%至-4.25亿元。对此，上纬新材在最新三季报中表示，该公司消费级具身智能机器人业务于2026年9月20日正式开售，产品将于10月开始交付，前三季度尚未确认收入。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:20:00",
+   "url": "https://finance.eastmoney.com/a/202610303917224684.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917224684.html",
+     "published_at": "2026-10-31 08:20:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "自动化设备",
+     "keywords": [
+      "机器人"
+     ]
+    },
+    {
+     "name": "消费电子",
+     "keywords": [
+      "华为"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 制造业投资与机器人量产 → 减速器、伺服、本体",
+   "score": 3.2
+  },
+  {
+   "title": "汇丰私人银行：85%内地受访企业家未来一年内拟加码AI投入",
+   "summary": "汇丰私人银行最新发布的《全球企业家财富报告》显示，人工智能正加速融入企业家的日常决策与业务流程。超过八成（85%）内地受访企业家计划未来一年内增加AI相关投入，平均拟将15%至20%的年度营收用于技术升级；近六成（56%）受访企业家表示已调整业务策略，加快AI应用融合。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:49:30",
+   "url": "https://finance.eastmoney.com/a/202610303917170916.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917170916.html",
+     "published_at": "2026-10-31 07:49:30",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI",
+      "人工智能"
+     ]
+    },
+    {
+     "name": "银行",
+     "keywords": [
+      "银行"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 3.2
+  },
+  {
+   "title": "北交所37家公司前三季净利翻倍 细分赛道龙头成增长主力",
+   "summary": "10月30日，北交所三季报披露收官。354家北交所公司完成2026年前三季度财报披露，其中37家前三季度归母净利润翻倍，硬质合金、食品消费、半导体零部件等细分赛道龙头成为增长主力。业绩落地后，多家高增公司迅速迎来公募、券商、私募等机构组团调研。多家券商认为，北交所盈利底部信号逐步清晰，在改革政策加持下，板块存在估值修复空间，资金配置上将更侧重业绩可验证、细分领域具备差异化优势的标的。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:29:25",
+   "url": "https://finance.eastmoney.com/a/202610313917302574.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917302574.html",
+     "published_at": "2026-10-31 07:29:25",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "政策",
+    "业绩"
+   ],
+   "confidence": "中",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 3.2
+  },
+  {
+   "title": "乌克兰总统泽连斯基敦促美国加快“爱国者”防空导弹的交付进度",
+   "summary": "乌克兰总统泽连斯基敦促美国加快“爱国者”防空导弹的交付进度。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 06:49:29",
+   "url": "https://finance.eastmoney.com/a/202610313917332913.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917332913.html",
+     "published_at": "2026-10-31 06:49:29",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "军工装备",
+     "keywords": [
+      "导弹"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 订单与国防预算 → 主机厂、配套企业排产",
+   "score": 3.2
+  },
+  {
+   "title": "谷歌据悉正在与美国国防部就参与“金穹”导弹防御系统项目的工作进行谈判",
+   "summary": "谷歌据悉正在与美国国防部就参与“金穹”导弹防御系统项目的工作进行谈判。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 05:18:03",
+   "url": "https://finance.eastmoney.com/a/202610313917321380.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917321380.html",
+     "published_at": "2026-10-31 05:18:03",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "军工装备",
+     "keywords": [
+      "国防",
+      "导弹"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "低",
+   "uncertainty": "消息尚未获得官方确认；隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 订单与国防预算 → 主机厂、配套企业排产",
+   "score": 3.2
+  },
+  {
+   "title": "纳斯达克100指数跌幅扩大至4% 费城半导体指数跌8.7%",
+   "summary": "纳斯达克100指数跌幅扩大至4%，刷新日低。费城半导体指数跌8.7%，英特尔现跌30.8%，闪迪跌15%，AMD、高通、ARM跌12%，希捷科技跌超9%，西部数据、应用材料跌超8%，Cerebras、阿斯麦、拉姆研究跌超7%，台积电、博通跌超6%。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 02:03:33",
+   "url": "https://finance.eastmoney.com/a/202610313917303743.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917303743.html",
+     "published_at": "2026-10-31 02:03:33",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "半导体",
+     "keywords": [
+      "半导体"
+     ]
+    }
+   ],
+   "keywords": [
+    "纳斯达克"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 半导体/芯片需求与国产替代预期 → 设计、制造、设备、材料",
+   "score": 3.2
+  },
+  {
+   "title": "美国本周石油钻井数462口 前值460口",
+   "summary": "美国本周石油钻井数462口，前值460口。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:07:44",
+   "url": "https://finance.eastmoney.com/a/202610313917301169.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917301169.html",
+     "published_at": "2026-10-31 01:07:44",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "油气开采及服务",
+     "keywords": [
+      "石油"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 油价与资本开支 → 开采、油服订单",
+   "score": 3.2
+  },
+  {
+   "title": "纳斯达克100指数跌幅扩大至3.5% 费城半导体指数跌超8%",
+   "summary": "纳斯达克100指数跌幅扩大至3.5%，刷新日低。费城半导体指数跌8%，报10596.08点。英特尔现跌30%，闪迪跌13%，AMD、高通、ARM跌11%，希捷科技、应用材料跌超8%，西部数据、拉姆研究跌超7%。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 00:51:00",
+   "url": "https://finance.eastmoney.com/a/202610313917300861.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917300861.html",
+     "published_at": "2026-10-31 00:51:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "半导体",
+     "keywords": [
+      "半导体"
+     ]
+    }
+   ],
+   "keywords": [
+    "纳斯达克"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 半导体/芯片需求与国产替代预期 → 设计、制造、设备、材料",
+   "score": 3.2
+  },
+  {
+   "title": "税收表现不及GDP？万亿税源去哪儿了？专家建议寻找新锚点",
+   "summary": "近日，我国前三季度的经济数据和财政数据相继公布。结合近年来的经济数据，有专家发现，税收表现不及GDP，仍有增长空间。在近日举办的第十届财经发展论坛上，上海财经大学财税投资学院院长、教授范子英带来了“无税收繁荣”的主旨演讲，洞悉税收变化，并建议在新兴领域快速发展的今天，加快研究健全适应新业态发展的税收制度。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:31:00",
+   "url": "https://finance.eastmoney.com/a/202610303917173462.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917173462.html",
+     "published_at": "2026-10-31 08:31:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "税收"
+   ],
+   "confidence": "中",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 3.1
+  },
+  {
+   "title": "腾讯汤道生：大家现在很少提到模型参数和跑分 WorkBuddy不是刻意规划出来的",
+   "summary": "之前总是被质疑“慢了”的腾讯，出现了现象级产品Workbuddy，对此，汤道生表示，“这是一个高速增长的市场，WorkBuddy当前在市场确实在一个相对领先的位置，但我相信未来几年产品也要持续去迭代，这个赛道才刚开始。我相信我们友商也一样在不断迭代这个产品。”",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:17:25",
+   "url": "https://finance.eastmoney.com/a/202610313917510915.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917510915.html",
+     "published_at": "2026-10-31 08:17:25",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "规划"
+   ],
+   "confidence": "中",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 3.1
+  },
+  {
+   "title": "安理会举行联合国秘书长遴选第七轮意向性投票",
+   "summary": "联合国安理会30日就下一任联合国秘书长遴选举行第七轮意向性投票。安理会当月轮值主席、希腊常驻联合国代表巴尔塔在投票结束后说，投票结果将通过候选人推举国通知各候选人。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:23:08",
+   "url": "https://finance.eastmoney.com/a/202610313917315717.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917315717.html",
+     "published_at": "2026-10-31 04:23:08",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "通知"
+   ],
+   "confidence": "中",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 3.1
+  },
+  {
+   "title": "《金融产品网络营销管理办法》实施满月：金融产品网络营销“草莽时代”落幕",
+   "summary": "一场行业系统性整改全面铺开，金融机构告别以往粗放式的私域流量打法，客户触达、内容审核、客户维护全面转向规范化。金融产品的线上获客逻辑正从“流量至上”向“专业为本”重构。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 03:29:00",
+   "url": "https://finance.eastmoney.com/a/202610313917307637.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917307637.html",
+     "published_at": "2026-10-31 03:29:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "办法"
+   ],
+   "confidence": "中",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 3.1
+  },
+  {
+   "title": "金价跌至一年来新低",
+   "summary": "受国际原油价格上涨、美国通胀压力加剧以及市场对美联储进一步加息的预期升温等因素影响，国际金价30日跌至一年来新低。截至收盘，纽商所12月交割的黄金期货价格报每盎司3898.9美元，跌幅为3.29%；12月交割的白银期价收于每盎司49.276美元，跌幅为5.93%。这是白银期货价格自2025年11月以来首次跌破每盎司50美元关口。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:53:09",
+   "url": "https://finance.eastmoney.com/a/202610313917464411.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917464411.html",
+     "published_at": "2026-10-31 07:53:09",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "贵金属",
+     "keywords": [
+      "金价",
+      "黄金"
+     ]
+    }
+   ],
+   "keywords": [
+    "美联储",
+    "加息",
+    "美国",
+    "原油",
+    "黄金",
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 实际利率与避险需求 → 金价、矿业利润",
+   "score": 3.0
+  },
+  {
+   "title": "东方证券孙金霞：中国具有低利率与完备的基础设施体系等多重优势，为科技产业长期发展提供基础",
+   "summary": "东方证券研究所副所长孙金霞表示，中国科技发展的前景建立在扎实的自身基础之上。中国长期形成的高储蓄、低融资成本以及完备的基础设施体系，为新一轮科技投资提供了重要比较优势。此外，中国在工程师资源以及应用场景等方面也具有独特优势，为科技创新和产业升级提供了长期竞争力。",
+   "category": "产业",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:49:19",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:49:19",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917574228.html",
+     "published_at": "2026-10-31 11:48:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "证券",
+     "keywords": [
+      "证券"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 市场成交与政策 → 经纪、投行、自营收入",
+   "score": 2.9
+  },
+  {
+   "title": "上海数据交易所已核发首批15份数据产权登记凭证",
+   "summary": "10月31日，证券时报记者从2026全球数商大会“数智共生要素蝶变”——数据产业高质量发展与国际合作论坛上获悉，上海数据交易所已核发首批15份数据产权登记凭证，登记对象覆盖航运航空、金融服务、大宗商品、人工智能、智慧农业等领域，既包含成熟数据产品，也涵盖面向新技术、新场景开发形成的数据集。",
+   "category": "产业",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:43:56",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:43:56",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917573792.html",
+     "published_at": "2026-10-31 11:42:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "证券",
+     "keywords": [
+      "交易所",
+      "证券"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 市场成交与政策 → 经纪、投行、自营收入",
+   "score": 2.9
+  },
+  {
+   "title": "北京：培育高温膜燃料电池、固体氧化物燃料电池、氢燃机等前沿赛道创新主体",
+   "summary": "北京市经济和信息化局近日印发《北京市氢能产业发展实施方案（2026—2030年）》。其中提出，推动氢能多元供应、多领域应用技术创新，开展富氢高炉控制、氢基直接还原等氢冶金技术研发，加快液氢储运、固态储供氢、高压管束储运等储运关键装备产业化，探索车载氢系统循环再利用模式，培育高温膜燃料电池、固体氧化物燃料电池、氢燃机、液氢重卡等前沿赛道创新主体，拓展氢能多元化高端应用产业链条。",
+   "category": "产业",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:42:58",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:42:58",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917573683.html",
+     "published_at": "2026-10-31 11:41:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "电池",
+     "keywords": [
+      "电池"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 新能源车与储能需求 → 电池排产、材料价格",
+   "score": 2.9
+  },
+  {
+   "title": "奇瑞高管回应智界独立：要更像新势力，而非“大一号”传统车企",
+   "summary": "在10月31日举行的三季度媒体沟通交流会上，奇瑞汽车股份有限公司执行副总裁戚士龙回应智界独立时表示，希望智界团队更像新势力企业，而不是简单做成“大一号”的传统车企。他表示，将从组织规模化、产品高端化及品牌逐步优化等方面，提升智界独立运营能力。据悉，智界明年还会有新产品导入，而海外业务仍由奇瑞集团独立运营。",
+   "category": "产业",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:35:19",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:35:19",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917571569.html",
+     "published_at": "2026-10-31 11:28:36",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "车企",
+      "汽车"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 2.9
+  },
+  {
+   "title": "我国铼、金、镍、锆等保有资源量大幅增加",
+   "summary": "通过共伴生、低品位、难利用战略性矿产再评价，我国铼保有资源量增加超两倍，金相当于新增50个大型矿床，镍相当于新增30个大型矿床。自然资源部10月31日发布数据显示，2024年，自然资源部组织全国27个省区市、100余家单位、近2000名调查人员，开展了全国镓、锗、铟、铬铁矿、镍、钴、锆、铪、铌、钽、钒、稀土、铼、钾盐、金、锰、氦气等17种战略性矿产共伴生、低品位资源再评价工作。通过一年工作，完成全国1800余处在产矿山和大中型矿区的资源再评价，摸清17种战略性矿产共伴生、低品位资源的实际开发利用情况，及当前技术经济",
+   "category": "产业",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 10:10:31",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 10:09:49",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917526171.html",
+     "published_at": "2026-10-31 10:10:31",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "能源金属",
+     "keywords": [
+      "镍",
+      "钴"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 锂钴镍价格 → 矿端与冶炼利润",
+   "score": 2.9
+  },
+  {
+   "title": "伊朗称4艘违规穿越海峡油轮爆炸",
+   "summary": "伊朗伊斯兰革命卫队海军当地时间10月30日晚宣布，当天下午，第4艘油轮在霍尔木兹海峡违规航行时触雷爆炸并起火。这艘载有超过200万桶原油的油轮，无视伊朗伊斯兰革命卫队海军的无线电警告，在美军挑唆下试图驶离霍尔木兹海峡南部未经授权的航道。革命卫队表示，这是自当天凌晨以来在霍尔木兹海峡起火的第4艘油轮。 （CCTV国际时讯）",
+   "category": "海外",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 10:01:53",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 10:01:53",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917525650.html",
+     "published_at": "2026-10-31 10:01:53",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "原油"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.9
+  },
+  {
+   "title": "新华保险投资业绩阶段性波动 原保险保费同比增3.5% 管理层坦言2027年仍临挑战",
+   "summary": "昨日，新华保险公告三季报，数据显示，2026年前三季度，新华保险营业收入851.74亿元，同比下滑37.9%；归属于母公司股东的净利润222.82亿元，同比下滑32.2%。对于业绩的波动，新华保险表示，2026年三季度，受资本市场波动影响，投资业绩在上年同期高基数的基础上出现阶段性波动，导致营业收入和净利润同比下降。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:51:08",
+   "url": "https://finance.eastmoney.com/a/202610313917437610.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917437610.html",
+     "published_at": "2026-10-31 07:51:08",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "保险",
+     "keywords": [
+      "保险",
+      "保费"
+     ]
+    }
+   ],
+   "keywords": [
+    "公告",
+    "业绩",
+    "股东"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 利率与保费增长 → 投资端与负债端",
+   "score": 2.9
+  },
+  {
+   "title": "华能水电整合清洁能源资产 拟87亿元收购控股股东旗下公司",
+   "summary": "华能水电方面表示，此次并购是华能集团履行避免同业竞争承诺、推动水电资产注入上市平台、提质增效上市公司核心资产的举措。目前，华能集团已明确将华能水电定位为集团水电业务唯一整合平台。继华能四川公司资产收购落地后，本次HNYL公司股权的注入，将进一步充实华能水电清洁能源资产储备，夯实长期发展资源根基。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:59:24",
+   "url": "https://finance.eastmoney.com/a/202610313917562222.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917562222.html",
+     "published_at": "2026-10-31 10:59:24",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "电力",
+     "keywords": [
+      "水电"
+     ]
+    }
+   ],
+   "keywords": [
+    "并购",
+    "股东"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 电价与来水/煤价 → 火电、水电、核电盈利",
+   "score": 2.8
+  },
+  {
+   "title": "可灵AI完成增资198亿元！金蝶、沐曦新进 中东资本退出",
+   "summary": "10月30日晚，快手发布公告，旗下视频生成大模型可灵AI增资正式落地，全部投资者已足额缴纳增资款并完成交割。实际到账增资款总额约198.02亿元（约29.05亿美元），较此前204.47亿元的融资上限略有缩减。这一规模不仅刷新了国内生成式AI领域单轮融资纪录，也创下全球多模态大模型公司单轮融资的最高金额。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:50:00",
+   "url": "https://finance.eastmoney.com/a/202610313917555988.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917555988.html",
+     "published_at": "2026-10-31 10:50:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI",
+      "大模型"
+     ]
+    }
+   ],
+   "keywords": [
+    "公告",
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.8
+  },
+  {
+   "title": "三季度业绩承压 长安汽车智能化子公司拟挂牌引战投",
+   "summary": "10月30日晚间，长安汽车（000625.SZ）披露2026年三季报，同日公告全资子公司重庆长安科技有限责任公司在产权交易所预挂牌，拟通过增资扩股方式引入投资者。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:03:57",
+   "url": "https://finance.eastmoney.com/a/202610313917513191.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917513191.html",
+     "published_at": "2026-10-31 10:03:57",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "汽车"
+     ]
+    }
+   ],
+   "keywords": [
+    "公告",
+    "业绩"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 2.8
+  },
+  {
+   "title": "何小鹏：如果你想证明自己的智驾强 那你就应该出国！",
+   "summary": "小鹏集团董事长何小鹏表示，自诞生之日起，小鹏就将智能驾驶作为自己的DNA，但在国内一直有对其质疑的声音。在这次巴黎车展上，欧洲本地车企与媒体一开始也对其智驾能力持怀疑态度，直到亲身体会后对小鹏表示认同，并愿意开启合作。何小鹏表示：“有人以前告诉我，如果你想证明自己的智驾强，那就应该出国，小鹏做到了。在明年，小鹏的智驾会从中国走向全球。”",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:10:02",
+   "url": "https://finance.eastmoney.com/a/202610303916910350.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916910350.html",
+     "published_at": "2026-10-31 09:10:02",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "车企",
+      "智能驾驶"
+     ]
+    }
+   ],
+   "keywords": [
+    "董事长",
+    "欧洲"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 2.8
+  },
+  {
+   "title": "特朗普：房利美和房地美将向佛罗里达州抵押贷款投资400亿美元",
+   "summary": "美国总统特朗普表示，房利美和房地美将向佛罗里达州抵押贷款投资400亿美元。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:47:44",
+   "url": "https://finance.eastmoney.com/a/202610313917516565.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917516565.html",
+     "published_at": "2026-10-31 08:47:44",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "银行",
+     "keywords": [
+      "贷款"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国",
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 利率与信贷投放 → 净息差、资产质量",
+   "score": 2.8
+  },
+  {
+   "title": "招商银行前三季业绩增长提速 私人银行客户逼近22万",
+   "summary": "10月30日，招商银行发布三季报。前三季度，该行实现营业收入2648.52亿元，同比增长5.34%；实现归属于该行股东的净利润1164.76亿元，同比增长2.38%。三季报还显示，招商银行零售AUM达到18.71万亿元，较上年末增长9.52%。私人银行客户逼近22万户，较上年末增长10.10%。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:28:00",
+   "url": "https://finance.eastmoney.com/a/202610303916883649.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916883649.html",
+     "published_at": "2026-10-31 08:28:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "银行",
+     "keywords": [
+      "银行"
+     ]
+    }
+   ],
+   "keywords": [
+    "业绩",
+    "股东"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 利率与信贷投放 → 净息差、资产质量",
+   "score": 2.8
+  },
+  {
+   "title": "TCL中环停牌！收购中环领先少数股权 加码半导体材料投入",
+   "summary": "10月30日，TCL中环（002129.SZ）发布停牌公告，披露公司正在筹划发行股份购买资产暨关联交易事项，本次交易拟收购中环领先半导体科技股份有限公司少数股权。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:18:00",
+   "url": "https://finance.eastmoney.com/a/202610303917260746.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917260746.html",
+     "published_at": "2026-10-31 08:18:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "半导体",
+     "keywords": [
+      "半导体"
+     ]
+    }
+   ],
+   "keywords": [
+    "公告",
+    "停牌"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 半导体/芯片需求与国产替代预期 → 设计、制造、设备、材料",
+   "score": 2.8
+  },
+  {
+   "title": "美国国务卿卢比奥今天会见了日本外相和韩国外长",
+   "summary": "美国国务卿卢比奥今天会见了日本外相和韩国外长。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 06:59:17",
+   "url": "https://finance.eastmoney.com/a/202610313917335991.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917335991.html",
+     "published_at": "2026-10-31 06:59:17",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "日本",
+    "韩国",
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.8
+  },
+  {
+   "title": "伦敦股市30日上涨",
+   "summary": "英国伦敦股市《金融时报》100种股票平均价格指数30日报收于10729.78点，较前一交易日上涨7.71点，涨幅为0.07%。欧洲三大股指当天涨跌不一。当天伦敦股市成分股中位于涨幅前五位的个股分别为：阿斯利康制药公司股价上涨6.96%，英国电信集团股价上涨6.71%，可口可乐欧洲太平洋合作伙伴公司股价上涨3.28%，酒业公司帝亚吉欧股价上涨3.26%，出版集团励讯股价上涨2.64%。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 02:57:29",
+   "url": "https://finance.eastmoney.com/a/202610313917308875.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917308875.html",
+     "published_at": "2026-10-31 02:57:29",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "欧股",
+    "英国",
+    "欧洲"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.8
+  },
+  {
+   "title": "美联储穆萨莱姆：有必要进一步收紧政策 而且要尽快行动",
+   "summary": "美联储官员穆萨莱姆表示，美国通胀高企且范围广泛，可能会持续。货币和金融环境依然宽松。第三季度数据证实经济内在势头强劲。有必要进一步收紧政策，而且要尽快行动。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 00:32:47",
+   "url": "https://finance.eastmoney.com/a/202610313917300092.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917300092.html",
+     "published_at": "2026-10-31 00:32:47",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "政策",
+    "美联储",
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.8
+  },
+  {
+   "title": "CRO或成最大赢家？AI重构药企组织范式：“一人管线”横空出世",
+   "summary": "近日，临近IPO的Anthropic，在招股书中勾勒出2万亿美元的药品市场空间，同时官宣了与多家药企的长期合作。此番布局距其宣布成立生命科学研究团队及实验室仅过去一个月，巨头动作不断，令AI切入生命科学赛道的想象再度升温。正当市场热议AIDD会否成为下一个杀手级AI应用时，药企的研发组织范式，也在这场浪潮中悄然重塑。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:53:55",
+   "url": "https://finance.eastmoney.com/a/202610313917522584.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917522584.html",
+     "published_at": "2026-10-31 09:53:55",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.7
+  },
+  {
+   "title": "额度已经用完！剑桥科技拟再投入17.69亿港元扩产光模块 Q3单季净利同比大涨213%",
+   "summary": "10月30日晚间，剑桥科技披露2026年第三季度报告。公司前三季度实现营业收入49.21亿元，同比增长46.46%；实现归母净利润7.61亿元，同比增长193.35%。同日晚间，公司还公告称，拟变更H股发售所得款项用途。其中17.685亿港元投向光模块产品（包括800G/1.6T产品）的产能提升。该项目计划投入金额由12.893亿港元增至17.685亿港元。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:37:25",
+   "url": "https://finance.eastmoney.com/a/202610303916950024.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916950024.html",
+     "published_at": "2026-10-31 09:37:25",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "通信设备",
+     "keywords": [
+      "光模块"
+     ]
+    }
+   ],
+   "keywords": [
+    "公告"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 运营商与海外资本开支 → 光模块、交换机",
+   "score": 2.7
+  },
+  {
+   "title": "起底银行工资代发业务灰色产业链：中介自荐“凑业绩”",
+   "summary": "“银行老师看过来，承接银行一次性工资代发任务，资源多多。”记者发现，社交平台上近期批量出现承接工资代发业务的广告。同时，也有部分银行员工公开寻找付费完成工资代发任务的中介或人力资源公司。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:19:38",
+   "url": "https://finance.eastmoney.com/a/202610303916720482.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916720482.html",
+     "published_at": "2026-10-31 09:19:38",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "银行",
+     "keywords": [
+      "银行"
+     ]
+    }
+   ],
+   "keywords": [
+    "业绩"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 利率与信贷投放 → 净息差、资产质量",
+   "score": 2.7
+  },
+  {
+   "title": "清华大学汽车产业与技术战略研究院院长赵福全：车企单纯靠出海回避国内竞争的时代已经终结",
+   "summary": "在10月29—30日举办的2026全球华人汽车精英联合年会暨“中国拥抱世界”汽车产业国际发展论坛上，全球汽车精英组织副主席、FISITA终身名誉主席、清华大学汽车产业与技术战略研究院院长赵福全表示，关税壁垒、地缘风险、售后体系缺失、残值管理不足等长尾问题持续凸显，东南亚市场价格战已显现内卷化趋势，车企单纯靠出海回避国内竞争的时代已经终结。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:15:00",
+   "url": "https://finance.eastmoney.com/a/202610313917519610.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917519610.html",
+     "published_at": "2026-10-31 09:15:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "车企",
+      "汽车"
+     ]
+    }
+   ],
+   "keywords": [
+    "关税"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 2.7
+  },
+  {
+   "title": "债市突现大幅调整 发生了什么？",
+   "summary": "10月30日，国债期货超长端品种率先走弱，30年期主力合约收跌0.73%，创下3月9日以来最大单日跌幅；现券同步走弱，超长特别国债“26超长特别国债04”收益率上行3个基点，报2.083%。市场传出某地方国企信用风险消息，持仓机构出于风控考量提前抛售，这让市场也“弯了一下腰”，恐慌情绪出现外溢，从城投品种向整个债市蔓延，利率债也未能幸免。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:59:00",
+   "url": "https://finance.eastmoney.com/a/202610303917021282.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917021282.html",
+     "published_at": "2026-10-31 08:59:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "证券",
+     "keywords": [
+      "债市",
+      "国债"
+     ]
+    }
+   ],
+   "keywords": [
+    "特别国债"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 市场成交与政策 → 经纪、投行、自营收入",
+   "score": 2.7
+  },
+  {
+   "title": "三季度营收新高利润却转负 山东黄金成首家亏损“金主”",
+   "summary": "10月28日晚间，山东黄金对外披露三季报。在国际金价走低的情况下，公司第三季度营收逆势提升至369亿元，环比增长75%，创下单季度营收历史新高。然而，收入增长却未能转化为利润增量，公司归母净利润由今年二季度的20.97亿元，转为三季度的亏损3.63亿元。在已经披露定期报告的7家同行业公司中，山东黄金也成为了今年三季度首家出现亏损的黄金矿业公司。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:53:00",
+   "url": "https://finance.eastmoney.com/a/202610313917336137.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917336137.html",
+     "published_at": "2026-10-31 08:53:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "贵金属",
+     "keywords": [
+      "黄金",
+      "金价"
+     ]
+    }
+   ],
+   "keywords": [
+    "黄金"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 实际利率与避险需求 → 金价、矿业利润",
+   "score": 2.7
+  },
+  {
+   "title": "红果短剧登顶台湾APP下载榜首！有人看到天亮 有人退订Netflix",
+   "summary": "“Netflix（美国会员订阅制流媒体平台）一集还没看完，红果已经重生、复仇、离婚、闪婚三次了。”最近，这句话在台湾社交媒体引发大量讨论。十月中下旬，红果短剧同时登上台湾App Store与Google Play两个应用商店免费应用下载榜榜首。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:43:06",
+   "url": "https://finance.eastmoney.com/a/202610313917515452.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917515452.html",
+     "published_at": "2026-10-31 08:43:06",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "文化传媒",
+     "keywords": [
+      "短剧"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 广告需求与内容供给 → 传媒公司收入",
+   "score": 2.7
+  },
+  {
+   "title": "铝企前三季度业绩整体表现亮眼",
+   "summary": "截至10月30日记者发稿，申万铝行业30家A股上市公司2026年三季报已全部披露完毕。前三季度，30家公司营业收入均实现同比增长，其中，18家公司归母净利润同比正增长，另有3家公司同比实现扭亏为盈。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:42:00",
+   "url": "https://finance.eastmoney.com/a/202610313917305844.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917305844.html",
+     "published_at": "2026-10-31 07:42:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "工业金属",
+     "keywords": [
+      "铝"
+     ]
+    }
+   ],
+   "keywords": [
+    "业绩"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 地产与制造业需求 → 铜铝价格、加工费",
+   "score": 2.7
+  },
+  {
+   "title": "前三季度业绩稳步增长 券业分化格局凸显",
+   "summary": "随着上市券商三季报披露完成，证券行业前三季度整体业绩轮廓已然清晰，营收与净利润同比稳步增长，第三季度数据则普遍回落，这一反差反映出当前券商面临较为复杂的经营环境。在业内人士看来，券商经营业绩对市场周期的依赖并未因行业转型而消失，但抗波动能力与业务结构质量，正在成为区分券商强弱的核心标尺。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:38:36",
+   "url": "https://finance.eastmoney.com/a/202610313917334414.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917334414.html",
+     "published_at": "2026-10-31 07:38:36",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "证券",
+     "keywords": [
+      "券商",
+      "证券"
+     ]
+    }
+   ],
+   "keywords": [
+    "业绩"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 市场成交与政策 → 经纪、投行、自营收入",
+   "score": 2.7
+  },
+  {
+   "title": "三季度券商新晋逾80家公司前十大流通股股东 后市配置看好资源品及高股息龙头",
+   "summary": "在A股上市公司三季报密集出炉的同时，市场重要机构投资者——券商的最新持仓变动情况也逐渐呈现在投资者面前。数据显示，截至10月30日记者发稿时，已有超过200家上市公司的前十大流通股股东中出现券商身影，券商三季度对至少40家公司进行加仓，同时新晋超80家公司前十大流通股股东。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:35:48",
+   "url": "https://finance.eastmoney.com/a/202610313917334769.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917334769.html",
+     "published_at": "2026-10-31 07:35:48",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "证券",
+     "keywords": [
+      "券商"
+     ]
+    }
+   ],
+   "keywords": [
+    "股东"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 市场成交与政策 → 经纪、投行、自营收入",
+   "score": 2.7
+  },
+  {
+   "title": "量价齐升助推有色公司业绩增长 算力金属或成高景气主线",
+   "summary": "从细分行业来看，前三季度矿企、下游高景气金属新材料企业表现亮眼，但受金属价格波动影响，三季度不少龙头企业利润环比有所回落。总体来看，2026年全年有色金属或仍处于高景气通道，与AI算力强相关的金属需求确定性更强。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:10:53",
+   "url": "https://finance.eastmoney.com/a/202610313917324772.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917324772.html",
+     "published_at": "2026-10-31 07:10:53",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "算力",
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [
+    "业绩"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.7
+  },
+  {
+   "title": "一体化龙头业绩领跑 化工板块显现结构性复苏",
+   "summary": "今年前三季度，A股化工上市公司呈现结构性复苏态势。数据显示，截至10月30日晚记者发稿时，已有481家化工类上市公司（包括基础化工和石油石化）披露三季报。前三季度，这些公司合计实现归母净利润约3855.28亿元，同比增长约36.57%；超过八成实现盈利，近60家归母净利润同比增幅超过100%，东岳硅材、东方盛虹、恒逸石化等公司增幅居前。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:08:00",
+   "url": "https://finance.eastmoney.com/a/202610313917325432.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917325432.html",
+     "published_at": "2026-10-31 07:08:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "化学制品",
+     "keywords": [
+      "化工"
+     ]
+    }
+   ],
+   "keywords": [
+    "业绩"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 原料价格与下游需求 → 价差、开工率",
+   "score": 2.7
+  },
+  {
+   "title": "周六你需要知道的隔夜全球要闻：苹果再次反超英伟达登顶全球公司市值榜；特朗普拟于中期选举次日恢复对伊朗打击",
+   "summary": "全球要闻1、特朗普据悉计划在中期选举次日恢复对伊朗的打击。美国通报海湾国家要求其做好最早11月4日发动打击的准备。2、黑石告知投资者，Anthropic在IPO后可能无法获得投资级评级。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 06:36:02",
+   "url": "https://finance.eastmoney.com/a/202610313917332026.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917332026.html",
+     "published_at": "2026-10-31 06:36:02",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "消费电子",
+     "keywords": [
+      "苹果"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "低",
+   "uncertainty": "消息尚未获得官方确认；单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 新机周期与客户份额 → 零部件、组装订单",
+   "score": 2.7
+  },
+  {
+   "title": "AI推理基础设施公司Baseten据悉正以约300亿美元的估值推进新一轮融资",
+   "summary": "AI推理基础设施公司Baseten据悉正以约300亿美元的估值推进新一轮融资。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 06:05:30",
+   "url": "https://finance.eastmoney.com/a/202610313917326837.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917326837.html",
+     "published_at": "2026-10-31 06:05:30",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "低",
+   "uncertainty": "消息尚未获得官方确认；单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.7
+  },
+  {
+   "title": "苹果再度反超英伟达 成为全球市值最高公司",
+   "summary": "苹果公司周五重新夺回全球市值最高公司的头衔，从英伟达手中接过这一位置。在人工智能支出引发担忧之际，投资者寻求苹果这家iPhone制造商所带来的相对安全感。苹果股价周五下跌1.2%，市值降至5.03万亿美元；英伟达下跌4.2%，收盘市值为4.93万亿美元。这是苹果自7月底短暂超过英伟达以来，首次再次反超。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 05:37:59",
+   "url": "https://finance.eastmoney.com/a/202610313917323873.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917323873.html",
+     "published_at": "2026-10-31 05:37:59",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "消费电子",
+     "keywords": [
+      "苹果"
+     ]
+    }
+   ],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 新机周期与客户份额 → 零部件、组装订单",
+   "score": 2.7
+  },
+  {
+   "title": "摩根大通：2027年美国国库券需求或跟不上供应",
+   "summary": "摩根大通策略师Jay Barry和Pankaj Vohra等在报告中表示，美国国库券发行规模预计将继续扩大——2027年市场还需吸收9910亿美元的国库券净供应——因此关键问题在于需求能否跟上供应。“我们认为这方面面临一些阻力，”策略师写道。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:08:23",
+   "url": "https://finance.eastmoney.com/a/202610313917314739.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917314739.html",
+     "published_at": "2026-10-31 04:08:23",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美国",
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.7
+  },
+  {
+   "title": "国际油价30日上涨",
+   "summary": "截至当天收盘，纽约商品交易所12月交货的轻质原油期货价格上涨2.12美元，收于每桶104.12美元，涨幅为2.08%；12月交货的伦敦布伦特原油期货价格上涨2.76美元，收于每桶117.64美元，涨幅为2.4%。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 03:37:11",
+   "url": "https://finance.eastmoney.com/a/202610313917312768.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917312768.html",
+     "published_at": "2026-10-31 03:37:11",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "原油",
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.7
+  },
+  {
+   "title": "伊朗称在格什姆岛上空击落一架美军无人机",
+   "summary": "当地时间10月30日，伊朗伊斯兰革命卫队宣布，数小时前，一架美国MQM-170型侦察无人机在该国南部格什姆岛上空被伊朗伊斯兰革命卫队航空航天部队的防空系统击落。卫队表示，这是卫队击落的第二架该型号无人机。美军对此暂无回应。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 03:24:08",
+   "url": "https://finance.eastmoney.com/a/202610313917311172.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917311172.html",
+     "published_at": "2026-10-31 03:24:08",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "军工装备",
+     "keywords": [
+      "航空",
+      "航天"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 订单与国防预算 → 主机厂、配套企业排产",
+   "score": 2.7
+  },
+  {
+   "title": "上期所原油期货2612合约夜盘收涨4.25% 沪金夜盘收跌3.51%",
+   "summary": "上期所原油期货2612合约夜盘收涨4.25%，报758.50元人民币/桶。沪金夜盘收跌3.51%，沪银收跌6.8%。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 02:51:09",
+   "url": "https://finance.eastmoney.com/a/202610313917308768.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917308768.html",
+     "published_at": "2026-10-31 02:51:09",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "油气开采及服务",
+     "keywords": [
+      "原油"
+     ]
+    }
+   ],
+   "keywords": [
+    "原油"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 油价与资本开支 → 开采、油服订单",
+   "score": 2.7
+  },
+  {
+   "title": "智利铜业委员会将2026年平均铜价预测上调至每磅6.18美元，2027年为每磅5.95美元",
+   "summary": "智利铜业委员会将2026年平均铜价预测上调至每磅6.18美元，2027年为每磅5.95美元。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:43:09",
+   "url": "https://finance.eastmoney.com/a/202610313917301945.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917301945.html",
+     "published_at": "2026-10-31 01:43:09",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "工业金属",
+     "keywords": [
+      "铜"
+     ]
+    }
+   ],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 地产与制造业需求 → 铜铝价格、加工费",
+   "score": 2.7
+  },
+  {
+   "title": "欧洲主要股指收盘多数下跌",
+   "summary": "欧洲主要股指收盘多数下跌，英国富时100指数涨0.07%，法国CAC40指数跌0.20%，德国DAX30指数跌0.85%，富时意大利MIB指数跌1.00%。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 00:41:02",
+   "url": "https://finance.eastmoney.com/a/202610313917300588.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917300588.html",
+     "published_at": "2026-10-31 00:41:02",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "英国",
+    "欧洲"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.7
+  },
+  {
+   "title": "美国今年麻疹确诊病例已超过去年2倍",
+   "summary": "美国疾病控制和预防中心30日公布的最新数据显示，截至目前，美国2026年已累计报告4852例麻疹确诊病例，超过2025年全年病例总数的2倍。专家认为，麻疹疫情反弹暴露出美国公共卫生体系的短板。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 12:03:14",
+   "url": "https://finance.eastmoney.com/a/202610313917575861.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917575861.html",
+     "published_at": "2026-10-31 12:03:14",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "具身智能缝制机器人在河南发布",
+   "summary": "10月28日，杰克科技旗下品牌艾图科技在河南省周口市举办全球发布会，推出两大核心成果：面向服装真实工位的具身智能缝制机器人——艾妮机器人，以及全球首条可量产落地的服装机器人成套产线——产线王。两项产品攻克柔性面料操控这一世界级技术难题，标志着服装制造向机器人规模化商用迈出关键一步，以新质生产力破解全球服装行业招工难、成本高、小单快反难的发展困局。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 11:20:20",
+   "url": "https://finance.eastmoney.com/a/202610313917568630.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917568630.html",
+     "published_at": "2026-10-31 11:20:20",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "自动化设备",
+     "keywords": [
+      "机器人"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 制造业投资与机器人量产 → 减速器、伺服、本体",
+   "score": 2.6
+  },
+  {
+   "title": "麦格米特：明年AI电源板块整体收入有望实现大幅增长",
+   "summary": "麦格米特(002851)近日接受机构调研时表示，公司GB300产品产能不断爬坡，订单充足。VeraRubin相关产品和同行同步推出、同步对接客户，公司也在推进首批项目的订单，争取能够尽早落地，期待明年能够拿到不错的市场份额。公司GB300业务还在持续爬坡、持续获取新订单，加上其他产品的对接，明年公司AI电源板块整体收入有望实现大幅增长。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 11:17:00",
+   "url": "https://finance.eastmoney.com/a/202610313917568757.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917568757.html",
+     "published_at": "2026-10-31 11:17:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.6
+  },
+  {
+   "title": "美国中期选举倒计时 选情生变官司不断",
+   "summary": "当地时间10月30日，距离美国中期选举投票仅剩四天之际，美国知名选举分析机构库克政治报告当天发布最新预测，认为民主党争夺国会控制权的形势进一步改善，众议院有望增加更多席位，参议院多数席位之争也会更加激烈。与此同时，本届中期选举的相关诉讼也在继续增加，涉及选民资格、候选人参选行为和选举结果认证等多个方面。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:41:16",
+   "url": "https://finance.eastmoney.com/a/202610313917548719.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917548719.html",
+     "published_at": "2026-10-31 10:41:16",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "AI制药正站在泡沫与验证的十字路口：资金涌入、估值抬升",
+   "summary": "有投资人表示，他们今年已在布局AI4LS（AI赋能生命科学）相关标的，AI4LS正从单点预测，迈向多任务协同的新阶段；虚拟细胞、数字生命等概念的提出，将药物疗效预测带入全新范式，AI蛋白设计、AI合成肽、AI核酸药物等领域也值得关注。但整个赛道太火，当下的氛围，仿佛重现了2021年部分生物科技企业估值一年上涨两三倍的景象。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:40:23",
+   "url": "https://finance.eastmoney.com/a/202610313917546689.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917546689.html",
+     "published_at": "2026-10-31 10:40:23",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.6
+  },
+  {
+   "title": "利元亨全固态电池整线设备成功出机国内头部客户",
+   "summary": "据利元亨消息，近日，利元亨为国内某头部企业打造的全固态电池整线设备顺利完成出机。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:31:00",
+   "url": "https://finance.eastmoney.com/a/202610313917542480.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917542480.html",
+     "published_at": "2026-10-31 10:31:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "电池",
+     "keywords": [
+      "电池",
+      "固态电池"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 新能源车与储能需求 → 电池排产、材料价格",
+   "score": 2.6
+  },
+  {
+   "title": "币安称热钱包遭攻击损失约63亿美元，已冻结约30亿美元被盗资产",
+   "summary": "当地时间10月30日，币安发布安全事件更新称，其热钱包于10月29日遭未经授权访问，导致约63亿美元代币资产被盗。币安表示，将通过用户安全资产基金（SAFU）及公司资金承担全部损失，目前已拨出超过63.4亿美元资金，其中约50亿美元为受影响的同类代币资产，已覆盖约80%的损失；另有约30亿美元被盗资产已在链上冻结。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:48:33",
+   "url": "https://finance.eastmoney.com/a/202610313917522460.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917522460.html",
+     "published_at": "2026-10-31 09:48:33",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "华为畅享100系列正式开售",
+   "summary": "10月31日，据华为终端消息，华为畅享100系列正式开售，新机提供标准版、Pro、ProMax三款机型，均配备麒麟8系芯片，标准版共三款配色，内存配置128/256GB，售价1399元起，Pro版和ProMax版分别提供四款配色，内存128/256/512GB，售价1799元起。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:45:53",
+   "url": "https://finance.eastmoney.com/a/202610313917522088.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917522088.html",
+     "published_at": "2026-10-31 09:45:53",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "消费电子",
+     "keywords": [
+      "华为"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 新机周期与客户份额 → 零部件、组装订单",
+   "score": 2.6
+  },
+  {
+   "title": "报告称长三角形成从底层算力、核心算法到终端应用的完整产业生态",
+   "summary": "30日发布的一份报告认为，数据、算力、算法是智能经济的三个核心驱动要素，而长三角地区已经形成从底层算力、核心算法到终端应用、高端装备的完整产业生态。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:26:40",
+   "url": "https://finance.eastmoney.com/a/202610313917521111.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917521111.html",
+     "published_at": "2026-10-31 09:26:40",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "算力"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.6
+  },
+  {
+   "title": "工业AI时代来了？鼎捷数智利润增近三倍 新签AI订单增两倍",
+   "summary": "10月29日晚间，鼎捷数智（300378.SZ）发布的财报显示，前三季度，公司实现营业收入17.86亿元，同比增长10.66%；归母净利润1.99亿元，同比增长289.32%。鼎捷数智在本次三季报中披露了更多经营细节。其中，AI智能体相关业务与制造业实践的结合，为市场提供了工业数智化转型服务企业通过AI部署与产业实践相结合获得增量业务的观察窗口。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:22:27",
+   "url": "https://finance.eastmoney.com/a/202610303916565559.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916565559.html",
+     "published_at": "2026-10-31 09:22:27",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.6
+  },
+  {
+   "title": "奥特曼：看着AI攻克那些难题 兴奋之后 是一种从未有过的悲伤",
+   "summary": "OpenAI创始人奥特曼在采访中表示，当亲眼看着AI接连攻克学术生涯中的诸多难题时，兴奋过后，他心底涌起一种从未有过的悲伤，清晰地意识到某个时代将要结束了。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:15:01",
+   "url": "https://finance.eastmoney.com/a/202610303916892062.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916892062.html",
+     "published_at": "2026-10-31 09:15:01",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.6
+  },
+  {
+   "title": "全球汽车精英组织主席汪大总：中国汽车出海有两大共性痛点",
+   "summary": "在10月29—30日举办的2026全球华人汽车精英联合年会暨“中国拥抱世界”汽车产业国际发展论坛上，全球汽车精英组织主席、美中汽车交流协会主席汪大总表示，近年中国汽车在新能源与智能网联领域实现跨越式发展，整车出口规模三年实现翻番，2026年前三季度增速超60%，全年有望突破千万辆大关。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:11:00",
+   "url": "https://finance.eastmoney.com/a/202610313917519198.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917519198.html",
+     "published_at": "2026-10-31 09:11:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "汽车",
+      "整车"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 2.6
+  },
+  {
+   "title": "钢铁工业“苦日子”到头了？三季报里藏着三个新信号",
+   "summary": "10月30日，中国钢铁工业协会召开2026年三季度信息发布会。中国钢铁工业协会党委副书记、副会长、新闻发言人唐祖君在发布会上介绍，前三季度，全国粗钢产量7.25亿吨，同比下降2.9%；重点统计企业平均钢材库存量1685万吨，为近四年最高水平；钢铁主业利润126亿元，同比大幅下降75.2%。钢铁行业运行呈现“供强需弱、出口回落、库存高位、钢价低位、成本上升、效益下滑”的态势。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:08:24",
+   "url": "https://finance.eastmoney.com/a/202610303916922317.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916922317.html",
+     "published_at": "2026-10-31 09:08:24",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "工业金属",
+     "keywords": [
+      "钢铁"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 地产与制造业需求 → 铜铝价格、加工费",
+   "score": 2.6
+  },
+  {
+   "title": "黑石集团预计Anthropic上市后或无法获得投资级评级，融资成本面临上升压力",
+   "summary": "10月31日，据报道，黑石集团近日向投资者表示，人工智能初创公司Anthropic上市后可能无法立即获得投资级信用评级，预计评级或处于“BB”区间。此前，黑石曾预计该公司年底前可获得投资级评级。Anthropic正在推进一项总额630亿美元的芯片融资交易，其中180亿美元为由其租赁付款支持的次级债务。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:03:53",
+   "url": "https://finance.eastmoney.com/a/202610313917518923.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917518923.html",
+     "published_at": "2026-10-31 09:03:53",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "俄乌互相指责对方袭击能源设施",
+   "summary": "俄罗斯副总理诺瓦克30日表示，乌克兰当天袭击了俄罗斯多座炼油厂和一个天然气设施。俄罗斯总统助理乌沙科夫同一天表示，乌克兰再次无视美国总统特朗普要求停止袭击俄罗斯炼油厂的呼吁，特朗普在该问题上态度坚定但乌方未听从。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:40:54",
+   "url": "https://finance.eastmoney.com/a/202610313917515150.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917515150.html",
+     "published_at": "2026-10-31 08:40:54",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "KENVUE将被剔除出标普500指数",
+   "summary": "KENVUE将被剔除出标普500指数。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:40:44",
+   "url": "https://finance.eastmoney.com/a/202610313917515682.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917515682.html",
+     "published_at": "2026-10-31 08:40:44",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "标普"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "改款车按全新车型标准开发？问界透露新M8投入15亿元",
+   "summary": "10月30日，问界新M8正式开放配置，并同步披露整车开发投入与产品升级详情。记者了解到，问界新M8作为改款车型却是按照全新车型标准开发，投入金额达15亿元。作为对比，行业主流爆款车型改款投入普遍处于5亿元量级，问界的这一操作可谓打破了行业基准线。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:29:00",
+   "url": "https://finance.eastmoney.com/a/202610303916841482.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916841482.html",
+     "published_at": "2026-10-31 08:29:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "车型",
+      "整车"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 2.6
+  },
+  {
+   "title": "长鑫科技“带飞”！交通银行第三季度营收净利润双位数增长",
+   "summary": "10月30日，交通银行发布三季报。今年前三季度，该行营收同比增长8.02%至2156.53亿元，归母净利润同比增长6.10%至742.62亿元。截至9月末，该行不良贷款率为1.29%，较上年末上升0.01个百分点。值得一提的是，交通银行在财报中表示，长鑫科技股权项目实现IPO，带动该行公允价值变动收益大增。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:23:00",
+   "url": "https://finance.eastmoney.com/a/202610303917123856.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917123856.html",
+     "published_at": "2026-10-31 08:23:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "银行",
+     "keywords": [
+      "银行",
+      "贷款"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 利率与信贷投放 → 净息差、资产质量",
+   "score": 2.6
+  },
+  {
+   "title": "96台机器人组团验证 清华大学、无问芯穹、智元联合提出群体经验学习范式",
+   "summary": "记者10月30日获悉，清华大学、无问芯穹与智元联合提出群体经验学习（CollectiveExperienceLearning，CEL）新范式，并在96台真实机器人组成的集群中完成规模化验证。CEL让机器人可以不只依靠人类示范学习，还能借鉴群体中其他机器人的成功经验：一台机器人在执行任务时遇到困难，可以从同伴过去的经验中寻找解决方法，不断改进自己的表现。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:16:00",
+   "url": "https://finance.eastmoney.com/a/202610303916331178.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916331178.html",
+     "published_at": "2026-10-31 08:16:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "自动化设备",
+     "keywords": [
+      "机器人"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 制造业投资与机器人量产 → 减速器、伺服、本体",
+   "score": 2.6
+  },
+  {
+   "title": "OpenAI将最新一轮融资目标砍掉100亿美元",
+   "summary": "据报道，OpenAI将最新一轮融资目标砍掉100亿美元，现在寻求按1.25万亿美元估值融资大约200亿美元。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:12:43",
+   "url": "https://finance.eastmoney.com/a/202610313917512158.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917512158.html",
+     "published_at": "2026-10-31 08:12:43",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "百度搜索AI API千次4.9元 低于DeepSeek",
+   "summary": "10月30日，百度APP在产品升级沟通会上宣布，百度搜索实现递归自我进化，并全新升级搜索AI API，活动期间最低价仅需4.9元/千次，低于DeepSeek搜索 API的价格。同时围绕搜索框、AI镜头、GUI可视化、AI互动应用等方向推出重大升级。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:05:00",
+   "url": "https://finance.eastmoney.com/a/202610303916908524.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916908524.html",
+     "published_at": "2026-10-31 08:05:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.6
+  },
+  {
+   "title": "机器人坏了谁来修？这批学生没毕业就被大厂“抢”走了",
+   "summary": "近日记者走进位于北京亦庄的北京科技职业大学，这所学校在2026年也迎来了北京首个校企共建的具身智能机器人定向班。北职大机电工程学院副院长、机械制造及自动化专业负责人孙哲认为，随着机器人产业产能的提升以及应用场景的丰富，机器人维修方向预计将面临百万级别的人才缺口。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:04:44",
+   "url": "https://finance.eastmoney.com/a/202610303917294267.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917294267.html",
+     "published_at": "2026-10-31 08:04:44",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "自动化设备",
+     "keywords": [
+      "机器人"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 制造业投资与机器人量产 → 减速器、伺服、本体",
+   "score": 2.6
+  },
+  {
+   "title": "《2026胡润百富榜》出炉：上榜总财富32万亿元 AI与具身智能成造富主线",
+   "summary": "10月27日，胡润研究院发布《2026胡润百富榜》。2026年共有1529位个人财富50亿元以上的企业家登榜，比去年增加95位。上榜企业家总财富32万亿元，同比去年增长7%。785位企业家财富比去年增长，其中包括263位新人；911位企业家财富缩水或保持不变，其中167位落榜。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:02:18",
+   "url": "https://finance.eastmoney.com/a/202610313917508423.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917508423.html",
+     "published_at": "2026-10-31 08:02:18",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.6
+  },
+  {
+   "title": "今冬能源电力供应有保障",
+   "summary": "随着气温不断走低，北方地区将陆续进入供暖季，冬季能源保障工作受到广泛关注。在30日举行的国家能源局例行新闻发布会上，国家能源局电力司副司长谭洪江表示，总体来看，今年迎峰度冬全国电力供需总体保持平衡。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:50:05",
+   "url": "https://finance.eastmoney.com/a/202610313917327424.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917327424.html",
+     "published_at": "2026-10-31 07:50:05",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "电力",
+     "keywords": [
+      "电力"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 电价与来水/煤价 → 火电、水电、核电盈利",
+   "score": 2.6
+  },
+  {
+   "title": "大额存单批量重启 存款利率延续分化格局",
+   "summary": "进入四季度，银行存款产品供给端出现新变化：一度收缩的中长期限存款和大额存单加快回归，部分民营银行重新上架大额存单，但销售范围多限定属地。利率层面，国有大行近期利率变化不大，部分全国性股份行在国庆节前后下调利率，部分中小银行则逆势小幅上调利率，存款利率“大行稳、部分股份行降、部分小行升”的分化格局延续。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:48:03",
+   "url": "https://finance.eastmoney.com/a/202610303917240674.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917240674.html",
+     "published_at": "2026-10-31 07:48:03",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "银行",
+     "keywords": [
+      "存款",
+      "银行"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 利率与信贷投放 → 净息差、资产质量",
+   "score": 2.6
+  },
+  {
+   "title": "A股休闲食品企业前三季度净利润合计43.90亿元",
+   "summary": "截至10月30日晚间，A股22家休闲食品上市公司中已全部披露2026年三季报。数据显示，这22家公司前三季度合计实现营收596.68亿元，净利润合计43.90亿元，其中13家营收同比正增长、10家净利润同比向好。随着流量红利逐步消退，休闲食品行业正告别依靠爆款铺货跑马圈地的增量扩张模式，转入以细分需求为锚点的存量精耕阶段。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:43:41",
+   "url": "https://finance.eastmoney.com/a/202610313917305732.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917305732.html",
+     "published_at": "2026-10-31 07:43:41",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "食品加工制造",
+     "keywords": [
+      "食品"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 成本与终端需求 → 毛利率与渠道库存",
+   "score": 2.6
+  },
+  {
+   "title": "首个钙钛矿膜结晶制造国家标准进入审定阶段",
+   "summary": "10月30日，全国首个钙钛矿膜结晶制造《抽气结晶物理液相沉积薄膜技术规范》国家标准编制审定会议在江苏昆山召开。凯伏绿能（西安）光电有限公司作为牵头起草单位，与多家产业链企业、高校及科研机构代表，共同研讨标准的编制、审定及后续工作安排。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:41:00",
+   "url": "https://finance.eastmoney.com/a/202610313917307113.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917307113.html",
+     "published_at": "2026-10-31 07:41:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "光伏设备",
+     "keywords": [
+      "钙钛矿"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 装机需求与产业链价格 → 硅料、组件、逆变器盈利",
+   "score": 2.6
+  },
+  {
+   "title": "多家A股游戏公司前三季度营收高增长",
+   "summary": "前三季度，巨人网络、恺英网络、昆仑万维等多家游戏公司营业收入增长超过50%。其中，巨人网络前三季度营收达到66.85亿元，同比增长98.45%，这主要得益于公司旗下产品《超自然行动组》取得亮眼的市场表现。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:25:18",
+   "url": "https://finance.eastmoney.com/a/202610313917302442.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917302442.html",
+     "published_at": "2026-10-31 07:25:18",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "游戏",
+     "keywords": [
+      "游戏"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 版号与流水 → 游戏公司收入、买量成本",
+   "score": 2.6
+  },
+  {
+   "title": "透视上市险企三季报：承保端守住基本盘 投资端收益率普遍下降",
+   "summary": "10月30日，中国人寿、中国平安、中国太保、中国人保、新华保险5家A股上市险企三季报披露收官。前三季度，5家保险公司保险服务收入均保持稳健增长，但投资端明显受到资本市场波动影响，总投资收益率普遍下滑，拖累归母净利润下降。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:13:39",
+   "url": "https://finance.eastmoney.com/a/202610313917323990.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917323990.html",
+     "published_at": "2026-10-31 07:13:39",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "保险",
+     "keywords": [
+      "险企",
+      "保险"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 利率与保费增长 → 投资端与负债端",
+   "score": 2.6
+  },
+  {
+   "title": "苹果和阿里巴巴达成合作千问集成到Apple智能",
+   "summary": "苹果和阿里巴巴宣布达成合作，将千问集成至Apple智能，中国用户可以在Siri、写作工具及视觉智能中，直接调用千问的文本与图像理解、内容生成等能力。这些功能将于11月4日起随最新的iOS开发者Beta版开放测试，并将于12月iOS 27.3正式发布时面向中国用户推出。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 06:59:52",
+   "url": "https://finance.eastmoney.com/a/202610313917335657.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917335657.html",
+     "published_at": "2026-10-31 06:59:52",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "消费电子",
+     "keywords": [
+      "苹果"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 新机周期与客户份额 → 零部件、组装订单",
+   "score": 2.6
+  },
+  {
+   "title": "特朗普再称伊朗战事将“很快结束” 多架美军机飞抵以色列",
+   "summary": "随着美国11月中期选举的临近，有关美国或将于选举后恢复对伊军事打击的消息也被不断曝出。有美官员及知情人士就在29日透露称，美国中央司令部司令布拉德·库珀于当日向美国总统特朗普汇报了针对伊朗的军事行动选项。不过特朗普尚未就是否对伊动武作出最终决定。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 06:48:21",
+   "url": "https://finance.eastmoney.com/a/202610313917333231.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917333231.html",
+     "published_at": "2026-10-31 06:48:21",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "低",
+   "uncertainty": "消息尚未获得官方确认；隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "美国国务卿鲁比奥与土耳其外长费丹举行了会晤",
+   "summary": "美国国务卿鲁比奥与土耳其外长费丹举行了会晤。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 06:13:42",
+   "url": "https://finance.eastmoney.com/a/202610313917330511.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917330511.html",
+     "published_at": "2026-10-31 06:13:42",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "古巴常驻联合国代表团外交官遭美驱逐后回国",
+   "summary": "古巴外交部第一副部长赫拉尔多·佩尼亚尔韦尔29日表示，欢迎日前被美国驱逐出境的古巴常驻联合国代表团一等秘书理查德·图尔回到古巴。据联合国官网27日消息，美国常驻联合国代表迈克尔·华尔兹与古巴外长罗德里格斯在联合国大会审议“必须终止美国对古巴的经济、商业和金融封锁”决议草案时发生激烈言语交锋。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 05:49:44",
+   "url": "https://finance.eastmoney.com/a/202610313917325738.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917325738.html",
+     "published_at": "2026-10-31 05:49:44",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "据报道 特朗普计划在中期选举次日恢复对伊朗的打击",
+   "summary": "据报道，特朗普计划在中期选举次日恢复对伊朗的打击。美国通报海湾国家要求其做好最早11月4日发动打击的准备。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 05:29:58",
+   "url": "https://finance.eastmoney.com/a/202610313917322394.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917322394.html",
+     "published_at": "2026-10-31 05:29:58",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "伊朗拉万岛附近一船只遭袭起火",
+   "summary": "英国海上贸易行动办公室30日通报，一艘船只当天在伊朗拉万岛以南海域被不明发射物击中后起火，但船员安全。通报说，事件发生于协调世界时30日18时（北京时间31日2时），地点位于拉万岛以南40海里（约74公里）处。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 05:29:30",
+   "url": "https://finance.eastmoney.com/a/202610313917322229.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917322229.html",
+     "published_at": "2026-10-31 05:29:30",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "英国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "Okta即将被纳入标普500指数",
+   "summary": "Okta即将被纳入标普500指数。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 05:19:04",
+   "url": "https://finance.eastmoney.com/a/202610313917321480.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917321480.html",
+     "published_at": "2026-10-31 05:19:04",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "标普"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "英国海上贸易行动办公室通报两起船舶遇袭事件",
+   "summary": "当地时间10月30日，英国海上贸易行动办公室通报，伊朗拉万岛以南约40海里处发生一起船舶遇袭事件。报告称，一船舶左舷遭不明抛射物击中，导致船只起火。目前船员已确认安全，暂无环境污染报告。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:47:25",
+   "url": "https://finance.eastmoney.com/a/202610313917316285.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917316285.html",
+     "published_at": "2026-10-31 04:47:25",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "英国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "美元指数30日下跌",
+   "summary": "衡量美元对六种主要货币的美元指数当天下跌0.16%，在汇市尾市收于101.878。截至纽约汇市尾市，1欧元兑换1.1167美元，高于前一交易日的1.1162美元；1英镑兑换1.3394美元，高于前一交易日的1.3361美元。1美元兑换157.37日元，低于前一交易日的157.96日元。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:24:59",
+   "url": "https://finance.eastmoney.com/a/202610313917315957.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917315957.html",
+     "published_at": "2026-10-31 04:24:59",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "伊朗称当天第四艘违规航行油轮穿越霍尔木兹海峡时触雷爆炸",
+   "summary": "当地时间10月30日晚，伊朗伊斯兰革命卫队海军宣布，当天下午，第四艘油轮在霍尔木兹海峡违规航行时发生触雷爆炸并起火。这艘载有超过200万桶原油的油轮，无视伊朗伊斯兰革命卫队海军的无线电警告，试图驶离霍尔木兹海峡南部未经授权的航道。卫队表示，这是自当天凌晨以来于霍尔木兹海峡起火的第四艘油轮。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:24:59",
+   "url": "https://finance.eastmoney.com/a/202610313917315887.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917315887.html",
+     "published_at": "2026-10-31 04:24:59",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "原油"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "纳斯达克中国金龙指数收跌0.27%",
+   "summary": "JDZG跌41.12%，虎虎科技跌16.50%，知乎跌7.59%，天演药业跌6.34%，禾赛跌6.09%。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:00:57",
+   "url": "https://finance.eastmoney.com/a/202610313917313572.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917313572.html",
+     "published_at": "2026-10-31 04:00:57",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "纳斯达克"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "恒生指数主连夜盘收涨0.25% 恒生科技指数主连夜盘收跌0.08%",
+   "summary": "恒生指数主连夜盘收涨0.25%，报23345点。恒生科技指数主连夜盘收跌0.08%，报3758点。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 03:13:39",
+   "url": "https://finance.eastmoney.com/a/202610313917310735.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917310735.html",
+     "published_at": "2026-10-31 03:13:39",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "恒生"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "标普500指数跌幅扩大至2% 刷新日低",
+   "summary": "标普500指数跌幅扩大至2%，刷新日低。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:53:03",
+   "url": "https://finance.eastmoney.com/a/202610313917302092.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917302092.html",
+     "published_at": "2026-10-31 01:53:03",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "标普"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "沪铜收跌0.87%",
+   "summary": "国际铜夜盘收跌1.07%，沪铜收跌0.87%，沪铝收跌0.36%，沪锌收跌1.16%，沪铅收跌0.4%，沪镍收跌1.71%，沪锡收跌1.97%。氧化铝夜盘收涨1%，铝合金收跌0.26%。不锈钢夜盘收平。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:08:20",
+   "url": "https://finance.eastmoney.com/a/202610313917301230.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917301230.html",
+     "published_at": "2026-10-31 01:08:20",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "工业金属",
+     "keywords": [
+      "铜",
+      "铝"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 地产与制造业需求 → 铜铝价格、加工费",
+   "score": 2.6
+  },
+  {
+   "title": "黑石告知投资者：Anthropic在IPO后可能无法获得投资级评级",
+   "summary": "黑石告知投资者，Anthropic在IPO后可能无法获得投资级评级。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 00:49:27",
+   "url": "https://finance.eastmoney.com/a/202610313917300717.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917300717.html",
+     "published_at": "2026-10-31 00:49:27",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "证券",
+     "keywords": [
+      "IPO"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 市场成交与政策 → 经纪、投行、自营收入",
+   "score": 2.6
+  },
+  {
+   "title": "加拿大与欧盟签署数字贸易和竞争协议",
+   "summary": "加拿大与欧盟签署数字贸易和竞争协议。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 00:46:41",
+   "url": "https://finance.eastmoney.com/a/202610313917300689.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917300689.html",
+     "published_at": "2026-10-31 00:46:41",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "加拿大"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 2.6
+  },
+  {
+   "title": "标普因AI投资回报及资本开支不确定性下调Meta评级展望至负面，维持“AA-”评级",
+   "summary": "当地时间10月30日，标普全球评级将MetaPlatforms长期发行人信用评级展望由“稳定”下调至“负面”，维持“AA-”评级。标普预计，Meta资本开支将从2026年的约1400亿美元升至2027年的逾2250亿美元，2026年至2028年自由经营现金流（FOCF）或持续为负；若AI投资商业化进展不及预期，公司调整后杠杆率可能于2027年升至1.1倍，超过“AA-”评级对应的1.0倍下调门槛。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:35:54",
+   "url": "https://finance.eastmoney.com/a/202610313917544585.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917544585.html",
+     "published_at": "2026-10-31 10:35:54",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [
+    "标普",
+    "美元"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 2.5
+  },
+  {
+   "title": "俄外长：日本停止对俄不友好方可恢复全面对话",
+   "summary": "俄外长拉夫罗夫30日应日方请求在美国亚特兰大出席二十国集团外长会期间同日本外务大臣茂木敏充简短交谈，谈及双边关系，强调日本停止对俄不友好做法是恢复俄日全面对话的必要条件。俄日上一次正式会谈是2021年9月。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 05:28:28",
+   "url": "https://finance.eastmoney.com/a/202610313917322087.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917322087.html",
+     "published_at": "2026-10-31 05:28:28",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "日本",
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 1.9
+  },
+  {
+   "title": "美联储官员洛根表示：美联储至少还需加息两次 每次25个基点",
+   "summary": "美联储官员洛根表示，美联储至少还需加息两次，每次25个基点。在加息50个基点后，暂停加息将是合理的，以便确定何种进一步行动是合适的。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:35:35",
+   "url": "https://finance.eastmoney.com/a/202610313917301787.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917301787.html",
+     "published_at": "2026-10-31 01:35:35",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美联储",
+    "加息"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 1.9
+  },
+  {
+   "title": "中方对美国强推西撒问题安理会决议草案表决表示遗憾",
+   "summary": "中国常驻联合国代表傅聪30日在安理会表决联合国西撒哈拉全民投票特派团（西撒特派团）授权延期决议草案后作解释性发言，对美国强推表决表示遗憾。傅聪说，中方对付诸表决的由美国起草的决议草案投了弃权票。多年来，西撒特派团认真履行安理会授权，为维持现地稳定、防止局势升级、保护平民发挥了重要作用，为推动西撒问题政治解决营造良好条件。中方支持西撒特派团授权延期一年。遗憾的是，美方决议草案未能延续以往的西撒问题安理会决议框架，未能充分平衡照顾各方关切，意欲施压一方接受预设的谈判结果。执笔国未能给予安理会成员足够时间充分协商，在各方",
+   "category": "海外",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 10:59:47",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 10:59:47",
+     "source_id": "news:cls:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 1.8
+  },
+  {
+   "title": "跨界光伏！深南电A拟收购天合跟踪控股权 预计构成重大资产重组",
+   "summary": "深南电A10月30日晚间发布公告称，当日，公司与天合光能（常州）科技有限公司及天合光能股份有限公司签署《股权收购意向协议》，拟以支付现金的方式购买天合科技持有的天合开拓者光伏支架（江苏常州）有限公司不低于51%且不超过70%的股权。交易完成后，天合跟踪将成为公司控股子公司，纳入合并报表范围。",
+   "category": "公司",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:39:18",
+   "url": "https://finance.eastmoney.com/a/202610303916944124.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303916944124.html",
+     "published_at": "2026-10-31 09:39:18",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "光伏设备",
+     "keywords": [
+      "光伏"
+     ]
+    }
+   ],
+   "keywords": [
+    "公告",
+    "重组"
+   ],
+   "confidence": "中",
+   "uncertainty": "公告细节、影响金额与会计处理待核",
+   "impact_path": "公司事件 → 装机需求与产业链价格 → 硅料、组件、逆变器盈利（先看直接影响，再看同业比较）",
+   "score": 1.8
+  },
+  {
+   "title": "对话亚马逊CTO Werner Vogels：别急着上AI 先想清楚为什么付钱",
+   "summary": "如果一家企业担心赶不上AI，亚马逊副总裁兼首席技术官WernerVogels给出的建议是：不妨先暂停一下，看看AI能帮上什么忙。问题在于，有些决定在真正弄清“AI究竟能做什么”之前就已匆匆做出。“恐惧是一种非常糟糕的决策方式。”Werner Vogels告诉记者，企业不会因为没有马上使用AI，就立即倒闭。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:52:00",
+   "url": "https://finance.eastmoney.com/a/202610313917336338.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917336338.html",
+     "published_at": "2026-10-31 08:52:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 1.8
+  },
+  {
+   "title": "三季度外资机构大调仓 增持创新药及红利股",
+   "summary": "在三季度市场持续调整之际，外资趁机大规模调仓。数据统计显示，截至10月30日，QFII（合格境外机构投资者）三季度新进1050只股票前10大流通股东，退出785只股票前10大流通股东，北上资金三季度新进323只股票前10大流通股东，退出196只股票前10大流通股东。",
+   "category": "公司",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:18:33",
+   "url": "https://finance.eastmoney.com/a/202610313917302857.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917302857.html",
+     "published_at": "2026-10-31 07:18:33",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "化学制药",
+     "keywords": [
+      "创新药"
+     ]
+    }
+   ],
+   "keywords": [
+    "增持",
+    "股东"
+   ],
+   "confidence": "中",
+   "uncertainty": "公告细节、影响金额与会计处理待核",
+   "impact_path": "公司事件 → 医保支付与集采价格 → 药品放量与利润率（先看直接影响，再看同业比较）",
+   "score": 1.8
+  },
+  {
+   "title": "标普确认卡塔尔“AA/A-1+”主权评级，展望稳定",
+   "summary": "标普确认卡塔尔“AA/A-1+”主权评级，展望稳定。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 05:12:23",
+   "url": "https://finance.eastmoney.com/a/202610313917316876.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917316876.html",
+     "published_at": "2026-10-31 05:12:23",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "标普"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 1.8
+  },
+  {
+   "title": "标普表示 因资本开支与自由经营现金流面临显著不确定性 将Meta Platforms的展望下调至负面",
+   "summary": "标普表示，因资本开支与自由经营现金流面临显著不确定性，将Meta Platforms的展望下调至负面。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 05:08:22",
+   "url": "https://finance.eastmoney.com/a/202610313917316717.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917316717.html",
+     "published_at": "2026-10-31 05:08:22",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "标普"
+   ],
+   "confidence": "中",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 1.8
+  },
+  {
+   "title": "福特汽车首席执行官吉姆·法利的目标是到2032年实现年销500万辆汽车",
+   "summary": "福特汽车首席执行官吉姆·法利的目标是到2032年实现年销500万辆汽车，较当前水平增长约20%。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:20:25",
+   "url": "https://finance.eastmoney.com/a/202610313917301644.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917301644.html",
+     "published_at": "2026-10-31 01:20:25",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "汽车"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "中",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 1.8
+  },
+  {
+   "title": "控股股东50%股权以1港元易主 凯撒文化实控人变更",
+   "summary": "10月30日，凯撒文化披露《简式权益变动报告书》，信息披露义务人郑合明将其持有的凯撒集团（香港）有限公司（系凯撒文化控股股东）50.00%股权，以1港元全部转让给妻子陈玉琴，转让完成后郑合明不再持有凯撒集团股权，仅直接持有上市公司0.01%股权。",
+   "category": "公司",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 09:29:59",
+   "url": "https://finance.eastmoney.com/a/202610303917038822.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610303917038822.html",
+     "published_at": "2026-10-31 09:29:59",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "股东",
+    "实控人"
+   ],
+   "confidence": "中",
+   "uncertainty": "公告细节、影响金额与会计处理待核；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 1.2
+  },
+  {
+   "title": "“象征性护盘？”话音未落 长鑫科技公告拟回购股份至少注销一半 前三季净利1320亿元",
+   "summary": "10月30日，长鑫科技（688825.SH）披露2026年三季报，公司前三季度实现营收2690.24亿元，同比增长738.51%；归母净利润1320.40亿元，同比扭亏为盈；经营现金流净额2547.51亿元，同比增长1864.52%。同日，公司公布《关于以集中竞价交易方式回购公司股份方案的公告》。公司拟回购股份金额10亿元至20亿元。",
+   "category": "公司",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:59:05",
+   "url": "https://finance.eastmoney.com/a/202610313917475524.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917475524.html",
+     "published_at": "2026-10-31 07:59:05",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "公告",
+    "回购"
+   ],
+   "confidence": "中",
+   "uncertainty": "公告细节、影响金额与会计处理待核；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 1.2
+  }
+ ],
+ "selected": [
+  {
+   "title": "消费基建迎来政策组合拳 五部门发文促消费投资良性互动",
+   "summary": "10月30日，国家发展改革委联合交通运输部、商务部、文化和旅游部、市场监管总局等部门印发《关于加强消费基础设施建设促进消费投资良性互动的指导意见》，从完善城乡商业设施、提升服务消费设施、优化出行消费设施、健全流通设施网络、推进新型消费设施建设五方面部署20项重点任务，旨在促进消费和投资良性互动，扩大国内需求。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:34:11",
+   "url": "https://finance.eastmoney.com/a/202610313917303266.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917303266.html",
+     "published_at": "2026-10-31 07:34:11",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "建筑装饰",
+     "keywords": [
+      "基建"
+     ]
+    }
+   ],
+   "keywords": [
+    "商务部",
+    "市场监管",
+    "政策",
+    "意见",
+    "监管"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定",
+   "impact_path": "政策 → 基建投资与回款 → 新签订单、现金流",
+   "score": 5.2
+  },
+  {
+   "title": "中国人民银行进一步优化短端利率调控机制",
+   "summary": "在近期举行的2026金融街论坛年会上，中国人民银行行长潘功胜表示，从现在的情况看，银行间隔夜回购利率（DR001）实际上已成为货币政策调控的目标利率；但与此同时，公开市场操作主要品种和主要政策利率的期限还是7天，两者并不完全一致。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:44:00",
+   "url": "https://finance.eastmoney.com/a/202610313917306817.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917306817.html",
+     "published_at": "2026-10-31 04:44:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "银行",
+     "keywords": [
+      "银行"
+     ]
+    }
+   ],
+   "keywords": [
+    "人民银行",
+    "政策",
+    "回购"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定",
+   "impact_path": "政策 → 利率与信贷投放 → 净息差、资产质量",
+   "score": 5.1
+  },
+  {
+   "title": "山西前三季度煤层气产量创新高",
+   "summary": "记者10月31日从山西省统计局获悉，今年前三季度，山西省煤层气产量达到117.4亿立方米，创历史同期产量新高，约占全国产量的80.2%。与此同时，山西依托煤层气伴生资源，加快布局氦气提取产业，实现了从煤矿瓦斯到高纯战略资源的转化，为国家能源与战略资源安全提供了重要保障。作为全国首个能源革命综合改革试点省份，山西煤层气资源禀赋突出，埋深2000米以浅预测资源量约8.31万亿立方米，占全国近三分之一。近年来，山西持续推动煤层气增储上产，沁水盆地、鄂尔多斯盆地东缘两大基地协同发力，形成“中浅层稳产、深层上产”的发展格局。",
+   "category": "政策",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:51:16",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:40:19",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917574385.html",
+     "published_at": "2026-10-31 11:51:16",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "统计局",
+    "试点"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.7
+  },
+  {
+   "title": "总值21亿美元、盟友“买单” 美国批准对乌500枚“爱国者”导弹军售",
+   "summary": "据英国广播公司(BBC)报道，美国国务院当地时间10月30日发表声明称，已决定批准向乌克兰出售500枚“爱国者”导弹及相关设备，价值总额达21亿美元，费用“完全由合作伙伴和盟友承担”。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 10:02:40",
+   "url": "https://finance.eastmoney.com/a/202610313917525595.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917525595.html",
+     "published_at": "2026-10-31 10:02:40",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "军工装备",
+     "keywords": [
+      "导弹"
+     ]
+    }
+   ],
+   "keywords": [
+    "国务院",
+    "英国",
+    "美国",
+    "美元"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 订单与国防预算 → 主机厂、配套企业排产",
+   "score": 4.7
+  },
+  {
+   "title": "美国批准向乌克兰出售500枚“爱国者”导弹",
+   "summary": "当地时间10月30日获悉，美国国务院当日表示，已批准向乌克兰出售500枚“爱国者”PAC-3型导弹，交易总额预计为21亿美元。美国国务院在声明中指出，乌克兰将利用加拿大、德国和挪威提供的捐款，并结合欧盟“乌克兰支持贷款”所筹措的资金，来支付这批防御性拦截导弹的费用。",
+   "category": "海外",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 04:23:07",
+   "url": "https://finance.eastmoney.com/a/202610313917315451.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917315451.html",
+     "published_at": "2026-10-31 04:23:07",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "军工装备",
+     "keywords": [
+      "导弹"
+     ]
+    }
+   ],
+   "keywords": [
+    "国务院",
+    "加拿大",
+    "美国",
+    "美元"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 订单与国防预算 → 主机厂、配套企业排产",
+   "score": 4.7
+  },
+  {
+   "title": "政策利率“换锚”迎来关键一步 央行：隔夜逆回购操作将于每个工作日开展",
+   "summary": "政策利率“换锚”迎来关键一步。中国人民银行10月30日发布公开市场业务公告称，为进一步优化短端利率调控机制，从2026年11月2日起，公开市场操作进行三项调整。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:16:04",
+   "url": "https://finance.eastmoney.com/a/202610313917324529.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917324529.html",
+     "published_at": "2026-10-31 07:16:04",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [],
+   "keywords": [
+    "央行",
+    "人民银行",
+    "政策",
+    "公告",
+    "回购"
+   ],
+   "confidence": "高",
+   "uncertainty": "政策细则、执行力度与落地时间未定；行业映射不明确，可能只影响风险偏好",
+   "impact_path": "事件 → 市场风险偏好 → 指数与相关板块（行业映射不明确）",
+   "score": 4.6
+  },
+  {
+   "title": "上海航运交易所：本周运输市场基本稳定 不同航线走势分化",
+   "summary": "据上海航运交易，本周，中国出口集装箱运输市场基本稳定，不同航线市场运价走势分化，综合指数小幅上涨。据国家统计局发布的数据显示，中国三季度GDP同比增长4.5%，国民经济平稳运行，对外贸易增势良好，呈现动能向新、结构向优的发展态势。10月30日，上海航运交易研究所（筹）发布的上海出口集装箱综合运价指数为3687.35点，较上期上涨0.2%。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 08:38:54",
+   "url": "https://finance.eastmoney.com/a/202610313917515261.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917515261.html",
+     "published_at": "2026-10-31 08:38:54",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "港口航运",
+     "keywords": [
+      "航运",
+      "运价"
+     ]
+    },
+    {
+     "name": "证券",
+     "keywords": [
+      "交易所"
+     ]
+    }
+   ],
+   "keywords": [
+    "统计局"
+   ],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 运价与吞吐量 → 集运、干散货盈利",
+   "score": 4.5
+  },
+  {
+   "title": "东方证券孙金霞：美国AI叙事面临高利率与投资回报双重约束，科技投资的可持续性正在受到检验",
+   "summary": "东方证券研究所副所长孙金霞认为，美国AI投资在产业层面仍具有广阔的发展前景，但其高度依赖资本密集型投资的增长模式，正在面临融资需求和成本上升、商业化回报滞后等多重压力。美国AI叙事正从过去的投资规模竞争，转向投资回报和可持续性的考验。孙金霞称，当前美国AI投资增长动能放缓，风险由债市向股市扩散。近期美国AI企业信用利差扩大，部分高杠杆算力企业出现融资压力，随后风险开始由债券市场向股票市场传导，科技股调整压力上升。",
+   "category": "海外",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:49:56",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:49:56",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917574120.html",
+     "published_at": "2026-10-31 11:46:00",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "证券",
+     "keywords": [
+      "证券",
+      "债市",
+      "债券"
+     ]
+    },
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI",
+      "算力"
+     ]
+    }
+   ],
+   "keywords": [
+    "美国"
+   ],
+   "confidence": "高",
+   "uncertainty": "隔夜或外部市场变化，A 股映射不一定同步",
+   "impact_path": "海外市场 → 风险偏好/汇率/商品价格 → 市场成交与政策 → 经纪、投行、自营收入",
+   "score": 4.1
+  },
+  {
+   "title": "AI技术变量催生经济增量",
+   "summary": "当前，大模型加速迭代、智能体落地应用、算力建设全面铺开，人工智能正以前所未有的速度、广度与深度融入生产生活。国家统计局发布的前三季度经济数据显示，信息传输、软件和信息技术服务业增加值同比增长10.4%，人工智能是重要助推力量。",
+   "category": "产业",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 07:55:51",
+   "url": "https://finance.eastmoney.com/a/202610313917327325.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917327325.html",
+     "published_at": "2026-10-31 07:55:51",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "软件开发",
+     "keywords": [
+      "AI",
+      "人工智能",
+      "大模型",
+      "软件",
+      "算力"
+     ]
+    }
+   ],
+   "keywords": [
+    "统计局"
+   ],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → AI 与信创投入 → 软件订单、云资源消耗",
+   "score": 3.9
+  },
+  {
+   "title": "俄罗斯据悉正考虑对液化石油气（LPG）出口征收禁止性关税",
+   "summary": "俄罗斯据悉正考虑对液化石油气（LPG）出口征收禁止性关税。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 02:15:19",
+   "url": "https://finance.eastmoney.com/a/202610313917303844.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917303844.html",
+     "published_at": "2026-10-31 02:15:19",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "油气开采及服务",
+     "keywords": [
+      "石油",
+      "油气"
+     ]
+    }
+   ],
+   "keywords": [
+    "关税"
+   ],
+   "confidence": "低",
+   "uncertainty": "消息尚未获得官方确认；政策细则、执行力度与落地时间未定",
+   "impact_path": "政策 → 油价与资本开支 → 开采、油服订单",
+   "score": 3.7
+  },
+  {
+   "title": "印度将棉花进口关税豁免期限延长至12月31日",
+   "summary": "印度将棉花进口关税豁免期限延长至12月31日。",
+   "category": "政策",
+   "source": "东方财富",
+   "source_id": "news:em:20261030120000",
+   "published_at": "2026-10-31 01:57:34",
+   "url": "https://finance.eastmoney.com/a/202610313917302965.html",
+   "sources": [
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917302965.html",
+     "published_at": "2026-10-31 01:57:34",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "纺织制造",
+     "keywords": [
+      "棉"
+     ]
+    }
+   ],
+   "keywords": [
+    "关税"
+   ],
+   "confidence": "中",
+   "uncertainty": "政策细则、执行力度与落地时间未定",
+   "impact_path": "政策 → 订单转移与棉价 → 代工毛利率",
+   "score": 3.7
+  },
+  {
+   "title": "北京：做强燃料电池汽车全产业链",
+   "summary": "北京市经济和信息化局近日印发《北京市氢能产业发展实施方案（2026—2030年）》。其中提出，做强燃料电池汽车全产业链。支持燃料电池整车、系统龙头企业完善全产业链布局，围绕整车正向开发，加快膜电极、催化剂、碳纸、瓶阀等关键材料部件协同创新。落地氢电一体化底盘等量产项目，形成万台级燃料电池整车产能以及动力系统、电堆、膜电极与关键材料配套能力，推动燃料电池整车与核心零部件综合成本下降超30%。",
+   "category": "产业",
+   "source": "财联社",
+   "source_id": "news:cls:20261030120000",
+   "published_at": "2026-10-31 11:48:32",
+   "url": null,
+   "sources": [
+    {
+     "name": "财联社",
+     "url": null,
+     "published_at": "2026-10-31 11:48:32",
+     "source_id": "news:cls:20261030120000"
+    },
+    {
+     "name": "东方财富",
+     "url": "https://finance.eastmoney.com/a/202610313917573569.html",
+     "published_at": "2026-10-31 11:40:20",
+     "source_id": "news:em:20261030120000"
+    }
+   ],
+   "industries": [
+    {
+     "name": "汽车整车",
+     "keywords": [
+      "汽车",
+      "整车"
+     ]
+    },
+    {
+     "name": "电池",
+     "keywords": [
+      "电池"
+     ]
+    }
+   ],
+   "keywords": [],
+   "confidence": "高",
+   "uncertainty": "单条新闻不足以确认行业趋势，需后续订单、价格与资金数据验证",
+   "impact_path": "产业变化 → 销量与价格战 → 整车盈利与市场份额",
+   "score": 3.5
+  }
+ ]
+}

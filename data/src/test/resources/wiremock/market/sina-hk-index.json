@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "url": "https://hq.sinajs.cn/list=rt_hkHSI,rt_hkHSTECH",
+    "charset": "gbk",
+    "bytes": 392,
+    "recorded_at": "2026-10-31T04:15:01+00:00"
+  },
+  "request": {
+    "method": "GET",
+    "urlPath": "/list=rt_hkHSI,rt_hkHSTECH"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/javascript; charset=GB18030"
+    },
+    "base64Body": "dmFyIGhxX3N0cl9ydF9oa0hTST0iSFNJLLrjyfrWuMr9LDIzMDExLjI5MCwyMjk1OC42NTAsMjM0MDAuMDIwLDIyOTQ3Ljk2MCwyMzI5NC40MjAsMzM1Ljc3MCwxLjQ2MCwwLjAwMCwwLjAwMCwyMTQzMTc4MTkuNzg2LDE1NDg5NTg2NjM2LDAuMDAwLDAuMDAwLDI4MDU2LjEwMCwyMjUxOC4wMDAsMjAyNi8xMC8zMCwxNjowODozMiwsLCwsLCI7CnZhciBocV9zdHJfcnRfaGtIU1RFQ0g9IkhTVEVDSCy648n6v8a8vNa4yv0sMzcyMC40OTAsMzc0NC4xNDAsMzgwOS43MTAsMzcwNi4zMDAsMzc1NC45MDAsMTAuNzYwLDAuMjkwLDAuMDAwLDAuMDAwLDUwNTg3OTE3LjY4NiwyMzUxOTY0MDIxLDAuMDAwLDAuMDAwLDYxNjIuNDcwLDM3MzcuMjEwLDIwMjYvMTAvMzAsMTY6MDg6MzIsLCwsLCwiOwo="
+  }
+}
