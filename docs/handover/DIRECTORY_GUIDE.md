@@ -65,7 +65,7 @@
 | --- | --- | --- |
 | `app` | `Application` | 启动；创建 `APP_DATA_DIR`；`@EnableScheduling` |
 | `app/api` | `AskController`、`ConversationController`、`ResearchController`、`StockChartController`、`MetricsController`、`HealthController`、`SseWriter`、`ApiConfig` | HTTP/SSE |
-| `app/config` | `AssistantConfig`、`MemoryImportRunner` | 全部 Bean 装配、旧档案导入 |
+| `app/config` | `AssistantConfig`、`MemoryImportRunner`、`TracingConfig` | 全部 Bean 装配、旧档案导入、OTel SDK（按需） |
 | `app/security` | `SecurityConfig`、`TokenAuthFilter`、`ApiTokenProperties` | 令牌鉴权 |
 
 资源：`app/src/main/resources/application.yml`。

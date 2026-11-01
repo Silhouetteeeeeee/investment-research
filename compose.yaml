@@ -15,6 +15,10 @@ services:
       XQ_TOKEN: ${XQ_TOKEN}
       APP_DATA_DIR: /app/var
       JAVA_TOOL_OPTIONS: -XX:MaxRAMPercentage=75
+      # 留空则不启用 tracing。collector 在 future profile 里只是占位，没有配 exporter。
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-investment-research}
+      OTEL_TRACES_SAMPLER_ARG: ${OTEL_TRACES_SAMPLER_ARG:-1}
     volumes:
       - ./var:/app/var
       - ./skills:/app/skills:ro

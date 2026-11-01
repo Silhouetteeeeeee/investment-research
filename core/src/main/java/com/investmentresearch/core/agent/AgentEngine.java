@@ -37,6 +37,7 @@ import io.agentscope.core.state.JsonFileAgentStateStore;
 import io.agentscope.core.tool.AgentTool;
 import io.agentscope.core.tool.ToolCallParam;
 import io.agentscope.core.tool.Toolkit;
+import io.agentscope.core.tracing.OtelTracingMiddleware;
 import io.agentscope.harness.agent.HarnessAgent;
 import io.agentscope.harness.agent.memory.compaction.CompactionConfig;
 import io.agentscope.harness.agent.skill.runtime.SkillLoadTool;
@@ -390,6 +391,8 @@ public final class AgentEngine implements AssistantEngine {
                         .disableToolsConfig()
                         .enableAgentTracingLog(false)
                         .middleware(new CompanyPromptMiddleware(properties.maxTurns()))
+                        // 没有注册 OTel SDK 时 tracer 是 noop，这里常驻不需要开关。
+                        .middleware(new OtelTracingMiddleware())
                         .build();
 
         // harness 还会挂异步工具；本节只暴露 registry 工具和 skill 加载

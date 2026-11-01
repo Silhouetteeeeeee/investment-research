@@ -15,6 +15,7 @@
 | `APP_DATA_DIR` | 否 | SQLite 和运行数据目录，默认 `./var`（相对启动目录）。 |
 | `APP_SKILLS_DIR` | 否 | `skills/` 所在目录，默认 `./skills`（相对启动目录）。 |
 | `APP_MEMORY_IMPORT` | 否 | Python 版 `research_memory.db` 的文件路径；启动时在档案为空的前提下一次性导入。 |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | 否 | OTLP/HTTP collector 根地址（自动补 `/v1/traces`）；留空则不启用 tracing。可选 `OTEL_SERVICE_NAME`、`OTEL_TRACES_SAMPLER_ARG`、`OTEL_SDK_DISABLED`。 |
 
 `.env`、`*.db`、`var/` 已在 `.gitignore` 中，密钥不要提交。
 

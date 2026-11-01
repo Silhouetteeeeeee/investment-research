@@ -14,7 +14,7 @@
 | 6 | 自选股/watchlist、桌面端、Streamlit、CLI、`stock/briefing.py`、`finance_scheduler.py` 未迁 | 已确认（按设计非目标或延期） | 迁移设计「非目标」 | 除 `finance_scheduler` 外均为明确非目标 |
 | 7 | 金标准覆盖不完整：`get_research_notes` 仅 2 家；`601318` 缺 8 张缓存表；`600600`/`601606` 缺回购；`600600`/`601318` 缺解禁；`601606` 缺内部人 | 已确认 | README；`golden/tools` 文件清单 | 换公司回放会「缺数据」，不是 bug |
 | 8 | MySQL 方言迁移、Testcontainers、Redis/RabbitMQ 实际接入 | 计划实现（阶段 4） | 迁移设计「阶段 4」；无代码 | 见 §5 |
-| 9 | 应用日志 JSON、指标、Tracing、OTLP | 部分实现（阶段 4） | `/api/**` 审计日志已写 `var/logs/audit.log`（JSON Lines）；应用日志仍非 JSON，无指标/Tracing/OTLP | 见 §5 |
+| 9 | 应用日志 JSON、指标、Tracing、OTLP | 部分实现（阶段 4） | `/api/**` 审计日志已写 `var/logs/audit.log`（JSON Lines）；指标走 Micrometer/`/api/metrics`；OTel traces 按需经 OTLP/HTTP 导出（`TracingConfig` + AgentScope `OtelTracingMiddleware`，需 `OTEL_EXPORTER_OTLP_ENDPOINT`）；应用日志仍非 JSON，日志里没有 traceId | 见 §5 |
 
 ## 2. 已知缺陷与技术债
 
@@ -45,7 +45,7 @@
 | 16 | 若干阈值/上限是分散的魔法数字（并发 2/4/6/8/10、TTL、分页 100/80/60） | 各适配器 | 低（可调性差） |
 | 17 | 进程内缓存（板块 600s、筛选/复盘 900s）重启即失、多实例不共享 | `SectorAdapter`、`ScreenAdapter`、`ReviewAdapter` | 中（未来多实例时） |
 | 18 | `MemoryImportRunner` 只在档案为空时导入；中止后不会重试 | `MemoryImportRunner.java` | 低 |
-| 19 | `AskController` 超时只结束 emitter，不取消后台任务 | `AskController.java` | 低（长任务仍会跑完并落库） |
+| 19 | ~~`AskController` 超时只结束 emitter，不取消后台任务~~ **已修**：超时 `FutureTask.cancel(true)` 中断工作线程，`AgentEngine` 清中断标记后再落盘 | `AskController.java`；`AgentEngine`；`AskControllerTest` | — |
 | 20 | 未使用的符号：`AgentProperties.defaults()`、`Screening.SHORTLIST_SIZE`、`SectorRotation.LEADER_LIMIT`、`Review.MAX_REPORTS` | core | 低 |
 | 21 | `ContextMeter` 为校验完整解析 `tool-schemas.json` 再丢弃 | `ContextMeter.java:61` | 低 |
 | 22 | `ResolveCompanyTool` 的错误文案写成「company 参数…」，实参名是 `name_or_code` | `ResolveCompanyTool.java:48` | 低（误导模型） |
@@ -82,7 +82,7 @@
 
 1. 全量对照测试（补金标准缺口、真实上游 live 测试的定期跑法）。当前只有可选的 `LiveSkillSmoke` 覆盖 skill 路由，完整问答仍靠人工。
 2. 慢查询与并发压测（SQLite 写并发、SSE 并发、上游并发 4 是否够）。
-3. 日志 JSON + traceId/conversationId/runId、指标（HTTP/Agent 轮次/工具耗时/模型 token）、Tracing/OTLP。
+3. 日志 JSON + traceId/conversationId/runId；指标（HTTP/Agent 轮次/工具耗时/模型 token，现有 `/api/metrics` 只覆盖工具与进程）；Tracing/OTLP（traces 已接，日志/指标未导出）。
 4. 备份恢复演练。
 5. MySQL profile：`db/migration/mysql` + Testcontainers 跑通全部迁移与 Mapper 测试。
 6. Redis / RabbitMQ profile 至少能启动。
@@ -96,6 +96,6 @@
 
 ## 6. 交接后第一件该做的事
 
-1. 先跑 `./mvnw verify` + `./mvnw spotless:check`，确认与本文记录一致（core 130 / data 134 / app 76）。若数字变了，先看 `git log` 有没有新提交。
+1. 先跑 `./mvnw verify` + `./mvnw spotless:check`，确认与本文记录一致（core 130 / data 134 / app 81）。若数字变了，先看 `git log` 有没有新提交。
 2. 用真实 `DEEPSEEK_API_KEY` + 真实网络跑一次完整问答（离线环境无法代跑），重点看：引用 id 是否出现、运行详情是否有模型/工具阶段、刷新后能否回放。
 3. 再决定是否动 §2 的技术债；**不要**在没有实跑基线前重构 `AgentEngine` 或适配器。
