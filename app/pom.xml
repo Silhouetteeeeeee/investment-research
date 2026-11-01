@@ -38,6 +38,15 @@
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
     </dependency>
+    <!-- 版本由 spring-boot-dependencies 管理；只有 app 需要，core 只依赖 opentelemetry-api（经 AgentScope 传入） -->
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-sdk</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-exporter-otlp</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>

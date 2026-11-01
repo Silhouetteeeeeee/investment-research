@@ -7,7 +7,7 @@
 | 配置来源 | 文件/位置 | 说明 |
 | --- | --- | --- |
 | Spring 配置 | `app/src/main/resources/application.yml` | 主配置，所有 `spring.*` 项 |
-| 环境变量 | `APP_API_TOKEN`、`DEEPSEEK_API_KEY`、`BAIDU_API_KEY`、`XQ_TOKEN`、`APP_DATA_DIR`、`APP_SKILLS_DIR`、`APP_MEMORY_IMPORT` | 通过 `${...}` 注入 `application.yml` 或 `Environment`/`@Value` 读取 |
+| 环境变量 | `APP_API_TOKEN`、`DEEPSEEK_API_KEY`、`BAIDU_API_KEY`、`XQ_TOKEN`、`APP_DATA_DIR`、`APP_SKILLS_DIR`、`APP_MEMORY_IMPORT`、`OTEL_*` | 通过 `${...}` 注入 `application.yml` 或 `Environment`/`@Value` 读取 |
 | 上游地址 | `app.datacenter-url`、`app.announcement-url`、`app.finance-url`、`app.f10-profile-url`、`app.f10-segments-url`、`app.stock-list-url` | **默认值写在适配器的 `@Value("${app.xxx-url:<默认URL>}")` 里，`application.yml` 没有这几项**；可用同名环境变量/系统属性覆盖（relaxed binding） |
 | MyBatis-Plus | `application.yml` 的 `mybatis-plus.*` | 下划线转驼峰、主键 `auto` |
 | Compose | `compose.yaml` + `.env` | 容器环境变量、卷、端口 |
@@ -24,7 +24,13 @@
 | `APP_DATA_DIR` | 否 | `./var` | 运行数据根目录：`app.db`、`runs/`、`sessions/`、`workspace/` | `app/.../Application.java`、`AssistantConfig`、`application.yml` |
 | `APP_SKILLS_DIR` | 否 | `./skills` | `skills/<name>/SKILL.md` 所在目录 | `AssistantConfig.agentProperties` |
 | `APP_MEMORY_IMPORT` | 否 | 空 | Python 版 `research_memory.db` 的**文件路径**；启动时若档案为空则一次性导入 | `app/.../config/MemoryImportRunner.java` |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | 否 | 空（= 不启用 tracing） | collector 根地址，代码自动补 `/v1/traces`；也可直接填完整地址 | `app/.../config/TracingConfig.java` |
+| `OTEL_SERVICE_NAME` | 否 | `investment-research` | trace 的 `service.name` 资源属性 | 同上 |
+| `OTEL_TRACES_SAMPLER_ARG` | 否 | `1` | 采样率 0..1；非法值按 1（全采样），不会拦住启动 | 同上 |
+| `OTEL_SDK_DISABLED` | 否 | `false` | `true` 时不建 SDK，即使填了 endpoint 也不导出 | 同上 |
 | `JAVA_TOOL_OPTIONS` | 否 | 镜像内 `-XX:MaxRAMPercentage=75` | JVM 参数 | `Dockerfile`、`compose.yaml` |
+
+Tracing 只导出 traces（`invoke_agent` / `chat` / `execute_tool` span，来自 AgentScope 的 `OtelTracingMiddleware`），不导出日志和指标；指标仍走 `/api/metrics` 与 Prometheus 端点。endpoint 留空时完全不建 SDK、不起后台导出线程。`compose.yaml` 里的 `otel-collector` 仍在 `future` profile 下且没有配 exporter，要实际接收 trace 需要自己补 collector 配置或指向外部 collector。
 
 令牌校验规则（`ApiTokenProperties`）：只允许非空 + ASCII；**代码不强制最小长度**，README/`.env.example` 建议至少 32 个 ASCII 字符（如 `openssl rand -hex 32`）。非 ASCII 会启动失败，原因是 Tomcat 按 ISO-8859-1 解码请求头，非 ASCII 令牌永远匹配不上。`toString()` 已脱敏，日志里不会打印令牌。
 
@@ -105,7 +111,7 @@ CI 口径即 `mvn verify` + `spotless:check`（设计文档 §测试策略）。
 | --- | --- | --- |
 | `app.build` / `image` | `.` / `investment-research:latest` | 本地构建 |
 | `ports` | `80:8080` | **只发布应用端口**；8081 不发布 |
-| `environment` | `APP_API_TOKEN`（未设置则 compose 直接报错）、`DEEPSEEK_API_KEY`、`XQ_TOKEN`、`APP_DATA_DIR=/app/var`、`JAVA_TOOL_OPTIONS` | 从 `.env` 注入 |
+| `environment` | `APP_API_TOKEN`（未设置则 compose 直接报错）、`DEEPSEEK_API_KEY`、`BAIDU_API_KEY`、`XQ_TOKEN`、`APP_DATA_DIR=/app/var`、`JAVA_TOOL_OPTIONS`、`OTEL_*` | 从 `.env` 注入 |
 | `volumes` | `./var:/app/var`、`./skills:/app/skills:ro` | 数据持久化；skills 可被宿主机整体覆盖 |
 | `stop_grace_period` | `35s` | 比 30s 优雅停机多 5 秒余量 |
 | `profiles: future` | `redis:7-alpine`、`rabbitmq:3-management-alpine`、`otel/opentelemetry-collector-contrib` | **默认不启动**，应用也不依赖 |

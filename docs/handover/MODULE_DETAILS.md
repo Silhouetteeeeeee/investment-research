@@ -168,6 +168,7 @@
 | `SseWriter` | `data: <json>\n\n`；断连后静默 |
 | `AssistantConfig` | 全部核心 Bean；缺 key → `UnavailableEngine("请先设置环境变量 DEEPSEEK_API_KEY")` |
 | `MemoryImportRunner` | `APP_MEMORY_IMPORT` 导入 |
+| `TracingConfig` | `OTEL_EXPORTER_OTLP_ENDPOINT` 存在且未 `OTEL_SDK_DISABLED` 时建 `SdkTracerProvider`（BatchSpanProcessor + OTLP/HTTP），注册到 `GlobalOpenTelemetry`，停机 `close()` 刷队列；留空则完全不建 SDK |
 | `SecurityConfig` / `TokenAuthFilter` / `ApiTokenProperties` | 令牌鉴权；无状态；401 JSON |
 
 ## 4. 前端（`frontend/`）

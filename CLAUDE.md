@@ -28,7 +28,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10        # 本机 JDK 21 位置
-./mvnw verify                    # 期望 core 130 / data 134 / app 76，BUILD SUCCESS
+./mvnw verify                    # 期望 core 130 / data 134 / app 81，BUILD SUCCESS
 ./mvnw -q spotless:check         # 期望退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```
@@ -62,13 +62,14 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 | 模型 | 默认 `deepseek:deepseek-v4-flash`（`AgentProperties.DEFAULT_MODEL`）；无 key → `UnavailableEngine` |
 | 工具 | 注册 33 个；`tool-schemas.json` 34 条（第 33 条 `load_skill` 由框架提供为 `load_skill_through_path`；第 34 条 `web_search` 为 Java 新增，schema 手写）；18 个时效工具不缓存 |
 | 数据 | `var/app.db`（Flyway V1–V12，33 张业务表 + 2 张系统表）、`var/runs/*.json`、`var/sessions/`、`var/workspace/` |
+| 追踪 | OTel traces 按需经 OTLP/HTTP 导出（`OTEL_EXPORTER_OTLP_ENDPOINT`，留空为 no-op）；`app/config/TracingConfig` 建 SDK，`AgentEngine` 挂 `OtelTracingMiddleware`；指标走 `/api/metrics` |
 | Prompt | `core/src/main/resources/prompts/system.md`；skill 正文 `skills/<name>/SKILL.md`（15 个） |
 | 金标准 | `core/src/test/resources/golden/**`、`fixtures/*.db`、`data/src/test/resources/wiremock/**`（由 `tools/golden/gen_golden.py`、`tools/fixtures/record.py` 生成） |
 | 已知差异 | 上下文压缩、运行记录字段、`fin_disclosure` 无写入者、`XQ_TOKEN` 无人读、`frontend/README.md` 过时 |
 
 ## 5. 当前进度（以 `git log` 为准）
 
-阶段 0–3 **已实现**（骨架与鉴权、第一问纵向切片、公司研究技能、大盘/新闻/板块/选股/策略/复盘/档案）；阶段 4（硬化：MySQL/Testcontainers、指标/追踪、CI、备份演练）与阶段 5（切换部署）**计划实现，尚未开始**。
+阶段 0–3 **已实现**（骨架与鉴权、第一问纵向切片、公司研究技能、大盘/新闻/板块/选股/策略/复盘/档案）；阶段 4 只落了指标与 OTel traces（`/api/metrics`、`TracingConfig`），MySQL/Testcontainers、日志 JSON/ traceId、CI、备份演练与阶段 5（切换部署）**尚未开始**。
 
 **真实链路覆盖**：有一个可选的 `LiveSkillSmoke`（`LIVE_SMOKE=1` + `DEEPSEEK_API_KEY` 才跑，默认 `verify` 不执行）检查真实模型的 skill 路由；完整问答（引用 → 运行详情 → 刷新回放）仍靠人工实跑，新会话接手后第一件值得做的事就是跑一次。
 

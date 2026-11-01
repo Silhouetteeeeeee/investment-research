@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（2026-11-01 SSE 超时中断后台线程后）：`./mvnw verify` 通过，**core 130 / data 134 / app 76**；`spotless:check` 退出 0。新增覆盖：`AskControllerTest.sse_timeout_interrupts_the_background_worker`（超时取消 `FutureTask` 并中断工作线程）；此前的 `KlineAdapterTest`（腾讯优先、东财 qfq 兜底、当日缓存、收盘后刷新、全挂回退旧缓存）、`StockChartControllerTest`（days 钳位、404/502）、`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest` 仍在。另有 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-11-01 接入 OpenTelemetry 后）：`./mvnw verify` 通过，**core 130 / data 134 / app 81**；`spotless:check` 退出 0。新增覆盖：`TracingConfigTest`（endpoint 为空/SDK 关闭时不建 SDK、endpoint 存在时建 SDK、采样率非法回退、`/v1/traces` 只补一次）；此前 `AskControllerTest.sse_timeout_interrupts_the_background_worker`（超时取消 `FutureTask` 并中断工作线程）；此前的 `KlineAdapterTest`（腾讯优先、东财 qfq 兜底、当日缓存、收盘后刷新、全挂回退旧缓存）、`StockChartControllerTest`（days 钳位、404/502）、`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest` 仍在。另有 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 
@@ -80,7 +80,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `upstream/RecordedFixtureTest` | 2 | 118 个录制映射可回放解码；56 页股票列表覆盖全 A 股 |
 | `upstream/UpstreamClientTest` | 7 | 字符集、500 重试、404 不重试、查询串/头脱敏、信号量不死锁、UTF-8 默认 |
 
-### app（21 类，76 个用例）
+### app（22 类，81 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -104,6 +104,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `AssistantWiringTest` | 1 | Bean 齐全、`/api/ask` 接真 `AskService` |
 | `AssistantEngineLiveBeanTest` | 1 | 有 key 时建真引擎 |
 | `AssistantEngineFallbackTest` | 1 | 缺 key 时 `UnavailableEngine` |
+| `config/TracingConfigTest` | 5 | endpoint 为空/`OTEL_SDK_DISABLED=true` 不建 SDK、endpoint 存在建 SDK、采样率非法回退、`/v1/traces` 只补一次 |
 | `ModuleBoundaryTest` | 4 个 `@ArchTest` | `core` 不依赖 data/app、`data` 不依赖 app、`core` 无 Web/MyBatis/JDBC、AgentScope 限于 `core.agent` |
 
 ## 4. 夹具与金标准
