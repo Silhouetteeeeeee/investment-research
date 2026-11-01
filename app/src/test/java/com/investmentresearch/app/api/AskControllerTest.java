@@ -36,7 +36,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +142,39 @@ class AskControllerTest {
                 .containsExactly("user", "assistant");
         assertThat(repository.usages).containsKey(1L);
         assertThat(runStore.written).hasSize(1);
+    }
+
+    @Test
+    void sse_timeout_interrupts_the_background_worker() throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch stopped = new CountDownLatch(1);
+        FutureTask<Void> task =
+                new FutureTask<>(
+                        () -> {
+                            started.countDown();
+                            try {
+                                Thread.sleep(60_000);
+                            } catch (InterruptedException interrupted) {
+                                stopped.countDown();
+                            }
+                            return null;
+                        });
+        Thread worker = new Thread(task, "sse-timeout-test");
+        worker.setDaemon(true);
+        worker.start();
+        try {
+            assertThat(started.await(5, TimeUnit.SECONDS)).isTrue();
+
+            AskController.abort(task, new SseEmitter());
+
+            assertThat(stopped.await(5, TimeUnit.SECONDS)).isTrue();
+            assertThat(task.isCancelled()).isTrue();
+            worker.join(5_000);
+            assertThat(worker.isAlive()).isFalse();
+        } finally {
+            task.cancel(true);
+            worker.interrupt();
+        }
     }
 
     @Test
