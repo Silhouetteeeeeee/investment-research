@@ -195,6 +195,9 @@ public final class AgentEngine implements AssistantEngine {
                     recordedRun(recorder, issues),
                     List.copyOf(state.raw));
         } catch (RuntimeException error) {
+            // SSE 超时会中断工作线程，Reactor 停止后会恢复中断标记；先清掉，
+            // 否则后面的运行记录落盘（NIO）会被 ClosedByInterruptException 打断。
+            Thread.interrupted();
             if (error instanceof EngineFailure failure) {
                 throw failure;
             }

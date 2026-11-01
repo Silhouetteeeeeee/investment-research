@@ -14,7 +14,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10
-./mvnw verify                    # 期望：core 130 / data 134 / app 75，BUILD SUCCESS
+./mvnw verify                    # 期望：core 130 / data 134 / app 76，BUILD SUCCESS
 ./mvnw -q spotless:check         # 期望：退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```

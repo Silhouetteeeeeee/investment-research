@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（2026-10-31 日 K 改为腾讯优先 + 落库后）：`./mvnw verify` 通过，**core 130 / data 134 / app 75**；`spotless:check` 退出 0。新增覆盖：`KlineAdapterTest`（腾讯优先、东财 qfq 兜底、当日缓存、收盘后刷新、全挂回退旧缓存）、`StockChartControllerTest`（days 钳位、404/502）、`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest`。另有 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-11-01 SSE 超时中断后台线程后）：`./mvnw verify` 通过，**core 130 / data 134 / app 76**；`spotless:check` 退出 0。新增覆盖：`AskControllerTest.sse_timeout_interrupts_the_background_worker`（超时取消 `FutureTask` 并中断工作线程）；此前的 `KlineAdapterTest`（腾讯优先、东财 qfq 兜底、当日缓存、收盘后刷新、全挂回退旧缓存）、`StockChartControllerTest`（days 钳位、404/502）、`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest` 仍在。另有 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 
@@ -80,14 +80,14 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `upstream/RecordedFixtureTest` | 2 | 118 个录制映射可回放解码；56 页股票列表覆盖全 A 股 |
 | `upstream/UpstreamClientTest` | 7 | 字符集、500 重试、404 不重试、查询串/头脱敏、信号量不死锁、UTF-8 默认 |
 
-### app（21 类，75 个用例）
+### app（21 类，76 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
 | `api/ConversationControllerTest` | 10 | 列表字段、详情去 raw/trace_count、404、证据最后匹配/null/400、run id 校验/路径穿越/no-store、删除级联 |
 | `security/TokenAuthTest` | 9 | 401 JSON、不建会话、错 token、Unicode 头、正确 token、公开静态页/health、管理端口 health、空白/非 ASCII 启动失败 |
 | `e2e/AskFlowTest` | 5 | 完整 SSE + 落库 + 回放；重启后读回；运行详情工具阶段；管理层 skill→工具；大盘 skill→取数 |
-| `api/AskControllerTest` | 4 | 空问题 400、state/text/done + 落库、断连不中断落库、引擎错误带 run 并落库 |
+| `api/AskControllerTest` | 5 | 空问题 400、state/text/done + 落库、断连不中断落库、SSE 超时中断后台线程、引擎错误带 run 并落库 |
 | `api/SseWriterTest` | 4 | 帧格式、中文不转义、JSR-310 ISO、断连吞异常 |
 | `api/AuditLogFilterTest` | 5 | 成功请求字段、401 标 `auth=missing/invalid`、异常记录 failure、非 `/api` 不记录、`/api/metrics` 轮询不记审计 |
 | `api/MetricsControllerTest` | 1 | 系统内存/CPU 与工具统计字段齐全 |

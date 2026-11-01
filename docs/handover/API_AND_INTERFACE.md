@@ -46,7 +46,7 @@
 - `conversation_id` 可省略/null/0，表示新会话。
 - `question` 为空白 → 400 `{"error":"empty question"}`（普通 JSON，不是 SSE）。
 - 响应头：`Cache-Control: no-cache`、`X-Accel-Buffering: no`（禁止 Nginx 缓冲）。
-- 超时：`SseEmitter` 10 分钟（`AskController.TIMEOUT_MS`）。超时只结束 emitter，不取消后台任务。
+- 超时：`SseEmitter` 10 分钟（`AskController.TIMEOUT_MS`）。超时会中断工作线程（`FutureTask.cancel(true)`，Reactor `blockLast` 随即取消上游订阅），再结束 emitter；已拿到的部分不落库，会话里会留一条 `error` 消息。
 - 线程：实际工作跑在 `askExecutor`（虚拟线程池，`ApiConfig`）。
 - 未配置 `DEEPSEEK_API_KEY` 时，引擎是 `UnavailableEngine`，直接推一条 `{"type":"error","text":"助手不可用：请先设置环境变量 DEEPSEEK_API_KEY"}`，不建会话。
 

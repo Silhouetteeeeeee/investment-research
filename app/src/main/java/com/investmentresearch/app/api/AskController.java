@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import java.util.concurrent.FutureTask;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,12 +54,25 @@ public class AskController {
         response.setHeader("X-Accel-Buffering", "no");
 
         SseEmitter emitter = new SseEmitter(TIMEOUT_MS);
-        emitter.onTimeout(emitter::complete);
         Long conversationId = conversationId(request.conversationId());
+        FutureTask<Void> task =
+                new FutureTask<>(
+                        () -> {
+                            stream(emitter, conversationId, question);
+                            return null;
+                        });
+        // 超时后页面已经收不到结果，中断工作线程，别让它继续占用虚拟线程和上游。
+        emitter.onTimeout(() -> abort(task, emitter));
         // This runs off the request thread and inherits no security context; Phase 1 must
         // capture ids before this hop rather than reading SecurityContextHolder here.
-        executor.execute(() -> stream(emitter, conversationId, question));
+        executor.execute(task);
         return emitter;
+    }
+
+    /** 超时回调：先中断工作线程（Reactor 会顺带取消上游订阅），再结束事件流。 */
+    static void abort(FutureTask<?> task, SseEmitter emitter) {
+        task.cancel(true);
+        emitter.complete();
     }
 
     private void stream(SseEmitter emitter, Long conversationId, String question) {
