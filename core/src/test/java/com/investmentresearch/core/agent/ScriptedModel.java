@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.agentscope.core.message.ContentBlock;
 import io.agentscope.core.message.Msg;
 import io.agentscope.core.message.TextBlock;
+import io.agentscope.core.message.ThinkingBlock;
 import io.agentscope.core.message.ToolUseBlock;
 import io.agentscope.core.model.ChatResponse;
 import io.agentscope.core.model.GenerateOptions;
@@ -33,6 +34,17 @@ public final class ScriptedModel implements Model {
 
     public static ChatResponse text(String text) {
         return reply(TextBlock.builder().text(text).build(), "stop");
+    }
+
+    public static ChatResponse thinkingThenText(String thinking, String text) {
+        return ChatResponse.builder()
+                .id("reply")
+                .content(
+                        List.of(
+                                ThinkingBlock.builder().thinking(thinking).build(),
+                                TextBlock.builder().text(text).build()))
+                .finishReason("stop")
+                .build();
     }
 
     public static ChatResponse toolCall(String name, Map<String, Object> arguments) {

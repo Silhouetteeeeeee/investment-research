@@ -358,6 +358,24 @@ class AgentEngineTest {
     }
 
     @Test
+    void full_trace_records_prompt_calls_and_thinking() {
+        ScriptedModel model =
+                new ScriptedModel(
+                        ScriptedModel.thinkingThenText("先想想", "回答[[profile:605499]]。"));
+        RecordingListener listener = new RecordingListener();
+
+        AskResult result =
+                engine(10, true, model, new FakeProfileTool())
+                        .ask(1, "605499", "东鹏饮料", "靠什么赚钱", listener);
+
+        Map<String, Object> payload = result.run().payload();
+        assertThat((List<?>) payload.get("prompts")).isNotEmpty();
+        assertThat((List<?>) payload.get("calls")).isNotEmpty();
+        assertThat(payload.get("thinking")).isEqualTo("先想想");
+        assertThat(listener.thinking.toString()).isEqualTo("先想想");
+    }
+
+    @Test
     void engine_failure_still_carries_a_finished_error_run() {
         // 第一次模型调用先取数，第二次调用没有脚本可用 -> 运行中途抛错
         ScriptedModel model =
@@ -382,13 +400,18 @@ class AgentEngineTest {
     }
 
     private AgentEngine engine(Model model, ResearchTool... tools) {
-        return engine(10, model, tools);
+        return engine(10, false, model, tools);
     }
 
     private AgentEngine engine(int maxTurns, Model model, ResearchTool... tools) {
+        return engine(maxTurns, false, model, tools);
+    }
+
+    private AgentEngine engine(int maxTurns, boolean fullTrace, Model model, ResearchTool... tools) {
         return new AgentEngine(
                 new ToolRegistry(List.of(tools)),
-                new AgentProperties("scripted", skillsDir, dataDir, maxTurns),
+                new AgentProperties(
+                        "scripted", skillsDir, dataDir, maxTurns, "/prompts/system.md", fullTrace),
                 () -> model);
     }
 
@@ -427,6 +450,12 @@ class AgentEngineTest {
         private final List<String> events = new ArrayList<>();
         private final List<ToolEvent> tools = new ArrayList<>();
         private final StringBuilder text = new StringBuilder();
+        private final StringBuilder thinking = new StringBuilder();
+
+        @Override
+        public void thinking(String delta) {
+            thinking.append(delta);
+        }
 
         @Override
         public void text(String delta) {

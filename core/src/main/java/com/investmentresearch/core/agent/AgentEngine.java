@@ -21,14 +21,19 @@ import io.agentscope.core.event.ExceedMaxItersEvent;
 import io.agentscope.core.event.ModelCallEndEvent;
 import io.agentscope.core.event.ModelCallStartEvent;
 import io.agentscope.core.event.TextBlockDeltaEvent;
+import io.agentscope.core.event.ThinkingBlockDeltaEvent;
 import io.agentscope.core.event.ToolCallStartEvent;
 import io.agentscope.core.event.ToolResultEndEvent;
+import io.agentscope.core.message.ContentBlock;
 import io.agentscope.core.message.Msg;
 import io.agentscope.core.message.MsgRole;
 import io.agentscope.core.message.TextBlock;
+import io.agentscope.core.message.ThinkingBlock;
 import io.agentscope.core.message.ToolResultBlock;
 import io.agentscope.core.message.ToolResultState;
+import io.agentscope.core.message.ToolUseBlock;
 import io.agentscope.core.middleware.MiddlewareBase;
+import io.agentscope.core.middleware.ReasoningInput;
 import io.agentscope.core.model.ChatUsage;
 import io.agentscope.core.model.GenerateOptions;
 import io.agentscope.core.model.Model;
@@ -62,7 +67,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /** AgentScope harness assembly plus the per-run cache/citation/trace bookkeeping. */
@@ -70,7 +77,6 @@ public final class AgentEngine implements AssistantEngine {
 
     private static final String USER_ID = "default";
     private static final String COMPANY_KEY = "defaultCompany";
-    private static final String SYSTEM_PROMPT = loadSystemPrompt();
     private static final ObjectMapper JSON = new ObjectMapper();
     private static final ObjectMapper CANONICAL_JSON =
             new ObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
@@ -104,12 +110,14 @@ public final class AgentEngine implements AssistantEngine {
     private final JsonFileAgentStateStore stateStore;
     private final Set<String> toolNames;
     private final Map<String, Object> toolSchemas;
+    private final String systemPrompt;
     private final HarnessAgent agent;
 
     public AgentEngine(
             ToolRegistry tools, AgentProperties properties, Supplier<Model> modelSupplier) {
         this.tools = tools;
         this.properties = properties;
+        this.systemPrompt = loadPrompt(properties.promptResource());
         this.stateStore = new JsonFileAgentStateStore(properties.dataDir().resolve("sessions"));
         this.toolNames =
                 tools.schemas().stream()
@@ -187,6 +195,7 @@ public final class AgentEngine implements AssistantEngine {
 
             CitationCheck check = citations.validate(text, state.sources);
             issues.addAll(check.issues());
+            recorder.recordThinking(state.thinking.toString());
             recorder.finish(stopReason, null);
             return new AskResult(
                     check.text(),
@@ -264,6 +273,14 @@ public final class AgentEngine implements AssistantEngine {
                             null,
                             usage == null ? "estimate" : "api",
                             call.forced());
+                }
+            }
+            case THINKING_BLOCK_DELTA -> {
+                ThinkingBlockDeltaEvent delta = (ThinkingBlockDeltaEvent) event;
+                String thinking = delta.getDelta();
+                if (thinking != null && !thinking.isEmpty()) {
+                    state.thinking.append(thinking);
+                    listener.thinking(thinking);
                 }
             }
             case TEXT_BLOCK_DELTA -> {
@@ -363,11 +380,11 @@ public final class AgentEngine implements AssistantEngine {
             toolkit.registerAgentTool(new CachedTool(schema));
         }
 
-        HarnessAgent built =
+        HarnessAgent.Builder builder =
                 HarnessAgent.builder()
                         .name("research-assistant")
                         .description("股票基本面研究助手")
-                        .sysPrompt(SYSTEM_PROMPT)
+                        .sysPrompt(systemPrompt)
                         .model(model)
                         .toolkit(toolkit)
                         .maxIters(properties.maxTurns())
@@ -392,8 +409,11 @@ public final class AgentEngine implements AssistantEngine {
                         .enableAgentTracingLog(false)
                         .middleware(new CompanyPromptMiddleware(properties.maxTurns()))
                         // 没有注册 OTel SDK 时 tracer 是 noop，这里常驻不需要开关。
-                        .middleware(new OtelTracingMiddleware())
-                        .build();
+                        .middleware(new OtelTracingMiddleware());
+        if (properties.fullTrace()) {
+            builder.middleware(new TraceMiddleware());
+        }
+        HarnessAgent built = builder.build();
 
         // harness 还会挂异步工具；本节只暴露 registry 工具和 skill 加载
         Set<String> keep = new HashSet<>(toolNames);
@@ -459,15 +479,14 @@ public final class AgentEngine implements AssistantEngine {
         }
     }
 
-    private static String loadSystemPrompt() {
-        try (InputStream stream =
-                AgentEngine.class.getResourceAsStream("/prompts/system.md")) {
+    private static String loadPrompt(String resource) {
+        try (InputStream stream = AgentEngine.class.getResourceAsStream(resource)) {
             if (stream == null) {
-                throw new IllegalStateException("找不到 prompts/system.md");
+                throw new IllegalStateException("找不到 " + resource);
             }
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException error) {
-            throw new IllegalStateException("读取 prompts/system.md 失败", error);
+            throw new IllegalStateException("读取 " + resource + " 失败", error);
         }
     }
 
@@ -564,6 +583,8 @@ public final class AgentEngine implements AssistantEngine {
         private final Map<String, Source> sources = Collections.synchronizedMap(new LinkedHashMap<>());
         private final List<TraceStep> trace = new CopyOnWriteArrayList<>();
         private final List<Map<String, Object>> raw = new CopyOnWriteArrayList<>();
+        private final StringBuilder thinking = new StringBuilder();
+        private final AtomicInteger lastMessageCount = new AtomicInteger();
 
         private RunState(
                 long conversationId,
@@ -665,6 +686,88 @@ public final class AgentEngine implements AssistantEngine {
             } catch (IOException error) {
                 return 0;
             }
+        }
+    }
+
+    /**
+     * 完整追踪：最终系统提示 + 每轮新增的消息。只在 {@code fullTrace} 时挂载，
+     * 聊天链路不需要多存几十 KB 的上下文快照。
+     */
+    private static final class TraceMiddleware implements MiddlewareBase {
+        @Override
+        public int order() {
+            // 低于 CompanyPromptMiddleware(100)：拿到的是已经拼好默认公司的最终提示
+            return 50;
+        }
+
+        @Override
+        public Mono<String> onSystemPrompt(
+                Agent agent, RuntimeContext context, String systemPrompt) {
+            RunState state = context == null ? null : context.get(RunState.class);
+            if (state != null) {
+                state.recorder.recordPrompt(systemPrompt);
+            }
+            return Mono.just(systemPrompt);
+        }
+
+        @Override
+        public Flux<AgentEvent> onReasoning(
+                Agent agent,
+                RuntimeContext context,
+                ReasoningInput input,
+                Function<ReasoningInput, Flux<AgentEvent>> next) {
+            RunState state = context == null ? null : context.get(RunState.class);
+            if (state != null) {
+                List<Msg> messages = input.messages() == null ? List.of() : input.messages();
+                List<Map<String, Object>> added = new ArrayList<>();
+                for (int i = state.lastMessageCount.get(); i < messages.size(); i++) {
+                    added.add(messageMap(messages.get(i)));
+                }
+                state.lastMessageCount.set(messages.size());
+                state.recorder.recordCall(state.round.get() + 1, added);
+            }
+            return next.apply(input);
+        }
+
+        private static Map<String, Object> messageMap(Msg message) {
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("role", message.getRole() == null ? "" : message.getRole().name());
+            List<Map<String, Object>> blocks = new ArrayList<>();
+            for (ContentBlock block : message.getContent()) {
+                blocks.add(blockMap(block));
+            }
+            item.put("content", blocks);
+            return item;
+        }
+
+        private static Map<String, Object> blockMap(ContentBlock block) {
+            Map<String, Object> item = new LinkedHashMap<>();
+            if (block instanceof TextBlock text) {
+                item.put("type", "text");
+                item.put("text", text.getText());
+            } else if (block instanceof ThinkingBlock thinking) {
+                item.put("type", "thinking");
+                item.put("text", thinking.getThinking());
+            } else if (block instanceof ToolUseBlock use) {
+                item.put("type", "tool_use");
+                item.put("id", use.getId());
+                item.put("name", use.getName());
+                item.put("input", use.getInput() == null ? Map.of() : use.getInput());
+            } else if (block instanceof ToolResultBlock result) {
+                StringBuilder text = new StringBuilder();
+                for (ContentBlock out : result.getOutput()) {
+                    if (out instanceof TextBlock part) {
+                        text.append(part.getText());
+                    }
+                }
+                item.put("type", "tool_result");
+                item.put("tool_call_id", result.getId());
+                item.put("name", result.getName());
+                item.put("text", text.toString());
+            } else {
+                item.put("type", block.getClass().getSimpleName());
+            }
+            return item;
         }
     }
 
