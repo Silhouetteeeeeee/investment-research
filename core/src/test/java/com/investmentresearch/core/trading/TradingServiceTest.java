@@ -23,6 +23,7 @@ import com.investmentresearch.core.domain.trade.TradePlan;
 import com.investmentresearch.core.domain.trade.TradingPhase;
 import com.investmentresearch.core.run.RunRecord;
 import com.investmentresearch.core.tool.TradingToolTestSupport;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -33,6 +34,7 @@ import java.util.Map;
 import java.util.function.Function;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class TradingServiceTest {
     private static final String DATE = "2026-11-07";
@@ -43,7 +45,10 @@ class TradingServiceTest {
     private TradingContext context;
     private QuoteCache cache;
     private ScriptedEngine engine;
+    private TradingExperience experience;
     private TradingService service;
+
+    @TempDir Path dir;
 
     @BeforeEach
     void setUp() {
@@ -51,7 +56,10 @@ class TradingServiceTest {
         context = new TradingContext();
         cache = new QuoteCache();
         engine = new ScriptedEngine();
-        service = new TradingService(repo, engine, context, cache, new FixedClock(MORNING));
+        experience = new TradingExperience(dir.resolve("trading"), new FixedClock(MORNING));
+        service =
+                new TradingService(
+                        repo, engine, context, cache, new FixedClock(MORNING), experience);
     }
 
     @Test
@@ -89,6 +97,22 @@ class TradingServiceTest {
         assertThat(phase.payloadJson())
                 .contains("\"answer\":\"计划已写入\"")
                 .contains("\"thinking\":\"先想\"");
+    }
+
+    @Test
+    void experience_document_reaches_the_phase_prompt() {
+        experience.save("# 交易经验\n- 止损后不要当天回补");
+        PlanDraft draft = new PlanDraft("空计划", List.of());
+        engine.behavior =
+                question -> {
+                    context.stage(draft);
+                    return answer("计划已写入", "run-1");
+                };
+
+        service.runPhase(DATE, TradingPhase.PRE_MARKET, listener());
+
+        assertThat(engine.prompts).singleElement().asString()
+                .contains("止损后不要当天回补");
     }
 
     @Test

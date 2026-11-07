@@ -1,6 +1,6 @@
 # 目录指南
 
-根目录 `D:\Programming\investment-research`。规模：主代码 206 个 Java 文件（core 107 / data 87 / app 12），测试 17+30+14 个文件。统计口径为 `find ... -name '*.java' | wc -l`。
+根目录 `D:\Programming\investment-research`。规模：主代码 258 个 Java 文件（core 143 / data 94 / app 21），测试 33+35+29 个文件。统计口径为 `find ... -name '*.java' | wc -l`。
 
 ## 1. 顶层
 
@@ -26,7 +26,7 @@
 | `docs/handover/` | 本文档集 | — |
 | `.superpowers/sdd/` | 阶段 0–1 / 阶段 3 的执行台账与评审包（git 忽略） | 决策记录，只在本地 |
 
-## 2. `core/`（107 文件，约 8.3k 行）
+## 2. `core/`（143 文件）
 
 | 包 | 类 | 职责 |
 | --- | --- | --- |
@@ -37,11 +37,11 @@
 | `core/research` | `MarketState`、`MemoryRules`、`MemoryException`、`NewsEvents`、`Review`、`Screening`、`SectorRotation`、`Strategy` | 与 Python 对齐的纯计算规则 |
 | `core/run` | `FileRunStore`、`RunRecord`、`RunRecorder`、`RunSummary` | 运行原文生成与落盘 |
 | `core/service` | `AskService`、`CompanyResolver`、`ContextMeter`、`EventSink`、`QuestionRouter`、`ResolvedCompany`、`Route` | 路由、编排、上下文占用 |
-| `core/tool` | 33 个工具类（含 Java 新增的 `WebSearchTool`）+ 3 个交易工具（`GetTradingStateTool`、`SaveTradePlanTool`、`SaveTradingJournalTool`）+ `ToolRegistry`、`ToolSchemas`、`ToolMetrics`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport`、`TradingToolSupport` | 模型可调用的工具与执行统计 |
+| `core/tool` | 33 个工具类（含 Java 新增的 `WebSearchTool`）+ 4 个交易工具（`GetTradingStateTool`、`SaveTradePlanTool`、`SaveTradingJournalTool`、`SaveTradingExperienceTool`）+ `ToolRegistry`、`ToolSchemas`、`ToolMetrics`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport`、`TradingToolSupport` | 模型可调用的工具与执行统计 |
 | `core/valuation` | `ValuationMath`、`ValuationInputError` | Decimal 估值计算 |
-| `core/trading` | `TradingRules`、`MarketSession`、`TradingService`、`TradingExecutor`、`TradingDayGate`、`TradingContext`、`TradingView`、`QuoteCache` + `core/domain/trade/*` | 模拟交易规则、阶段编排、盘中成交、交易日门禁、页面视图 |
+| `core/trading` | `TradingRules`、`MarketSession`、`TradingService`、`TradingExecutor`、`TradingDayGate`、`TradingContext`、`TradingView`、`QuoteCache`、`TradingExperience`、`PhasePrompt` + `core/domain/trade/*` | 模拟交易规则、阶段编排、盘中成交、交易日门禁、页面视图、长期经验文档 |
 
-资源：`core/src/main/resources/tool-schemas.json`（37 条 schema；34 条是生成物/`web_search`，末尾 3 条交易工具手工追加）、`prompts/system.md`（聊天）、`prompts/trading.md`（交易 Agent）。
+资源：`core/src/main/resources/tool-schemas.json`（38 条 schema；34 条是生成物/`web_search`，末尾 4 条交易工具手工追加）、`prompts/system.md`（聊天）、`prompts/trading.md`（交易 Agent）。
 
 ## 3. `data/`（87 文件，约 17.7k 行）
 

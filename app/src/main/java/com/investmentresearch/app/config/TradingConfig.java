@@ -8,6 +8,7 @@ import com.investmentresearch.core.port.QuotePort;
 import com.investmentresearch.core.port.TradingRepository;
 import com.investmentresearch.core.tool.GetTradingStateTool;
 import com.investmentresearch.core.tool.SaveTradePlanTool;
+import com.investmentresearch.core.tool.SaveTradingExperienceTool;
 import com.investmentresearch.core.tool.SaveTradingJournalTool;
 import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.core.tool.ToolSchemas;
@@ -16,6 +17,7 @@ import com.investmentresearch.core.trading.QuoteCache;
 import com.investmentresearch.core.trading.TradingContext;
 import com.investmentresearch.core.trading.TradingDayGate;
 import com.investmentresearch.core.trading.TradingExecutor;
+import com.investmentresearch.core.trading.TradingExperience;
 import com.investmentresearch.core.trading.TradingService;
 import com.investmentresearch.core.trading.TradingView;
 import com.investmentresearch.app.trading.TradingBroadcaster;
@@ -58,11 +60,17 @@ public class TradingConfig {
     }
 
     @Bean
+    public TradingExperience tradingExperience(AgentProperties properties) {
+        return new TradingExperience(properties.dataDir().resolve("trading"), tradingClock());
+    }
+
+    @Bean
     public TradingView tradingView(
             TradingRepository repository,
             TradingDayGate gate,
-            QuoteCache quotes) {
-        return new TradingView(repository, gate, quotes, tradingClock());
+            QuoteCache quotes,
+            TradingExperience experience) {
+        return new TradingView(repository, gate, quotes, tradingClock(), experience);
     }
 
     @Bean
@@ -96,12 +104,14 @@ public class TradingConfig {
             TradingRepository repository,
             CompanyDirectory directory,
             QuotePort quotes,
-            TradingContext context) {
+            TradingContext context,
+            TradingExperience experience) {
         return toolRegistry.plus(
                 List.of(
                         new GetTradingStateTool(repository, quotes, context, schemas),
                         new SaveTradePlanTool(context, repository, directory, quotes, schemas),
-                        new SaveTradingJournalTool(repository, context, schemas)));
+                        new SaveTradingJournalTool(repository, context, schemas),
+                        new SaveTradingExperienceTool(experience, context, schemas)));
     }
 
     /**
@@ -124,8 +134,9 @@ public class TradingConfig {
             @Qualifier("tradingEngine") AssistantEngine engine,
             TradingContext context,
             QuoteCache quotes,
-            Clock clock) {
-        return new TradingService(repository, engine, context, quotes, clock);
+            Clock clock,
+            TradingExperience experience) {
+        return new TradingService(repository, engine, context, quotes, clock, experience);
     }
 
     private static AgentProperties tradingProperties(Environment environment) {

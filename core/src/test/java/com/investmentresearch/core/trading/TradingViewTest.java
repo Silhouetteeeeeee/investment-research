@@ -12,12 +12,14 @@ import com.investmentresearch.core.domain.trade.TickRecord;
 import com.investmentresearch.core.domain.trade.TradeAccount;
 import com.investmentresearch.core.domain.trade.TradingPhase;
 import com.investmentresearch.core.tool.TradingToolTestSupport;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class TradingViewTest {
     private static final String TODAY = "2026-11-07";
@@ -30,8 +32,33 @@ class TradingViewTest {
             new TradingToolTestSupport.InMemoryRepo();
     private final QuoteCache quotes = new QuoteCache();
 
+    @TempDir Path dir;
+
+    private TradingExperience experience() {
+        return new TradingExperience(dir.resolve("trading"), CLOCK);
+    }
+
     private TradingView view(List<Quote> probe) {
-        return new TradingView(repo, new TradingDayGate(codes -> probe, CLOCK), quotes, CLOCK);
+        return new TradingView(
+                repo, new TradingDayGate(codes -> probe, CLOCK), quotes, CLOCK, experience());
+    }
+
+    @Test
+    void experience_endpoint_reads_the_document_and_its_update_time() {
+        experience().save("# 交易经验\n- 止损后不要当天回补");
+
+        Map<String, Object> data = view(List.of()).experience();
+
+        assertThat(data).containsEntry("content", "# 交易经验\n- 止损后不要当天回补");
+        assertThat(data.get("updated_at")).isNotNull();
+    }
+
+    @Test
+    void experience_endpoint_is_empty_before_the_first_close_review() {
+        Map<String, Object> data = view(List.of()).experience();
+
+        assertThat(data).containsEntry("content", "");
+        assertThat(data.get("updated_at")).isNull();
     }
 
     @Test

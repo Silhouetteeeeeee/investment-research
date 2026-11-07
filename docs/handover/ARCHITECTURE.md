@@ -95,9 +95,9 @@ graph LR
 | Mapper 扫描 | `data.config.MybatisPlusConfig` | `@MapperScan("com.investmentresearch.data.persistence")` |
 | `MemoryImportRunner` | `app.config` | `ApplicationRunner`，按 `APP_MEMORY_IMPORT` 导入旧档案 |
 | `StockMasterSync.refresh` | `data.sync` | `@Scheduled(cron="0 0 6 * * *")` 每日 06:00 刷新股票主表 |
-| `tradingContext` / `tradingToolRegistry` / `tradingEngine` | `TradingConfig` | 交易 Agent 的提示词上下文、聊天 33 个工具 + 3 个交易工具、独立引擎（同为 `UnavailableEngine` 回落） |
+| `tradingContext` / `tradingToolRegistry` / `tradingEngine` | `TradingConfig` | 交易 Agent 的提示词上下文、聊天 33 个工具 + 4 个交易工具、独立引擎（同为 `UnavailableEngine` 回落） |
 | `tradingService` / `tradingExecutor` / `tradingScheduler` | `TradingConfig` | 阶段编排、盘中按计划成交、定时与补跑 |
-| `tradingDayGate` / `quoteCache` / `tradingView` / `tradingBroadcaster` | `TradingConfig` | 交易日门禁、盘中报价缓存、只读页面视图、交易 SSE |
+| `tradingDayGate` / `quoteCache` / `tradingView` / `tradingBroadcaster` / `tradingExperience` | `TradingConfig` | 交易日门禁、盘中报价缓存、只读页面视图、交易 SSE、Agent 维护的长期经验文档（`var/trading/experience.md`） |
 
 ## 4. 核心业务调用序列（一次提问）
 

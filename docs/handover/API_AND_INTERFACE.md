@@ -26,7 +26,8 @@
 | GET | `/api/trading/dates` | `TradingController` | 有阶段记录的交易日列表（最近 30 个） |
 | GET | `/api/trading/equity` | `TradingController` | 权益快照序列 |
 | GET | `/api/trading/phases/{id}` | `TradingController` | 单个阶段元数据 + `payload_json`（answer/thinking/trace/raw/run）；不存在 → 404 `{"error":"..."}` |
-| GET | `/api/trading/journals?limit=100` | `TradingController` | 复盘经验档案：全部日期的复盘，倒序，`limit` 夹到 1..500；每条带 `date`、`phase`、`text`、`phase_id`、`sources` |
+| GET | `/api/trading/journals?limit=100` | `TradingController` | 复盘归档：全部日期的复盘，倒序，`limit` 夹到 1..500；每条带 `date`、`phase`、`text`、`phase_id`、`sources` |
+| GET | `/api/trading/experience` | `TradingController` | Agent 维护的长期经验文档：`{"content": "...", "updated_at": "..."}`；文件不存在时 content 为空串、updated_at 为 null |
 | GET | `/api/trading/stream` | `TradingController` | 交易 SSE：`phase`、`monitor`、`tool`、`thinking`、`text`、`heartbeat` |
 
 会话不存在时统一 404 `{"error":"not found"}`。
@@ -56,6 +57,12 @@
 - 线程：实际工作跑在 `askExecutor`（虚拟线程池，`ApiConfig`）。
 - 未配置 `DEEPSEEK_API_KEY` 时，引擎是 `UnavailableEngine`，直接推一条 `{"type":"error","text":"助手不可用：请先设置环境变量 DEEPSEEK_API_KEY"}`，不建会话。
 
+### `GET /api/trading/experience`
+
+`var/trading/experience.md` 的只读视图：`content` 为 Markdown 原文，`updated_at` 是文件修改时间
+（`uuuu-MM-dd'T'HH:mm:ss.SSSSSS`，Asia/Shanghai）。写入只发生在收盘阶段，由工具
+`save_trading_experience` 整篇覆盖；覆盖前保留 `experience.md.bak`。
+
 ### `GET /api/trading/state`
 
 金额一律是**分**（`long`），前端负责除 100 显示。顶层字段：
@@ -74,7 +81,7 @@ rules{initial_capital,lot,max_positions,max_single_position_pct,commission_rate_
 
 ### `GET /api/trading/journals`
 
-复盘按日归档、永久保存在 `trade_journal`；这个接口把档案倒序取出，供「交易」页的「经验档案」逐篇阅读。
+复盘按日归档、永久保存在 `trade_journal`；这个接口把档案倒序取出，供「交易」页的「复盘归档」逐篇阅读。
 每条 `{id,date,phase,text,run_id,phase_id,sources}`：`sources` 取自同日期同阶段 `trading_phase.payload_json`，
 因此正文里的 `[[source_id]]` 引用在档案里也能点开；阶段缺失或 payload 损坏时 `sources` 为空、正文照常返回。
 
@@ -151,11 +158,11 @@ interface ResearchTool {
 }
 ```
 
-- schema 单一来源：`core/src/main/resources/tool-schemas.json`，由 `tools/golden/gen_golden.py` 从 Python `assistant.tools.schemas()` 生成，**禁止手改**。唯一例外是 Python 侧不存在的 Java 新工具 `web_search`（第 34 条），只能手工追加，`ToolSchemasTest` 里有注明。
+- schema 单一来源：`core/src/main/resources/tool-schemas.json`，由 `tools/golden/gen_golden.py` 从 Python `assistant.tools.schemas()` 生成，**禁止手改**。例外是 Python 侧不存在的 Java 新工具：`web_search`（第 34 条）与 4 个交易工具（第 35–38 条），只能手工追加，`ToolSchemasTest` 里有注明。
 - 前 32 个的注册顺序与 Python 完全一致，由 `ToolSchemaParityTest` 校验：`resolve_company`、`get_company_profile`、`get_finance`、`get_financial_history`、`get_segments`、`get_management`、`get_shareholders`、`get_peers`、`get_dividends`、`get_insider_trades`、`get_buybacks`、`get_lockup_expiries`、`get_pledges`、`get_earnings_forecasts`、`get_institutional_research`、`get_research_notes`、`get_analyst_views`、`get_announcements`、`get_valuation`、`calc_valuation`、`get_market_overview`、`get_news_events`、`get_sector_rotation`、`screen_candidates`、`build_strategy_plan`、`save_daily_judgment`、`review_research_reports`、`list_research_memory`、`read_research_memory`、`append_research_record`、`update_research_record`、`record_conclusion_change`（32 个）。第 33 个是 Java 新增的 `web_search`，追加在末尾。
 - `load_skill` 只是 `tool-schemas.json` 里的 schema，没有 Java 执行类；实际执行由 AgentScope 的 `SkillLoadTool` 提供，模型侧名字是 `load_skill_through_path`（`AgentEngine` 的 `UNCACHED_TOOLS` 仍按 Python 名 `load_skill` 屏蔽缓存）。
 - `web_search`：`query` 必填、`count` 默认 5 钳到 1..10；百度千帆优先（`BAIDU_API_KEY`），任何失败回落 DeepSeek Search（`DEEPSEEK_API_KEY`）。结果归一成 `{title,url,snippet,content,date,site}`，每条生成 `web:<query-hash>:<n>` 的可引用 source；`content` 截断到 1000 字。`web_search` 在 `UNCACHED_TOOLS` 里。前端靠 source id 的 `web:` 前缀把这类引用标成「网页」（来源列表、悬停卡、来源详情侧栏），点正文角标直接新标签打开原文；改前缀会丢标记和跳转。
-- 交易工具（Python 侧没有，schema 手写追加在 `tool-schemas.json` 末尾）：`get_trading_state`（读当日账户/计划/成交/复盘，有 `date` 参数）、`save_trade_plan`（`trade_date`、`phase`=pre_market/midday、`notes`、`items[]`，BUY 必须 `stop_loss < trigger_price < take_profit`）、`save_trading_journal`（`phase`、`summary`、`lessons`、`changes`）。只进 `tradingToolRegistry`（聊天 33 + 3），聊天的 `toolRegistry` 不含它们。
+- 交易工具（Python 侧没有，schema 手写追加在 `tool-schemas.json` 末尾）：`get_trading_state`（读当日账户/计划/成交/复盘，有 `date` 参数）、`save_trade_plan`（`trade_date`、`phase`=pre_market/midday、`notes`、`items[]`，BUY 必须 `stop_loss < trigger_price < take_profit`）、`save_trading_journal`（`phase`、`summary`、`lessons`、`changes`）、`save_trading_experience`（`content` 全文，≤20000 字符，只在收盘阶段可用，整篇覆盖写 `var/trading/experience.md`）。只进 `tradingToolRegistry`（聊天 33 + 4），聊天的 `toolRegistry` 不含它们。
 
 ### 3.3 参数与钳位
 

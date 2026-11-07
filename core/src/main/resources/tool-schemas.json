@@ -1195,5 +1195,24 @@
       ],
       "additionalProperties": false
     }
+  },
+  "save_trading_experience": {
+    "name": "save_trading_experience",
+    "description": "维护长期交易经验文档（整篇覆盖写）。只在收盘阶段可用：把今天可复用的教训合并进现有文档，先去重，同一教训只留一条，过时结论改写而不是追加；不要把复盘原文照抄进来。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000,
+          "description": "完整 Markdown 全文：保留仍有效的旧条目，补充或改写入今日教训"
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "additionalProperties": false
+    }
   }
 }

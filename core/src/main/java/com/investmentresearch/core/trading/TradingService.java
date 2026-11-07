@@ -44,18 +44,21 @@ public final class TradingService {
     private final TradingContext context;
     private final QuoteCache quotes;
     private final Clock clock;
+    private final TradingExperience experience;
 
     public TradingService(
             TradingRepository repo,
             AssistantEngine engine,
             TradingContext context,
             QuoteCache quotes,
-            Clock clock) {
+            Clock clock,
+            TradingExperience experience) {
         this.repo = repo;
         this.engine = engine;
         this.context = context;
         this.quotes = quotes;
         this.clock = clock;
+        this.experience = experience;
     }
 
     /** 负数会话 id：-(yyyyMMdd)，避免和聊天会话撞号。 */
@@ -78,7 +81,7 @@ public final class TradingService {
 
         AskResult answer = null;
         try {
-            String prompt = PhasePrompt.userMessage(repo, phase, tradeDate);
+            String prompt = PhasePrompt.userMessage(repo, phase, tradeDate, lessons());
             answer = engine.ask(sessionId(tradeDate), MARKET_CODE, "大盘", prompt, listener);
 
             PlanDraft staged = context.stagedPlan();
@@ -193,6 +196,15 @@ public final class TradingService {
                     }
                     return true;
                 });
+    }
+
+    /** 经验文件读不出来时按「暂无经验」继续，不能让一份文档的 IO 失败挡住当天交易。 */
+    private String lessons() {
+        try {
+            return experience.read();
+        } catch (RuntimeException error) {
+            return "";
+        }
     }
 
     /** 收盘复盘前写权益快照；价格优先用最近一次 tick 的报价，缺价按成本估值。 */

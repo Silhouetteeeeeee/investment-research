@@ -76,9 +76,10 @@
 | `TradingExecutor` | 盘中按计划成交 | `tick(LocalDate, Instant)`；限价/止损/止盈触发 → claim 计划项 → 账户/持仓/成交；`PERSIST_INTERVAL_MS=60_000` 才落一次 tick |
 | `TradingDayGate` | 交易日门禁 | `status(date)`（探测并缓存）、`probe`、`markHoliday`、`cachedStatus`（页面用，不探测） |
 | `TradingContext` | 交易 Agent 的提示词/工具上下文 | 系统提示词 `prompts/trading.md`、账户/持仓/计划的只读摘要 |
-| `TradingView` | 页面只读视图组装（不触发上游） | `state/dates/equitySeries/phase/journals` |
+| `TradingView` | 页面只读视图组装（不触发上游） | `state/dates/equitySeries/phase/journals/experience` |
 | `QuoteCache` | 盘中最近一次报价（仅今天页面估值用） | `update/latest/byCode` |
-| 交易工具 | `get_trading_state`、`save_trade_plan`、`save_trading_journal` | schema 手写在 `tool-schemas.json` 末尾（Python 侧没有） |
+| `TradingExperience` | Agent 自己维护的长期经验文档（Markdown 全文覆盖） | `read/updatedAt/save`；`MAX_CHARS=20_000`，写前保留 `experience.md.bak`，临时文件 + 原子移动 |
+| 交易工具 | `get_trading_state`、`save_trade_plan`、`save_trading_journal`、`save_trading_experience`（仅收盘阶段） | schema 手写在 `tool-schemas.json` 末尾（Python 侧没有） |
 | `core.domain.trade.*` | `TradeAccount/Position/TradePlan/PlanItem/TradeOrder/JournalEntry/PhaseRecord/TickRecord/EquitySnapshot/Quote/Side/ItemStatus/ItemSource/TradingPhase` | 金额统一 `long` 分 |
 
 ### 1.4 `core.research`（纯函数，与 Python 逐条对齐）

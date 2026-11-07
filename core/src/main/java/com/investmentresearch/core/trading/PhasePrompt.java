@@ -15,7 +15,7 @@ public final class PhasePrompt {
     private PhasePrompt() {}
 
     public static String userMessage(
-            TradingRepository repo, TradingPhase phase, String tradeDate) {
+            TradingRepository repo, TradingPhase phase, String tradeDate, String experience) {
         StringBuilder out = new StringBuilder();
         out.append("交易日：").append(tradeDate).append('\n');
         out.append("当前阶段：").append(label(phase)).append("\n\n");
@@ -60,6 +60,13 @@ public final class PhasePrompt {
                 out.append("，").append(item.status()).append("（").append(item.source())
                         .append("）\n");
             }
+        }
+
+        out.append("\n交易经验（你自己维护；收盘阶段用 save_trading_experience 整篇更新）：\n");
+        if (experience == null || experience.isBlank()) {
+            out.append("- 暂无经验\n");
+        } else {
+            out.append(experience.strip()).append('\n');
         }
 
         out.append("\n最近复盘：\n");
@@ -116,6 +123,8 @@ public final class PhasePrompt {
                     2. 只调用 save_trading_journal，不产生新计划，不下单。
                     3. 复盘至少写：今日盈亏、每笔成交的理由是否成立、计划哪里错了、
                        明天要注意什么。
+                    4. 再把今天可复用的教训合并进 save_trading_experience：先看上面的旧经验，
+                       同一教训只留一条，过时结论改写而不是追加，不照抄复盘原文。
                     """;
         };
     }

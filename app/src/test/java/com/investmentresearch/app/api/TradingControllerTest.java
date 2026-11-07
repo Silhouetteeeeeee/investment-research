@@ -54,6 +54,20 @@ class TradingControllerTest {
     }
 
     @Test
+    void experience_returns_the_document_and_update_time() throws Exception {
+        when(view.experience())
+                .thenReturn(
+                        Map.of(
+                                "content", "# 交易经验\n- 止损后不要当天回补",
+                                "updated_at", "2026-11-07T15:06:00.123456"));
+
+        mockMvc.perform(get("/api/trading/experience"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").value("# 交易经验\n- 止损后不要当天回补"))
+                .andExpect(jsonPath("$.updated_at").value("2026-11-07T15:06:00.123456"));
+    }
+
+    @Test
     void journals_archive_returns_recent_reviews_with_default_limit() throws Exception {
         when(view.journals(100))
                 .thenReturn(List.of(Map.of("date", "2026-11-06", "phase", "close", "text", "复盘")));

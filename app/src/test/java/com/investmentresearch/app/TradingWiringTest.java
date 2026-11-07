@@ -75,13 +75,17 @@ class TradingWiringTest {
     }
 
     @Test
-    void trading_registry_extends_chat_tools_with_three_trading_tools() {
+    void trading_registry_extends_chat_tools_with_four_trading_tools() {
         // chat 注册 33 个工具（JSON 里的 load_skill 由框架提供，不在 registry 里）
         assertThat(chatRegistry.schemas()).hasSize(33);
-        assertThat(tradingRegistry.schemas()).hasSize(36);
+        assertThat(tradingRegistry.schemas()).hasSize(37);
         assertThat(tradingRegistry.schemas())
                 .extracting(ToolSchema::name)
-                .contains("get_trading_state", "save_trade_plan", "save_trading_journal");
+                .contains(
+                        "get_trading_state",
+                        "save_trade_plan",
+                        "save_trading_journal",
+                        "save_trading_experience");
     }
 
     @Test

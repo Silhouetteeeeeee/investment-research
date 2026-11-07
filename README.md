@@ -96,8 +96,12 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 持仓、计划、成交、阶段过程（prompt、工具调用、思考、引用）都在 `/api/trading/*` 与「交易」页；
 阶段失败会写 `error`，重启时把中断的 RUNNING 阶段标成错误并按窗口补跑盘前。
 
-每天午盘/收盘的复盘永久归档在 `trade_journal`，页面「经验档案」按日期倒序列出全部复盘，
+每天午盘/收盘的复盘永久归档在 `trade_journal`，页面「复盘归档」按日期倒序列出全部复盘，
 正文里的引用同样可以点开；盘前提示词会带上最近 5 篇复盘，让交易 Agent 自己参考历史经验。
+
+复盘之外还有一份 Agent 自己维护的长期经验文档 `var/trading/experience.md`（页面「交易经验」卡片）：
+收盘阶段由 Agent 用 `save_trading_experience` 合并当天教训、去重、改写旧结论，整篇覆盖写，
+上一版留在 `experience.md.bak`；每个阶段的提示词都会注入当前全文，盘前和午盘只读。
 
 ## 测试
 

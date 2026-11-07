@@ -31,13 +31,36 @@ public final class TradingView {
     private final TradingDayGate gate;
     private final QuoteCache quotes;
     private final Clock clock;
+    private final TradingExperience experience;
 
     public TradingView(
-            TradingRepository repo, TradingDayGate gate, QuoteCache quotes, Clock clock) {
+            TradingRepository repo,
+            TradingDayGate gate,
+            QuoteCache quotes,
+            Clock clock,
+            TradingExperience experience) {
         this.repo = repo;
         this.gate = gate;
         this.quotes = quotes;
         this.clock = clock;
+        this.experience = experience;
+    }
+
+    /** 长期经验文档；页面渲染原文，不做任何加工。 */
+    public Map<String, Object> experience() {
+        Map<String, Object> data = new LinkedHashMap<>();
+        String content;
+        String updatedAt;
+        try {
+            content = experience.read();
+            updatedAt = experience.updatedAt();
+        } catch (RuntimeException error) {
+            content = "";
+            updatedAt = null;
+        }
+        data.put("content", content);
+        data.put("updated_at", updatedAt);
+        return data;
     }
 
     public Map<String, Object> state(String date) {

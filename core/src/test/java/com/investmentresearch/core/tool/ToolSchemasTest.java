@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 class ToolSchemasTest {
 
     @Test
-    void loads_all_37_schemas_from_export() throws IOException {
+    void loads_all_38_schemas_from_export() throws IOException {
         Map<String, Map<String, Object>> exported;
         try (InputStream in = ToolSchemas.class.getResourceAsStream("/tool-schemas.json")) {
             assertNotNull(in);
@@ -25,9 +25,10 @@ class ToolSchemasTest {
                                     in,
                                     new TypeReference<Map<String, Map<String, Object>>>() {});
         }
-        // 33 条来自 Python schemas()，第 34 条 web_search 与第 35–37 条交易工具
-        // （get_trading_state / save_trade_plan / save_trading_journal）是 Java 新增
-        assertEquals(37, exported.size());
+        // 33 条来自 Python schemas()，第 34 条 web_search 与第 35–38 条交易工具
+        // （get_trading_state / save_trade_plan / save_trading_journal /
+        // save_trading_experience）是 Java 新增
+        assertEquals(38, exported.size());
 
         ToolSchemas schemas = ToolSchemas.loadDefault();
         for (String name : exported.keySet()) {

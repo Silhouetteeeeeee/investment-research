@@ -39,9 +39,9 @@ Python 仓库**保持不动**，作为金标准对照基准（含 `data/stock.db
 | 阶段 3 | 大盘、新闻事件、板块轮动、选股、策略、复盘、研究档案 | **已实现** | 提交 `43b0d17`..`12b6585`；`AskFlowTest` 大盘用例、`ResearchMemoryStoreTest` |
 | 阶段 4 | 硬化：全量对照、慢查询与并发、日志/指标/追踪、备份恢复演练、MySQL profile（Testcontainers）、Redis/RabbitMQ profile 可启动 | **部分实现** | 指标 `/api/metrics` + Micrometer；OTel traces 按需导出（`TracingConfig`）；其余无代码证据 |
 | 阶段 5 | 切换：云服务器部署、Python 版停服、保留金标准夹具 | **计划实现** | 未开始 |
-| 交易 Agent | 模拟交易：V13 九张表、3 个交易工具、阶段调度与交易日门禁、盘中轮询、`/api/trading/*`、交易页 | **已实现** | 分支 `feat/trading-agent`；`TradingRulesTest`、`TradingExecutorTest`、`TradingSchedulerTest`、`TradingViewTest`、`TradingControllerTest` |
+| 交易 Agent | 模拟交易：V13 九张表、4 个交易工具、阶段调度与交易日门禁、盘中轮询、长期经验文档、`/api/trading/*`、交易页 | **已实现** | 分支 `feat/trading-agent`；`TradingRulesTest`、`TradingExecutorTest`、`TradingSchedulerTest`、`TradingViewTest`、`TradingControllerTest` |
 
-当前分支 `feat/trading-agent`，HEAD 见 `git log`。`./mvnw verify` 现状：core 191 / data 146 / app 106 全绿（2026-11-07）。
+当前分支 `feat/trading-agent`，HEAD 见 `git log`。`./mvnw verify` 现状：core 204 / data 146 / app 107 全绿（2026-11-07）。
 
 ## 4. 技术栈
 

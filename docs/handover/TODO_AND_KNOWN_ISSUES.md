@@ -86,7 +86,7 @@
 | 2 | README 说 `spring-boot:run` 工作目录是 `app/`，实际被 `spring-boot-maven-plugin.workingDirectory` 设成仓库根（已实测：DB 落在 `./var/app.db`、`/` 200）；README 的 `APP_SKILLS_DIR=../skills`、`static-locations=../frontend` 写法过时 | `app/pom.xml:73-75` vs `README.md:36-40`；**已确认** |
 | 3 | `ConversationController` 注释仍说 `RunStore`/`AssistantEngine` bean「Task 20 之后才有」，实际一直存在 | `ConversationController.java:35-36` |
 | 4 | `ApiConfig` 注释提到「Phase 1」与 10 分钟流式 | `ApiConfig.java:10-13` |
-| 5 | 迁移设计说 33 个工具、15 个 skill；README 说 33 个工具 | 差异来自 `load_skill`：schema 有 34 条（另含 Java 新增 `web_search`），Java 注册 33 个，`load_skill` 由框架提供 |
+| 5 | 迁移设计说 33 个工具、15 个 skill；README 说 33 个工具 | 差异来自 `load_skill`：schema 有 38 条（另含 Java 新增 `web_search` 与 4 个交易工具），聊天注册 33 个、交易注册 37 个，`load_skill` 由框架提供 |
 | 6 | 迁移设计写 `data/app.db`，实际默认 `./var/app.db` | `application.yml` 以代码为准 |
 
 ## 5. 阶段 4 / 5 待办（来自迁移设计，均未开始）

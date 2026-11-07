@@ -1265,6 +1265,7 @@ createApp({
       tradingDate: "",
       tradingDates: [],
       tradingArchive: [],
+      tradingExperience: { content: "", updated_at: null },
       trading: null,
       tradingPhaseId: null,
       tradingPhaseDetail: null,
@@ -1564,6 +1565,7 @@ createApp({
       this.tradingError = "";
       this.loadTradingDates();
       this.loadTradingArchive();
+      this.loadTradingExperience();
       this.loadTradingState();
       this.stopTradingTimer();
       this.tradingTimer = setInterval(() => this.loadTradingState(), 5000);
@@ -1608,7 +1610,7 @@ createApp({
         this.tradingDates = [];
       }
     },
-    // 经验档案是跨日期的长期记忆，只在打开页面和阶段结束时刷新
+    // 复盘归档是跨日期的长期记忆，只在打开页面和阶段结束时刷新
     async loadTradingArchive() {
       try {
         const response = await apiFetch("/api/trading/journals?limit=200");
@@ -1617,6 +1619,20 @@ createApp({
         this.tradingArchive = Array.isArray(data.journals) ? data.journals : [];
       } catch (error) {
         this.tradingArchive = [];
+      }
+    },
+    // 经验文档只在收盘阶段变，打开页面和阶段结束时刷新即可
+    async loadTradingExperience() {
+      try {
+        const response = await apiFetch("/api/trading/experience");
+        if (!response.ok) return;
+        const data = await response.json();
+        this.tradingExperience = {
+          content: data.content || "",
+          updated_at: data.updated_at || null,
+        };
+      } catch (error) {
+        this.tradingExperience = { content: "", updated_at: null };
       }
     },
     async loadTradingState() {
@@ -1738,8 +1754,9 @@ createApp({
         if (event.event === "started") {
           this.tradingLive = { text: "", thinking: "", tools: [] };
         } else {
-          // 阶段结束往往带回新的复盘，档案要同步更新
+          // 阶段结束往往带回新的复盘与经验，归档要同步更新
           this.loadTradingArchive();
+          this.loadTradingExperience();
         }
         this.loadTradingState();
       } else if (event.type === "monitor") {
@@ -1760,6 +1777,9 @@ createApp({
       if (!phases.length) return [];
       const detail = this.tradingPhaseCache[phases[phases.length - 1].id];
       return (detail && detail.sources) || [];
+    },
+    experienceHtml() {
+      return renderBody(this.tradingExperience.content || "", []);
     },
     journalHtml(journal) {
       // 档案条目自带当时阶段的 sources；当日复盘没有时回落到已缓存的阶段详情

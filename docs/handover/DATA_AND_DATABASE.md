@@ -51,7 +51,7 @@
 | `memory_*` / `company_memory` | `ResearchMemoryStore`（`append` 只增，`update` 白名单，`change` 只增） | `ResearchMemoryStore`、`ResearchController`、记忆工具 |
 | `daily_reports` | `DailyReportStore`（`save` 按 `trade_date` upsert） | `DailyReportStore.load`、复盘工具 |
 | `kline_daily` | `KlineAdapter` 经 `KlineDailyStore`（按 `code + trade_date` upsert，一次取 500 根） | `KlineDailyStore.load`、日 K 面板 |
-| `trade_*` / `trading_*`（V13） | `TradingRepositoryImpl`：阶段编排写计划/复盘/阶段，`TradingExecutor` 写成交/持仓/账户/tick，收盘写权益快照 | `TradingService`（上下文与复盘）、`TradingExecutor`（计划与持仓）、`TradingView`（页面；`trade_journal` 全量倒序供「经验档案」） |
+| `trade_*` / `trading_*`（V13） | `TradingRepositoryImpl`：阶段编排写计划/复盘/阶段，`TradingExecutor` 写成交/持仓/账户/tick，收盘写权益快照 | `TradingService`（上下文与复盘）、`TradingExecutor`（计划与持仓）、`TradingView`（页面；`trade_journal` 全量倒序供「复盘归档」） |
 
 ## 4. 读写路径
 
@@ -130,11 +130,18 @@
 
 写入：先写临时文件 `.<run_id>.<pid>.tmp` 再原子移动；读取时校验 id 正则 `[0-9A-Za-z_-]{8,64}` 且不含 `..`。`prompts`/`skills`/`calls` 目前保留为空数组（已知差异）。
 
+## 7.1 Agent 维护的交易经验（`var/trading/experience.md`）
+
+- 不进数据库：正文是 Agent 在收盘阶段用 `save_trading_experience` 整篇覆盖写的 Markdown，上限 20000 字符（`TradingExperience.MAX_CHARS`）。
+- 写入：先把旧版本复制成 `experience.md.bak`，再写 `experience.md.tmp` 并原子移动（不支持时退回 `REPLACE_EXISTING`）。
+- 读取：文件不存在返回空串（页面显示空态、提示词写「暂无经验」）；`updated_at` 取文件修改时间，按 Asia/Shanghai 格式化。
+- 每个阶段的提示词都会注入当前全文；盘前/午盘只读。
+
 ## 8. 备份与恢复
 
 - `scripts/backup.sh`：`sqlite3 .backup` → `$DATA_DIR/backups/app-YYYYMMDD.db`，保留 7 份，`umask 077`。
 - 恢复：停应用 → 覆盖 `$DATA_DIR/app.db` → 启动（Flyway 校验版本）。
-- 运行原文不在备份脚本内；需要保留时自行打包 `var/runs`。
+- 运行原文与 `var/trading/experience.md` 不在备份脚本内；需要保留时自行打包 `var/runs` 与 `var/trading`。
 
 ## 9. 本机开发库现状（`var/app.db`，仅供参考）
 

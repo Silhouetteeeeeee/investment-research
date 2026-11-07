@@ -79,7 +79,7 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 | 坑 | 说明 |
 | --- | --- |
-| 工具数 33 vs 34 | schema 文件 34 条（含 `load_skill` 与 Java 新增 `web_search`），Java 注册 33 个；`load_skill` 由 AgentScope `SkillLoadTool` 提供，模型侧叫 `load_skill_through_path` |
+| 工具数 33 / 37 vs 38 | schema 文件 38 条（含 `load_skill`、Java 新增 `web_search` 与 4 个交易工具），聊天注册 33 个、交易注册 37 个（聊天 33 + 4）；`load_skill` 由 AgentScope `SkillLoadTool` 提供，模型侧叫 `load_skill_through_path` |
 | 大盘会话不能带公司 | `AgentEngine.ask` 对 `MARKET` 传空默认公司，否则工具会把「MARKET」当公司名 |
 | 工具结果缓存 | 时效性工具在 `UNCACHED_TOOLS` 里；改缓存语义两处都要看 |
 | `raw` 只落库不下发 | SSE 的 `done.message` 没有 `raw`；证据接口从库里 `raw` 取 |

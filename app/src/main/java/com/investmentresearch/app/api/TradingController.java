@@ -45,6 +45,12 @@ public class TradingController {
         return view.equitySeries();
     }
 
+    /** Agent 自己维护的长期经验文档；空态返回空串与 null 时间。 */
+    @GetMapping("/experience")
+    public Map<String, Object> experience() {
+        return view.experience();
+    }
+
     /** 复盘经验档案：按日期倒序，默认最近 100 篇。 */
     @GetMapping("/journals")
     public Map<String, Object> journals(

@@ -56,12 +56,12 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 | --- | --- |
 | 应用端口 / 管理端口 | 8080 / 8081（仅回环，仅 `health`） |
 | 唯一编排入口 | `core.service.AskService.ask(Long, String, EventSink)`（`AskService.java:60`） |
-| HTTP | `POST /api/ask`（SSE）、`/api/conversations/*`、`/api/research/companies*`、`/api/stocks/{code}/kline`、`/api/trading/state|dates|equity|phases/{id}|stream`、`/api/metrics`、`/health` |
+| HTTP | `POST /api/ask`（SSE）、`/api/conversations/*`、`/api/research/companies*`、`/api/stocks/{code}/kline`、`/api/trading/state|dates|equity|phases/{id}|journals|experience|stream`、`/api/metrics`、`/health` |
 | SSE 事件 | 聊天：`state` `text` `discard` `tool` `meter` `done` `error` `warning`（`SseEmitter` 600s，虚拟线程）；交易：`phase` `monitor` `tool` `thinking` `text` `heartbeat`（30 分钟，`TradingBroadcaster`） |
 | Agent | `core.agent.AgentEngine` → `HarnessAgent.streamEvents`，`maxIters=10`、`temperature=0.3`、`CompactionConfig.triggerTokens(80_000)`；交易侧独立 `tradingEngine`（`prompts/trading.md`，maxTurns=14、压缩阈值 120_000） |
 | 模型 | 默认 `deepseek:deepseek-v4-flash`（`AgentProperties.DEFAULT_MODEL`）；无 key → `UnavailableEngine` |
-| 工具 | 聊天注册 33 个、交易注册 36 个（多 `get_trading_state`/`save_trade_plan`/`save_trading_journal`）；`tool-schemas.json` 37 条（`load_skill` 由框架提供为 `load_skill_through_path`；`web_search` 与 3 个交易工具为 Java 新增，schema 手写）；18 个时效工具不缓存 |
-| 数据 | `var/app.db`（Flyway V1–V13，42 张业务表 + 2 张系统表）、`var/runs/*.json`、`var/sessions/`、`var/workspace/` |
+| 工具 | 聊天注册 33 个、交易注册 37 个（多 `get_trading_state`/`save_trade_plan`/`save_trading_journal`/`save_trading_experience`）；`tool-schemas.json` 38 条（`load_skill` 由框架提供为 `load_skill_through_path`；`web_search` 与 4 个交易工具为 Java 新增，schema 手写）；18 个时效工具不缓存 |
+| 数据 | `var/app.db`（Flyway V1–V13，42 张业务表 + 2 张系统表）、`var/runs/*.json`、`var/sessions/`、`var/workspace/`、`var/trading/experience.md`（Agent 维护的长期交易经验，`.bak` 为上一版） |
 | 追踪 | OTel traces 按需经 OTLP/HTTP 导出（`OTEL_EXPORTER_OTLP_ENDPOINT`，留空为 no-op）；`app/config/TracingConfig` 建 SDK，`AgentEngine` 挂 `OtelTracingMiddleware`；指标走 `/api/metrics` |
 | Prompt | `core/src/main/resources/prompts/system.md`；skill 正文 `skills/<name>/SKILL.md`（15 个） |
 | 金标准 | `core/src/test/resources/golden/**`、`fixtures/*.db`、`data/src/test/resources/wiremock/**`（由 `tools/golden/gen_golden.py`、`tools/fixtures/record.py` 生成） |
