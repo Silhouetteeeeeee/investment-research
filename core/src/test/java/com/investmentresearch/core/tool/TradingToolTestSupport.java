@@ -1,6 +1,8 @@
 package com.investmentresearch.core.tool;
 
 import com.investmentresearch.core.domain.trade.EquitySnapshot;
+import com.investmentresearch.core.domain.trade.ItemSource;
+import com.investmentresearch.core.domain.trade.ItemStatus;
 import com.investmentresearch.core.domain.trade.JournalEntry;
 import com.investmentresearch.core.domain.trade.PhaseRecord;
 import com.investmentresearch.core.domain.trade.PlanItem;
@@ -18,16 +20,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-/** 交易工具测试用的内存仓储；只实现读取状态和写复盘需要的行为。 */
-final class TradingToolTestSupport {
+/** 交易相关测试共用的内存仓储。 */
+public final class TradingToolTestSupport {
     private TradingToolTestSupport() {}
 
-    static final class InMemoryRepo implements TradingRepository {
+    public static final class InMemoryRepo implements TradingRepository {
         private TradeAccount account = new TradeAccount(100_000_000L, 100_000_000L);
         private final Map<String, Position> positions = new LinkedHashMap<>();
         private final List<TradePlan> plans = new ArrayList<>();
         private final List<TradeOrder> orders = new ArrayList<>();
         private final List<JournalEntry> journals = new ArrayList<>();
+        private final List<PhaseRecord> phases = new ArrayList<>();
+        private final Map<String, EquitySnapshot> equity = new LinkedHashMap<>();
+        private long nextId = 1;
 
         @Override
         public TradeAccount account() {
@@ -74,7 +79,7 @@ final class TradingToolTestSupport {
 
         @Override
         public long insertPlan(TradePlan plan) {
-            long id = plans.size() + 1L;
+            long id = nextId++;
             plans.add(
                     new TradePlan(id, plan.tradeDate(), plan.phase(), plan.version(),
                             plan.notes(), plan.runId(), plan.status(), plan.items()));
@@ -95,12 +100,22 @@ final class TradingToolTestSupport {
 
         @Override
         public void cancelPendingAgentItems(long planId) {
-            throw new UnsupportedOperationException();
+            replaceItems(planId, item -> item.status() == ItemStatus.PENDING
+                    && item.source() == ItemSource.AGENT
+                    ? copy(item, ItemStatus.CANCELLED)
+                    : item);
         }
 
         @Override
         public List<PlanItem> pendingAutoSellItems(long planId) {
-            return List.of();
+            TradePlan owner = plan(planId);
+            if (owner == null) {
+                return List.of();
+            }
+            return owner.items().stream()
+                    .filter(i -> i.source() == ItemSource.AUTO)
+                    .filter(i -> i.status() == ItemStatus.PENDING)
+                    .toList();
         }
 
         @Override
@@ -117,29 +132,35 @@ final class TradingToolTestSupport {
 
         @Override
         public long insertPlanItem(PlanItem item) {
+            long id = nextId++;
             TradePlan owner = plan(item.planId());
             List<PlanItem> items = new ArrayList<>(owner.items());
-            items.add(item);
+            items.add(copy(item, id));
             plans.set(
                     plans.indexOf(owner),
                     new TradePlan(owner.id(), owner.tradeDate(), owner.phase(), owner.version(),
                             owner.notes(), owner.runId(), owner.status(), items));
-            return items.size();
+            return id;
         }
 
         @Override
         public void updatePlanItem(PlanItem item) {
-            throw new UnsupportedOperationException();
+            replaceItems(item.planId(), existing -> existing.id() == item.id() ? item : existing);
         }
 
         @Override
         public boolean claimPendingItem(long planItemId, int filledShares, long priceCents) {
-            throw new UnsupportedOperationException();
+            PlanItem item = planItem(planItemId);
+            if (item == null || item.status() != ItemStatus.PENDING) {
+                return false;
+            }
+            updatePlanItem(copy(item, ItemStatus.FILLED));
+            return true;
         }
 
         @Override
         public long insertOrder(TradeOrder order) {
-            long id = orders.size() + 1L;
+            long id = nextId++;
             orders.add(
                     new TradeOrder(id, order.tradeDate(), order.planItemId(), order.code(),
                             order.name(), order.side(), order.priceCents(), order.shares(),
@@ -179,32 +200,74 @@ final class TradingToolTestSupport {
 
         @Override
         public void savePhase(PhaseRecord phase) {
-            throw new UnsupportedOperationException();
+            for (int i = 0; i < phases.size(); i++) {
+                PhaseRecord existing = phases.get(i);
+                if (existing.tradeDate().equals(phase.tradeDate())
+                        && existing.phase() == phase.phase()) {
+                    phases.set(
+                            i,
+                            new PhaseRecord(existing.id(), phase.tradeDate(), phase.phase(),
+                                    phase.status(), phase.startedAt(), phase.finishedAt(),
+                                    phase.runId(), phase.payloadJson(), phase.error()));
+                    return;
+                }
+            }
+            phases.add(
+                    new PhaseRecord(nextId++, phase.tradeDate(), phase.phase(), phase.status(),
+                            phase.startedAt(), phase.finishedAt(), phase.runId(),
+                            phase.payloadJson(), phase.error()));
         }
 
         @Override
         public PhaseRecord phase(String tradeDate, TradingPhase phase) {
-            return null;
+            return phases.stream()
+                    .filter(p -> p.tradeDate().equals(tradeDate) && p.phase() == phase)
+                    .findFirst()
+                    .orElse(null);
         }
 
         @Override
         public PhaseRecord phaseById(long id) {
-            return null;
+            return phases.stream().filter(p -> p.id() == id).findFirst().orElse(null);
         }
 
         @Override
         public List<PhaseRecord> phases(String tradeDate) {
-            return List.of();
+            return phases.stream().filter(p -> p.tradeDate().equals(tradeDate)).toList();
         }
 
         @Override
         public int markRunningPhasesError(String error) {
-            return 0;
+            int count = 0;
+            for (int i = 0; i < phases.size(); i++) {
+                PhaseRecord phase = phases.get(i);
+                if ("RUNNING".equals(phase.status())) {
+                    phases.set(
+                            i,
+                            new PhaseRecord(phase.id(), phase.tradeDate(), phase.phase(),
+                                    "ERROR", phase.startedAt(), phase.finishedAt(),
+                                    phase.runId(), phase.payloadJson(), error));
+                    count++;
+                }
+            }
+            return count;
         }
 
         @Override
         public int expirePendingItems(String tradeDate) {
-            return 0;
+            int count = 0;
+            for (TradePlan plan : plans) {
+                if (!plan.tradeDate().equals(tradeDate)) {
+                    continue;
+                }
+                for (PlanItem item : plan.items()) {
+                    if (item.status() == ItemStatus.PENDING) {
+                        updatePlanItem(copy(item, ItemStatus.EXPIRED));
+                        count++;
+                    }
+                }
+            }
+            return count;
         }
 
         @Override
@@ -219,27 +282,58 @@ final class TradingToolTestSupport {
 
         @Override
         public EquitySnapshot equity(String tradeDate) {
-            return null;
+            return equity.get(tradeDate);
         }
 
         @Override
         public List<EquitySnapshot> equitySeries() {
-            return List.of();
+            return equity.values().stream()
+                    .sorted((a, b) -> a.tradeDate().compareTo(b.tradeDate()))
+                    .toList();
         }
 
         @Override
         public void saveEquity(EquitySnapshot snapshot) {
-            throw new UnsupportedOperationException();
+            equity.put(snapshot.tradeDate(), snapshot);
         }
 
         @Override
         public List<String> tradeDates(int limit) {
-            return List.of();
+            return orders.stream().map(TradeOrder::tradeDate).distinct().toList();
         }
 
         @Override
         public <T> T transaction(Supplier<T> work) {
             return work.get();
+        }
+
+        private void replaceItems(long planId, java.util.function.UnaryOperator<PlanItem> mapper) {
+            TradePlan owner = plan(planId);
+            if (owner == null) {
+                return;
+            }
+            List<PlanItem> items = new ArrayList<>();
+            for (PlanItem item : owner.items()) {
+                items.add(mapper.apply(item));
+            }
+            plans.set(
+                    plans.indexOf(owner),
+                    new TradePlan(owner.id(), owner.tradeDate(), owner.phase(), owner.version(),
+                            owner.notes(), owner.runId(), owner.status(), items));
+        }
+
+        private static PlanItem copy(PlanItem item, ItemStatus status) {
+            return new PlanItem(item.id(), item.planId(), item.code(), item.name(), item.side(),
+                    item.triggerPriceCents(), item.shares(), item.stopLossCents(),
+                    item.takeProfitCents(), item.reason(), status, item.source(),
+                    item.filledShares(), item.filledPriceCents(), item.orderId(), item.note());
+        }
+
+        private static PlanItem copy(PlanItem item, long id) {
+            return new PlanItem(id, item.planId(), item.code(), item.name(), item.side(),
+                    item.triggerPriceCents(), item.shares(), item.stopLossCents(),
+                    item.takeProfitCents(), item.reason(), item.status(), item.source(),
+                    item.filledShares(), item.filledPriceCents(), item.orderId(), item.note());
         }
     }
 }
