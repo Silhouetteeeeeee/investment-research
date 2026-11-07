@@ -37,10 +37,11 @@
 | `core/research` | `MarketState`、`MemoryRules`、`MemoryException`、`NewsEvents`、`Review`、`Screening`、`SectorRotation`、`Strategy` | 与 Python 对齐的纯计算规则 |
 | `core/run` | `FileRunStore`、`RunRecord`、`RunRecorder`、`RunSummary` | 运行原文生成与落盘 |
 | `core/service` | `AskService`、`CompanyResolver`、`ContextMeter`、`EventSink`、`QuestionRouter`、`ResolvedCompany`、`Route` | 路由、编排、上下文占用 |
-| `core/tool` | 33 个工具类（含 Java 新增的 `WebSearchTool`）+ `ToolRegistry`、`ToolSchemas`、`ToolMetrics`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport` | 模型可调用的工具与执行统计 |
+| `core/tool` | 33 个工具类（含 Java 新增的 `WebSearchTool`）+ 3 个交易工具（`GetTradingStateTool`、`SaveTradePlanTool`、`SaveTradingJournalTool`）+ `ToolRegistry`、`ToolSchemas`、`ToolMetrics`、`ResearchTool`、`CompanyTool`、`ToolArguments`、`MemoryToolSupport`、`TradingToolSupport` | 模型可调用的工具与执行统计 |
 | `core/valuation` | `ValuationMath`、`ValuationInputError` | Decimal 估值计算 |
+| `core/trading` | `TradingRules`、`MarketSession`、`TradingService`、`TradingExecutor`、`TradingDayGate`、`TradingContext`、`TradingView`、`QuoteCache` + `core/domain/trade/*` | 模拟交易规则、阶段编排、盘中成交、交易日门禁、页面视图 |
 
-资源：`core/src/main/resources/tool-schemas.json`（34 条 schema；33 条是生成物，`web_search` 为 Java 新增手工追加）、`prompts/system.md`（系统提示词）。
+资源：`core/src/main/resources/tool-schemas.json`（37 条 schema；34 条是生成物/`web_search`，末尾 3 条交易工具手工追加）、`prompts/system.md`（聊天）、`prompts/trading.md`（交易 Agent）。
 
 ## 3. `data/`（87 文件，约 17.7k 行）
 
@@ -50,22 +51,23 @@
 | `data/adapter/eastmoney` | 18 个类 | 15 个适配器（东财 datacenter/F10/研报/估值）+ `EastmoneySupport`、`DatacenterSupport`、`ValuationSupport` |
 | `data/adapter/f10` | `CompanyProfileAdapter`、`SegmentAdapter`、`F10Support` | 东财 F10 概况/主营构成 |
 | `data/adapter/finance` | `FinanceAdapter`、`FinancialHistoryAdapter`、`FinanceSnapshot`、`FinanceMetrics`、`FinanceStatements`、`FinanceSupport`、`FinanceException` | 新浪财报三表 → 快照/趋势 |
-| `data/adapter/market` | 21 个类 | 7 个适配器（大盘、新闻、板块、选股、策略、复盘、日 K）+ 13 个新闻/行情源 + `MarketSupport` |
+| `data/adapter/market` | 22 个类 | 8 个适配器（大盘、新闻、板块、选股、策略、复盘、日 K、个股实时报价 `SinaStockQuoteAdapter`）+ 13 个新闻/行情源 + `MarketSupport` |
 | `data/adapter/memory` | `ResearchMemoryStore` | 研究档案读写与旧库导入 |
 | `data/adapter/search` | `WebSearchAdapter` | 联网搜索：百度千帆优先、DeepSeek 回落 |
 | `data/config` | `UpstreamConfig`、`MybatisPlusConfig` | RestClient 与 Mapper 扫描 |
-| `data/persistence` | 32 个类 | MyBatis 实体/Mapper、`ConversationRepositoryImpl`、`ResearchCache`/`ResearchCacheStore`、`DailyReportStore`、`KlineDailyStore` |
+| `data/persistence` | 33 个类 | MyBatis 实体/Mapper、`ConversationRepositoryImpl`、`TradingRepositoryImpl`、`ResearchCache`/`ResearchCacheStore`、`DailyReportStore`、`KlineDailyStore` |
 | `data/sync` | `StockMasterSync` | 每日 06:00 刷新股票主表 |
 | `data/upstream` | `UpstreamClient`、`RestClientUpstreamClient`、`UpstreamException` | 统一 HTTP（禁代理、UA、60s、2 次、并发 4） |
-| `data/src/main/resources/db/migration/sqlite` | `V1`–`V12` | Flyway 迁移 |
+| `data/src/main/resources/db/migration/sqlite` | `V1`–`V13` | Flyway 迁移 |
 
-## 4. `app/`（12 文件，约 1.1k 行）
+## 4. `app/`（21 文件，约 2.0k 行）
 
 | 包 | 类 | 职责 |
 | --- | --- | --- |
 | `app` | `Application` | 启动；创建 `APP_DATA_DIR`；`@EnableScheduling` |
-| `app/api` | `AskController`、`ConversationController`、`ResearchController`、`StockChartController`、`MetricsController`、`HealthController`、`SseWriter`、`ApiConfig` | HTTP/SSE |
-| `app/config` | `AssistantConfig`、`MemoryImportRunner`、`TracingConfig` | 全部 Bean 装配、旧档案导入、OTel SDK（按需） |
+| `app/api` | `AskController`、`ConversationController`、`ResearchController`、`StockChartController`、`TradingController`、`MetricsController`、`HealthController`、`SseWriter`、`ApiConfig` | HTTP/SSE |
+| `app/config` | `AssistantConfig`、`TradingConfig`、`TradingProperties`、`MemoryImportRunner`、`TracingConfig` | 全部 Bean 装配、交易配置、旧档案导入、OTel SDK（按需） |
+| `app/trading` | `TradingScheduler`、`TradingBroadcaster` | 交易调度（阶段/tick/补跑）与交易 SSE 广播 |
 | `app/security` | `SecurityConfig`、`TokenAuthFilter`、`ApiTokenProperties` | 令牌鉴权 |
 
 资源：`app/src/main/resources/application.yml`。
@@ -74,9 +76,9 @@
 
 | 路径 | 内容 |
 | --- | --- |
-| `core/src/test/java/.../{agent,citation,domain,research,run,service,tool,valuation}` | 16 个测试类 + `ScriptedModel` 假模型 |
-| `data/src/test/java/.../{adapter,eastmoney,f10,finance,market,memory,persistence,upstream}` | 31 个测试类 + `EastmoneyTestSupport`、`F10TestSupport` |
-| `app/src/test/java/.../{api,e2e,security}` | 21 个测试类（含 `ModuleBoundaryTest`（ArchUnit）、`SkillContentTest`、`AssistantWiringTest`） |
+| `core/src/test/java/.../{agent,citation,domain,research,run,service,tool,trading,valuation}` | 27 个测试类 + `ScriptedModel` 假模型 |
+| `data/src/test/java/.../{adapter,eastmoney,f10,finance,market,memory,persistence,upstream}` | 33 个测试类 + `EastmoneyTestSupport`、`F10TestSupport` |
+| `app/src/test/java/.../{api,e2e,security,trading}` | 26 个测试类（含 `ModuleBoundaryTest`（ArchUnit）、`SkillContentTest`、`AssistantWiringTest`、`TradingSchedulerTest`） |
 | `core/src/test/resources/golden/` | 7 个场景金标准 + `tools/`（99 个工具黄金）+ `rows/`（102 个数据库行黄金） |
 | `core/src/test/resources/fixtures/` | `stock-snapshot.db`（冻结行情/财报库）、`research-memory.db`（旧档案样本） |
 | `core/src/test/resources/skills-python/` | 14 个 Python 原文快照（`business_model` 无快照），用于 skill 正文逐字比对 |

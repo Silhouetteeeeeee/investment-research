@@ -15,6 +15,8 @@
 | `APP_DATA_DIR` | 否 | SQLite 和运行数据目录，默认 `./var`（相对启动目录）。 |
 | `APP_SKILLS_DIR` | 否 | `skills/` 所在目录，默认 `./skills`（相对启动目录）。 |
 | `APP_MEMORY_IMPORT` | 否 | Python 版 `research_memory.db` 的文件路径；启动时在档案为空的前提下一次性导入。 |
+| `APP_TRADING_ENABLED` | 否 | 后台模拟交易开关，默认 `true`；设成 `false` 后盘前/午盘/收盘与盘中轮询都不运行。 |
+| `app.trading.poll-seconds` | 否 | 盘中等价轮询间隔（秒），默认 10；可用 `APP_TRADING_POLL_SECONDS` 覆盖。 |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | 否 | OTLP/HTTP collector 根地址（自动补 `/v1/traces`）；留空则不启用 tracing。可选 `OTEL_SERVICE_NAME`、`OTEL_TRACES_SAMPLER_ARG`、`OTEL_SDK_DISABLED`。 |
 
 `.env`、`*.db`、`var/` 已在 `.gitignore` 中，密钥不要提交。
@@ -75,6 +77,24 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 同花顺板块走页面分页而不是 akshare 的 `/ajax/1/`，两者数据一致，但后者要 `v` cookie；
 板块日线用 `v6/line/.../last.js`，同样免 cookie。东财 `push2` 的实时板块接口在本机网络被拦，
 所以板块数据只走同花顺。
+
+## 模拟交易（后台 Agent）
+
+页面侧栏「交易」是纯模拟盘（只记账，不动真钱）。应用内置一个独立的后台交易 Agent，
+按 A 股交易时段自行运行，过程与结论全部落库：
+
+| 时间（Asia/Shanghai） | 阶段 |
+| --- | --- |
+| 09:25 起每 5 分钟探测，09:30 后确认是交易日才跑 | 盘前：用基本面工具挑候选并写当日交易计划（限价、股数、止损、止盈） |
+| 11:35 | 午盘复盘：对照计划与早盘走势，可改下午计划 |
+| 15:05 | 收盘复盘 + 权益快照；过期未成交的委托作废 |
+| 09:30–11:30、13:00–15:00 每 `poll-seconds` 秒 | 查计划内标的报价，触发限价/止损/止盈就按计划自动成交 |
+
+交易日判定以行情返回的日期是否等于今天为准；行情拿不到时保持「未确认」，不会按旧价格下单。
+非交易日（含周末）不运行——周末没有探测，页面显示「交易日未确认」，等效于休市。
+
+持仓、计划、成交、阶段过程（prompt、工具调用、思考、引用）都在 `/api/trading/*` 与「交易」页；
+阶段失败会写 `error`，重启时把中断的 RUNNING 阶段标成错误并按窗口补跑盘前。
 
 ## 测试
 

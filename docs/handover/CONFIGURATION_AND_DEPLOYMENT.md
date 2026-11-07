@@ -24,6 +24,9 @@
 | `APP_DATA_DIR` | 否 | `./var` | 运行数据根目录：`app.db`、`runs/`、`sessions/`、`workspace/` | `app/.../Application.java`、`AssistantConfig`、`application.yml` |
 | `APP_SKILLS_DIR` | 否 | `./skills` | `skills/<name>/SKILL.md` 所在目录 | `AssistantConfig.agentProperties` |
 | `APP_MEMORY_IMPORT` | 否 | 空 | Python 版 `research_memory.db` 的**文件路径**；启动时若档案为空则一次性导入 | `app/.../config/MemoryImportRunner.java` |
+| `APP_TRADING_ENABLED` | 否 | `true` | 后台模拟交易总开关；`false` 时盘前/午盘/收盘/盘中轮询与启动补跑全部不运行 | `application.yml` → `app.trading.enabled`；`app/.../config/TradingProperties.java` |
+| `APP_TRADING_POLL_SECONDS` | 否 | `10` | 盘中轮询间隔（秒）；`<=0` 回落 10 | `app.trading.poll-seconds`；`TradingProperties` |
+| `APP_TRADING_PHASE_TIMEOUT_MINUTES` | 否 | `15` | 单个阶段最长运行时间（分钟）；超时把阶段写成 `ERROR` | `app.trading.phase-timeout-minutes`；`TradingScheduler` |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | 否 | 空（= 不启用 tracing） | collector 根地址，代码自动补 `/v1/traces`；也可直接填完整地址 | `app/.../config/TracingConfig.java` |
 | `OTEL_SERVICE_NAME` | 否 | `investment-research` | trace 的 `service.name` 资源属性 | 同上 |
 | `OTEL_TRACES_SAMPLER_ARG` | 否 | `1` | 采样率 0..1；非法值按 1（全采样），不会拦住启动 | 同上 |
@@ -45,6 +48,9 @@ Tracing 只导出 traces（`invoke_agent` / `chat` / `execute_tool` span，来�
 | `spring.flyway.locations` | `classpath:db/migration/sqlite` | 迁移脚本目录（在 `data` 模块资源里） |
 | `spring.web.resources.static-locations` | `file:./frontend/` | 以进程工作目录为基准托管静态页 |
 | `app.api-token` | `${APP_API_TOKEN:}` | 令牌；空白 → 启动失败 |
+| `app.trading.enabled` | `${APP_TRADING_ENABLED:true}` | 交易总开关 |
+| `app.trading.poll-seconds` | `10` | 盘中轮询间隔；`@Scheduled(fixedDelayString)` 启动时解析（可用 `APP_TRADING_POLL_SECONDS` 覆盖） |
+| `app.trading.phase-timeout-minutes` | 未写（默认 15） | `TradingProperties` 紧凑构造器兜底，可用 `APP_TRADING_PHASE_TIMEOUT_MINUTES` 覆盖 |
 | `server.shutdown` | `graceful` | SIGTERM 时等待在途请求（含 SSE） |
 | `server.port` | 未设置 → 8080 | 应用端口 |
 | `management.server.port` | `8081` | 独立管理端口 |

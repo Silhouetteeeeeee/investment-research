@@ -22,6 +22,11 @@
 | GET | `/api/research/companies/{code}?section=&limit=&offset=&status=` | `ResearchController` | 档案详情/分页；`code` 必须 `\d{6}` 否则 404；未知 `section` → 400 `{"error":"unknown section"}`；`limit` 夹到 1..500，默认 200 |
 | GET | `/api/metrics` | `MetricsController` | 系统 CPU/内存 + 各工具调用次数、成功率、平均/P95/P99；进程内存、启动以来，缓存命中不计入 |
 | GET | `/api/stocks/{code}/kline?days=120` | `StockChartController` | 个股日线（前复权）；`code` 必须 `\d{6}` 否则 404；`days` 夹到 20..500，非法值按 120；优先腾讯、东财兜底，结果落 `kline_daily`；两家都失败且有旧缓存时返回旧缓存 |
+| GET | `/api/trading/state?date=` | `TradingController` | 当日（或指定日）交易状态：账户、持仓、计划、成交、复盘、阶段、tick、规则；只读，不触发上游报价 |
+| GET | `/api/trading/dates` | `TradingController` | 有阶段记录的交易日列表（最近 30 个） |
+| GET | `/api/trading/equity` | `TradingController` | 权益快照序列 |
+| GET | `/api/trading/phases/{id}` | `TradingController` | 单个阶段元数据 + `payload_json`（answer/thinking/trace/raw/run）；不存在 → 404 `{"error":"..."}` |
+| GET | `/api/trading/stream` | `TradingController` | 交易 SSE：`phase`、`monitor`、`tool`、`thinking`、`text`、`heartbeat` |
 
 会话不存在时统一 404 `{"error":"not found"}`。
 
@@ -49,6 +54,35 @@
 - 超时：`SseEmitter` 10 分钟（`AskController.TIMEOUT_MS`）。超时会中断工作线程（`FutureTask.cancel(true)`，Reactor `blockLast` 随即取消上游订阅），再结束 emitter；已拿到的部分不落库，会话里会留一条 `error` 消息。
 - 线程：实际工作跑在 `askExecutor`（虚拟线程池，`ApiConfig`）。
 - 未配置 `DEEPSEEK_API_KEY` 时，引擎是 `UnavailableEngine`，直接推一条 `{"type":"error","text":"助手不可用：请先设置环境变量 DEEPSEEK_API_KEY"}`，不建会话。
+
+### `GET /api/trading/state`
+
+金额一律是**分**（`long`），前端负责除 100 显示。顶层字段：
+
+```text
+date, account{cash,initial,equity,day_pnl},
+positions[{code,name,shares,available,avg_cost,price,value,pnl}],
+plan{id,phase,version,status,notes,items[...]},
+orders[], journals[], phases[{id,phase,status,started_at,finished_at,run_id,error}],
+tick{checked_at,quotes[],executed[]}, today_status,
+rules{initial_capital,lot,max_positions,max_single_position_pct,commission_rate_pct,min_commission,stamp_tax_rate_pct,t_plus_one}
+```
+
+价格优先级：当天用 `QuoteCache`（盘中最近一次报价）→ 当天 tick 的报价 JSON → 权益快照价格 → 成本价。
+`today_status` 用 `TradingDayGate.cachedStatus`，不探测上游：`TRADING` / `HOLIDAY` / `UNCONFIRMED`。
+
+### `GET /api/trading/stream`
+
+`text/event-stream`，超时 30 分钟；订阅后立刻发一帧 `heartbeat` 把响应头刷出去，此后每 20 秒一次心跳。
+无订阅者时事件直接丢弃，不影响落库。事件：
+
+| type | 字段 | 何时发 |
+| --- | --- | --- |
+| `phase` | `status`（started/finished）、`phase`、`date`、`record` | 阶段开始/结束 |
+| `monitor` | `checked_at`、`quotes`、`executed`、`error` | 每次盘中轮询 |
+| `tool` | `name`、`company`、`ok`、`cached`、`duration_ms` | 交易 Agent 调工具 |
+| `thinking` / `text` | `delta` | 阶段内的流式输出 |
+| `heartbeat` | — | 订阅时与每 20 秒 |
 
 ## 2. SSE 协议
 
@@ -114,6 +148,7 @@ interface ResearchTool {
 - 前 32 个的注册顺序与 Python 完全一致，由 `ToolSchemaParityTest` 校验：`resolve_company`、`get_company_profile`、`get_finance`、`get_financial_history`、`get_segments`、`get_management`、`get_shareholders`、`get_peers`、`get_dividends`、`get_insider_trades`、`get_buybacks`、`get_lockup_expiries`、`get_pledges`、`get_earnings_forecasts`、`get_institutional_research`、`get_research_notes`、`get_analyst_views`、`get_announcements`、`get_valuation`、`calc_valuation`、`get_market_overview`、`get_news_events`、`get_sector_rotation`、`screen_candidates`、`build_strategy_plan`、`save_daily_judgment`、`review_research_reports`、`list_research_memory`、`read_research_memory`、`append_research_record`、`update_research_record`、`record_conclusion_change`（32 个）。第 33 个是 Java 新增的 `web_search`，追加在末尾。
 - `load_skill` 只是 `tool-schemas.json` 里的 schema，没有 Java 执行类；实际执行由 AgentScope 的 `SkillLoadTool` 提供，模型侧名字是 `load_skill_through_path`（`AgentEngine` 的 `UNCACHED_TOOLS` 仍按 Python 名 `load_skill` 屏蔽缓存）。
 - `web_search`：`query` 必填、`count` 默认 5 钳到 1..10；百度千帆优先（`BAIDU_API_KEY`），任何失败回落 DeepSeek Search（`DEEPSEEK_API_KEY`）。结果归一成 `{title,url,snippet,content,date,site}`，每条生成 `web:<query-hash>:<n>` 的可引用 source；`content` 截断到 1000 字。`web_search` 在 `UNCACHED_TOOLS` 里。前端靠 source id 的 `web:` 前缀把这类引用标成「网页」（来源列表、悬停卡、来源详情侧栏），点正文角标直接新标签打开原文；改前缀会丢标记和跳转。
+- 交易工具（Python 侧没有，schema 手写追加在 `tool-schemas.json` 末尾）：`get_trading_state`（读当日账户/计划/成交/复盘，有 `date` 参数）、`save_trade_plan`（`trade_date`、`phase`=pre_market/midday、`notes`、`items[]`，BUY 必须 `stop_loss < trigger_price < take_profit`）、`save_trading_journal`（`phase`、`summary`、`lessons`、`changes`）。只进 `tradingToolRegistry`（聊天 33 + 3），聊天的 `toolRegistry` 不含它们。
 
 ### 3.3 参数与钳位
 

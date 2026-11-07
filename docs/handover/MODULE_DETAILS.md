@@ -27,7 +27,7 @@
 | --- | --- | --- |
 | `AgentEngine` | 装配 `HarnessAgent`；把 AgentScope 事件映射成 SSE/运行记录；引用校验；工具缓存 | `AskResult ask(long, String code, String name, String question, StreamListener)`、`deleteSession(long)`；`UNCACHED_TOOLS`（17 个）、`CompanyPromptMiddleware(order=100)` |
 | `AgentFactory` | 用 `ModelRegistry.resolve(model, apiKey)` 创建引擎 | `static AssistantEngine create(ToolRegistry, AgentProperties, String apiKey)` |
-| `AgentProperties` | 模型/skill/数据目录/轮次 | record `(model, skillsDir, dataDir, maxTurns)`；默认 `deepseek:deepseek-v4-flash`、`skills`、`data`、`10` |
+| `AgentProperties` | 模型/skill/数据目录/轮次/提示词 | record `(model, skillsDir, dataDir, maxTurns, promptResource, fullTrace)`（4 参便捷构造器保留）；默认 `deepseek:deepseek-v4-flash`、`skills`、`data`、`10`、`/prompts/system.md`、`false` |
 | `AssistantEngine` | 引擎接口 | `ask(...)`、`deleteSession(...)` |
 | `AskResult` | 一次问答结果 | record `(text, sources, trace, issues, run, raw)` |
 | `EngineFailure` | 带运行记录的引擎异常 | `RunRecord run()` |
@@ -65,6 +65,21 @@
 | 33 个具体工具 | 见 `API_AND_INTERFACE.md` §3.3；`CalcValuationTool` 支持 check/scenario/terminal；`WebSearchTool` 是唯一非 Python 移植工具 |
 
 公司类工具的参数默认值与钳位统一写在各自的 `CompanyTool` 子类里（见 `API_AND_INTERFACE.md` 表）。
+
+### 1.3.1 `core.trading`
+
+| 类 | 职责 | 关键成员 |
+| --- | --- | --- |
+| `TradingRules` | 交易规则常量 | 一手 100 股、最多 5 只、单票不超过 20%、佣金万 2.5（最低 5 元）、印花税千 1（仅卖出）、T+1 |
+| `MarketSession` | 交易时段判断 | `inContinuousTrading`（09:30–11:30、13:00–15:00）、`inCatchUpWindow`（09:25–14:30）、`ZONE=Asia/Shanghai` |
+| `TradingService` | 阶段编排：组上下文 → 调引擎 → 落阶段/计划/复盘/权益 | `runPhase(LocalDate, TradingPhase, StreamListener)` |
+| `TradingExecutor` | 盘中按计划成交 | `tick(LocalDate, Instant)`；限价/止损/止盈触发 → claim 计划项 → 账户/持仓/成交；`PERSIST_INTERVAL_MS=60_000` 才落一次 tick |
+| `TradingDayGate` | 交易日门禁 | `status(date)`（探测并缓存）、`probe`、`markHoliday`、`cachedStatus`（页面用，不探测） |
+| `TradingContext` | 交易 Agent 的提示词/工具上下文 | 系统提示词 `prompts/trading.md`、账户/持仓/计划的只读摘要 |
+| `TradingView` | 页面只读视图组装（不触发上游） | `state/dates/equitySeries/phase` |
+| `QuoteCache` | 盘中最近一次报价（仅今天页面估值用） | `update/latest/byCode` |
+| 交易工具 | `get_trading_state`、`save_trade_plan`、`save_trading_journal` | schema 手写在 `tool-schemas.json` 末尾（Python 侧没有） |
+| `core.domain.trade.*` | `TradeAccount/Position/TradePlan/PlanItem/TradeOrder/JournalEntry/PhaseRecord/TickRecord/EquitySnapshot/Quote/Side/ItemStatus/ItemSource/TradingPhase` | 金额统一 `long` 分 |
 
 ### 1.4 `core.research`（纯函数，与 Python 逐条对齐）
 
@@ -148,6 +163,7 @@
 - MyBatis-Plus：`BaseMapper` 做 CRUD，`@TableId(INPUT)`（仅 `ConversationEntity` 用 AUTO）；`StockMasterSync` 与 `PeerAdapter` 用 `insertOrUpdate`；复合主键表（`val_*`、`biz_segment`、`fin_*`、`company_profile`）用 `TransactionTemplate` 里 delete+insert。
 - `JdbcTemplate` 存储：`ResearchCacheStore`（白名单表名，`ResearchCache` 枚举 10 项）、`DailyReportStore`、`ResearchMemoryStore`、`KlineDailyStore`（`kline_daily`，按 `code + trade_date` upsert）。
 - `ConversationRepositoryImpl`：`create/find/recent/messages/append/updateUsage/delete`；`append` 在事务里用 `INSERT ... SELECT MAX(seq)+1 ... RETURNING seq` 取序号并 touch 会话；读消息时跳过无法解析的 payload。
+- `TradingRepositoryImpl`（`TradingRepository`）：交易 9 张表的读写；成交用条件 UPDATE `claim`（`PENDING → FILLED`）保证同一计划项只成交一次；`expirePendingItems` 收盘作废过期委托；`markRunningPhasesError` 在启动时清理中断阶段。
 
 ### 2.4 定时任务
 
@@ -170,13 +186,18 @@
 | `MemoryImportRunner` | `APP_MEMORY_IMPORT` 导入 |
 | `TracingConfig` | `OTEL_EXPORTER_OTLP_ENDPOINT` 存在且未 `OTEL_SDK_DISABLED` 时建 `SdkTracerProvider`（BatchSpanProcessor + OTLP/HTTP），注册到 `GlobalOpenTelemetry`，停机 `close()` 刷队列；留空则完全不建 SDK |
 | `SecurityConfig` / `TokenAuthFilter` / `ApiTokenProperties` | 令牌鉴权；无状态；401 JSON |
+| `TradingController` | `/api/trading/state|dates|equity|phases/{id}` 与 `/stream`（SSE）；未知阶段 → 404 |
+| `TradingConfig` | 交易侧全部 Bean；`tradingToolRegistry` / `tradingEngine` 用 `@Bean(defaultCandidate = false)` 避免与聊天侧同类型 bean 冲突；`TradingProperties` 默认 enabled/10s/15min |
+| `TradingScheduler` | `@Scheduled`：盘前 09:25–09:45 探测、午盘 11:35、收盘 15:05、盘中按 `poll-seconds`；单线程阶段 executor + 超时；启动补跑；报价连续失败 3 次退避 60s |
+| `TradingBroadcaster` | 交易 SSE 广播；订阅即发一帧心跳把响应头刷出去；无订阅者时丢弃 |
+| `TradingProperties` | `app.trading.enabled|poll-seconds|phase-timeout-minutes` |
 
 ## 4. 前端（`frontend/`）
 
 | 文件 | 关键点 |
 | --- | --- |
-| `app.js` | 令牌 `localStorage["ir_token"]` + 401 重试；markdown + DOMPurify + `[[id]]` 渲染；`ChatPane`；运行详情 timeline/prompt/context 三个标签；档案页只读；`KlineChart`（SVG 蜡烛 + 成交量 + MA5/10/20），跟随左侧会话公司，悬停显示 OHLC/量额；一次取 500 根，默认窗口最近 120 根，拖动平移、滚轮缩放、双击回到最新；左边缘可拖宽（`localStorage["klineWidth"]`） |
-| `index.html` | 左会话列表、分栏聊天、档案页、全局来源侧栏、`<chat-pane>` 模板、运行详情面板 |
+| `app.js` | 令牌 `localStorage["ir_token"]` + 401 重试；markdown + DOMPurify + `[[id]]` 渲染；`ChatPane`；运行详情 timeline/prompt/context 三个标签；档案页只读；交易页（计划/阶段/持仓/成交/复盘/tick，SSE 实时思考与引用弹层）；`KlineChart`（SVG 蜡烛 + 成交量 + MA5/10/20），跟随左侧会话公司，悬停显示 OHLC/量额；一次取 500 根，默认窗口最近 120 根，拖动平移、滚轮缩放、双击回到最新；左边缘可拖宽（`localStorage["klineWidth"]`） |
+| `index.html` | 左会话列表、分栏聊天、档案页、系统监控、交易页、全局来源侧栏、`<chat-pane>` 模板、运行详情面板 |
 | `boot.js` | 启动视频，Esc/空格/回车跳过，12s 兜底，5s 卡顿检测 |
 | `styles.css` | 全部样式 |
 | `assets/` | 本地内置 Vue/marked/DOMPurify + 启动视频 |

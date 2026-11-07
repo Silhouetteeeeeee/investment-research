@@ -28,7 +28,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 
 ## 3. 测试清单
 
-### core（17 类 + 1 个假模型，127 个用例）
+### core（27 类 + 1 个假模型，184 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -51,10 +51,19 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `tool/WebSearchToolTest` | 3 | 空 query 拒绝、去空白、count 钳到 1..10 |
 | `adapter/search/WebSearchAdapterTest` | 5 | 百度成功、429 回落 DeepSeek、无百度 key 直连 DS、两家都失败、无 key 报错 |
 | `valuation/ValuationMathTest` | 3 | 非法增长/ROIC、Decimal 算术参照 |
+| `trading/TradingRulesTest` | 7 | 佣金/印花税/整手、T+1、限价与止损止盈触发、成本与已实现盈亏、权益/当日盈亏 |
+| `trading/MarketSessionTest` | 1 | 连续竞价时段与补跑窗口 |
+| `trading/TradingDayGateTest` | 4 | 昨日报价=未确认、今日报价=交易日并缓存、已标休市、上游异常不误判休市 |
+| `trading/TradingExecutorTest` | 10 | 限价买入、止损/止盈卖出、T+1 可卖、资金/持仓上限、整手与重复 claim、过期委托、tick 落库节流 |
+| `trading/TradingServiceTest` | 6 | 盘前必须提交计划、午盘/收盘复盘、收盘权益快照先写、引擎失败落 ERROR、run 记录 |
+| `trading/TradingViewTest` | 6 | 空态不探测上游、历史日读快照、当日优先级、未知阶段 404 语义 |
+| `tool/GetTradingStateToolTest` | 3 | 当日/指定日、无数据 |
+| `tool/SaveTradePlanToolTest` | 11 | 参数校验、BUY 止损<限价<止盈、整手、午盘不能新增 BUY、暂存与落库时机 |
+| `tool/SaveTradingJournalToolTest` | 3 | 阶段必填、正文落库、缺阶段拒绝 |
 
 `ScriptedModel`（无 `@Test`）是测试用假模型：按脚本返回文本/工具调用，并记录收到的消息，供 Agent 循环类测试使用。
 
-### data（31 类，134 个执行用例）
+### data（33 类，146 个执行用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -77,10 +86,12 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `persistence/ConversationRepositoryTest` | 6 | 往返、搜索/排序、有序消息扁平化、级联删除、坏 payload 跳过、新库 schema |
 | `persistence/DailyReportStoreTest` | 4 | 同日覆盖、最新优先、缺 trade_date 拒绝、坏 payload 跳过 |
 | `persistence/ResearchCacheStoreTest` | 3 | 只按 code 的往返/覆盖、带 key 表、notes key |
+| `persistence/TradingRepositoryImplTest` | 8 | 账户/持仓/计划项往返、条件 claim 只成交一次、过期委托、阶段 upsert 与启动清理、tick/权益快照、新建库 schema |
+| `market/SinaStockQuoteAdapterTest` | 4 | 33 字段解析、停牌/缺字段、批量代码、上游失败 |
 | `upstream/RecordedFixtureTest` | 2 | 118 个录制映射可回放解码；56 页股票列表覆盖全 A 股 |
 | `upstream/UpstreamClientTest` | 7 | 字符集、500 重试、404 不重试、查询串/头脱敏、信号量不死锁、UTF-8 默认 |
 
-### app（22 类，81 个用例）
+### app（26 类，100 个用例；另有 `LiveSkillSmoke`、`QuestionBankEval` 默认不跑）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -106,6 +117,9 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `AssistantEngineFallbackTest` | 1 | 缺 key 时 `UnavailableEngine` |
 | `config/TracingConfigTest` | 5 | endpoint 为空/`OTEL_SDK_DISABLED=true` 不建 SDK、endpoint 存在建 SDK、采样率非法回退、`/v1/traces` 只补一次 |
 | `ModuleBoundaryTest` | 4 个 `@ArchTest` | `core` 不依赖 data/app、`data` 不依赖 app、`core` 无 Web/MyBatis/JDBC、AgentScope 限于 `core.agent` |
+| `api/TradingControllerTest` | 4 | state/dates/equity JSON、未知阶段 404、SSE 首帧心跳 |
+| `trading/TradingSchedulerTest` | 12 | 非交易日不跑、09:45 未确认标休市、盘前失败只重试一次、盘中时段与门禁、报价失败退避、启动补跑、阶段不重叠、收盘先作废再复盘、启动清理 RUNNING |
+| `TradingWiringTest` | 3 | 聊天 33 / 交易 36 个工具、交易引擎使用 `trading.md`、调度/视图/广播 bean 齐全且默认配置正确 |
 
 ## 4. 夹具与金标准
 

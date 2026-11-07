@@ -16,6 +16,19 @@
 | 8 | MySQL 方言迁移、Testcontainers、Redis/RabbitMQ 实际接入 | 计划实现（阶段 4） | 迁移设计「阶段 4」；无代码 | 见 §5 |
 | 9 | 应用日志 JSON、指标、Tracing、OTLP | 部分实现（阶段 4） | `/api/**` 审计日志已写 `var/logs/audit.log`（JSON Lines）；指标走 Micrometer/`/api/metrics`；OTel traces 按需经 OTLP/HTTP 导出（`TracingConfig` + AgentScope `OtelTracingMiddleware`，需 `OTEL_EXPORTER_OTLP_ENDPOINT`）；应用日志仍非 JSON，日志里没有 traceId | 见 §5 |
 
+### 1.1 模拟交易（2026-11-07）
+
+| # | 问题 | 状态 | 证据 | 影响 |
+| --- | --- | --- | --- | --- |
+| T1 | 成交按报价直接全成/全不成，无滑点、无部分成交、无盘口深度 | 已确认（模拟盘设计） | `TradingExecutor` | 收益偏乐观；只适合看流程与策略纪律 |
+| T2 | 盘前候选依赖基本面工具与模型判断，可能一天都不出计划（「今天不交易」也是合法结论） | 已确认 | `TradingService`；`save_trade_plan` 允许空 items | 空计划日没有成交，不是故障 |
+| T3 | 交易日判定依赖新浪报价日期；周末不探测，页面显示「交易日未确认」而非「休市」 | 已确认 | `TradingDayGate`、`TradingScheduler` 的 MON-FRI cron | 行为等价（不运行），只是文案 |
+| T4 | 9:30 前拿到的报价可能是昨收/集合竞价，报价日期刷新时点取决于上游 | 待确认 | 需真实交易日观察 | 极端情况下门禁要多等几个 5 分钟窗口 |
+| T5 | 阶段超时只中断线程，若引擎不响应中断仍可能残留半成品（阶段已标 ERROR） | 已确认 | `TradingScheduler.runPhase` | 唯一副作用是可能多一次上游调用 |
+| T6 | 交易页无自动化测试；SSE/思考流只能人工看 | 已确认 | Task 14 手测记录 | 前端回归靠人工 |
+| T7 | 交易无手续费之外的税费/融资成本，T+1 只按「今日买入」数量扣减可用 | 已确认（模拟盘简化） | `TradingRules` | 与真实券商略有差异 |
+| T8 | 多实例部署时会重复调度 | 已确认（单实例前提） | `TradingScheduler` 无分布式锁 | 与迁移设计「单实例前提」一致 |
+
 ## 2. 已知缺陷与技术债
 
 ### 2.1 阶段 3 评审记录、已决定延期（不要当新问题修）
