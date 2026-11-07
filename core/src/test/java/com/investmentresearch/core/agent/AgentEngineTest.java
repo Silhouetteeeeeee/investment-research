@@ -397,6 +397,9 @@ class AgentEngineTest {
         List<Map<String, Object>> stages =
                 (List<Map<String, Object>>) payload.get("stages");
         assertThat(stages).isNotEmpty();
+        assertThat(failure.raw()).isNotEmpty();
+        assertThat(failure.trace()).isNotEmpty();
+        assertThat(failure.sources()).extracting(Source::id).containsExactly("profile:605499");
     }
 
     private AgentEngine engine(Model model, ResearchTool... tools) {

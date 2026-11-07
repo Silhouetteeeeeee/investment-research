@@ -218,7 +218,13 @@ public final class AgentEngine implements AssistantEngine {
             // 运行记录先收尾再抛，前端失败消息也能展开时间线（agent.py:720-723）
             recorder.finish("error", message);
             // 不再自己加前缀：AskService 会拼"研究失败："，加两层就成"研究失败：回答生成失败：…"
-            throw new EngineFailure(message, recordedRun(recorder, issues), error);
+            throw new EngineFailure(
+                    message,
+                    recordedRun(recorder, issues),
+                    error,
+                    List.copyOf(state.raw),
+                    List.copyOf(state.sources.values()),
+                    List.copyOf(state.trace));
         }
     }
 
