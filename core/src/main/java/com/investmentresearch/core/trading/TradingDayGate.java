@@ -72,4 +72,15 @@ public final class TradingDayGate {
     public void markHoliday(LocalDate date) {
         rejected.set(date);
     }
+
+    /** 只读已判定的状态，不触发上游探测；页面读状态时用。 */
+    public Status cachedStatus(LocalDate date) {
+        if (date.equals(confirmed.get())) {
+            return Status.TRADING;
+        }
+        if (date.equals(rejected.get())) {
+            return Status.HOLIDAY;
+        }
+        return Status.UNCONFIRMED;
+    }
 }

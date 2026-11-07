@@ -13,7 +13,11 @@ import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.core.tool.ToolSchemas;
 import com.investmentresearch.core.trading.QuoteCache;
 import com.investmentresearch.core.trading.TradingContext;
+import com.investmentresearch.core.trading.TradingDayGate;
 import com.investmentresearch.core.trading.TradingService;
+import com.investmentresearch.core.trading.TradingView;
+import com.investmentresearch.app.trading.TradingBroadcaster;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.List;
@@ -35,6 +39,29 @@ public class TradingConfig {
     @Bean
     public QuoteCache quoteCache() {
         return new QuoteCache();
+    }
+
+    @Bean
+    public Clock tradingClock() {
+        return Clock.systemDefaultZone();
+    }
+
+    @Bean
+    public TradingDayGate tradingDayGate(QuotePort quotes) {
+        return new TradingDayGate(quotes, tradingClock());
+    }
+
+    @Bean
+    public TradingView tradingView(
+            TradingRepository repository,
+            TradingDayGate gate,
+            QuoteCache quotes) {
+        return new TradingView(repository, gate, quotes, tradingClock());
+    }
+
+    @Bean
+    public TradingBroadcaster tradingBroadcaster(ObjectMapper json) {
+        return new TradingBroadcaster(json);
     }
 
     /** 与聊天 registry 同类型，但不参与无限定符的按类型注入。 */
@@ -72,8 +99,9 @@ public class TradingConfig {
             TradingRepository repository,
             @Qualifier("tradingEngine") AssistantEngine engine,
             TradingContext context,
-            QuoteCache quotes) {
-        return new TradingService(repository, engine, context, quotes, Clock.systemDefaultZone());
+            QuoteCache quotes,
+            Clock clock) {
+        return new TradingService(repository, engine, context, quotes, clock);
     }
 
     private static AgentProperties tradingProperties(Environment environment) {

@@ -32,6 +32,7 @@ public final class TradingToolTestSupport {
         private final List<JournalEntry> journals = new ArrayList<>();
         private final List<PhaseRecord> phases = new ArrayList<>();
         private final Map<String, EquitySnapshot> equity = new LinkedHashMap<>();
+        private final Map<String, TickRecord> ticks = new LinkedHashMap<>();
         private long nextId = 1;
 
         @Override
@@ -272,12 +273,12 @@ public final class TradingToolTestSupport {
 
         @Override
         public TickRecord latestTick(String tradeDate) {
-            return null;
+            return ticks.get(tradeDate);
         }
 
         @Override
         public void saveTick(TickRecord tick) {
-            throw new UnsupportedOperationException();
+            ticks.put(tick.tradeDate(), tick);
         }
 
         @Override
