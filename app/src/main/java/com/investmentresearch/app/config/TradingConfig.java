@@ -14,20 +14,24 @@ import com.investmentresearch.core.tool.ToolSchemas;
 import com.investmentresearch.core.trading.QuoteCache;
 import com.investmentresearch.core.trading.TradingContext;
 import com.investmentresearch.core.trading.TradingDayGate;
+import com.investmentresearch.core.trading.TradingExecutor;
 import com.investmentresearch.core.trading.TradingService;
 import com.investmentresearch.core.trading.TradingView;
 import com.investmentresearch.app.trading.TradingBroadcaster;
+import com.investmentresearch.app.trading.TradingScheduler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-/** 交易 Agent 的装配；执行器、调度器、页面 bean 在后续任务里追加。 */
+/** 交易 Agent 的装配。 */
 @Configuration
+@EnableConfigurationProperties(TradingProperties.class)
 public class TradingConfig {
     private static final String MISSING_KEY = "请先设置环境变量 DEEPSEEK_API_KEY";
 
@@ -62,6 +66,24 @@ public class TradingConfig {
     @Bean
     public TradingBroadcaster tradingBroadcaster(ObjectMapper json) {
         return new TradingBroadcaster(json);
+    }
+
+    @Bean
+    public TradingExecutor tradingExecutor(
+            TradingRepository repository, QuotePort quotes, QuoteCache cache) {
+        return new TradingExecutor(repository, quotes, cache, tradingClock());
+    }
+
+    @Bean
+    public TradingScheduler tradingScheduler(
+            TradingService service,
+            TradingExecutor executor,
+            TradingDayGate gate,
+            TradingRepository repository,
+            TradingBroadcaster broadcaster,
+            TradingProperties props) {
+        return new TradingScheduler(
+                service, executor, gate, repository, broadcaster, props, tradingClock());
     }
 
     /** 与聊天 registry 同类型，但不参与无限定符的按类型注入。 */

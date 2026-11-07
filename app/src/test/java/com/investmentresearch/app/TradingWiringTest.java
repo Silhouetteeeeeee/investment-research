@@ -3,11 +3,17 @@ package com.investmentresearch.app;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.investmentresearch.app.config.AssistantConfig;
+import com.investmentresearch.app.config.TradingProperties;
+import com.investmentresearch.app.trading.TradingBroadcaster;
+import com.investmentresearch.app.trading.TradingScheduler;
 import com.investmentresearch.core.agent.AssistantEngine;
 import com.investmentresearch.core.domain.ToolSchema;
 import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.core.trading.TradingContext;
+import com.investmentresearch.core.trading.TradingDayGate;
+import com.investmentresearch.core.trading.TradingExecutor;
 import com.investmentresearch.core.trading.TradingService;
+import com.investmentresearch.core.trading.TradingView;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +58,13 @@ class TradingWiringTest {
     @Qualifier("tradingEngine")
     AssistantEngine tradingEngine;
 
+    @Autowired TradingExecutor tradingExecutor;
+    @Autowired TradingScheduler tradingScheduler;
+    @Autowired TradingView tradingView;
+    @Autowired TradingBroadcaster tradingBroadcaster;
+    @Autowired TradingDayGate tradingDayGate;
+    @Autowired TradingProperties tradingProperties;
+
     @Test
     void trading_registry_extends_chat_tools_with_three_trading_tools() {
         // chat 注册 33 个工具（JSON 里的 load_skill 由框架提供，不在 registry 里）
@@ -67,5 +80,16 @@ class TradingWiringTest {
         assertThat(tradingContext).isNotNull();
         assertThat(tradingService).isNotNull();
         assertThat(tradingEngine).isInstanceOf(AssistantConfig.UnavailableEngine.class);
+    }
+
+    @Test
+    void scheduler_executor_view_and_broadcaster_are_wired() {
+        assertThat(tradingExecutor).isNotNull();
+        assertThat(tradingScheduler).isNotNull();
+        assertThat(tradingView).isNotNull();
+        assertThat(tradingBroadcaster).isNotNull();
+        assertThat(tradingDayGate).isNotNull();
+        assertThat(tradingProperties.enabled()).isTrue();
+        assertThat(tradingProperties.pollSeconds()).isEqualTo(10);
     }
 }
