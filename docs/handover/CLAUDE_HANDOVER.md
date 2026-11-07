@@ -73,7 +73,7 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 - 模型：`AgentProperties.DEFAULT_MODEL` 或配置项（`AgentProperties` 由 `AssistantConfig` 从环境构造）。
 - 轮次：`DEFAULT_MAX_TURNS`；强制作答轮不计入轮数的逻辑在 `AgentEngine.handleEvent` 的 `EXCEED_MAX_ITERS` 分支。
-- 压缩：`AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(80_000))`；同时看 `ContextMeter.HARD_TOKENS`。
+- 压缩：`AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(properties.compactionTokens()))`（`AgentProperties` 默认 80_000，交易引擎 120_000）；同时看 `ContextMeter.HARD_TOKENS`。
 
 ## 6. 容易踩的坑
 

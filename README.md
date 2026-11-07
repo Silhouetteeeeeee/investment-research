@@ -135,7 +135,7 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
   `{"type":"error","text":"助手不可用：请先设置环境变量 DEEPSEEK_API_KEY"}` 且没有
   `conversation_id`。与 Python 版不同，Java 不预先建会话、不保存这条用户消息，
   所以刷新页面后该问题不在历史里。
-- 上下文压缩只配置了 `triggerTokens(80_000)`，没有移植 Python 的完整压缩策略。
+- 上下文压缩只配置了 `triggerTokens`（聊天默认 80_000，交易引擎 120_000），没有移植 Python 的完整压缩策略。
 - 运行记录缺少 `stream`、`message_count`、`input_chars`、`system_share`、`tool_share`、
   `system_prompt_hash`、`tools_hash`；详情页因此不显示流式标记，并会出现
   “消息 0 条 · system 0%”。`prompts`、`skills`、`calls` 目前也只保留空数组。

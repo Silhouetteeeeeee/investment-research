@@ -6,7 +6,7 @@
 
 | # | 问题 | 状态 | 证据 | 建议 |
 | --- | --- | --- | --- | --- |
-| 1 | 上下文压缩只配了 `triggerTokens(80_000)`，没有 Python 的 55k 软阈值摘要与裁剪 | 已确认（有意简化） | `AgentEngine`、`ContextMeter`；README「已知差异」 | 若要追平，需要事件映射到摘要步骤；成本高，先不动 |
+| 1 | 上下文压缩只配了 `triggerTokens`（默认 80_000、交易 120_000），没有 Python 的 55k 软阈值摘要与裁剪 | 已确认（有意简化） | `AgentEngine`、`ContextMeter`；README「已知差异」 | 若要追平，需要事件映射到摘要步骤；成本高，先不动 |
 | 2 | 运行记录缺 `stream`、`message_count`、`input_chars`、`system_share`、`tool_share`、`system_prompt_hash`、`tools_hash`；`prompts`/`skills`/`calls` 恒为空数组 | 已确认 | `RunRecorder`；README 已知差异 | 详情页因此显示「消息 0 条 · system 0%」，需要时补字段 |
 | 3 | `fin_disclosure` 表没有任何写入者，披露触发的财报刷新不会生效 | 已确认 | `FinanceAdapter.java:46` 注释 | 要么接 `stock/disclosure_service.py`，要么删掉这段逻辑 |
 | 4 | `XQ_TOKEN` / 雪球数据未接入 | 已确认 | 全仓无代码读取；仅 `.env.example`/`compose.yaml`/README | 明确从范围内移除或补实现 |

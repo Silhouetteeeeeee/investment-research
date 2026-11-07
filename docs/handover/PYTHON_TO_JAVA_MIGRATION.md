@@ -85,7 +85,7 @@ Python 有四个 SQLite：
 
 | 差异 | Python | Java | 判断 |
 | --- | --- | --- | --- |
-| 上下文压缩 | 55k 软阈值摘要 + 80k 硬阈值裁剪 | 只有 `triggerTokens(80_000)` | 有意简化，README 已记 |
+| 上下文压缩 | 55k 软阈值摘要 + 80k 硬阈值裁剪 | 只有 `triggerTokens`（聊天 80_000、交易 120_000） | 有意简化，README 已记 |
 | 运行记录字段 | 含 `stream`、`message_count`、`input_chars`、`system_share`、`tool_share`、`system_prompt_hash`、`tools_hash` | 缺失；`prompts`/`skills`/`calls` 多为空数组 | 已知差异 |
 | token 用量 | 有 usage 用真实值，否则估算 | 同思路，`usage_source` 标注 | 一致 |
 | 公司概况缓存 TTL | 按来源规则 | 30 天（`CompanyProfileAdapter`） | 待确认是否有意 |

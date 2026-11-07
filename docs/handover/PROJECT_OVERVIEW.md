@@ -41,7 +41,7 @@ Python 仓库**保持不动**，作为金标准对照基准（含 `data/stock.db
 | 阶段 5 | 切换：云服务器部署、Python 版停服、保留金标准夹具 | **计划实现** | 未开始 |
 | 交易 Agent | 模拟交易：V13 九张表、3 个交易工具、阶段调度与交易日门禁、盘中轮询、`/api/trading/*`、交易页 | **已实现** | 分支 `feat/trading-agent`；`TradingRulesTest`、`TradingExecutorTest`、`TradingSchedulerTest`、`TradingViewTest`、`TradingControllerTest` |
 
-当前分支 `main`，HEAD 见 `git log`。`./mvnw verify` 现状：core 184 / data 146 / app 100 全绿（2026-11-07）。
+当前分支 `feat/trading-agent`，HEAD 见 `git log`。`./mvnw verify` 现状：core 191 / data 146 / app 106 全绿（2026-11-07）。
 
 ## 4. 技术栈
 
@@ -90,7 +90,7 @@ investment-research/
 
 ## 7. 已知差异（详见 `TODO_AND_KNOWN_ISSUES.md`）
 
-- 上下文压缩只配置了 `triggerTokens(80_000)`，未移植 Python 的完整裁剪策略。
+- 上下文压缩只配置了 `triggerTokens`（聊天默认 80_000、交易引擎 120_000），未移植 Python 的完整裁剪策略。
 - 运行记录缺 `stream`、`message_count`、`system_prompt_hash`、`tools_hash` 等字段，详情页部分信息为空。
 - token 用量多数按估算（`usage_source: "estimate"`），不是计费依据。
 - 缺 `DEEPSEEK_API_KEY` 时不建会话、不落历史。

@@ -217,7 +217,7 @@ flowchart LR
 
 ### 5.2 上下文占用
 
-`ContextMeter.usage` = `FIXED_TOKENS`（system.md + tool-schemas.json 的固定成本）+ 消息文本估算 + 每消息 4 tokens 开销 ×（消息数+2）+ 当前草稿估算。预算 `BUDGET_TOKENS=55_000`，硬上限 `HARD_TOKENS=80_000`（只上报，实际由 harness `triggerTokens(80_000)` 触发压缩）。SSE 的 `meter` 事件按 ≥400ms 节流。
+`ContextMeter.usage` = `FIXED_TOKENS`（system.md + tool-schemas.json 的固定成本）+ 消息文本估算 + 每消息 4 tokens 开销 ×（消息数+2）+ 当前草稿估算。预算 `BUDGET_TOKENS=55_000`，硬上限 `HARD_TOKENS=80_000`（只上报，实际由 harness `triggerTokens(properties.compactionTokens())` 触发压缩；聊天默认 80_000，交易引擎 120_000）。SSE 的 `meter` 事件按 ≥400ms 节流。
 
 ### 5.3 会话切换
 

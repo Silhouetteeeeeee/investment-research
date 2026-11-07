@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（2026-11-01 接入 OpenTelemetry 后）：`./mvnw verify` 通过，**core 130 / data 134 / app 81**；`spotless:check` 退出 0。新增覆盖：`TracingConfigTest`（endpoint 为空/SDK 关闭时不建 SDK、endpoint 存在时建 SDK、采样率非法回退、`/v1/traces` 只补一次）；此前 `AskControllerTest.sse_timeout_interrupts_the_background_worker`（超时取消 `FutureTask` 并中断工作线程）；此前的 `KlineAdapterTest`（腾讯优先、东财 qfq 兜底、当日缓存、收盘后刷新、全挂回退旧缓存）、`StockChartControllerTest`（days 钳位、404/502）、`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest` 仍在。另有 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-11-01 接入 OpenTelemetry 后）：`./mvnw verify` 通过，**core 130 / data 134 / app 81**；`spotless:check` 退出 0。交易分支整分支评审修复后（2026-11-07）：**core 191 / data 146 / app 106**，`spotless:check` 退出 0。新增覆盖：`TracingConfigTest`（endpoint 为空/SDK 关闭时不建 SDK、endpoint 存在时建 SDK、采样率非法回退、`/v1/traces` 只补一次）；此前 `AskControllerTest.sse_timeout_interrupts_the_background_worker`（超时取消 `FutureTask` 并中断工作线程）；此前的 `KlineAdapterTest`（腾讯优先、东财 qfq 兜底、当日缓存、收盘后刷新、全挂回退旧缓存）、`StockChartControllerTest`（days 钳位、404/502）、`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest` 仍在。另有 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
 
 ## 2. 测试分层
 
@@ -28,11 +28,12 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 
 ## 3. 测试清单
 
-### core（27 类 + 1 个假模型，184 个用例）
+### core（28 类 + 1 个假模型，191 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
-| `agent/AgentEngineTest` | 14 | 流式顺序、大盘无默认公司、运行记录落盘、skill 加载、引用清洗、会话复用、缓存/不缓存、未知工具、轮次用尽、工具异常、参数校验失败 trace、失败运行记录 |
+| `agent/AgentEngineTest` | 16 | 流式顺序、大盘无默认公司、运行记录落盘、skill 加载、引用清洗、会话复用、缓存/不缓存、未知工具、轮次用尽、工具异常、参数校验失败 trace、失败运行记录（含失败前思考） |
+| `agent/AgentPropertiesTest` | 2 | 聊天默认压缩 80k、交易引擎可配 120k |
 | `agent/ToolCallCacheTest` | 7 | 会话隔离、key 规范化、cached 标记、清理范围、每会话 LRU 容量、会话数上限、TTL 过期 |
 | `citation/CitationValidatorTest` | 16 | 已知/未知/重复 id、无引用数字、嵌套、裁剪、大小写、Unicode 数字、null |
 | `domain/ToolResultTest` | 6 | 字段省略、cached note、失败形状、Python 数值/字符串表示、工具消息金标准 |
@@ -54,10 +55,10 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `trading/TradingRulesTest` | 7 | 佣金/印花税/整手、T+1、限价与止损止盈触发、成本与已实现盈亏、权益/当日盈亏 |
 | `trading/MarketSessionTest` | 1 | 连续竞价时段与补跑窗口 |
 | `trading/TradingDayGateTest` | 4 | 昨日报价=未确认、今日报价=交易日并缓存、已标休市、上游异常不误判休市 |
-| `trading/TradingExecutorTest` | 10 | 限价买入、止损/止盈卖出、T+1 可卖、资金/持仓上限、整手与重复 claim、过期委托、tick 落库节流 |
-| `trading/TradingServiceTest` | 6 | 盘前必须提交计划、午盘/收盘复盘、收盘权益快照先写、引擎失败落 ERROR、run 记录 |
-| `trading/TradingViewTest` | 6 | 空态不探测上游、历史日读快照、当日优先级、未知阶段 404 语义 |
-| `tool/GetTradingStateToolTest` | 3 | 当日/指定日、无数据 |
+| `trading/TradingExecutorTest` | 11 | 限价买入、止损/止盈卖出、T+1 可卖、资金/持仓上限、20% 上限按最新报价估值、整手与重复 claim、过期委托、tick 落库节流 |
+| `trading/TradingServiceTest` | 7 | 盘前必须提交计划、午盘/收盘复盘、复盘缺失不提交暂存计划、收盘权益快照先写、引擎失败落 ERROR、run 记录 |
+| `trading/TradingViewTest` | 7 | 空态不探测上游、历史日读快照、当日优先级、未知阶段 404 语义、经验档案带日期与引用 |
+| `tool/GetTradingStateToolTest` | 4 | 当日/指定日、无数据、日盈亏基准取本日之前快照 |
 | `tool/SaveTradePlanToolTest` | 11 | 参数校验、BUY 止损<限价<止盈、整手、午盘不能新增 BUY、暂存与落库时机 |
 | `tool/SaveTradingJournalToolTest` | 3 | 阶段必填、正文落库、缺阶段拒绝 |
 
@@ -91,7 +92,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `upstream/RecordedFixtureTest` | 2 | 118 个录制映射可回放解码；56 页股票列表覆盖全 A 股 |
 | `upstream/UpstreamClientTest` | 7 | 字符集、500 重试、404 不重试、查询串/头脱敏、信号量不死锁、UTF-8 默认 |
 
-### app（26 类，100 个用例；另有 `LiveSkillSmoke`、`QuestionBankEval` 默认不跑）
+### app（26 类，106 个用例；另有 `LiveSkillSmoke`、`QuestionBankEval` 默认不跑）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -117,9 +118,9 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `AssistantEngineFallbackTest` | 1 | 缺 key 时 `UnavailableEngine` |
 | `config/TracingConfigTest` | 5 | endpoint 为空/`OTEL_SDK_DISABLED=true` 不建 SDK、endpoint 存在建 SDK、采样率非法回退、`/v1/traces` 只补一次 |
 | `ModuleBoundaryTest` | 4 个 `@ArchTest` | `core` 不依赖 data/app、`data` 不依赖 app、`core` 无 Web/MyBatis/JDBC、AgentScope 限于 `core.agent` |
-| `api/TradingControllerTest` | 4 | state/dates/equity JSON、未知阶段 404、SSE 首帧心跳 |
-| `trading/TradingSchedulerTest` | 12 | 非交易日不跑、09:45 未确认标休市、盘前失败只重试一次、盘中时段与门禁、报价失败退避、启动补跑、阶段不重叠、收盘先作废再复盘、启动清理 RUNNING |
-| `TradingWiringTest` | 3 | 聊天 33 / 交易 36 个工具、交易引擎使用 `trading.md`、调度/视图/广播 bean 齐全且默认配置正确 |
+| `api/TradingControllerTest` | 6 | state/dates/equity JSON、未知阶段 404、经验档案默认/指定条数、SSE 首帧心跳 |
+| `trading/TradingSchedulerTest` | 15 | 非交易日不跑、09:45 未确认标休市、未确认时每个窗口重探、盘前失败只重试一次且按天重置、盘中时段与门禁、报价失败退避、启动补跑（含失败后补跑）、阶段不重叠、收盘先作废再复盘、启动清理 RUNNING |
+| `TradingWiringTest` | 4 | 聊天 33 / 交易 36 个工具、交易引擎使用 `trading.md`、交易时钟固定 Asia/Shanghai、调度/视图/广播 bean 齐全且默认配置正确 |
 
 ## 4. 夹具与金标准
 
