@@ -110,6 +110,16 @@ function fileSize(bytes) {
   return `${n}B`;
 }
 
+// 阶段 payload 里的 raw/run 原样展开，交易页不允许丢内容
+function prettyJson(value) {
+  if (value === null || value === undefined) return "（没有记录）";
+  try {
+    return JSON.stringify(value, null, 2);
+  } catch (error) {
+    return String(value);
+  }
+}
+
 const STOP_LABELS = {
   answered: "已回答",
   rounds_exhausted: "轮次用尽",
@@ -1248,6 +1258,22 @@ createApp({
       metrics: null,
       metricsError: "",
       metricsTimer: null,
+      // 交易页：trading 是 /api/trading/state 的完整快照，阶段详情按需缓存
+      tradingOpen: false,
+      tradingLoading: false,
+      tradingError: "",
+      tradingDate: "",
+      tradingDates: [],
+      trading: null,
+      tradingPhaseId: null,
+      tradingPhaseDetail: null,
+      tradingPhaseCache: {},
+      tradingPhaseTab: "answer",
+      tradingLive: { text: "", thinking: "", tools: [] },
+      tradingStream: null,
+      tradingRetry: 0,
+      tradingTimer: null,
+      tradingCite: null,
     };
   },
   computed: {
@@ -1286,7 +1312,7 @@ createApp({
       return text.length > 12000 ? `${text.slice(0, 12000)}\n…（已截断）` : text;
     },
     klineOpen() {
-      return Boolean(this.kline.code) && !this.sourceView && !this.archiveOpen && !this.metricsOpen;
+      return Boolean(this.kline.code) && !this.sourceView && !this.archiveOpen && !this.metricsOpen && !this.tradingOpen;
     },
     archiveCodes() {
       return this.archiveList.map((item) => item.code);
@@ -1375,6 +1401,46 @@ createApp({
       return [...((this.metrics && this.metrics.tools) || [])].sort(
         (a, b) => b.count - a.count || String(a.name).localeCompare(String(b.name))
       );
+    },
+    todayStatusText() {
+      if (!this.trading) return "";
+      const status = this.trading.today_status;
+      if (!status) return "历史日期";
+      return { TRADING: "交易日", HOLIDAY: "休市", UNCONFIRMED: "交易日未确认" }[status] || status;
+    },
+    todayStatusClass() {
+      const status = this.trading && this.trading.today_status;
+      return status ? `trading-status-${status.toLowerCase()}` : "";
+    },
+    planHtml() {
+      if (!this.trading || !this.trading.plan) return "";
+      return renderBody(this.trading.plan.notes || "", this.sourcesOf(this.trading.plan.phase));
+    },
+    liveHtml() {
+      return renderBody(this.tradingLive.text || "", this.liveSources(), true);
+    },
+    phaseAnswerHtml() {
+      const detail = this.tradingPhaseDetail;
+      return detail ? renderBody(detail.answer || "", detail.sources || []) : "";
+    },
+    phaseThinking() {
+      const detail = this.tradingPhaseDetail;
+      return detail && detail.thinking ? String(detail.thinking) : "";
+    },
+    phaseTrace() {
+      return (this.tradingPhaseDetail && this.tradingPhaseDetail.trace) || [];
+    },
+    phaseRawJson() {
+      return prettyJson(this.tradingPhaseDetail && this.tradingPhaseDetail.raw);
+    },
+    phaseRunJson() {
+      return prettyJson(this.tradingPhaseDetail && this.tradingPhaseDetail.run);
+    },
+    phaseIssues() {
+      return (this.tradingPhaseDetail && this.tradingPhaseDetail.issues) || [];
+    },
+    phaseSources() {
+      return (this.tradingPhaseDetail && this.tradingPhaseDetail.sources) || [];
     },
   },
   methods: {
@@ -1479,6 +1545,283 @@ createApp({
       const value = Number(share);
       if (!Number.isFinite(value) || value <= 0) return "0%";
       return `${Math.min(100, Math.round(value * 100))}%`;
+    },
+
+    // ---------------- 交易页 ----------------
+    openTrading() {
+      this.closeSource();
+      this.archiveOpen = false;
+      this.closeMetrics();
+      this.tradingOpen = true;
+      this.tradingDate = "";
+      this.tradingPhaseId = null;
+      this.tradingPhaseDetail = null;
+      this.tradingPhaseCache = {};
+      this.tradingPhaseTab = "answer";
+      this.tradingLive = { text: "", thinking: "", tools: [] };
+      this.tradingCite = null;
+      this.tradingError = "";
+      this.loadTradingDates();
+      this.loadTradingState();
+      this.stopTradingTimer();
+      this.tradingTimer = setInterval(() => this.loadTradingState(), 5000);
+      this.connectTradingStream();
+    },
+    closeTrading() {
+      this.tradingOpen = false;
+      this.stopTradingTimer();
+      this.closeTradingStream();
+      this.tradingCite = null;
+    },
+    stopTradingTimer() {
+      if (this.tradingTimer) {
+        clearInterval(this.tradingTimer);
+        this.tradingTimer = null;
+      }
+    },
+    closeTradingStream() {
+      if (this.tradingStream) {
+        try {
+          this.tradingStream.abort();
+        } catch (error) { /* 已断开 */ }
+        this.tradingStream = null;
+      }
+    },
+    selectTradingDate(value) {
+      this.tradingDate = value || "";
+      this.tradingPhaseId = null;
+      this.tradingPhaseDetail = null;
+      this.tradingPhaseCache = {};
+      this.tradingPhaseTab = "answer";
+      this.tradingLive = { text: "", thinking: "", tools: [] };
+      this.loadTradingState();
+    },
+    async loadTradingDates() {
+      try {
+        const response = await apiFetch("/api/trading/dates");
+        if (!response.ok) return;
+        const data = await response.json();
+        this.tradingDates = Array.isArray(data.dates) ? data.dates : [];
+      } catch (error) {
+        this.tradingDates = [];
+      }
+    },
+    async loadTradingState() {
+      if (!this.tradingOpen) return;
+      this.tradingLoading = true;
+      try {
+        const query = this.tradingDate ? `?date=${encodeURIComponent(this.tradingDate)}` : "";
+        const response = await apiFetch(`/api/trading/state${query}`);
+        if (!this.tradingOpen) return;
+        if (!response.ok) {
+          this.tradingError = "交易状态读取失败，请稍后重试";
+          return;
+        }
+        this.trading = await response.json();
+        this.tradingError = "";
+        await this.ensurePhaseDetails();
+      } catch (error) {
+        this.tradingError = "交易状态读取失败，请稍后重试";
+      } finally {
+        this.tradingLoading = false;
+      }
+    },
+    // 每个阶段的完整 payload 都缓存；状态变了才重新拉，保证引用可点
+    async ensurePhaseDetails() {
+      const phases = (this.trading && this.trading.phases) || [];
+      for (const phase of phases) {
+        const cached = this.tradingPhaseCache[phase.id];
+        if (cached && cached.status === phase.status) continue;
+        try {
+          const response = await apiFetch(`/api/trading/phases/${phase.id}`);
+          if (!response.ok) continue;
+          const detail = await response.json();
+          this.tradingPhaseCache = { ...this.tradingPhaseCache, [phase.id]: detail };
+          if (this.tradingPhaseId === phase.id) this.tradingPhaseDetail = detail;
+        } catch (error) { /* 单个阶段失败不影响其它内容 */ }
+      }
+      if (this.tradingPhaseId == null && phases.length) {
+        const latest = phases[phases.length - 1];
+        this.tradingPhaseId = latest.id;
+        this.tradingPhaseDetail = this.tradingPhaseCache[latest.id] || null;
+      }
+    },
+    async loadTradingPhase(id) {
+      this.tradingPhaseId = id;
+      this.tradingPhaseTab = "answer";
+      const cached = this.tradingPhaseCache[id];
+      if (cached) {
+        this.tradingPhaseDetail = cached;
+        return;
+      }
+      try {
+        const response = await apiFetch(`/api/trading/phases/${id}`);
+        if (!response.ok) {
+          this.tradingError = "阶段详情读取失败";
+          return;
+        }
+        const detail = await response.json();
+        this.tradingPhaseCache = { ...this.tradingPhaseCache, [id]: detail };
+        this.tradingPhaseDetail = detail;
+      } catch (error) {
+        this.tradingError = "阶段详情读取失败";
+      }
+    },
+    async connectTradingStream() {
+      this.closeTradingStream();
+      const controller = new AbortController();
+      this.tradingStream = controller;
+      const headers = {};
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (token) headers.Authorization = `Bearer ${token}`;
+      try {
+        const response = await fetch("/api/trading/stream", { headers, signal: controller.signal });
+        if (!response.ok || !response.body) throw new Error(`HTTP ${response.status}`);
+        this.tradingRetry = 0;
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        while (true) {
+          const chunk = await reader.read();
+          if (chunk.done) break;
+          buffer += decoder.decode(chunk.value, { stream: true });
+          let split;
+          while ((split = buffer.indexOf("\n\n")) >= 0) {
+            const frame = buffer.slice(0, split);
+            buffer = buffer.slice(split + 2);
+            const line = frame.split("\n").find((item) => item.startsWith("data:"));
+            if (!line) continue;
+            let event;
+            try {
+              event = JSON.parse(line.slice(5).trim());
+            } catch (error) {
+              continue;
+            }
+            this.onTradingEvent(event);
+          }
+        }
+      } catch (error) {
+        if (error.name === "AbortError" || !this.tradingOpen) return;
+        // 指数退避重连；断开期间仍靠 5 秒轮询兜底
+        this.tradingRetry = Math.min(this.tradingRetry + 1, 4);
+        const delay = Math.min(30000, 3000 * Math.pow(2, this.tradingRetry - 1));
+        this.tradingError = `实时流断开，${Math.round(delay / 1000)} 秒后重连`;
+        setTimeout(() => {
+          if (this.tradingOpen) this.connectTradingStream();
+        }, delay);
+      } finally {
+        if (this.tradingStream === controller) this.tradingStream = null;
+      }
+    },
+    onTradingEvent(event) {
+      if (!this.tradingOpen) return;
+      if (event.type === "thinking") {
+        this.tradingLive.thinking += event.delta || "";
+      } else if (event.type === "text") {
+        this.tradingLive.text += event.delta || "";
+      } else if (event.type === "tool") {
+        this.tradingLive.tools.push(event);
+      } else if (event.type === "phase") {
+        if (event.event === "started") {
+          this.tradingLive = { text: "", thinking: "", tools: [] };
+        }
+        this.loadTradingState();
+      } else if (event.type === "monitor") {
+        this.loadTradingState();
+      } else if (event.type === "error") {
+        this.tradingError = event.text || "交易出错";
+      }
+    },
+    sourcesOf(phaseName) {
+      const phase = ((this.trading && this.trading.phases) || []).find(
+        (item) => item.phase === phaseName
+      );
+      const detail = phase && this.tradingPhaseCache[phase.id];
+      return (detail && detail.sources) || [];
+    },
+    liveSources() {
+      const phases = (this.trading && this.trading.phases) || [];
+      if (!phases.length) return [];
+      const detail = this.tradingPhaseCache[phases[phases.length - 1].id];
+      return (detail && detail.sources) || [];
+    },
+    journalHtml(journal) {
+      return renderBody(journal.text || "", this.sourcesOf(journal.phase));
+    },
+    onTradingCite(event) {
+      const target = event.target;
+      const cite = target && target.closest ? target.closest(".cite") : null;
+      if (!cite) return;
+      event.stopPropagation();
+      const id = cite.getAttribute("data-id") || "";
+      let found = null;
+      for (const detail of Object.values(this.tradingPhaseCache)) {
+        found = (detail.sources || []).find((source) => String(source.id) === id);
+        if (found) break;
+      }
+      this.tradingCite =
+        found || {
+          id,
+          label: cite.getAttribute("data-label") || id,
+          detail: cite.getAttribute("data-detail") || "",
+          as_of: cite.getAttribute("data-asof") || "",
+          url: cite.getAttribute("data-url") || "",
+        };
+    },
+    showTradingSource(source) {
+      this.tradingCite = source;
+    },
+    phaseLabel(phase) {
+      return { pre_market: "盘前", midday: "午盘", close: "收盘" }[phase] || phase || "--";
+    },
+    phaseStatusLabel(status) {
+      return { RUNNING: "进行中", OK: "完成", ERROR: "失败" }[status] || status || "--";
+    },
+    itemStatusLabel(status) {
+      return {
+        PENDING: "待成交",
+        FILLED: "已成交",
+        CANCELLED: "已取消",
+        REJECTED: "已拒绝",
+        EXPIRED: "已过期",
+      }[status] || status || "--";
+    },
+    sideLabel(side) {
+      return { BUY: "买入", SELL: "卖出" }[side] || side || "--";
+    },
+    money(cents) {
+      const value = (Number(cents) || 0) / 100;
+      return value.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    },
+    price(cents) {
+      if (cents === null || cents === undefined) return "--";
+      return (Number(cents) / 100).toFixed(2);
+    },
+    signedMoney(cents) {
+      const value = Number(cents) || 0;
+      const sign = value > 0 ? "+" : value < 0 ? "-" : "";
+      return `${sign}¥${this.money(Math.abs(value))}`;
+    },
+    pctText(value, base) {
+      const total = Number(base) || 0;
+      if (!total) return "--";
+      const pct = ((Number(value) || 0) / total) * 100;
+      return `${pct > 0 ? "+" : ""}${pct.toFixed(2)}%`;
+    },
+    pnlClass(value) {
+      const number = Number(value) || 0;
+      return number > 0 ? "pnl-up" : number < 0 ? "pnl-down" : "";
+    },
+    shortTime(text) {
+      return text ? String(text).slice(11, 19) : "";
+    },
+    compactJson(value) {
+      try {
+        const text = JSON.stringify(value || {});
+        return text.length > 160 ? `${text.slice(0, 160)}…` : text;
+      } catch (error) {
+        return String(value);
+      }
     },
     async loadArchiveDetail(code) {
       const requested = code;

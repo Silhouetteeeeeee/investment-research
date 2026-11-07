@@ -22,6 +22,8 @@ public final class TradingBroadcaster {
         SseEmitter emitter = new SseEmitter(TIMEOUT_MS);
         SseWriter writer = new SseWriter(emitter, json);
         writers.add(writer);
+        // 立刻发一帧，把响应头刷出去；否则客户端要等到下一次心跳才算连上
+        writer.send(Map.of("type", "heartbeat"));
         emitter.onCompletion(() -> writers.remove(writer));
         emitter.onTimeout(
                 () -> {
