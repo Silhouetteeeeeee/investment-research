@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequestMapping("/api/trading")
 public class TradingController {
     private static final int DATE_LIMIT = 30;
+    private static final int JOURNAL_LIMIT = 100;
 
     private final TradingView view;
     private final TradingBroadcaster broadcaster;
@@ -42,6 +43,13 @@ public class TradingController {
     @GetMapping("/equity")
     public List<Map<String, Object>> equity() {
         return view.equitySeries();
+    }
+
+    /** 复盘经验档案：按日期倒序，默认最近 100 篇。 */
+    @GetMapping("/journals")
+    public Map<String, Object> journals(
+            @RequestParam(name = "limit", required = false) Integer limit) {
+        return Map.of("journals", view.journals(limit == null ? JOURNAL_LIMIT : limit));
     }
 
     @GetMapping("/phases/{id}")

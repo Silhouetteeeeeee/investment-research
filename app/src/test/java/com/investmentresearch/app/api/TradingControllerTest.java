@@ -54,6 +54,26 @@ class TradingControllerTest {
     }
 
     @Test
+    void journals_archive_returns_recent_reviews_with_default_limit() throws Exception {
+        when(view.journals(100))
+                .thenReturn(List.of(Map.of("date", "2026-11-06", "phase", "close", "text", "复盘")));
+
+        mockMvc.perform(get("/api/trading/journals"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.journals[0].date").value("2026-11-06"))
+                .andExpect(jsonPath("$.journals[0].text").value("复盘"));
+    }
+
+    @Test
+    void journals_archive_honours_limit() throws Exception {
+        when(view.journals(5)).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/trading/journals").param("limit", "5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.journals").isEmpty());
+    }
+
+    @Test
     void unknown_phase_id_is_404() throws Exception {
         when(view.phase(9)).thenThrow(new IllegalArgumentException("未知阶段：9"));
 

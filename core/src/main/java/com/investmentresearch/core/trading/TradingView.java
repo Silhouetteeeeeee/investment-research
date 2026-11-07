@@ -82,6 +82,39 @@ public final class TradingView {
         return repo.tradeDates(limit);
     }
 
+    /** 全部复盘档案（日期倒序）：用户点开「经验」逐篇学习，引用带当时阶段的来源。 */
+    public List<Map<String, Object>> journals(int limit) {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (JournalEntry journal : repo.recentJournals(Math.max(1, Math.min(500, limit)))) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("id", journal.id());
+            row.put("date", journal.tradeDate());
+            row.put("phase", journal.phase() == null ? null : journal.phase().dbValue());
+            row.put("text", journal.text());
+            row.put("run_id", journal.runId());
+            PhaseRecord phase =
+                    journal.phase() == null
+                            ? null
+                            : repo.phase(journal.tradeDate(), journal.phase());
+            row.put("phase_id", phase == null ? null : phase.id());
+            row.put("sources", phase == null ? List.of() : sources(phase));
+            rows.add(row);
+        }
+        return rows;
+    }
+
+    private static List<?> sources(PhaseRecord phase) {
+        if (phase.payloadJson() == null || phase.payloadJson().isBlank()) {
+            return List.of();
+        }
+        try {
+            Object sources = JSON.readValue(phase.payloadJson(), MAP_TYPE).get("sources");
+            return sources instanceof List<?> list ? list : List.of();
+        } catch (JsonProcessingException ignored) {
+            return List.of();
+        }
+    }
+
     public List<Map<String, Object>> equitySeries() {
         List<Map<String, Object>> rows = new ArrayList<>();
         for (EquitySnapshot snapshot : repo.equitySeries()) {

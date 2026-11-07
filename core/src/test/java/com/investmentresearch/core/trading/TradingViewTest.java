@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.investmentresearch.core.domain.trade.EquitySnapshot;
+import com.investmentresearch.core.domain.trade.JournalEntry;
 import com.investmentresearch.core.domain.trade.PhaseRecord;
 import com.investmentresearch.core.domain.trade.Position;
 import com.investmentresearch.core.domain.trade.Quote;
@@ -133,6 +134,36 @@ class TradingViewTest {
         assertThat(phase.get("phase")).isEqualTo("pre_market");
         assertThat(phase.get("status")).isEqualTo("OK");
         assertThat(phase.get("answer")).isEqualTo("计划已提交");
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void journals_archive_carries_date_and_phase_sources() {
+        repo.saveJournal(
+                new JournalEntry(1, YESTERDAY, TradingPhase.CLOSE, "复盘 [[fin:600000]]", "run-1"));
+        repo.savePhase(
+                new PhaseRecord(
+                        0,
+                        YESTERDAY,
+                        TradingPhase.CLOSE,
+                        "OK",
+                        "2026-11-06 15:05:00",
+                        "2026-11-06 15:10:00",
+                        "run-1",
+                        "{\"sources\":[{\"id\":\"fin:600000\",\"label\":\"财报\",\"detail\":\"营收\"}]}",
+                        null));
+
+        List<Map<String, Object>> rows = view(List.of()).journals(10);
+
+        assertThat(rows).hasSize(1);
+        Map<String, Object> row = rows.get(0);
+        assertThat(row.get("date")).isEqualTo(YESTERDAY);
+        assertThat(row.get("phase")).isEqualTo("close");
+        assertThat(row.get("text")).isEqualTo("复盘 [[fin:600000]]");
+        assertThat(row.get("phase_id")).isNotNull();
+        assertThat((List<Map<String, Object>>) row.get("sources"))
+                .singleElement()
+                .satisfies(source -> assertThat(source.get("id")).isEqualTo("fin:600000"));
     }
 
     private static Quote quote(String code, long price) {

@@ -51,7 +51,7 @@
 | `memory_*` / `company_memory` | `ResearchMemoryStore`（`append` 只增，`update` 白名单，`change` 只增） | `ResearchMemoryStore`、`ResearchController`、记忆工具 |
 | `daily_reports` | `DailyReportStore`（`save` 按 `trade_date` upsert） | `DailyReportStore.load`、复盘工具 |
 | `kline_daily` | `KlineAdapter` 经 `KlineDailyStore`（按 `code + trade_date` upsert，一次取 500 根） | `KlineDailyStore.load`、日 K 面板 |
-| `trade_*` / `trading_*`（V13） | `TradingRepositoryImpl`：阶段编排写计划/复盘/阶段，`TradingExecutor` 写成交/持仓/账户/tick，收盘写权益快照 | `TradingService`（上下文与复盘）、`TradingExecutor`（计划与持仓）、`TradingView`（页面） |
+| `trade_*` / `trading_*`（V13） | `TradingRepositoryImpl`：阶段编排写计划/复盘/阶段，`TradingExecutor` 写成交/持仓/账户/tick，收盘写权益快照 | `TradingService`（上下文与复盘）、`TradingExecutor`（计划与持仓）、`TradingView`（页面；`trade_journal` 全量倒序供「经验档案」） |
 
 ## 4. 读写路径
 

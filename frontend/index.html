@@ -531,6 +531,23 @@
           </div>
         </div>
 
+        <!-- 经验档案：每日复盘长期归档，用户点开学习 -->
+        <div class="trading-card">
+          <div class="trading-card-head">
+            <span>经验档案</span>
+            <span class="trading-tag">每日复盘长期保存</span>
+          </div>
+          <div class="trading-journals">
+            <div class="trading-journal" v-for="journal in tradingArchive" :key="journal.id">
+              <div class="trading-journal-head">
+                {{ journal.date }} · {{ phaseLabel(journal.phase) }}复盘
+              </div>
+              <div class="body" v-html="journalHtml(journal)" @click="onTradingCite"></div>
+            </div>
+            <div class="side-empty" v-if="!tradingArchive.length">还没有归入档案的复盘</div>
+          </div>
+        </div>
+
         <!-- 盘中检查 -->
         <div class="trading-card">
           <details class="trading-tick" v-if="trading.tick">
@@ -898,6 +915,6 @@
 <script src="/assets/marked.umd.js"></script>
 <script src="/assets/purify.min.js"></script>
 <script src="/boot.js?v=20261029c"></script>
-<script src="/app.js?v=20261107a"></script>
+<script src="/app.js?v=20261107b"></script>
 </body>
 </html>

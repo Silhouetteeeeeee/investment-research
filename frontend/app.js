@@ -1264,6 +1264,7 @@ createApp({
       tradingError: "",
       tradingDate: "",
       tradingDates: [],
+      tradingArchive: [],
       trading: null,
       tradingPhaseId: null,
       tradingPhaseDetail: null,
@@ -1562,6 +1563,7 @@ createApp({
       this.tradingCite = null;
       this.tradingError = "";
       this.loadTradingDates();
+      this.loadTradingArchive();
       this.loadTradingState();
       this.stopTradingTimer();
       this.tradingTimer = setInterval(() => this.loadTradingState(), 5000);
@@ -1604,6 +1606,17 @@ createApp({
         this.tradingDates = Array.isArray(data.dates) ? data.dates : [];
       } catch (error) {
         this.tradingDates = [];
+      }
+    },
+    // 经验档案是跨日期的长期记忆，只在打开页面和阶段结束时刷新
+    async loadTradingArchive() {
+      try {
+        const response = await apiFetch("/api/trading/journals?limit=200");
+        if (!response.ok) return;
+        const data = await response.json();
+        this.tradingArchive = Array.isArray(data.journals) ? data.journals : [];
+      } catch (error) {
+        this.tradingArchive = [];
       }
     },
     async loadTradingState() {
@@ -1724,6 +1737,9 @@ createApp({
       } else if (event.type === "phase") {
         if (event.event === "started") {
           this.tradingLive = { text: "", thinking: "", tools: [] };
+        } else {
+          // 阶段结束往往带回新的复盘，档案要同步更新
+          this.loadTradingArchive();
         }
         this.loadTradingState();
       } else if (event.type === "monitor") {
@@ -1746,7 +1762,8 @@ createApp({
       return (detail && detail.sources) || [];
     },
     journalHtml(journal) {
-      return renderBody(journal.text || "", this.sourcesOf(journal.phase));
+      // 档案条目自带当时阶段的 sources；当日复盘没有时回落到已缓存的阶段详情
+      return renderBody(journal.text || "", journal.sources || this.sourcesOf(journal.phase));
     },
     onTradingCite(event) {
       const target = event.target;

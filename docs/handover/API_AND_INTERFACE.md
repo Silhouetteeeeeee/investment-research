@@ -26,6 +26,7 @@
 | GET | `/api/trading/dates` | `TradingController` | 有阶段记录的交易日列表（最近 30 个） |
 | GET | `/api/trading/equity` | `TradingController` | 权益快照序列 |
 | GET | `/api/trading/phases/{id}` | `TradingController` | 单个阶段元数据 + `payload_json`（answer/thinking/trace/raw/run）；不存在 → 404 `{"error":"..."}` |
+| GET | `/api/trading/journals?limit=100` | `TradingController` | 复盘经验档案：全部日期的复盘，倒序，`limit` 夹到 1..500；每条带 `date`、`phase`、`text`、`phase_id`、`sources` |
 | GET | `/api/trading/stream` | `TradingController` | 交易 SSE：`phase`、`monitor`、`tool`、`thinking`、`text`、`heartbeat` |
 
 会话不存在时统一 404 `{"error":"not found"}`。
@@ -70,6 +71,12 @@ rules{initial_capital,lot,max_positions,max_single_position_pct,commission_rate_
 
 价格优先级：当天用 `QuoteCache`（盘中最近一次报价）→ 当天 tick 的报价 JSON → 权益快照价格 → 成本价。
 `today_status` 用 `TradingDayGate.cachedStatus`，不探测上游：`TRADING` / `HOLIDAY` / `UNCONFIRMED`。
+
+### `GET /api/trading/journals`
+
+复盘按日归档、永久保存在 `trade_journal`；这个接口把档案倒序取出，供「交易」页的「经验档案」逐篇阅读。
+每条 `{id,date,phase,text,run_id,phase_id,sources}`：`sources` 取自同日期同阶段 `trading_phase.payload_json`，
+因此正文里的 `[[source_id]]` 引用在档案里也能点开；阶段缺失或 payload 损坏时 `sources` 为空、正文照常返回。
 
 ### `GET /api/trading/stream`
 
