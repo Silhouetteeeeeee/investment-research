@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.investmentresearch.core.domain.StockRef;
 import com.investmentresearch.core.domain.ToolResult;
+import com.investmentresearch.core.domain.ToolSchema;
 import com.investmentresearch.core.port.CompanyDirectory;
 import com.investmentresearch.core.port.CompanyProfilePort;
 import com.investmentresearch.core.port.SegmentPort;
@@ -48,6 +49,34 @@ class ToolRegistryTest {
                 seen.set(code);
             }
             return ToolResult.ok(code, "2026-10-30", List.of(), Map.of("name", "东鹏饮料"));
+        };
+    }
+
+    @Test
+    void plus_appends_tools_in_order_and_shares_metrics() {
+        ToolRegistry base = new ToolRegistry(List.of(schemaTool("a")));
+
+        ToolRegistry all = base.plus(List.of(schemaTool("b")));
+
+        assertThat(all.schemas())
+                .extracting(ToolSchema::name)
+                .containsExactly("a", "b");
+        assertThat(all.metrics()).isSameAs(base.metrics());
+    }
+
+    private static ResearchTool schemaTool(String name) {
+        ToolSchema schema = new ToolSchema(name, name, Map.of("type", "object"));
+        return new ResearchTool() {
+            @Override
+            public ToolSchema schema() {
+                return schema;
+            }
+
+            @Override
+            public ToolResult execute(
+                    Map<String, Object> arguments, String defaultCompany) {
+                return ToolResult.ok(null, null, List.of(), Map.of());
+            }
         };
     }
 

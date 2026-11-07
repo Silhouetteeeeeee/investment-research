@@ -1075,5 +1075,125 @@
       ],
       "additionalProperties": false
     }
+  },
+  "get_trading_state": {
+    "name": "get_trading_state",
+    "description": "读取模拟盘权威状态：账户现金与权益、持仓（含 T+1 可用股数）、当日 ACTIVE 计划、成交、复盘和交易规则。每次思考前先调用；金额同时给「分」和「元」。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "交易日 YYYY-MM-DD；省略时用当前交易日"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "save_trade_plan": {
+    "name": "save_trade_plan",
+    "description": "提交当日交易计划（先暂存，阶段成功后才落库）。盘前必须恰好调用一次；午盘只在需要改未成交项或止损止盈时调用，生成新版本，不能新增早盘没有的 BUY 代码。BUY 必须给 trigger_price、stop_loss、take_profit 且 stop_loss < trigger_price < take_profit。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "trade_date": {
+          "type": "string",
+          "description": "交易日 YYYY-MM-DD，必须与当前交易日一致"
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "pre_market",
+            "midday"
+          ],
+          "description": "当前阶段；收盘不产生计划"
+        },
+        "notes": {
+          "type": "string",
+          "description": "计划摘要"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^\\d{6}$",
+                "description": "6 位股票代码"
+              },
+              "name": {
+                "type": "string",
+                "description": "股票名称，可省略"
+              },
+              "side": {
+                "type": "string",
+                "enum": [
+                  "BUY",
+                  "SELL"
+                ]
+              },
+              "shares": {
+                "type": "integer",
+                "minimum": 100,
+                "multipleOf": 100,
+                "description": "股数，100 的整数倍"
+              },
+              "trigger_price": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "BUY 限价，单位分；现价不高于它才成交"
+              },
+              "stop_loss": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "止损价，单位分"
+              },
+              "take_profit": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "止盈价，单位分"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "description": "「好公司 + 好价格」的理由，必填"
+              }
+            },
+            "required": [
+              "code",
+              "side",
+              "shares",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "trade_date",
+        "phase",
+        "items"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "save_trading_journal": {
+    "name": "save_trading_journal",
+    "description": "写一篇阶段复盘。午盘和收盘必须调用，盘前禁止。至少写：今日盈亏、每笔成交的理由是否成立、计划哪里错了、明天要注意什么。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "复盘正文，可含 [[source_id]] 引用"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    }
   }
 }

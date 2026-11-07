@@ -12,6 +12,7 @@ import java.util.Objects;
 /** Dispatches tool calls by name; unknown names and unexpected failures become failed results. */
 public final class ToolRegistry {
     private final Map<String, ResearchTool> tools;
+    private final List<ResearchTool> orderedTools;
     private final List<ToolSchema> schemas;
     private final ToolMetrics metrics;
 
@@ -22,6 +23,7 @@ public final class ToolRegistry {
 
     public ToolRegistry(List<ResearchTool> tools, ToolMetrics metrics) {
         Map<String, ResearchTool> byName = new LinkedHashMap<>();
+        List<ResearchTool> registered = new ArrayList<>();
         List<ToolSchema> ordered = new ArrayList<>();
         for (ResearchTool tool : tools) {
             if (tool == null) {
@@ -31,11 +33,20 @@ public final class ToolRegistry {
             if (byName.putIfAbsent(name, tool) != null) {
                 throw new IllegalArgumentException("duplicate tool: " + name);
             }
+            registered.add(tool);
             ordered.add(tool.schema());
         }
         this.tools = Map.copyOf(byName);
+        this.orderedTools = List.copyOf(registered);
         this.schemas = List.copyOf(ordered);
         this.metrics = Objects.requireNonNull(metrics, "metrics");
+    }
+
+    /** 派生一个追加了工具的 registry，顺序保持原工具在前，共享同一份指标。 */
+    public ToolRegistry plus(List<ResearchTool> extra) {
+        List<ResearchTool> all = new ArrayList<>(orderedTools);
+        all.addAll(extra);
+        return new ToolRegistry(all, metrics);
     }
 
     public List<ToolSchema> schemas() {

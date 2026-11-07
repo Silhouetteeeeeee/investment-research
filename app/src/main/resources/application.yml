@@ -1,6 +1,11 @@
 spring:
   lifecycle:
     timeout-per-shutdown-phase: 30s
+  task:
+    scheduling:
+      # 盘中轮询、阶段耗时与 SSE 心跳各占一个线程
+      pool:
+        size: 4
   datasource:
     url: jdbc:sqlite:file:${APP_DATA_DIR:./var}/app.db?busy_timeout=5000
     driver-class-name: org.sqlite.JDBC
@@ -15,6 +20,10 @@ spring:
 app:
   # 静态访问令牌；未设置时启动失败（ApiTokenProperties 校验）
   api-token: ${APP_API_TOKEN:}
+  trading:
+    # 非交易日不会运行；这里只是总开关
+    enabled: ${APP_TRADING_ENABLED:true}
+    poll-seconds: 10
 
 server:
   # SIGTERM 后停止接收新请求并等待进行中的请求（含 SSE）结束
