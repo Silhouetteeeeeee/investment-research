@@ -14,6 +14,8 @@ import com.investmentresearch.core.trading.TradingDayGate;
 import com.investmentresearch.core.trading.TradingExecutor;
 import com.investmentresearch.core.trading.TradingService;
 import com.investmentresearch.core.trading.TradingView;
+import java.time.Clock;
+import java.time.ZoneId;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,13 @@ class TradingWiringTest {
     @Autowired TradingBroadcaster tradingBroadcaster;
     @Autowired TradingDayGate tradingDayGate;
     @Autowired TradingProperties tradingProperties;
+    @Autowired Clock tradingClock;
+
+    @Test
+    void trading_clock_is_pinned_to_shanghai() {
+        // 容器默认 UTC；交易时钟必须固定 A 股时区，否则盘中时段判断会整体错位
+        assertThat(tradingClock.getZone()).isEqualTo(ZoneId.of("Asia/Shanghai"));
+    }
 
     @Test
     void trading_registry_extends_chat_tools_with_three_trading_tools() {

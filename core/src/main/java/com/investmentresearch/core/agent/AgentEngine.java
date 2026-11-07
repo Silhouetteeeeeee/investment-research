@@ -216,6 +216,8 @@ public final class AgentEngine implements AssistantEngine {
                 message = error.getClass().getSimpleName();
             }
             // 运行记录先收尾再抛，前端失败消息也能展开时间线（agent.py:720-723）
+            // 失败前的思考也要留下，否则交易页的「完整过程」会缺一段推理
+            recorder.recordThinking(state.thinking.toString());
             recorder.finish("error", message);
             // 不再自己加前缀：AskService 会拼"研究失败："，加两层就成"研究失败：回答生成失败：…"
             throw new EngineFailure(
@@ -398,7 +400,10 @@ public final class AgentEngine implements AssistantEngine {
                         .skillRepository(new FileSystemSkillRepository(properties.skillsDir()))
                         .workspace(properties.dataDir().resolve("workspace"))
                         .stateStore(stateStore)
-                        .compaction(CompactionConfig.builder().triggerTokens(80_000).build())
+                        .compaction(
+                                CompactionConfig.builder()
+                                        .triggerTokens(properties.compactionTokens())
+                                        .build())
                         .disableToolResultEviction()
                         .disableFilesystemTools()
                         .disableShellTool()

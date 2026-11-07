@@ -3,6 +3,7 @@ package com.investmentresearch.core.tool;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.investmentresearch.core.domain.ToolResult;
+import com.investmentresearch.core.domain.trade.EquitySnapshot;
 import com.investmentresearch.core.domain.trade.ItemSource;
 import com.investmentresearch.core.domain.trade.ItemStatus;
 import com.investmentresearch.core.domain.trade.JournalEntry;
@@ -107,6 +108,22 @@ class GetTradingStateToolTest {
     }
 
     @Test
+    void day_pnl_baselines_on_the_previous_day_even_after_todays_snapshot_exists() {
+        // 收盘阶段在模型复盘前就写了当日权益快照；日盈亏必须对比前一交易日，不能对比当天
+        repo.saveAccount(new TradeAccount(100_000_000L, 90_000_000L));
+        repo.savePosition(new Position("600000", "浦发银行", 200, 1_000L));
+        repo.saveEquity(snapshot("2026-11-06", 89_000_000L));
+        repo.saveEquity(snapshot(DATE, 90_240_000L));
+
+        ToolResult result =
+                tool(codes -> List.of(quote("600000", 1_200L))).execute(Map.of("date", DATE), null);
+
+        assertThat(map(result.data().get("account")))
+                .containsEntry("day_pnl", 1_240_000L)
+                .containsEntry("day_pnl_yuan", "12400.00");
+    }
+
+    @Test
     void defaults_to_the_context_trade_date() {
         context.begin(DATE, TradingPhase.MIDDAY);
 
@@ -118,6 +135,10 @@ class GetTradingStateToolTest {
 
     private GetTradingStateTool tool(QuotePort quotes) {
         return new GetTradingStateTool(repo, quotes, context, new ToolSchemas(Map.of()));
+    }
+
+    private static EquitySnapshot snapshot(String date, long equityCents) {
+        return new EquitySnapshot(date, equityCents, 0L, equityCents, 0L, Map.of());
     }
 
     private static Quote quote(String code, long priceCents) {

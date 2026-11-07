@@ -172,6 +172,27 @@ class TradingServiceTest {
     }
 
     @Test
+    void midday_without_journal_does_not_supersede_the_morning_plan() {
+        // 复盘没写成时整个阶段算失败；暂存的午盘计划不能顶掉早盘的唯一有效计划
+        long oldId = repo.insertPlan(
+                new TradePlan(0, DATE, TradingPhase.PRE_MARKET, 1, "旧计划", "run-0", "ACTIVE",
+                        List.of()));
+        engine.behavior =
+                question -> {
+                    context.stage(new PlanDraft("不该生效", List.of()));
+                    return answer("忘了写复盘", "run-2");
+                };
+
+        service.runPhase(DATE, TradingPhase.MIDDAY, listener());
+
+        assertThat(repo.phase(DATE, TradingPhase.MIDDAY).status()).isEqualTo("ERROR");
+        TradePlan plan = repo.activePlan(DATE);
+        assertThat(plan.id()).isEqualTo(oldId);
+        assertThat(plan.status()).isEqualTo("ACTIVE");
+        assertThat(repo.plans(DATE)).hasSize(1);
+    }
+
+    @Test
     void pnl_snapshot_written_before_close_journal() {
         repo.saveAccount(new TradeAccount(100_000_000L, 90_000_000L));
         repo.savePosition(new Position("600000", "浦发银行", 200, 1_000L));

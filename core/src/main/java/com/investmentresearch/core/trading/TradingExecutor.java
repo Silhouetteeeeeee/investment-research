@@ -109,7 +109,7 @@ public final class TradingExecutor {
             if (quote == null || !quote.tradable()) {
                 continue;
             }
-            Execution execution = execute(item, quote, tradeDate);
+            Execution execution = execute(item, quote, tradeDate, byCode);
             if (execution != null) {
                 executed.add(execution);
             }
@@ -117,7 +117,8 @@ public final class TradingExecutor {
         return persist(new TickResult(tradeDate, checkedAt, rows, executed, null, false));
     }
 
-    private Execution execute(PlanItem item, Quote quote, String tradeDate) {
+    private Execution execute(
+            PlanItem item, Quote quote, String tradeDate, Map<String, Quote> byCode) {
         long price = quote.priceCents();
         if (item.side() == Side.BUY) {
             if (item.triggerPriceCents() != null
@@ -134,12 +135,13 @@ public final class TradingExecutor {
                         return null;
                     }
                     return item.side() == Side.BUY
-                            ? buy(item, quote, tradeDate)
+                            ? buy(item, quote, tradeDate, byCode)
                             : sell(item, quote, tradeDate);
                 });
     }
 
-    private Execution buy(PlanItem item, Quote quote, String tradeDate) {
+    private Execution buy(
+            PlanItem item, Quote quote, String tradeDate, Map<String, Quote> byCode) {
         long price = quote.priceCents();
         int shares = item.shares();
         long amount = price * shares;
@@ -158,7 +160,7 @@ public final class TradingExecutor {
         if (positions.size() >= TradingRules.MAX_POSITIONS) {
             return reject(item, "持仓已达 " + TradingRules.MAX_POSITIONS + " 只上限");
         }
-        long equity = equity(cash, positions, quote);
+        long equity = equity(cash, positions, byCode);
         if (amount > TradingRules.MAX_SINGLE_POSITION * equity) {
             return reject(item, "单票仓位超过 20% 上限");
         }
@@ -280,9 +282,14 @@ public final class TradingExecutor {
         return null;
     }
 
-    private long equity(long cash, List<Position> positions, Quote current) {
+    /** 已有持仓按本轮报价估值；缺价（停牌/未取到）由 TradingRules 退回成本价。 */
+    private static long equity(long cash, List<Position> positions, Map<String, Quote> byCode) {
         Map<String, Long> prices = new LinkedHashMap<>();
-        prices.put(current.code(), current.priceCents());
+        for (Quote quote : byCode.values()) {
+            if (quote.priceCents() > 0) {
+                prices.put(quote.code(), quote.priceCents());
+            }
+        }
         return TradingRules.equity(cash, positions, prices);
     }
 

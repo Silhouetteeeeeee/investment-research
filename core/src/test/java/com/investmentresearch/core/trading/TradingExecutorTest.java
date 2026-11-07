@@ -198,6 +198,19 @@ class TradingExecutorTest {
         assertThat(repo.orders(DATE)).isEmpty();
     }
 
+    @Test
+    void twenty_percent_cap_values_other_holdings_at_the_latest_quote() {
+        // 已有持仓要按最新价估值：按成本估值会低估权益，把合规买单误拒
+        repo.savePosition(new Position("600519", "贵州茅台", 10_000, 1_000L));
+        seedPlan(buy("600000", 1_500L, 15_000, null, null));
+
+        TradingExecutor.TickResult result =
+                executor(List.of(quote("600000", 1_500L), quote("600519", 2_000L))).tick(DATE);
+
+        assertThat(result.executed()).hasSize(1);
+        assertThat(repo.orders(DATE)).hasSize(1);
+    }
+
     private TradingExecutor executor(List<Quote> quotes) {
         QuotePort port = codes -> quotes;
         return new TradingExecutor(repo, port, cache, clock);

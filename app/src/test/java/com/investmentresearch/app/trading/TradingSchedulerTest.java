@@ -91,6 +91,20 @@ class TradingSchedulerTest {
     }
 
     @Test
+    void premarket_reprobes_every_window_while_unconfirmed() {
+        // 09:25 探测失败后，09:30 窗口必须重新探测；否则一次网络抖动会把整天判成休市
+        gateIs(TradingDayGate.Status.UNCONFIRMED);
+        when(gate.probe(DATE)).thenReturn(TradingDayGate.Status.TRADING);
+        when(repo.phase(TODAY, TradingPhase.PRE_MARKET)).thenReturn(null);
+        clock.set("2026-11-07T09:30:00");
+
+        scheduler().preMarketWindow();
+
+        verify(gate).probe(DATE);
+        verify(service).runPhase(eq(TODAY), eq(TradingPhase.PRE_MARKET), any());
+    }
+
+    @Test
     void unconfirmed_after_0945_marks_holiday() {
         gateIs(TradingDayGate.Status.UNCONFIRMED);
         clock.set("2026-11-07T09:45:00");
@@ -121,6 +135,34 @@ class TradingSchedulerTest {
 
         scheduler.preMarketWindow();
         verify(service, times(1)).runPhase(eq(TODAY), eq(TradingPhase.PRE_MARKET), any());
+    }
+
+    @Test
+    void premarket_retry_flag_resets_on_a_new_day() {
+        // 标志位按天重置：进程跨天运行，第二天失败后仍要能重试
+        gateIs(TradingDayGate.Status.TRADING);
+        PhaseRecord failed =
+                new PhaseRecord(
+                        1, TODAY, TradingPhase.PRE_MARKET, "ERROR", "09:30", "09:31", null, null,
+                        "模型失败");
+        when(repo.phase(TODAY, TradingPhase.PRE_MARKET)).thenReturn(failed);
+        LocalDate nextDay = LocalDate.of(2026, 11, 8);
+        PhaseRecord failedNext =
+                new PhaseRecord(
+                        2, nextDay.toString(), TradingPhase.PRE_MARKET, "ERROR", "09:30", "09:31",
+                        null, null, "模型失败");
+        TradingScheduler scheduler = scheduler();
+
+        clock.set("2026-11-07T09:45:00");
+        scheduler.preMarketWindow();
+        verify(service).runPhase(eq(TODAY), eq(TradingPhase.PRE_MARKET), any());
+
+        when(gate.today()).thenReturn(nextDay);
+        when(repo.phase(nextDay.toString(), TradingPhase.PRE_MARKET)).thenReturn(failedNext);
+        clock.set("2026-11-08T09:45:00");
+        scheduler.preMarketWindow();
+
+        verify(service).runPhase(eq(nextDay.toString()), eq(TradingPhase.PRE_MARKET), any());
     }
 
     @Test
@@ -213,6 +255,23 @@ class TradingSchedulerTest {
         scheduler().catchUp();
 
         verify(service, never()).runPhase(any(), any(), any());
+    }
+
+    @Test
+    void startup_catch_up_retries_premarket_after_a_failed_attempt() {
+        // 盘前失败后重启：没有计划就必须补跑，否则一整天都不会有交易计划
+        gateIs(TradingDayGate.Status.TRADING);
+        PhaseRecord failed =
+                new PhaseRecord(
+                        1, TODAY, TradingPhase.PRE_MARKET, "ERROR", "09:30", "09:31", null, null,
+                        "模型失败");
+        when(repo.phase(TODAY, TradingPhase.PRE_MARKET)).thenReturn(failed);
+        when(repo.activePlan(TODAY)).thenReturn(null);
+        clock.set("2026-11-07T10:00:00");
+
+        scheduler().catchUp();
+
+        verify(service).runPhase(eq(TODAY), eq(TradingPhase.PRE_MARKET), any());
     }
 
     @Test

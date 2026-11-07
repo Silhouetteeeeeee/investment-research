@@ -9,14 +9,28 @@ public record AgentProperties(
         Path dataDir,
         int maxTurns,
         String promptResource,
-        boolean fullTrace) {
+        boolean fullTrace,
+        int compactionTokens) {
 
     public static final String DEFAULT_MODEL = "deepseek:deepseek-v4-flash";
     public static final int DEFAULT_MAX_TURNS = 10;
     public static final String DEFAULT_PROMPT = "/prompts/system.md";
+    public static final int DEFAULT_COMPACTION_TOKENS = 80_000;
 
     public AgentProperties(String model, Path skillsDir, Path dataDir, int maxTurns) {
-        this(model, skillsDir, dataDir, maxTurns, DEFAULT_PROMPT, false);
+        this(model, skillsDir, dataDir, maxTurns, DEFAULT_PROMPT, false,
+                DEFAULT_COMPACTION_TOKENS);
+    }
+
+    public AgentProperties(
+            String model,
+            Path skillsDir,
+            Path dataDir,
+            int maxTurns,
+            String promptResource,
+            boolean fullTrace) {
+        this(model, skillsDir, dataDir, maxTurns, promptResource, fullTrace,
+                DEFAULT_COMPACTION_TOKENS);
     }
 
     public AgentProperties {
@@ -29,6 +43,8 @@ public record AgentProperties(
                 promptResource == null || promptResource.isBlank()
                         ? DEFAULT_PROMPT
                         : promptResource;
+        compactionTokens =
+                compactionTokens <= 0 ? DEFAULT_COMPACTION_TOKENS : compactionTokens;
     }
 
     public static AgentProperties defaults() {

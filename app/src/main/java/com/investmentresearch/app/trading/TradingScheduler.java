@@ -24,6 +24,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -49,7 +50,7 @@ public final class TradingScheduler {
     private final Clock clock;
 
     private final AtomicBoolean phaseRunning = new AtomicBoolean();
-    private final AtomicBoolean premarketRetried = new AtomicBoolean();
+    private final AtomicReference<String> premarketRetriedDate = new AtomicReference<>();
     private final ExecutorService phaseExecutor =
             Executors.newSingleThreadExecutor(
                     runnable -> {
@@ -87,6 +88,13 @@ public final class TradingScheduler {
         }
         LocalDate today = gate.today();
         TradingDayGate.Status status = gate.status(today);
+        if (status == TradingDayGate.Status.UNCONFIRMED) {
+            // status() 会缓存未确认结果；每个窗口必须重新探测，一次抖动不能把整天判成休市
+            TradingDayGate.Status probed = gate.probe(today);
+            if (probed != null) {
+                status = probed;
+            }
+        }
         if (status == TradingDayGate.Status.HOLIDAY) {
             return;
         }
@@ -107,8 +115,9 @@ public final class TradingScheduler {
         if ("OK".equals(existing.status()) || "RUNNING".equals(existing.status())) {
             return;
         }
-        // 盘前失败只在 09:45 重试一次
-        if (!now.isBefore(HOLIDAY_CUTOFF) && premarketRetried.compareAndSet(false, true)) {
+        // 盘前失败每天只在 09:45 重试一次；进程跨天运行时标志要跟着日期走
+        if (!now.isBefore(HOLIDAY_CUTOFF) && !date.equals(premarketRetriedDate.get())) {
+            premarketRetriedDate.set(date);
             runPhase(date, TradingPhase.PRE_MARKET);
         }
     }
@@ -189,7 +198,11 @@ public final class TradingScheduler {
             return;
         }
         String date = today.toString();
-        if (repo.phase(date, TradingPhase.PRE_MARKET) != null || repo.activePlan(date) != null) {
+        PhaseRecord phase = repo.phase(date, TradingPhase.PRE_MARKET);
+        // 只有「已有计划」或「盘前已经跑成」才不补跑；失败留下的 ERROR 行不能挡住当天唯一的计划
+        if (repo.activePlan(date) != null
+                || (phase != null
+                        && ("OK".equals(phase.status()) || "RUNNING".equals(phase.status())))) {
             return;
         }
         runPhase(date, TradingPhase.PRE_MARKET);

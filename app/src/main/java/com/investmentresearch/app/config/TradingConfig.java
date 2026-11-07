@@ -11,6 +11,7 @@ import com.investmentresearch.core.tool.SaveTradePlanTool;
 import com.investmentresearch.core.tool.SaveTradingJournalTool;
 import com.investmentresearch.core.tool.ToolRegistry;
 import com.investmentresearch.core.tool.ToolSchemas;
+import com.investmentresearch.core.trading.MarketSession;
 import com.investmentresearch.core.trading.QuoteCache;
 import com.investmentresearch.core.trading.TradingContext;
 import com.investmentresearch.core.trading.TradingDayGate;
@@ -47,7 +48,8 @@ public class TradingConfig {
 
     @Bean
     public Clock tradingClock() {
-        return Clock.systemDefaultZone();
+        // 交易时段固定在 A 股时区；容器默认 UTC，用 defaultZone 会让盘中判断整体错位
+        return Clock.system(MarketSession.ZONE);
     }
 
     @Bean
@@ -133,6 +135,8 @@ public class TradingConfig {
                 Path.of(environment.getProperty("APP_DATA_DIR", "./var")),
                 14,
                 "/prompts/trading.md",
-                true);
+                true,
+                // 设计：交易引擎压缩阈值 120k，聊天仍是 80k
+                120_000);
     }
 }

@@ -376,6 +376,26 @@ class AgentEngineTest {
     }
 
     @Test
+    void engine_failure_keeps_the_thinking_so_far() {
+        // 失败也要把已经产生的思考写进运行记录，否则交易页的「完整过程」会丢掉失败前的推理
+        ScriptedModel model =
+                new ScriptedModel(
+                        ScriptedModel.thinkingThenToolCall(
+                                "先看档案", "get_company_profile", Map.of()));
+        EngineFailure failure = null;
+
+        try {
+            engine(model, new FakeProfileTool())
+                    .ask(1, "605499", "东鹏饮料", "靠什么赚钱", new RecordingListener());
+        } catch (EngineFailure error) {
+            failure = error;
+        }
+
+        assertThat(failure).isNotNull();
+        assertThat(failure.run().payload().get("thinking")).isEqualTo("先看档案");
+    }
+
+    @Test
     void engine_failure_still_carries_a_finished_error_run() {
         // 第一次模型调用先取数，第二次调用没有脚本可用 -> 运行中途抛错
         ScriptedModel model =

@@ -85,12 +85,13 @@ public final class TradingService {
             if (phase == TradingPhase.PRE_MARKET && staged == null) {
                 throw new IllegalStateException("盘前阶段没有提交交易计划，今天不能开盘");
             }
-            if (staged != null) {
-                commitPlan(tradeDate, phase, staged, answer.run());
-            }
+            // 后置条件先检查再落库：阶段失败不能留下半成品，午盘失败也不能顶掉早盘计划
             if (phase != TradingPhase.PRE_MARKET && !journalWritten(tradeDate, phase)) {
                 throw new IllegalStateException(
                         PhasePrompt.label(phase) + "阶段没有写复盘");
+            }
+            if (staged != null) {
+                commitPlan(tradeDate, phase, staged, answer.run());
             }
             savePhase(tradeDate, phase, "OK", startedAt, answer.run(), payload(answer), null);
         } catch (EngineFailure failure) {

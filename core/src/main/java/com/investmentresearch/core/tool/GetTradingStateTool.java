@@ -67,7 +67,7 @@ public final class GetTradingStateTool implements ResearchTool {
 
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("date", date);
-        data.put("account", account(account, equity));
+        data.put("account", account(account, equity, date));
         data.put("positions", positionList(positions, prices, date, orders));
         data.put("plan", plan(repo.activePlan(date)));
         data.put("orders", orderList(orders));
@@ -97,7 +97,7 @@ public final class GetTradingStateTool implements ResearchTool {
         return prices;
     }
 
-    private Map<String, Object> account(TradeAccount account, long equity) {
+    private Map<String, Object> account(TradeAccount account, long equity, String date) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("cash", account.cashCents());
         map.put("cash_yuan", yuan(account.cashCents()));
@@ -105,17 +105,19 @@ public final class GetTradingStateTool implements ResearchTool {
         map.put("initial_yuan", yuan(account.initialCents()));
         map.put("equity", equity);
         map.put("equity_yuan", yuan(equity));
-        long baseline = previousEquity();
+        long baseline = previousEquity(date);
         map.put("day_pnl", equity - baseline);
         map.put("day_pnl_yuan", yuan(equity - baseline));
         return map;
     }
 
-    /** 当日盈亏基准：上一个交易日的权益快照，没有就用初始本金。 */
-    private long previousEquity() {
+    /** 当日盈亏基准：本日之前最近一份权益快照，没有就用初始本金。 */
+    private long previousEquity(String date) {
         long baseline = TradingRules.INITIAL_CAPITAL_CENTS;
         for (EquitySnapshot snapshot : repo.equitySeries()) {
-            baseline = snapshot.equityCents();
+            if (snapshot.tradeDate().compareTo(date) < 0) {
+                baseline = snapshot.equityCents();
+            }
         }
         return baseline;
     }
