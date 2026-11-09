@@ -1,5 +1,6 @@
 package com.investmentresearch.core.agent;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.investmentresearch.core.citation.CitationCheck;
@@ -38,7 +39,9 @@ import io.agentscope.core.model.ChatUsage;
 import io.agentscope.core.model.GenerateOptions;
 import io.agentscope.core.model.Model;
 import io.agentscope.core.skill.repository.FileSystemSkillRepository;
+import io.agentscope.core.state.AgentState;
 import io.agentscope.core.state.JsonFileAgentStateStore;
+import io.agentscope.core.state.State;
 import io.agentscope.core.tool.AgentTool;
 import io.agentscope.core.tool.ToolCallParam;
 import io.agentscope.core.tool.Toolkit;
@@ -77,6 +80,8 @@ public final class AgentEngine implements AssistantEngine {
 
     private static final String USER_ID = "default";
     private static final String COMPANY_KEY = "defaultCompany";
+    /** 会话级引用注册表在会话目录里的文件名；只在本类的 get/save 中使用。 */
+    private static final String SOURCES_KEY = "sources";
     private static final ObjectMapper JSON = new ObjectMapper();
     private static final ObjectMapper CANONICAL_JSON =
             new ObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
@@ -145,6 +150,8 @@ public final class AgentEngine implements AssistantEngine {
         // Python api.py:71 —— 大盘问题不绑公司，否则工具会把「MARKET」当成公司名去解析
         String defaultCompany = QuestionRouter.MARKET_CODE.equals(code) ? "" : code;
         RunState state = new RunState(conversationId, defaultCompany, listener, recorder);
+        // 续聊可引用上一轮的来源；压缩会把历史里的工具结果换成摘要，所以另存一份注册表
+        Map<String, Source> registry = knownSources(conversationId);
         RuntimeContext context =
                 RuntimeContext.builder()
                         .userId(USER_ID)
@@ -193,10 +200,12 @@ public final class AgentEngine implements AssistantEngine {
                 }
             }
 
-            CitationCheck check = citations.validate(text, state.sources);
+            registry.putAll(state.sources);
+            CitationCheck check = citations.validate(text, registry);
             issues.addAll(check.issues());
             recorder.recordThinking(state.thinking.toString());
             recorder.finish(stopReason, null);
+            saveKnownSources(conversationId, registry);
             return new AskResult(
                     check.text(),
                     check.citations(),
@@ -219,6 +228,9 @@ public final class AgentEngine implements AssistantEngine {
             // 失败前的思考也要留下，否则交易页的「完整过程」会缺一段推理
             recorder.recordThinking(state.thinking.toString());
             recorder.finish("error", message);
+            // 失败前取到的来源也留下，下一轮引用它们不该变成 [?]
+            registry.putAll(state.sources);
+            saveKnownSources(conversationId, registry);
             // 不再自己加前缀：AskService 会拼"研究失败："，加两层就成"研究失败：回答生成失败：…"
             throw new EngineFailure(
                     message,
@@ -237,6 +249,88 @@ public final class AgentEngine implements AssistantEngine {
         runIssues.addAll(issues);
         return new RunRecord((String) payload.get("run_id"), payload);
     }
+
+    /**
+     * 已知来源 = 历史里的工具结果 + 上次落盘的注册表。压缩会把历史里的工具结果换成摘要，
+     * 注册表负责补上被压掉的来源 id，续聊引用上一轮来源时才不会变成 {@code [?]}。
+     *
+     * <p>shortcut: 历史扫描依赖 {@code ToolResultBlock} 里 {@code toMessageJson} 的 JSON
+     * 结构；框架若改掉这个存储格式，只剩 {@code sources.json} 兜底。
+     */
+    private Map<String, Source> knownSources(long conversationId) {
+        Map<String, Source> known = new LinkedHashMap<>();
+        String sessionId = Long.toString(conversationId);
+        try {
+            stateStore
+                    .get(USER_ID, sessionId, "agent_state", AgentState.class)
+                    .ifPresent(
+                            state -> {
+                                for (Msg message : state.getContext()) {
+                                    for (ToolResultBlock block :
+                                            message.getContentBlocks(ToolResultBlock.class)) {
+                                        addPayloadSources(known, block);
+                                    }
+                                }
+                            });
+        } catch (RuntimeException ignored) {
+            // 历史读不出来只会少解析几个旧引用，不能影响本轮回答
+        }
+        try {
+            stateStore
+                    .get(USER_ID, sessionId, SOURCES_KEY, SourcesFile.class)
+                    .ifPresent(
+                            file -> {
+                                for (Source source : file.sources()) {
+                                    known.put(source.id(), source);
+                                }
+                            });
+        } catch (RuntimeException ignored) {
+            // 注册表损坏就当没有
+        }
+        return known;
+    }
+
+    private void saveKnownSources(long conversationId, Map<String, Source> known) {
+        try {
+            stateStore.save(
+                    USER_ID,
+                    Long.toString(conversationId),
+                    SOURCES_KEY,
+                    new SourcesFile(List.copyOf(known.values())));
+        } catch (RuntimeException ignored) {
+            // 注册表只是引用的解析垫片，落盘失败不能打断回答
+        }
+    }
+
+    private static void addPayloadSources(Map<String, Source> known, ToolResultBlock block) {
+        List<ContentBlock> output = block.getOutput() == null ? List.of() : block.getOutput();
+        for (ContentBlock part : output) {
+            if (!(part instanceof TextBlock text) || text.getText() == null) {
+                continue;
+            }
+            try {
+                for (JsonNode item : JSON.readTree(text.getText()).path("sources")) {
+                    String id = item.path("id").asText("");
+                    if (!id.isBlank()) {
+                        known.put(
+                                id,
+                                new Source(
+                                        id,
+                                        item.path("label").asText(""),
+                                        item.path("detail").asText(""),
+                                        item.path("as_of").asText(""),
+                                        item.path("fetched_at").asText(""),
+                                        item.path("url").asText("")));
+                    }
+                }
+            } catch (IOException ignored) {
+                // 工具结果不是 JSON 的服务端消息直接跳过
+            }
+        }
+    }
+
+    /** 会话级来源清单的落盘载体；State 只是 JsonFileAgentStateStore 的标记接口。 */
+    private record SourcesFile(List<Source> sources) implements State {}
 
     @Override
     public void deleteSession(long conversationId) {

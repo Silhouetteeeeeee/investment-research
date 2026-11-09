@@ -201,6 +201,72 @@ class AgentEngineTest {
     }
 
     @Test
+    void second_ask_resolves_citations_from_an_earlier_turn() {
+        // 续聊时模型会继续引用上一轮工具结果里的 source id；注册表若只覆盖本轮就会变成 [?]
+        ScriptedModel model =
+                new ScriptedModel(
+                        ScriptedModel.toolCall("get_company_profile", Map.of()),
+                        ScriptedModel.text("营收 1 亿[[profile:605499]]。"),
+                        ScriptedModel.text("上一轮说的营收[[profile:605499]]。"));
+        AgentEngine engine = engine(model, new FakeProfileTool());
+
+        engine.ask(1, "605499", "东鹏饮料", "第一个问题", new RecordingListener());
+        AskResult second =
+                engine.ask(1, "605499", "东鹏饮料", "第二个问题", new RecordingListener());
+
+        assertThat(second.text()).isEqualTo("上一轮说的营收[[profile:605499]]。");
+        assertThat(second.issues()).doesNotContain("unknown_citation");
+        assertThat(second.sources()).extracting(Source::id).containsExactly("profile:605499");
+    }
+
+    @Test
+    void citation_registry_outlives_compacted_history_and_restart() throws IOException {
+        AgentEngine first = engine(
+                new ScriptedModel(
+                        ScriptedModel.toolCall("get_company_profile", Map.of()),
+                        ScriptedModel.text("营收 1 亿[[profile:605499]]。")),
+                new FakeProfileTool());
+        first.ask(1, "605499", "东鹏饮料", "第一个问题", new RecordingListener());
+
+        Path sessionDir = dataDir.resolve("sessions").resolve("default").resolve("1");
+        assertThat(sessionDir.resolve("sources.json")).exists();
+        // 压缩会把历史里的工具结果换成摘要；这里只留注册表，模拟压缩后再重启
+        Files.delete(sessionDir.resolve("agent_state.json"));
+
+        AgentEngine restarted =
+                engine(
+                        new ScriptedModel(ScriptedModel.text("营收仍是 1 亿[[profile:605499]]。")),
+                        new FakeProfileTool());
+        AskResult second =
+                restarted.ask(1, "605499", "东鹏饮料", "第二个问题", new RecordingListener());
+
+        assertThat(second.text()).isEqualTo("营收仍是 1 亿[[profile:605499]]。");
+        assertThat(second.issues()).doesNotContain("unknown_citation");
+    }
+
+    @Test
+    void old_conversation_without_registry_file_resolves_from_history() throws IOException {
+        // 升级前的会话没有 sources.json；第一次续聊仍要能从历史里的工具结果恢复引用
+        engine(
+                        new ScriptedModel(
+                                ScriptedModel.toolCall("get_company_profile", Map.of()),
+                                ScriptedModel.text("营收 1 亿[[profile:605499]]。")),
+                        new FakeProfileTool())
+                .ask(1, "605499", "东鹏饮料", "第一个问题", new RecordingListener());
+        Files.delete(dataDir.resolve("sessions").resolve("default").resolve("1").resolve("sources.json"));
+
+        AgentEngine restarted =
+                engine(
+                        new ScriptedModel(ScriptedModel.text("营收仍是 1 亿[[profile:605499]]。")),
+                        new FakeProfileTool());
+        AskResult second =
+                restarted.ask(1, "605499", "东鹏饮料", "第二个问题", new RecordingListener());
+
+        assertThat(second.text()).isEqualTo("营收仍是 1 亿[[profile:605499]]。");
+        assertThat(second.issues()).doesNotContain("unknown_citation");
+    }
+
+    @Test
     void identical_tool_call_in_same_conversation_is_cached() {
         ScriptedModel model =
                 new ScriptedModel(
