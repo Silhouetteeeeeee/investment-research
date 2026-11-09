@@ -369,6 +369,42 @@ def clear_json(directory: Path) -> None:
         item.unlink()
 
 
+def annotate_research_status(by_name: dict) -> None:
+    """Python 把 status 声明为自由字符串，Java 侧却按 section 校验固定枚举。
+
+    schema 里补上枚举和说明，模型才能一次提交合法值；实际取值仍由 section 决定。
+    """
+    append = by_name["append_research_record"]["parameters"]["properties"]["record"]["properties"]
+    append["status"].update(
+        {
+            "enum": [
+                "待验证",
+                "部分支持",
+                "已证实",
+                "已证伪",
+                "有效",
+                "已推翻",
+                "待处理",
+                "调查中",
+                "已解决",
+                "暂时无法解决",
+            ],
+            "description": (
+                "hypotheses：待验证/部分支持/已证实/已证伪；"
+                "conclusions：有效/已推翻；"
+                "questions：待处理/调查中/已解决/暂时无法解决"
+            ),
+        }
+    )
+    update = by_name["update_research_record"]["parameters"]["properties"]["patch"]["properties"]
+    update["status"].update(
+        {
+            "enum": ["待验证", "部分支持", "已证实", "已证伪", "待处理", "调查中", "已解决", "暂时无法解决"],
+            "description": "hypotheses：待验证/部分支持/已证实/已证伪；questions：待处理/调查中/已解决/暂时无法解决",
+        }
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--python-repo", default="D:/Programming/PythonProject")
@@ -475,6 +511,7 @@ def main() -> int:
         by_name = {item["function"]["name"]: item["function"] for item in exported}
         if len(by_name) != 33:
             raise SystemExit(f"expected 33 tool schemas, got {len(by_name)}")
+        annotate_research_status(by_name)
         schemas_path.parent.mkdir(parents=True, exist_ok=True)
         write_json(schemas_path, by_name)
 

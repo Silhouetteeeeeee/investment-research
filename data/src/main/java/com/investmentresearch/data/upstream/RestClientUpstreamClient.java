@@ -1,13 +1,17 @@
 package com.investmentresearch.data.upstream;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.zip.GZIPInputStream;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.util.StreamUtils;
@@ -113,14 +117,30 @@ public class RestClientUpstreamClient implements UpstreamClient {
                 request.body(body);
             }
             return request.exchange(
-                    (sent, response) ->
-                            new RawResponse(
-                                    response.getStatusCode().value(),
-                                    response.getBody() == null
-                                            ? new byte[0]
-                                            : StreamUtils.copyToByteArray(response.getBody())));
+                    (sent, response) -> {
+                        byte[] raw =
+                                response.getBody() == null
+                                        ? new byte[0]
+                                        : StreamUtils.copyToByteArray(response.getBody());
+                        // 东财等接口会无视请求头直接 gzip，不抬头就按 UTF-8 解出乱码（CTRL-CHAR 31）
+                        return new RawResponse(
+                                response.getStatusCode().value(),
+                                gunzipIfNeeded(
+                                        raw, response.getHeaders().getFirst("Content-Encoding")));
+                    });
         } finally {
             PERMITS.release();
+        }
+    }
+
+    private static byte[] gunzipIfNeeded(byte[] body, String contentEncoding) throws IOException {
+        if (body.length == 0
+                || contentEncoding == null
+                || !contentEncoding.toLowerCase(Locale.ROOT).contains("gzip")) {
+            return body;
+        }
+        try (GZIPInputStream in = new GZIPInputStream(new ByteArrayInputStream(body))) {
+            return in.readAllBytes();
         }
     }
 

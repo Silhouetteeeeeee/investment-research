@@ -35,7 +35,7 @@
 | `ToolCallCache` | 会话内工具结果缓存 | `get/put/clear`；key = 工具名 + 规范化参数（去 `company`）+ 公司；每会话 200 条、500 会话、30 分钟 TTL，LRU 淘汰 |
 | `ToolEvent` | 工具事件 | record `(name, company, ok, cached, durationMs)` |
 
-`buildAgent` 关键参数：name `research-assistant`、system=`prompts/system.md`、`maxIters(maxTurns)`、`temperature(0.3)`、`skillRepository(FileSystemSkillRepository)`、`workspace(dataDir/workspace)`、`stateStore(JsonFileAgentStateStore(dataDir/sessions))`、`compaction(triggerTokens(properties.compactionTokens()))`（默认 80_000，交易引擎 120_000）；关闭文件系统/Shell/Web/记忆/转写/子代理/动态 skill 等能力；最后移除 harness 自带异步工具，只保留注册表工具 + `load_skill_through_path`。
+`buildAgent` 关键参数：name `research-assistant`、system=`prompts/system.md`、`maxIters(maxTurns)`、`temperature(0.3)`、`skillRepository(FileSystemSkillRepository)`、`workspace(dataDir/workspace)`、`stateStore(JsonFileAgentStateStore(dataDir/sessions))`、`compaction(triggerTokens(properties.compactionTokens()))`（默认 55_000，交易引擎 120_000）；关闭文件系统/Shell/Web/记忆/转写/子代理/动态 skill 等能力；最后移除 harness 自带异步工具，只保留注册表工具 + `load_skill_through_path`。
 
 事件映射（`handleEvent`）：
 
@@ -111,6 +111,7 @@
 - 未知 id → 文本替换为 `[?]`，每个出现记一条 `unknown_citation`（不去重）。
 - 已知 id 保留原文、按首次出现排序、去重。
 - 清洗后若无任何有效引用但文本含 Unicode 数字 → 追加「回答里有数字，但没有任何有效引用」。
+- 注册表是**会话级**的：`AgentEngine` 每轮把历史工具结果里的 `sources` 与会话目录下的 `sources.json` 合并后交给校验器，并把本轮新增来源写回 `sources.json`；否则续聊引用上一轮来源、或框架压缩把工具结果换成摘要后，id 会全部变成 `[?]`。
 
 ### 1.7 `core.valuation` 与 `core.domain`
 

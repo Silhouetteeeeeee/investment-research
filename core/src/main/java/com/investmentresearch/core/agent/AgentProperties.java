@@ -15,7 +15,9 @@ public record AgentProperties(
     public static final String DEFAULT_MODEL = "deepseek:deepseek-v4-flash";
     public static final int DEFAULT_MAX_TURNS = 10;
     public static final String DEFAULT_PROMPT = "/prompts/system.md";
-    public static final int DEFAULT_COMPACTION_TOKENS = 80_000;
+    // harness 只数对话消息、按 2.5 字符/token 估算，且不含 system+工具 schema（约 14k）；
+    // 实测 80k 阈值要等真实 prompt 到 ~106k 才触发，55k 与 ContextMeter 的预算对齐。
+    public static final int DEFAULT_COMPACTION_TOKENS = 55_000;
 
     public AgentProperties(String model, Path skillsDir, Path dataDir, int maxTurns) {
         this(model, skillsDir, dataDir, maxTurns, DEFAULT_PROMPT, false,

@@ -7,8 +7,9 @@ import org.junit.jupiter.api.Test;
 class AgentPropertiesTest {
 
     @Test
-    void chat_defaults_compact_at_80k() {
-        assertThat(AgentProperties.defaults().compactionTokens()).isEqualTo(80_000);
+    void chat_defaults_compact_at_55k() {
+        // harness 按 2.5 字符/token 且不含固定提示词，55k 对应真实 prompt 约 80k
+        assertThat(AgentProperties.defaults().compactionTokens()).isEqualTo(55_000);
     }
 
     @Test

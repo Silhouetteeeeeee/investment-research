@@ -117,7 +117,7 @@ TokenAuthFilter.doFilterInternal                     app/security/TokenAuthFilte
 
 | 机制 | 位置 | 行为 |
 | --- | --- | --- |
-| 框架压缩 | `AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(properties.compactionTokens()))`（默认 80_000，交易 120_000） | 超过阈值由 HarnessAgent 压缩 |
+| 框架压缩 | `AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(properties.compactionTokens()))`（默认 55_000，交易 120_000） | 超过阈值由 HarnessAgent 压缩 |
 | 占用估算 | `ContextMeter.usage(cid, draftTokens)` | 固定成本（system.md + tool-schemas.json）+ 消息文本 + 每消息开销 + 草稿；预算 55k、硬上限 80k |
 | 推送 | `AskService` 的 `listener` | 初始一次；文本每 ≥400ms；`discard`/`tool` 后归零 |
 | 会话状态 | `JsonFileAgentStateStore(dataDir/sessions)` | 按 `sessionId=conversationId` 持久化 |

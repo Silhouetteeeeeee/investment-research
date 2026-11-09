@@ -14,7 +14,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10
-./mvnw verify                    # 期望：core 130 / data 134 / app 81，BUILD SUCCESS
+./mvnw verify                    # 期望：core 207 / data 146 / app 107，BUILD SUCCESS（先 unset DEEPSEEK_API_KEY）
 ./mvnw -q spotless:check         # 期望：退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```
@@ -49,7 +49,7 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 ### 5.1 新增一个工具
 
-1. 确认 Python 侧已有同名工具；**schema 不要手写**——`tool-schemas.json` 由 `tools/golden/gen_golden.py` 从 Python 生成。只有 Python 没有的 Java 新工具（如 `web_search`）才手工追加，并在 `ToolSchemasTest` 注明。
+1. 确认 Python 侧已有同名工具；**schema 不要手写**——`tool-schemas.json` 由 `tools/golden/gen_golden.py` 从 Python 生成。Python 没写的约束（如 `append_research_record.status` 的分 section 枚举）在 `annotate_research_status` 里补，别只改 JSON。只有 Python 没有的 Java 新工具（如 `web_search`）才手工追加，并在 `ToolSchemasTest` 注明。
 2. 在 `core/tool/` 新建 `XxxTool extends CompanyTool`（公司类）或实现 `ResearchTool`。
 3. 若需要新数据：先加 `core/port/XxxPort`，再在 `data/adapter/**` 实现；端口返回 `ToolResult`，异常转 failure。
 4. 在 `app/config/AssistantConfig.toolRegistry(...)` 按 Python 顺序插入（顺序由 `ToolSchemaParityTest` 校验）。
@@ -73,7 +73,7 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 - 模型：`AgentProperties.DEFAULT_MODEL` 或配置项（`AgentProperties` 由 `AssistantConfig` 从环境构造）。
 - 轮次：`DEFAULT_MAX_TURNS`；强制作答轮不计入轮数的逻辑在 `AgentEngine.handleEvent` 的 `EXCEED_MAX_ITERS` 分支。
-- 压缩：`AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(properties.compactionTokens()))`（`AgentProperties` 默认 80_000，交易引擎 120_000）；同时看 `ContextMeter.HARD_TOKENS`。
+- 压缩：`AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(properties.compactionTokens()))`（`AgentProperties` 默认 55_000，交易引擎 120_000）；同时看 `ContextMeter.HARD_TOKENS`。
 
 ## 6. 容易踩的坑
 

@@ -12,7 +12,7 @@ export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10    # 本机已有的 JDK 21
 
 Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8` 再读。
 
-最近一次完整结果（2026-11-01 接入 OpenTelemetry 后）：`./mvnw verify` 通过，**core 130 / data 134 / app 81**；`spotless:check` 退出 0。交易分支整分支评审修复后（2026-11-07）：**core 191 / data 146 / app 106**；经验文档功能合入后：**core 204 / data 146 / app 107**，两次 `spotless:check` 均退出 0。新增覆盖：`TracingConfigTest`（endpoint 为空/SDK 关闭时不建 SDK、endpoint 存在时建 SDK、采样率非法回退、`/v1/traces` 只补一次）；此前 `AskControllerTest.sse_timeout_interrupts_the_background_worker`（超时取消 `FutureTask` 并中断工作线程）；此前的 `KlineAdapterTest`（腾讯优先、东财 qfq 兜底、当日缓存、收盘后刷新、全挂回退旧缓存）、`StockChartControllerTest`（days 钳位、404/502）、`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest` 仍在。另有 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。
+最近一次完整结果（2026-11-09 会话问题修复后）：`./mvnw verify` 通过，**core 229 / data 152 / app 107**；`spotless:check` 退出 0。此前：OpenTelemetry 接入后（2026-11-01）**core 130 / data 134 / app 81**；交易分支整分支评审修复后（2026-11-07）**core 191 / data 146 / app 106**；经验文档功能合入后 **core 204 / data 146 / app 107**；会话级引用注册表修复后（2026-11-09）**core 207 / data 146 / app 107**。新增覆盖：`UpstreamClientTest.decompresses_gzip_response`（东财无视请求头直接 gzip）；此前 `TracingConfigTest`（endpoint 为空/SDK 关闭时不建 SDK、endpoint 存在时建 SDK、采样率非法回退、`/v1/traces` 只补一次）；`AskControllerTest.sse_timeout_interrupts_the_background_worker`（超时取消 `FutureTask` 并中断工作线程）；`KlineAdapterTest`（腾讯优先、东财 qfq 兜底、当日缓存、收盘后刷新、全挂回退旧缓存）、`StockChartControllerTest`（days 钳位、404/502）、`DatacenterSortQueryTest`（sortTypes/sortColumns 顺序回归）、`WebSearchToolTest`、`WebSearchAdapterTest`；以及 `ToolCallCacheTest`（LRU/TTL）、`ToolMetricsTest`、`MetricsControllerTest`、`QuestionBankTest`、`VersionStampTest`、`AnswerJudgeTest`、`EvalHistoryTest`。测试数为执行数，参数化用例会展开，与 `@Test` 注解计数不完全一致。跑 app 测试需 `APP_SKILLS_DIR=../skills`（Maven 的 surefire 工作目录是 `app/`），否则 Spring 上下文会因找不到 `app/skills` 而起不来。
 
 ## 2. 测试分层
 
@@ -28,7 +28,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 
 ## 3. 测试清单
 
-### core（31 类 + 1 个假模型，204 个用例）
+### core（33 类 + 1 个假模型，229 个用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -67,7 +67,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 
 `ScriptedModel`（无 `@Test`）是测试用假模型：按脚本返回文本/工具调用，并记录收到的消息，供 Agent 循环类测试使用。
 
-### data（33 类，146 个执行用例）
+### data（34 类，152 个执行用例）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |
@@ -95,7 +95,7 @@ Windows 终端输出可能是 GBK，重定向到文件后 `iconv -f gbk -t utf-8
 | `upstream/RecordedFixtureTest` | 2 | 118 个录制映射可回放解码；56 页股票列表覆盖全 A 股 |
 | `upstream/UpstreamClientTest` | 7 | 字符集、500 重试、404 不重试、查询串/头脱敏、信号量不死锁、UTF-8 默认 |
 
-### app（26 类，107 个用例；另有 `LiveSkillSmoke`、`QuestionBankEval` 默认不跑）
+### app（25 类，107 个用例；另有 `LiveSkillSmoke`、`QuestionBankEval` 默认不跑）
 
 | 测试类 | 用例数 | 覆盖 |
 | --- | --- | --- |

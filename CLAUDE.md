@@ -28,7 +28,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10        # 本机 JDK 21 位置
-./mvnw verify                    # 期望 core 130 / data 134 / app 81，BUILD SUCCESS
+./mvnw verify                    # 期望 core 229 / data 152 / app 107，BUILD SUCCESS（先 unset DEEPSEEK_API_KEY，并 export APP_SKILLS_DIR=../skills）
 ./mvnw -q spotless:check         # 期望退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```

@@ -90,7 +90,7 @@ investment-research/
 
 ## 7. 已知差异（详见 `TODO_AND_KNOWN_ISSUES.md`）
 
-- 上下文压缩只配置了 `triggerTokens`（聊天默认 80_000、交易引擎 120_000），未移植 Python 的完整裁剪策略。
+- 上下文压缩只配置了 `triggerTokens`（聊天默认 55_000、交易引擎 120_000），未移植 Python 的完整裁剪策略。
 - 运行记录缺 `stream`、`message_count`、`system_prompt_hash`、`tools_hash` 等字段，详情页部分信息为空。
 - token 用量多数按估算（`usage_source: "estimate"`），不是计费依据。
 - 缺 `DEEPSEEK_API_KEY` 时不建会话、不落历史。

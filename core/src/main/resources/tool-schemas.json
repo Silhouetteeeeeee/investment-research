@@ -825,7 +825,20 @@
               "type": "string"
             },
             "status": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "待验证",
+                "部分支持",
+                "已证实",
+                "已证伪",
+                "有效",
+                "已推翻",
+                "待处理",
+                "调查中",
+                "已解决",
+                "暂时无法解决"
+              ],
+              "description": "hypotheses：待验证/部分支持/已证实/已证伪；conclusions：有效/已推翻；questions：待处理/调查中/已解决/暂时无法解决"
             },
             "next_review_date": {
               "type": "string"
@@ -929,7 +942,18 @@
               "type": "string"
             },
             "status": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "待验证",
+                "部分支持",
+                "已证实",
+                "已证伪",
+                "待处理",
+                "调查中",
+                "已解决",
+                "暂时无法解决"
+              ],
+              "description": "hypotheses：待验证/部分支持/已证实/已证伪；questions：待处理/调查中/已解决/暂时无法解决"
             },
             "confidence": {
               "type": "string",
