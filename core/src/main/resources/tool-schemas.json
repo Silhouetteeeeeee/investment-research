@@ -1214,5 +1214,118 @@
       ],
       "additionalProperties": false
     }
+  },
+  "screen_stocks": {
+    "name": "screen_stocks",
+    "description": "按 Agent 给定的条件筛选全市场 A 股：条件之间是 AND 硬过滤，缺数据的股票视为不满足。只传与问题相关的条件，不要为了凑条件而加；不传 filters 时退回量化筛选（成交额候选池 + 量价打分），结果带 mode=quant。ROE 与增速为报告期累计值（非年化，不同公司报告期可能不同）；负 PE/PB 视为缺失（亏损股不会因 pe 上限入选）；行情为上一交易日收盘的快照，as_of 会标明日期。结果只是候选名单，不是买入信号。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "filters": {
+          "type": "array",
+          "maxItems": 10,
+          "description": "AND 条件，最多 10 条；缺该指标的股票视为不满足。boards 只支持 in，值为板块名或板块名数组。",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "enum": [
+                  "pe",
+                  "pb",
+                  "market_cap",
+                  "price",
+                  "chg_pct",
+                  "turnover",
+                  "amount",
+                  "ps",
+                  "roe",
+                  "gross_margin",
+                  "net_margin",
+                  "revenue_growth",
+                  "profit_growth",
+                  "ocf_per_share",
+                  "ocf_to_profit",
+                  "ocf_positive_years",
+                  "boards"
+                ]
+              },
+              "op": {
+                "type": "string",
+                "enum": [
+                  ">",
+                  ">=",
+                  "<",
+                  "<=",
+                  "=",
+                  "in"
+                ],
+                "description": "数值字段用 > >= < <= =；boards 只用 in"
+              },
+              "value": {
+                "description": "比较值：数值字段为数字；boards 为板块名或板块名数组（沪市主板/深市主板/创业板/科创板/其他）"
+              }
+            },
+            "required": [
+              "field",
+              "op",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "sort": {
+          "type": "array",
+          "maxItems": 3,
+          "description": "按数组顺序逐级排序，最多 3 条；order 缺省 desc；缺该指标的股票排在最后。",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "enum": [
+                  "pe",
+                  "pb",
+                  "market_cap",
+                  "price",
+                  "chg_pct",
+                  "turnover",
+                  "amount",
+                  "ps",
+                  "roe",
+                  "gross_margin",
+                  "net_margin",
+                  "revenue_growth",
+                  "profit_growth",
+                  "ocf_per_share",
+                  "ocf_to_profit",
+                  "ocf_positive_years"
+                ]
+              },
+              "order": {
+                "type": "string",
+                "enum": [
+                  "asc",
+                  "desc"
+                ],
+                "default": "desc"
+              }
+            },
+            "required": [
+              "field"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "最多返回条数"
+        }
+      },
+      "additionalProperties": false
+    }
   }
 }
