@@ -14,7 +14,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10
-./mvnw verify                    # 期望：core 130 / data 134 / app 81，BUILD SUCCESS
+./mvnw verify                    # 期望：core 207 / data 146 / app 107，BUILD SUCCESS（先 unset DEEPSEEK_API_KEY）
 ./mvnw -q spotless:check         # 期望：退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```
@@ -49,7 +49,7 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 ### 5.1 新增一个工具
 
-1. 确认 Python 侧已有同名工具；**schema 不要手写**——`tool-schemas.json` 由 `tools/golden/gen_golden.py` 从 Python 生成。只有 Python 没有的 Java 新工具（如 `web_search`）才手工追加，并在 `ToolSchemasTest` 注明。
+1. 确认 Python 侧已有同名工具；**schema 不要手写**——`tool-schemas.json` 由 `tools/golden/gen_golden.py` 从 Python 生成。Python 没写的约束（如 `append_research_record.status` 的分 section 枚举）在 `annotate_research_status` 里补，别只改 JSON。只有 Python 没有的 Java 新工具（如 `web_search`）才手工追加，并在 `ToolSchemasTest` 注明。
 2. 在 `core/tool/` 新建 `XxxTool extends CompanyTool`（公司类）或实现 `ResearchTool`。
 3. 若需要新数据：先加 `core/port/XxxPort`，再在 `data/adapter/**` 实现；端口返回 `ToolResult`，异常转 failure。
 4. 在 `app/config/AssistantConfig.toolRegistry(...)` 按 Python 顺序插入（顺序由 `ToolSchemaParityTest` 校验）。
@@ -73,13 +73,13 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 - 模型：`AgentProperties.DEFAULT_MODEL` 或配置项（`AgentProperties` 由 `AssistantConfig` 从环境构造）。
 - 轮次：`DEFAULT_MAX_TURNS`；强制作答轮不计入轮数的逻辑在 `AgentEngine.handleEvent` 的 `EXCEED_MAX_ITERS` 分支。
-- 压缩：`AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(80_000))`；同时看 `ContextMeter.HARD_TOKENS`。
+- 压缩：`AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(properties.compactionTokens()))`（`AgentProperties` 默认 55_000，交易引擎 120_000）；同时看 `ContextMeter.HARD_TOKENS`。
 
 ## 6. 容易踩的坑
 
 | 坑 | 说明 |
 | --- | --- |
-| 工具数 33 vs 34 | schema 文件 34 条（含 `load_skill` 与 Java 新增 `web_search`），Java 注册 33 个；`load_skill` 由 AgentScope `SkillLoadTool` 提供，模型侧叫 `load_skill_through_path` |
+| 工具数 33 / 37 vs 38 | schema 文件 38 条（含 `load_skill`、Java 新增 `web_search` 与 4 个交易工具），聊天注册 33 个、交易注册 37 个（聊天 33 + 4）；`load_skill` 由 AgentScope `SkillLoadTool` 提供，模型侧叫 `load_skill_through_path` |
 | 大盘会话不能带公司 | `AgentEngine.ask` 对 `MARKET` 传空默认公司，否则工具会把「MARKET」当公司名 |
 | 工具结果缓存 | 时效性工具在 `UNCACHED_TOOLS` 里；改缓存语义两处都要看 |
 | `raw` 只落库不下发 | SSE 的 `done.message` 没有 `raw`；证据接口从库里 `raw` 取 |

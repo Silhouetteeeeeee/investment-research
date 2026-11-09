@@ -1,5 +1,6 @@
 package com.investmentresearch.core.agent;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.investmentresearch.core.citation.CitationCheck;
@@ -21,19 +22,26 @@ import io.agentscope.core.event.ExceedMaxItersEvent;
 import io.agentscope.core.event.ModelCallEndEvent;
 import io.agentscope.core.event.ModelCallStartEvent;
 import io.agentscope.core.event.TextBlockDeltaEvent;
+import io.agentscope.core.event.ThinkingBlockDeltaEvent;
 import io.agentscope.core.event.ToolCallStartEvent;
 import io.agentscope.core.event.ToolResultEndEvent;
+import io.agentscope.core.message.ContentBlock;
 import io.agentscope.core.message.Msg;
 import io.agentscope.core.message.MsgRole;
 import io.agentscope.core.message.TextBlock;
+import io.agentscope.core.message.ThinkingBlock;
 import io.agentscope.core.message.ToolResultBlock;
 import io.agentscope.core.message.ToolResultState;
+import io.agentscope.core.message.ToolUseBlock;
 import io.agentscope.core.middleware.MiddlewareBase;
+import io.agentscope.core.middleware.ReasoningInput;
 import io.agentscope.core.model.ChatUsage;
 import io.agentscope.core.model.GenerateOptions;
 import io.agentscope.core.model.Model;
 import io.agentscope.core.skill.repository.FileSystemSkillRepository;
+import io.agentscope.core.state.AgentState;
 import io.agentscope.core.state.JsonFileAgentStateStore;
+import io.agentscope.core.state.State;
 import io.agentscope.core.tool.AgentTool;
 import io.agentscope.core.tool.ToolCallParam;
 import io.agentscope.core.tool.Toolkit;
@@ -62,7 +70,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /** AgentScope harness assembly plus the per-run cache/citation/trace bookkeeping. */
@@ -70,7 +80,8 @@ public final class AgentEngine implements AssistantEngine {
 
     private static final String USER_ID = "default";
     private static final String COMPANY_KEY = "defaultCompany";
-    private static final String SYSTEM_PROMPT = loadSystemPrompt();
+    /** 会话级引用注册表在会话目录里的文件名；只在本类的 get/save 中使用。 */
+    private static final String SOURCES_KEY = "sources";
     private static final ObjectMapper JSON = new ObjectMapper();
     private static final ObjectMapper CANONICAL_JSON =
             new ObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
@@ -104,12 +115,14 @@ public final class AgentEngine implements AssistantEngine {
     private final JsonFileAgentStateStore stateStore;
     private final Set<String> toolNames;
     private final Map<String, Object> toolSchemas;
+    private final String systemPrompt;
     private final HarnessAgent agent;
 
     public AgentEngine(
             ToolRegistry tools, AgentProperties properties, Supplier<Model> modelSupplier) {
         this.tools = tools;
         this.properties = properties;
+        this.systemPrompt = loadPrompt(properties.promptResource());
         this.stateStore = new JsonFileAgentStateStore(properties.dataDir().resolve("sessions"));
         this.toolNames =
                 tools.schemas().stream()
@@ -137,6 +150,8 @@ public final class AgentEngine implements AssistantEngine {
         // Python api.py:71 —— 大盘问题不绑公司，否则工具会把「MARKET」当成公司名去解析
         String defaultCompany = QuestionRouter.MARKET_CODE.equals(code) ? "" : code;
         RunState state = new RunState(conversationId, defaultCompany, listener, recorder);
+        // 续聊可引用上一轮的来源；压缩会把历史里的工具结果换成摘要，所以另存一份注册表
+        Map<String, Source> registry = knownSources(conversationId);
         RuntimeContext context =
                 RuntimeContext.builder()
                         .userId(USER_ID)
@@ -185,9 +200,12 @@ public final class AgentEngine implements AssistantEngine {
                 }
             }
 
-            CitationCheck check = citations.validate(text, state.sources);
+            registry.putAll(state.sources);
+            CitationCheck check = citations.validate(text, registry);
             issues.addAll(check.issues());
+            recorder.recordThinking(state.thinking.toString());
             recorder.finish(stopReason, null);
+            saveKnownSources(conversationId, registry);
             return new AskResult(
                     check.text(),
                     check.citations(),
@@ -207,9 +225,20 @@ public final class AgentEngine implements AssistantEngine {
                 message = error.getClass().getSimpleName();
             }
             // 运行记录先收尾再抛，前端失败消息也能展开时间线（agent.py:720-723）
+            // 失败前的思考也要留下，否则交易页的「完整过程」会缺一段推理
+            recorder.recordThinking(state.thinking.toString());
             recorder.finish("error", message);
+            // 失败前取到的来源也留下，下一轮引用它们不该变成 [?]
+            registry.putAll(state.sources);
+            saveKnownSources(conversationId, registry);
             // 不再自己加前缀：AskService 会拼"研究失败："，加两层就成"研究失败：回答生成失败：…"
-            throw new EngineFailure(message, recordedRun(recorder, issues), error);
+            throw new EngineFailure(
+                    message,
+                    recordedRun(recorder, issues),
+                    error,
+                    List.copyOf(state.raw),
+                    List.copyOf(state.sources.values()),
+                    List.copyOf(state.trace));
         }
     }
 
@@ -220,6 +249,88 @@ public final class AgentEngine implements AssistantEngine {
         runIssues.addAll(issues);
         return new RunRecord((String) payload.get("run_id"), payload);
     }
+
+    /**
+     * 已知来源 = 历史里的工具结果 + 上次落盘的注册表。压缩会把历史里的工具结果换成摘要，
+     * 注册表负责补上被压掉的来源 id，续聊引用上一轮来源时才不会变成 {@code [?]}。
+     *
+     * <p>shortcut: 历史扫描依赖 {@code ToolResultBlock} 里 {@code toMessageJson} 的 JSON
+     * 结构；框架若改掉这个存储格式，只剩 {@code sources.json} 兜底。
+     */
+    private Map<String, Source> knownSources(long conversationId) {
+        Map<String, Source> known = new LinkedHashMap<>();
+        String sessionId = Long.toString(conversationId);
+        try {
+            stateStore
+                    .get(USER_ID, sessionId, "agent_state", AgentState.class)
+                    .ifPresent(
+                            state -> {
+                                for (Msg message : state.getContext()) {
+                                    for (ToolResultBlock block :
+                                            message.getContentBlocks(ToolResultBlock.class)) {
+                                        addPayloadSources(known, block);
+                                    }
+                                }
+                            });
+        } catch (RuntimeException ignored) {
+            // 历史读不出来只会少解析几个旧引用，不能影响本轮回答
+        }
+        try {
+            stateStore
+                    .get(USER_ID, sessionId, SOURCES_KEY, SourcesFile.class)
+                    .ifPresent(
+                            file -> {
+                                for (Source source : file.sources()) {
+                                    known.put(source.id(), source);
+                                }
+                            });
+        } catch (RuntimeException ignored) {
+            // 注册表损坏就当没有
+        }
+        return known;
+    }
+
+    private void saveKnownSources(long conversationId, Map<String, Source> known) {
+        try {
+            stateStore.save(
+                    USER_ID,
+                    Long.toString(conversationId),
+                    SOURCES_KEY,
+                    new SourcesFile(List.copyOf(known.values())));
+        } catch (RuntimeException ignored) {
+            // 注册表只是引用的解析垫片，落盘失败不能打断回答
+        }
+    }
+
+    private static void addPayloadSources(Map<String, Source> known, ToolResultBlock block) {
+        List<ContentBlock> output = block.getOutput() == null ? List.of() : block.getOutput();
+        for (ContentBlock part : output) {
+            if (!(part instanceof TextBlock text) || text.getText() == null) {
+                continue;
+            }
+            try {
+                for (JsonNode item : JSON.readTree(text.getText()).path("sources")) {
+                    String id = item.path("id").asText("");
+                    if (!id.isBlank()) {
+                        known.put(
+                                id,
+                                new Source(
+                                        id,
+                                        item.path("label").asText(""),
+                                        item.path("detail").asText(""),
+                                        item.path("as_of").asText(""),
+                                        item.path("fetched_at").asText(""),
+                                        item.path("url").asText("")));
+                    }
+                }
+            } catch (IOException ignored) {
+                // 工具结果不是 JSON 的服务端消息直接跳过
+            }
+        }
+    }
+
+    /** 会话级来源清单的落盘载体；State 只是 JsonFileAgentStateStore 的标记接口。 */
+    private record SourcesFile(List<Source> sources) implements State {}
 
     @Override
     public void deleteSession(long conversationId) {
@@ -264,6 +375,14 @@ public final class AgentEngine implements AssistantEngine {
                             null,
                             usage == null ? "estimate" : "api",
                             call.forced());
+                }
+            }
+            case THINKING_BLOCK_DELTA -> {
+                ThinkingBlockDeltaEvent delta = (ThinkingBlockDeltaEvent) event;
+                String thinking = delta.getDelta();
+                if (thinking != null && !thinking.isEmpty()) {
+                    state.thinking.append(thinking);
+                    listener.thinking(thinking);
                 }
             }
             case TEXT_BLOCK_DELTA -> {
@@ -363,11 +482,11 @@ public final class AgentEngine implements AssistantEngine {
             toolkit.registerAgentTool(new CachedTool(schema));
         }
 
-        HarnessAgent built =
+        HarnessAgent.Builder builder =
                 HarnessAgent.builder()
                         .name("research-assistant")
                         .description("股票基本面研究助手")
-                        .sysPrompt(SYSTEM_PROMPT)
+                        .sysPrompt(systemPrompt)
                         .model(model)
                         .toolkit(toolkit)
                         .maxIters(properties.maxTurns())
@@ -375,7 +494,10 @@ public final class AgentEngine implements AssistantEngine {
                         .skillRepository(new FileSystemSkillRepository(properties.skillsDir()))
                         .workspace(properties.dataDir().resolve("workspace"))
                         .stateStore(stateStore)
-                        .compaction(CompactionConfig.builder().triggerTokens(80_000).build())
+                        .compaction(
+                                CompactionConfig.builder()
+                                        .triggerTokens(properties.compactionTokens())
+                                        .build())
                         .disableToolResultEviction()
                         .disableFilesystemTools()
                         .disableShellTool()
@@ -392,8 +514,11 @@ public final class AgentEngine implements AssistantEngine {
                         .enableAgentTracingLog(false)
                         .middleware(new CompanyPromptMiddleware(properties.maxTurns()))
                         // 没有注册 OTel SDK 时 tracer 是 noop，这里常驻不需要开关。
-                        .middleware(new OtelTracingMiddleware())
-                        .build();
+                        .middleware(new OtelTracingMiddleware());
+        if (properties.fullTrace()) {
+            builder.middleware(new TraceMiddleware());
+        }
+        HarnessAgent built = builder.build();
 
         // harness 还会挂异步工具；本节只暴露 registry 工具和 skill 加载
         Set<String> keep = new HashSet<>(toolNames);
@@ -459,15 +584,14 @@ public final class AgentEngine implements AssistantEngine {
         }
     }
 
-    private static String loadSystemPrompt() {
-        try (InputStream stream =
-                AgentEngine.class.getResourceAsStream("/prompts/system.md")) {
+    private static String loadPrompt(String resource) {
+        try (InputStream stream = AgentEngine.class.getResourceAsStream(resource)) {
             if (stream == null) {
-                throw new IllegalStateException("找不到 prompts/system.md");
+                throw new IllegalStateException("找不到 " + resource);
             }
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException error) {
-            throw new IllegalStateException("读取 prompts/system.md 失败", error);
+            throw new IllegalStateException("读取 " + resource + " 失败", error);
         }
     }
 
@@ -564,6 +688,8 @@ public final class AgentEngine implements AssistantEngine {
         private final Map<String, Source> sources = Collections.synchronizedMap(new LinkedHashMap<>());
         private final List<TraceStep> trace = new CopyOnWriteArrayList<>();
         private final List<Map<String, Object>> raw = new CopyOnWriteArrayList<>();
+        private final StringBuilder thinking = new StringBuilder();
+        private final AtomicInteger lastMessageCount = new AtomicInteger();
 
         private RunState(
                 long conversationId,
@@ -665,6 +791,88 @@ public final class AgentEngine implements AssistantEngine {
             } catch (IOException error) {
                 return 0;
             }
+        }
+    }
+
+    /**
+     * 完整追踪：最终系统提示 + 每轮新增的消息。只在 {@code fullTrace} 时挂载，
+     * 聊天链路不需要多存几十 KB 的上下文快照。
+     */
+    private static final class TraceMiddleware implements MiddlewareBase {
+        @Override
+        public int order() {
+            // 低于 CompanyPromptMiddleware(100)：拿到的是已经拼好默认公司的最终提示
+            return 50;
+        }
+
+        @Override
+        public Mono<String> onSystemPrompt(
+                Agent agent, RuntimeContext context, String systemPrompt) {
+            RunState state = context == null ? null : context.get(RunState.class);
+            if (state != null) {
+                state.recorder.recordPrompt(systemPrompt);
+            }
+            return Mono.just(systemPrompt);
+        }
+
+        @Override
+        public Flux<AgentEvent> onReasoning(
+                Agent agent,
+                RuntimeContext context,
+                ReasoningInput input,
+                Function<ReasoningInput, Flux<AgentEvent>> next) {
+            RunState state = context == null ? null : context.get(RunState.class);
+            if (state != null) {
+                List<Msg> messages = input.messages() == null ? List.of() : input.messages();
+                List<Map<String, Object>> added = new ArrayList<>();
+                for (int i = state.lastMessageCount.get(); i < messages.size(); i++) {
+                    added.add(messageMap(messages.get(i)));
+                }
+                state.lastMessageCount.set(messages.size());
+                state.recorder.recordCall(state.round.get() + 1, added);
+            }
+            return next.apply(input);
+        }
+
+        private static Map<String, Object> messageMap(Msg message) {
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("role", message.getRole() == null ? "" : message.getRole().name());
+            List<Map<String, Object>> blocks = new ArrayList<>();
+            for (ContentBlock block : message.getContent()) {
+                blocks.add(blockMap(block));
+            }
+            item.put("content", blocks);
+            return item;
+        }
+
+        private static Map<String, Object> blockMap(ContentBlock block) {
+            Map<String, Object> item = new LinkedHashMap<>();
+            if (block instanceof TextBlock text) {
+                item.put("type", "text");
+                item.put("text", text.getText());
+            } else if (block instanceof ThinkingBlock thinking) {
+                item.put("type", "thinking");
+                item.put("text", thinking.getThinking());
+            } else if (block instanceof ToolUseBlock use) {
+                item.put("type", "tool_use");
+                item.put("id", use.getId());
+                item.put("name", use.getName());
+                item.put("input", use.getInput() == null ? Map.of() : use.getInput());
+            } else if (block instanceof ToolResultBlock result) {
+                StringBuilder text = new StringBuilder();
+                for (ContentBlock out : result.getOutput()) {
+                    if (out instanceof TextBlock part) {
+                        text.append(part.getText());
+                    }
+                }
+                item.put("type", "tool_result");
+                item.put("tool_call_id", result.getId());
+                item.put("name", result.getName());
+                item.put("text", text.toString());
+            } else {
+                item.put("type", block.getClass().getSimpleName());
+            }
+            return item;
         }
     }
 

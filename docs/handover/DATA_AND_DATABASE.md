@@ -4,7 +4,7 @@
 
 | 存储 | 路径 | 内容 | 清理/保留 |
 | --- | --- | --- | --- |
-| SQLite | `${APP_DATA_DIR:./var}/app.db` | 33 张业务表 + Flyway 历史（共 35 张） | 长期；每日备份保留 7 份 |
+| SQLite | `${APP_DATA_DIR:./var}/app.db` | 42 张业务表（33 通用 + 9 交易）+ Flyway 历史（共 44 张） | 长期；每日备份保留 7 份 |
 | 运行原文 | `${APP_DATA_DIR}/runs/<run_id>.json` | 一次问答的时间线、阶段、问题、模型 | 保留最新 200 份（按 mtime 剪枝） |
 | Agent 会话状态 | `${APP_DATA_DIR}/sessions/default/**` | AgentScope `JsonFileAgentStateStore` | 删除会话时一起删 |
 | Agent 工作区 | `${APP_DATA_DIR}/workspace/` | HarnessAgent 工作区 | 不清理 |
@@ -29,6 +29,7 @@
 | V10 | `V10__research_memory.sql` | `company_memory`、`memory_fact`、`memory_hypothesis`、`memory_conclusion`、`memory_question`、`memory_change` | 每张记忆表 `id` 自增 + `UNIQUE(code, <x>_id)`；`memory_fact` 另 `UNIQUE(code, dedupe_key)`；`memory_change` 外键指向 `memory_conclusion(code,conclusion_id)`；索引若干；触发器 `memory_change_no_update` / `memory_change_no_delete` |
 | V11 | `V11__daily_reports.sql` | `daily_reports` | `trade_date PK, saved_at, payload` |
 | V12 | `V12__kline_daily.sql` | `kline_daily` | PK `(code, trade_date)`，`WITHOUT ROWID`；前复权 OHLCV/额 + `fetched_at`（epoch ms）；约 41 KB/只（500 根） |
+| V13 | `V13__trading.sql` | `trade_account`、`trade_position`、`trade_plan`、`trade_plan_item`、`trade_order`、`trade_journal`、`trading_phase`、`trading_tick`、`trading_equity` | 账户单行（`id=1`，现金/权益，单位分）；持仓 PK `code`；计划按 `trade_date` 一版（`version` 递增）；计划项 `status` 由条件 UPDATE `claim` 推进；`trading_phase` 每阶段一行（`phase` + `trade_date`，`status/run_id/payload_json/error`）；`trading_tick` 按 `(trade_date, checked_at)`；`trading_equity` PK `trade_date` |
 
 设计文档要求「SQLite / MySQL 双方言目录」，**目前只有 `sqlite` 目录**，MySQL 迁移与 Testcontainers 属阶段 4（未实现）。
 
@@ -50,6 +51,7 @@
 | `memory_*` / `company_memory` | `ResearchMemoryStore`（`append` 只增，`update` 白名单，`change` 只增） | `ResearchMemoryStore`、`ResearchController`、记忆工具 |
 | `daily_reports` | `DailyReportStore`（`save` 按 `trade_date` upsert） | `DailyReportStore.load`、复盘工具 |
 | `kline_daily` | `KlineAdapter` 经 `KlineDailyStore`（按 `code + trade_date` upsert，一次取 500 根） | `KlineDailyStore.load`、日 K 面板 |
+| `trade_*` / `trading_*`（V13） | `TradingRepositoryImpl`：阶段编排写计划/复盘/阶段，`TradingExecutor` 写成交/持仓/账户/tick，收盘写权益快照 | `TradingService`（上下文与复盘）、`TradingExecutor`（计划与持仓）、`TradingView`（页面；`trade_journal` 全量倒序供「复盘归档」） |
 
 ## 4. 读写路径
 
@@ -128,12 +130,19 @@
 
 写入：先写临时文件 `.<run_id>.<pid>.tmp` 再原子移动；读取时校验 id 正则 `[0-9A-Za-z_-]{8,64}` 且不含 `..`。`prompts`/`skills`/`calls` 目前保留为空数组（已知差异）。
 
+## 7.1 Agent 维护的交易经验（`var/trading/experience.md`）
+
+- 不进数据库：正文是 Agent 在收盘阶段用 `save_trading_experience` 整篇覆盖写的 Markdown，上限 20000 字符（`TradingExperience.MAX_CHARS`）。
+- 写入：先把旧版本复制成 `experience.md.bak`，再写 `experience.md.tmp` 并原子移动（不支持时退回 `REPLACE_EXISTING`）。
+- 读取：文件不存在返回空串（页面显示空态、提示词写「暂无经验」）；`updated_at` 取文件修改时间，按 Asia/Shanghai 格式化。
+- 每个阶段的提示词都会注入当前全文；盘前/午盘只读。
+
 ## 8. 备份与恢复
 
 - `scripts/backup.sh`：`sqlite3 .backup` → `$DATA_DIR/backups/app-YYYYMMDD.db`，保留 7 份，`umask 077`。
 - 恢复：停应用 → 覆盖 `$DATA_DIR/app.db` → 启动（Flyway 校验版本）。
-- 运行原文不在备份脚本内；需要保留时自行打包 `var/runs`。
+- 运行原文与 `var/trading/experience.md` 不在备份脚本内；需要保留时自行打包 `var/runs` 与 `var/trading`。
 
 ## 9. 本机开发库现状（`var/app.db`，仅供参考）
 
-35 张表 = 33 张业务表 + `flyway_schema_history` + `sqlite_sequence`。有数据的表：`stock` 5563、`val_history` 3456、`biz_segment` 400、`announcement` 218、`fin_balance` 88、`fin_income`/`fin_cashflow`/`fin_metrics` 各 90、`val_peer` 86、`message` 6、`conversation` 3、`company_profile` 1、`company_peers` 2、`company_memory` 1、`memory_fact` 3、`memory_conclusion` 1、`memory_question` 1；V9 缓存表与 `daily_reports`、`fin_disclosure` 为空。这只反映本机试跑，不是验收基线。
+44 张表 = 42 张业务表（33 通用 + 9 交易）+ `flyway_schema_history` + `sqlite_sequence`。有数据的表（2026-10 盘点，早于 V13）：`stock` 5563、`val_history` 3456、`biz_segment` 400、`announcement` 218、`fin_balance` 88、`fin_income`/`fin_cashflow`/`fin_metrics` 各 90、`val_peer` 86、`message` 6、`conversation` 3、`company_profile` 1、`company_peers` 2、`company_memory` 1、`memory_fact` 3、`memory_conclusion` 1、`memory_question` 1；V9 缓存表、`daily_reports`、`fin_disclosure` 与 V13 交易表为空（本机尚未跑过真实交易日）。这只反映本机试跑，不是验收基线。

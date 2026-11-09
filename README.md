@@ -15,6 +15,8 @@
 | `APP_DATA_DIR` | 否 | SQLite 和运行数据目录，默认 `./var`（相对启动目录）。 |
 | `APP_SKILLS_DIR` | 否 | `skills/` 所在目录，默认 `./skills`（相对启动目录）。 |
 | `APP_MEMORY_IMPORT` | 否 | Python 版 `research_memory.db` 的文件路径；启动时在档案为空的前提下一次性导入。 |
+| `APP_TRADING_ENABLED` | 否 | 后台模拟交易开关，默认 `true`；设成 `false` 后盘前/午盘/收盘与盘中轮询都不运行。 |
+| `app.trading.poll-seconds` | 否 | 盘中等价轮询间隔（秒），默认 10；可用 `APP_TRADING_POLL_SECONDS` 覆盖。 |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | 否 | OTLP/HTTP collector 根地址（自动补 `/v1/traces`）；留空则不启用 tracing。可选 `OTEL_SERVICE_NAME`、`OTEL_TRACES_SAMPLER_ARG`、`OTEL_SDK_DISABLED`。 |
 
 `.env`、`*.db`、`var/` 已在 `.gitignore` 中，密钥不要提交。
@@ -76,6 +78,31 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
 板块日线用 `v6/line/.../last.js`，同样免 cookie。东财 `push2` 的实时板块接口在本机网络被拦，
 所以板块数据只走同花顺。
 
+## 模拟交易（后台 Agent）
+
+页面侧栏「交易」是纯模拟盘（只记账，不动真钱）。应用内置一个独立的后台交易 Agent，
+按 A 股交易时段自行运行，过程与结论全部落库：
+
+| 时间（Asia/Shanghai） | 阶段 |
+| --- | --- |
+| 09:25 起每 5 分钟探测，09:30 后确认是交易日才跑 | 盘前：用基本面工具挑候选并写当日交易计划（限价、股数、止损、止盈） |
+| 11:35 | 午盘复盘：对照计划与早盘走势，可改下午计划 |
+| 15:05 | 收盘复盘 + 权益快照；过期未成交的委托作废 |
+| 09:30–11:30、13:00–15:00 每 `poll-seconds` 秒 | 查计划内标的报价，触发限价/止损/止盈就按计划自动成交 |
+
+交易日判定以行情返回的日期是否等于今天为准；行情拿不到时保持「未确认」，不会按旧价格下单。
+非交易日（含周末）不运行——周末没有探测，页面显示「交易日未确认」，等效于休市。
+
+持仓、计划、成交、阶段过程（prompt、工具调用、思考、引用）都在 `/api/trading/*` 与「交易」页；
+阶段失败会写 `error`，重启时把中断的 RUNNING 阶段标成错误并按窗口补跑盘前。
+
+每天午盘/收盘的复盘永久归档在 `trade_journal`，页面「复盘归档」按日期倒序列出全部复盘，
+正文里的引用同样可以点开；盘前提示词会带上最近 5 篇复盘，让交易 Agent 自己参考历史经验。
+
+复盘之外还有一份 Agent 自己维护的长期经验文档 `var/trading/experience.md`（页面「交易经验」卡片）：
+收盘阶段由 Agent 用 `save_trading_experience` 合并当天教训、去重、改写旧结论，整篇覆盖写，
+上一版留在 `experience.md.bak`；每个阶段的提示词都会注入当前全文，盘前和午盘只读。
+
 ## 测试
 
 ```bash
@@ -112,7 +139,7 @@ java -jar app/target/app-0.1.0-SNAPSHOT.jar
   `{"type":"error","text":"助手不可用：请先设置环境变量 DEEPSEEK_API_KEY"}` 且没有
   `conversation_id`。与 Python 版不同，Java 不预先建会话、不保存这条用户消息，
   所以刷新页面后该问题不在历史里。
-- 上下文压缩只配置了 `triggerTokens(80_000)`，没有移植 Python 的完整压缩策略。
+- 上下文压缩只配置了 `triggerTokens`（聊天默认 80_000，交易引擎 120_000），没有移植 Python 的完整压缩策略。
 - 运行记录缺少 `stream`、`message_count`、`input_chars`、`system_share`、`tool_share`、
   `system_prompt_hash`、`tools_hash`；详情页因此不显示流式标记，并会出现
   “消息 0 条 · system 0%”。`prompts`、`skills`、`calls` 目前也只保留空数组。

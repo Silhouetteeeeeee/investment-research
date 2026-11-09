@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>投资助手</title>
 <!-- 改样式或脚本后把 v 加一，避免浏览器继续用旧缓存 -->
-<link rel="stylesheet" href="/styles.css?v=20261031d" />
+<link rel="stylesheet" href="/styles.css?v=20261107a" />
 </head>
 <body>
 <div class="boot" id="boot" role="dialog" aria-label="启动动画">
@@ -33,6 +33,9 @@
     </button>
     <button class="archive-entry" @click="openMetrics()">
       <span>系统监控</span>
+    </button>
+    <button class="archive-entry" @click="openTrading()">
+      <span>交易</span><span class="count">{{ (trading && trading.positions && trading.positions.length) || 0 }}</span>
     </button>
 
     <div class="side-sec">
@@ -68,7 +71,7 @@
   </aside>
 
   <main class="main" @dragover.prevent @drop.prevent="onDrop">
-    <div class="panes" ref="panes" v-show="!archiveOpen && !metricsOpen">
+    <div class="panes" ref="panes" v-show="!archiveOpen && !metricsOpen && !tradingOpen">
       <chat-pane
         ref="leftPane"
         :style="leftStyle"
@@ -311,6 +314,298 @@
           </table>
           <div class="side-empty" v-if="!sortedTools.length">还没有工具调用记录</div>
         </div>
+      </div>
+    </section>
+
+    <section class="archive-view trading-view" v-if="tradingOpen">
+      <header class="archive-head">
+        <button class="archive-back" @click="closeTrading">← 返回对话</button>
+        <span class="archive-title">交易 · 模拟盘</span>
+        <select class="trading-date" :value="tradingDate" @change="selectTradingDate($event.target.value)">
+          <option value="">今天</option>
+          <option v-for="day in tradingDates" :key="day" :value="day">{{ day }}</option>
+        </select>
+        <span class="trading-status" :class="todayStatusClass" v-if="trading">{{ todayStatusText }}</span>
+        <span class="metrics-status" v-if="tradingError">{{ tradingError }}</span>
+        <span class="metrics-status" v-else-if="tradingLoading">正在读取交易状态…</span>
+      </header>
+
+      <div class="trading-body" v-if="trading">
+        <div class="metrics-cards">
+          <div class="metric-card">
+            <div class="metric-label">总权益</div>
+            <div class="metric-value">¥{{ money(trading.account.equity) }}</div>
+            <div class="metric-note">初始 ¥{{ money(trading.account.initial) }}</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">现金</div>
+            <div class="metric-value">¥{{ money(trading.account.cash) }}</div>
+            <div class="metric-note">持仓 {{ (trading.positions || []).length }} 只</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">今日盈亏</div>
+            <div class="metric-value" :class="pnlClass(trading.account.day_pnl)">{{ signedMoney(trading.account.day_pnl) }}</div>
+            <div class="metric-note">基准为上一交易日权益</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">累计收益</div>
+            <div class="metric-value" :class="pnlClass(trading.account.equity - trading.account.initial)">{{ pctText(trading.account.equity - trading.account.initial, trading.account.initial) }}</div>
+            <div class="metric-note">{{ signedMoney(trading.account.equity - trading.account.initial) }}</div>
+          </div>
+        </div>
+
+        <!-- 今日计划 -->
+        <div class="trading-card">
+          <div class="trading-card-head">
+            <span>
+              交易计划
+              <template v-if="trading.plan">v{{ trading.plan.version }}（{{ phaseLabel(trading.plan.phase) }}）</template>
+            </span>
+            <span class="trading-tag" v-if="trading.plan">{{ trading.plan.status }}</span>
+          </div>
+          <template v-if="trading.plan">
+            <div class="body trading-notes" v-if="trading.plan.notes" v-html="planHtml" @click="onTradingCite"></div>
+            <div class="metrics-table-wrap">
+              <table class="metrics-table trading-table">
+                <thead>
+                  <tr>
+                    <th>方向</th><th>代码</th><th>名称</th><th>限价</th><th>股数</th>
+                    <th>止损</th><th>止盈</th><th>状态</th><th>来源</th><th>理由</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in trading.plan.items" :key="item.id">
+                    <td :class="item.side === 'BUY' ? 'side-buy' : 'side-sell'">{{ sideLabel(item.side) }}</td>
+                    <td class="mono">{{ item.code }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.trigger_price == null ? "市价" : "¥" + price(item.trigger_price) }}</td>
+                    <td>{{ item.shares }}</td>
+                    <td>{{ item.stop_loss == null ? "--" : "¥" + price(item.stop_loss) }}</td>
+                    <td>{{ item.take_profit == null ? "--" : "¥" + price(item.take_profit) }}</td>
+                    <td>{{ itemStatusLabel(item.status) }}</td>
+                    <td>{{ item.source === "AUTO" ? "风控" : "Agent" }}</td>
+                    <td class="trading-reason">{{ item.reason }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="side-empty" v-if="!trading.plan.items.length">这一版计划没有委托，今天不交易</div>
+          </template>
+          <div class="side-empty" v-else>今天还没有交易计划</div>
+        </div>
+
+        <!-- 阶段过程 -->
+        <div class="trading-card">
+          <div class="trading-card-head"><span>阶段过程</span><span class="trading-tag" v-if="trading.today_status">{{ todayStatusText }}</span></div>
+          <div class="trading-phases">
+            <button
+              v-for="phase in trading.phases"
+              :key="phase.id"
+              class="trading-phase"
+              :class="{ active: tradingPhaseId === phase.id }"
+              @click="loadTradingPhase(phase.id)"
+            >
+              <span>{{ phaseLabel(phase.phase) }}</span>
+              <i :class="'phase-' + phase.status.toLowerCase()">{{ phaseStatusLabel(phase.status) }}</i>
+              <span class="trading-phase-meta">{{ shortTime(phase.finished_at || phase.started_at) }}</span>
+            </button>
+            <span class="side-empty" v-if="!trading.phases.length">还没有阶段记录</span>
+          </div>
+
+          <div class="trading-live" v-if="tradingLive.text || tradingLive.thinking || tradingLive.tools.length">
+            <div class="trading-live-title">实时</div>
+            <div class="trading-tools" v-if="tradingLive.tools.length">
+              <span class="trading-chip" v-for="(tool, index) in tradingLive.tools" :key="index">
+                {{ tool.name }}{{ tool.ok === false ? " · 失败" : "" }} · {{ formatDuration(tool.duration_ms) }}
+              </span>
+            </div>
+            <pre class="trading-thinking" v-if="tradingLive.thinking">{{ tradingLive.thinking }}</pre>
+            <div class="body trading-answer" v-if="tradingLive.text" v-html="liveHtml" @click="onTradingCite"></div>
+          </div>
+
+          <div class="trading-detail" v-if="tradingPhaseDetail">
+            <div class="trading-detail-head">
+              <span>{{ phaseLabel(tradingPhaseDetail.phase) }} · {{ phaseStatusLabel(tradingPhaseDetail.status) }}</span>
+              <span class="trading-detail-time">{{ shortTime(tradingPhaseDetail.started_at) }} → {{ shortTime(tradingPhaseDetail.finished_at) || "进行中" }}</span>
+              <span class="trading-error" v-if="tradingPhaseDetail.error">{{ tradingPhaseDetail.error }}</span>
+            </div>
+            <nav class="trading-tabs">
+              <button :class="{ active: tradingPhaseTab === 'answer' }" @click="tradingPhaseTab = 'answer'">回答与引用</button>
+              <button :class="{ active: tradingPhaseTab === 'thinking' }" @click="tradingPhaseTab = 'thinking'">思考过程</button>
+              <button :class="{ active: tradingPhaseTab === 'trace' }" @click="tradingPhaseTab = 'trace'">工具时间线</button>
+              <button :class="{ active: tradingPhaseTab === 'raw' }" @click="tradingPhaseTab = 'raw'">工具原始返回</button>
+              <button :class="{ active: tradingPhaseTab === 'run' }" @click="tradingPhaseTab = 'run'">运行记录</button>
+            </nav>
+            <div class="body trading-answer" v-show="tradingPhaseTab === 'answer'" v-html="phaseAnswerHtml" @click="onTradingCite"></div>
+            <pre class="trading-pre" v-show="tradingPhaseTab === 'thinking'">{{ phaseThinking || "这次阶段没有留下思考过程" }}</pre>
+            <div class="metrics-table-wrap" v-show="tradingPhaseTab === 'trace'">
+              <table class="metrics-table trading-table">
+                <thead><tr><th>轮次</th><th>工具</th><th>公司</th><th>结果</th><th>耗时</th><th>数据日期</th><th>参数</th></tr></thead>
+                <tbody>
+                  <tr v-for="(step, index) in phaseTrace" :key="index">
+                    <td>{{ step.round }}</td>
+                    <td class="mono">{{ step.name }}</td>
+                    <td>{{ step.company || "--" }}</td>
+                    <td>{{ step.ok ? (step.cached ? "复用缓存" : "成功") : "失败" }}</td>
+                    <td>{{ formatDuration(step.durationMs) }}</td>
+                    <td>{{ step.asOf || "--" }}</td>
+                    <td class="trading-reason">{{ compactJson(step.arguments) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="side-empty" v-if="!phaseTrace.length">没有工具调用</div>
+            </div>
+            <pre class="trading-pre" v-show="tradingPhaseTab === 'raw'">{{ phaseRawJson }}</pre>
+            <pre class="trading-pre" v-show="tradingPhaseTab === 'run'">{{ phaseRunJson }}</pre>
+            <div class="trading-issues" v-if="phaseIssues.length">
+              <div v-for="(issue, index) in phaseIssues" :key="index">{{ issue }}</div>
+            </div>
+            <div class="trading-sources" v-if="phaseSources.length">
+              <div class="trading-sources-title">引用来源（{{ phaseSources.length }}）</div>
+              <button class="trading-source" v-for="(source, index) in phaseSources" :key="source.id" @click="showTradingSource(source)">
+                <span class="src-num">{{ index + 1 }}</span>
+                <span>{{ source.label }}</span>
+                <span class="trading-source-detail">{{ source.detail }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 持仓 -->
+        <div class="trading-card">
+          <div class="trading-card-head"><span>持仓</span></div>
+          <div class="metrics-table-wrap">
+            <table class="metrics-table trading-table">
+              <thead><tr><th>代码</th><th>名称</th><th>股数</th><th>可用</th><th>成本</th><th>现价</th><th>市值</th><th>浮盈</th></tr></thead>
+              <tbody>
+                <tr v-for="position in trading.positions" :key="position.code">
+                  <td class="mono">{{ position.code }}</td>
+                  <td>{{ position.name }}</td>
+                  <td>{{ position.shares }}</td>
+                  <td>{{ position.available }}</td>
+                  <td>¥{{ price(position.avg_cost) }}</td>
+                  <td>¥{{ price(position.price) }}</td>
+                  <td>¥{{ money(position.value) }}</td>
+                  <td :class="pnlClass(position.pnl)">{{ signedMoney(position.pnl) }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="side-empty" v-if="!trading.positions.length">空仓</div>
+          </div>
+        </div>
+
+        <!-- 成交 -->
+        <div class="trading-card">
+          <div class="trading-card-head"><span>当日成交</span></div>
+          <div class="metrics-table-wrap">
+            <table class="metrics-table trading-table">
+              <thead><tr><th>时间</th><th>方向</th><th>代码</th><th>名称</th><th>价格</th><th>股数</th><th>金额</th><th>费用</th><th>已实现</th><th>理由</th></tr></thead>
+              <tbody>
+                <tr v-for="order in trading.orders" :key="order.id">
+                  <td>{{ order.quote_time || "--" }}</td>
+                  <td :class="order.side === 'BUY' ? 'side-buy' : 'side-sell'">{{ sideLabel(order.side) }}</td>
+                  <td class="mono">{{ order.code }}</td>
+                  <td>{{ order.name }}</td>
+                  <td>¥{{ price(order.price) }}</td>
+                  <td>{{ order.shares }}</td>
+                  <td>¥{{ money(order.amount) }}</td>
+                  <td>¥{{ money(order.fee + order.tax) }}</td>
+                  <td :class="pnlClass(order.realized_pnl)">{{ order.realized_pnl == null ? "--" : signedMoney(order.realized_pnl) }}</td>
+                  <td class="trading-reason">{{ order.reason }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="side-empty" v-if="!trading.orders.length">今天没有成交</div>
+          </div>
+        </div>
+
+        <!-- 复盘 -->
+        <div class="trading-card">
+          <div class="trading-card-head"><span>复盘</span></div>
+          <div class="trading-journals">
+            <div class="trading-journal" v-for="journal in trading.journals" :key="journal.id">
+              <div class="trading-journal-head">{{ phaseLabel(journal.phase) }}复盘</div>
+              <div class="body" v-html="journalHtml(journal)" @click="onTradingCite"></div>
+            </div>
+            <div class="side-empty" v-if="!trading.journals.length">还没有复盘</div>
+          </div>
+        </div>
+
+        <!-- 交易经验：Agent 自己维护的长期沉淀，每日复盘之外的另一份文档 -->
+        <div class="trading-card">
+          <div class="trading-card-head">
+            <span>交易经验</span>
+            <span class="trading-tag">Agent 长期维护</span>
+          </div>
+          <div class="trading-journals">
+            <div class="trading-journal" v-if="tradingExperience.content">
+              <div class="trading-journal-head" v-if="tradingExperience.updated_at">更新于 {{ tradingExperience.updated_at }}</div>
+              <div class="body" v-html="experienceHtml"></div>
+            </div>
+            <div class="side-empty" v-if="!tradingExperience.content">还没有沉淀出经验</div>
+          </div>
+        </div>
+
+        <!-- 复盘归档：每日复盘原文长期保存，用户点开学习 -->
+        <div class="trading-card">
+          <div class="trading-card-head">
+            <span>复盘归档</span>
+            <span class="trading-tag">每日复盘长期保存</span>
+          </div>
+          <div class="trading-journals">
+            <div class="trading-journal" v-for="journal in tradingArchive" :key="journal.id">
+              <div class="trading-journal-head">
+                {{ journal.date }} · {{ phaseLabel(journal.phase) }}复盘
+              </div>
+              <div class="body" v-html="journalHtml(journal)" @click="onTradingCite"></div>
+            </div>
+            <div class="side-empty" v-if="!tradingArchive.length">还没有复盘归档</div>
+          </div>
+        </div>
+
+        <!-- 盘中检查 -->
+        <div class="trading-card">
+          <details class="trading-tick" v-if="trading.tick">
+            <summary>盘中检查 · {{ trading.tick.checked_at }}<span class="trading-error" v-if="trading.tick.error"> · {{ trading.tick.error }}</span></summary>
+            <div class="metrics-table-wrap">
+              <table class="metrics-table trading-table">
+                <thead><tr><th>代码</th><th>名称</th><th>现价</th><th>昨收</th><th>今开</th><th>最高</th><th>最低</th><th>时间</th></tr></thead>
+                <tbody>
+                  <tr v-for="quote in trading.tick.quotes" :key="quote.code">
+                    <td class="mono">{{ quote.code }}</td>
+                    <td>{{ quote.name }}</td>
+                    <td>¥{{ price(quote.priceCents) }}</td>
+                    <td>¥{{ price(quote.prevCloseCents) }}</td>
+                    <td>¥{{ price(quote.openCents) }}</td>
+                    <td>¥{{ price(quote.highCents) }}</td>
+                    <td>¥{{ price(quote.lowCents) }}</td>
+                    <td>{{ quote.quoteTime }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="side-empty" v-if="!trading.tick.quotes.length">这次检查没有拿到报价</div>
+            </div>
+            <div class="trading-executed" v-if="trading.tick.executed.length">
+              <div class="trading-executed-row" v-for="(execution, index) in trading.tick.executed" :key="index">
+                {{ sideLabel(execution.side) }} {{ execution.code }} {{ execution.shares }} 股 @ ¥{{ price(execution.priceCents) }} · {{ execution.note }}
+              </div>
+            </div>
+          </details>
+          <div class="side-empty" v-else>今天还没有盘中检查记录</div>
+        </div>
+      </div>
+      <div class="side-empty trading-empty" v-else-if="!tradingLoading && !tradingError">还没有交易数据</div>
+
+      <div class="trading-cite" v-if="tradingCite">
+        <div class="trading-cite-head">
+          <span>{{ tradingCite.label || tradingCite.id }}</span>
+          <button class="icon-btn close" @click="tradingCite = null">✕</button>
+        </div>
+        <p class="sp-detail" v-if="tradingCite.detail">{{ tradingCite.detail }}</p>
+        <div class="trading-cite-meta">
+          数据日期 {{ tradingCite.as_of || "未标注" }} · 来源编号 {{ tradingCite.id || "--" }}
+        </div>
+        <a class="sp-link" v-if="tradingCite.url" :href="tradingCite.url" target="_blank" rel="noreferrer">打开原文 ↗</a>
       </div>
     </section>
 
@@ -635,6 +930,6 @@
 <script src="/assets/marked.umd.js"></script>
 <script src="/assets/purify.min.js"></script>
 <script src="/boot.js?v=20261029c"></script>
-<script src="/app.js?v=20261031e"></script>
+<script src="/app.js?v=20261107c"></script>
 </body>
 </html>

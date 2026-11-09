@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.agentscope.core.message.ContentBlock;
 import io.agentscope.core.message.Msg;
 import io.agentscope.core.message.TextBlock;
+import io.agentscope.core.message.ThinkingBlock;
 import io.agentscope.core.message.ToolUseBlock;
 import io.agentscope.core.model.ChatResponse;
 import io.agentscope.core.model.GenerateOptions;
@@ -35,7 +36,34 @@ public final class ScriptedModel implements Model {
         return reply(TextBlock.builder().text(text).build(), "stop");
     }
 
+    public static ChatResponse thinkingThenText(String thinking, String text) {
+        return ChatResponse.builder()
+                .id("reply")
+                .content(
+                        List.of(
+                                ThinkingBlock.builder().thinking(thinking).build(),
+                                TextBlock.builder().text(text).build()))
+                .finishReason("stop")
+                .build();
+    }
+
     public static ChatResponse toolCall(String name, Map<String, Object> arguments) {
+        return reply(toolUse(name, arguments), "tool_calls");
+    }
+
+    public static ChatResponse thinkingThenToolCall(
+            String thinking, String name, Map<String, Object> arguments) {
+        return ChatResponse.builder()
+                .id("reply")
+                .content(
+                        List.of(
+                                ThinkingBlock.builder().thinking(thinking).build(),
+                                toolUse(name, arguments)))
+                .finishReason("tool_calls")
+                .build();
+    }
+
+    private static ToolUseBlock toolUse(String name, Map<String, Object> arguments) {
         Map<String, Object> input = arguments == null ? Map.of() : arguments;
         String content;
         try {
@@ -43,15 +71,13 @@ public final class ScriptedModel implements Model {
         } catch (JsonProcessingException error) {
             throw new IllegalArgumentException(error);
         }
-        return reply(
-                ToolUseBlock.builder()
-                        .id("call_" + name + "_" + UUID.randomUUID().toString().substring(0, 8))
-                        .name(name)
-                        .input(input)
-                        // AgentScope 用 content 做参数校验，input 只负责交给工具
-                        .content(content)
-                        .build(),
-                "tool_calls");
+        return ToolUseBlock.builder()
+                .id("call_" + name + "_" + UUID.randomUUID().toString().substring(0, 8))
+                .name(name)
+                .input(input)
+                // AgentScope 用 content 做参数校验，input 只负责交给工具
+                .content(content)
+                .build();
     }
 
     private static ChatResponse reply(ContentBlock block, String finishReason) {

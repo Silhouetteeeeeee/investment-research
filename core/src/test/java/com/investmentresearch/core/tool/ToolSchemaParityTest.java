@@ -41,7 +41,11 @@ import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-/** The registered schemas must be byte-for-byte the Python export, key order included. */
+/**
+ * The registered schemas must be byte-for-byte the Python export, key order included. The only
+ * deliberate deviation is {@code annotate_research_status} in {@code gen_golden.py}, which adds
+ * the section-specific status enums that Python's schema leaves to runtime validation.
+ */
 class ToolSchemaParityTest {
 
     private static final CompanyDirectory DIRECTORY =

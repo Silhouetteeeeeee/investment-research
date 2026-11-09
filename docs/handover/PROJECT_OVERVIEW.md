@@ -19,6 +19,7 @@ Python 仓库**保持不动**，作为金标准对照基准（含 `data/stock.db
 - 会话/消息持久化、运行记录（`var/runs/<run_id>.json`）、证据回取。
 - `/api/**` + SSE 契约，前端 `frontend/` 原样复用（仅加令牌输入）。
 - 研究档案（记忆）读写与旧库导入。
+- 后台模拟交易 Agent（2026-11-07 新增）：盘前计划、午盘/收盘复盘、盘中按计划自动成交、自有持仓与权益快照、「交易」页全过程回放。只记账，不动真钱。
 
 **不在范围内（迁移设计「非目标」）**
 
@@ -38,8 +39,9 @@ Python 仓库**保持不动**，作为金标准对照基准（含 `data/stock.db
 | 阶段 3 | 大盘、新闻事件、板块轮动、选股、策略、复盘、研究档案 | **已实现** | 提交 `43b0d17`..`12b6585`；`AskFlowTest` 大盘用例、`ResearchMemoryStoreTest` |
 | 阶段 4 | 硬化：全量对照、慢查询与并发、日志/指标/追踪、备份恢复演练、MySQL profile（Testcontainers）、Redis/RabbitMQ profile 可启动 | **部分实现** | 指标 `/api/metrics` + Micrometer；OTel traces 按需导出（`TracingConfig`）；其余无代码证据 |
 | 阶段 5 | 切换：云服务器部署、Python 版停服、保留金标准夹具 | **计划实现** | 未开始 |
+| 交易 Agent | 模拟交易：V13 九张表、4 个交易工具、阶段调度与交易日门禁、盘中轮询、长期经验文档、`/api/trading/*`、交易页 | **已实现** | 分支 `feat/trading-agent`；`TradingRulesTest`、`TradingExecutorTest`、`TradingSchedulerTest`、`TradingViewTest`、`TradingControllerTest` |
 
-当前分支 `main`，HEAD 见 `git log`。`./mvnw verify` 现状：core 130 / data 134 / app 81 全绿。
+当前分支 `feat/trading-agent`，HEAD 见 `git log`。`./mvnw verify` 现状：core 204 / data 146 / app 107 全绿（2026-11-07）。
 
 ## 4. 技术栈
 
@@ -88,7 +90,7 @@ investment-research/
 
 ## 7. 已知差异（详见 `TODO_AND_KNOWN_ISSUES.md`）
 
-- 上下文压缩只配置了 `triggerTokens(80_000)`，未移植 Python 的完整裁剪策略。
+- 上下文压缩只配置了 `triggerTokens`（聊天默认 55_000、交易引擎 120_000），未移植 Python 的完整裁剪策略。
 - 运行记录缺 `stream`、`message_count`、`system_prompt_hash`、`tools_hash` 等字段，详情页部分信息为空。
 - token 用量多数按估算（`usage_source: "estimate"`），不是计费依据。
 - 缺 `DEEPSEEK_API_KEY` 时不建会话、不落历史。

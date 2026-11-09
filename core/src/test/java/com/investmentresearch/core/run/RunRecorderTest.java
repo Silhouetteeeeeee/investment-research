@@ -144,6 +144,22 @@ class RunRecorderTest {
     }
 
     @Test
+    void records_prompts_calls_and_thinking() {
+        RunRecorder recorder = recorder();
+        recorder.start(-20261107L, "盘前");
+        recorder.recordPrompt("系统提示");
+        recorder.recordPrompt("系统提示");
+        recorder.recordCall(1, List.of(Map.of("role", "USER", "text", "问题")));
+        recorder.recordThinking("先看账户");
+        recorder.finish("answered", null);
+
+        Map<String, Object> payload = recorder.payload();
+        assertThat((List<?>) payload.get("prompts")).hasSize(1);
+        assertThat((List<?>) payload.get("calls")).hasSize(1);
+        assertThat(payload.get("thinking")).isEqualTo("先看账户");
+    }
+
+    @Test
     void missing_ttft_is_null_not_zero() {
         RunRecorder recorder = recorder();
         recorder.start(17, "研究一下");

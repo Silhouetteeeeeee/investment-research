@@ -28,7 +28,7 @@
 ```bash
 cd /d/Programming/investment-research
 export JAVA_HOME=/c/Users/dudu/.jdks/ms-21.0.10        # 本机 JDK 21 位置
-./mvnw verify                    # 期望 core 130 / data 134 / app 81，BUILD SUCCESS
+./mvnw verify                    # 期望 core 229 / data 152 / app 107，BUILD SUCCESS（先 unset DEEPSEEK_API_KEY，并 export APP_SKILLS_DIR=../skills）
 ./mvnw -q spotless:check         # 期望退出 0
 git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 ```
@@ -56,12 +56,12 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 | --- | --- |
 | 应用端口 / 管理端口 | 8080 / 8081（仅回环，仅 `health`） |
 | 唯一编排入口 | `core.service.AskService.ask(Long, String, EventSink)`（`AskService.java:60`） |
-| HTTP | `POST /api/ask`（SSE）、`/api/conversations/*`、`/api/research/companies*`、`/api/stocks/{code}/kline`、`/api/metrics`、`/health` |
-| SSE 事件 | `state` `text` `discard` `tool` `meter` `done` `error` `warning`（`SseEmitter` 600s，虚拟线程） |
-| Agent | `core.agent.AgentEngine` → `HarnessAgent.streamEvents`，`maxIters=10`、`temperature=0.3`、`CompactionConfig.triggerTokens(80_000)` |
+| HTTP | `POST /api/ask`（SSE）、`/api/conversations/*`、`/api/research/companies*`、`/api/stocks/{code}/kline`、`/api/trading/state|dates|equity|phases/{id}|journals|experience|stream`、`/api/metrics`、`/health` |
+| SSE 事件 | 聊天：`state` `text` `discard` `tool` `meter` `done` `error` `warning`（`SseEmitter` 600s，虚拟线程）；交易：`phase` `monitor` `tool` `thinking` `text` `heartbeat`（30 分钟，`TradingBroadcaster`） |
+| Agent | `core.agent.AgentEngine` → `HarnessAgent.streamEvents`，`maxIters=10`、`temperature=0.3`、`CompactionConfig.triggerTokens(80_000)`；交易侧独立 `tradingEngine`（`prompts/trading.md`，maxTurns=14、压缩阈值 120_000） |
 | 模型 | 默认 `deepseek:deepseek-v4-flash`（`AgentProperties.DEFAULT_MODEL`）；无 key → `UnavailableEngine` |
-| 工具 | 注册 33 个；`tool-schemas.json` 34 条（第 33 条 `load_skill` 由框架提供为 `load_skill_through_path`；第 34 条 `web_search` 为 Java 新增，schema 手写）；18 个时效工具不缓存 |
-| 数据 | `var/app.db`（Flyway V1–V12，33 张业务表 + 2 张系统表）、`var/runs/*.json`、`var/sessions/`、`var/workspace/` |
+| 工具 | 聊天注册 33 个、交易注册 37 个（多 `get_trading_state`/`save_trade_plan`/`save_trading_journal`/`save_trading_experience`）；`tool-schemas.json` 38 条（`load_skill` 由框架提供为 `load_skill_through_path`；`web_search` 与 4 个交易工具为 Java 新增，schema 手写）；18 个时效工具不缓存 |
+| 数据 | `var/app.db`（Flyway V1–V13，42 张业务表 + 2 张系统表）、`var/runs/*.json`、`var/sessions/`、`var/workspace/`、`var/trading/experience.md`（Agent 维护的长期交易经验，`.bak` 为上一版） |
 | 追踪 | OTel traces 按需经 OTLP/HTTP 导出（`OTEL_EXPORTER_OTLP_ENDPOINT`，留空为 no-op）；`app/config/TracingConfig` 建 SDK，`AgentEngine` 挂 `OtelTracingMiddleware`；指标走 `/api/metrics` |
 | Prompt | `core/src/main/resources/prompts/system.md`；skill 正文 `skills/<name>/SKILL.md`（15 个） |
 | 金标准 | `core/src/test/resources/golden/**`、`fixtures/*.db`、`data/src/test/resources/wiremock/**`（由 `tools/golden/gen_golden.py`、`tools/fixtures/record.py` 生成） |
@@ -71,12 +71,14 @@ git log --oneline -5             # 期望 HEAD 是 12b6585 或之后
 
 阶段 0–3 **已实现**（骨架与鉴权、第一问纵向切片、公司研究技能、大盘/新闻/板块/选股/策略/复盘/档案）；阶段 4 只落了指标与 OTel traces（`/api/metrics`、`TracingConfig`），MySQL/Testcontainers、日志 JSON/ traceId、CI、备份演练与阶段 5（切换部署）**尚未开始**。
 
+分支 `feat/trading-agent` 新增**后台模拟交易 Agent**（2026-11-07，纯模拟盘）：盘前计划 → 盘中按计划自动成交 → 午盘/收盘复盘，交易日门禁、`/api/trading/*` 与「交易」页；未合并到 `main`。
+
 **真实链路覆盖**：有一个可选的 `LiveSkillSmoke`（`LIVE_SMOKE=1` + `DEEPSEEK_API_KEY` 才跑，默认 `verify` 不执行）检查真实模型的 skill 路由；完整问答（引用 → 运行详情 → 刷新回放）仍靠人工实跑，新会话接手后第一件值得做的事就是跑一次。
 
 ## 6. 改动怎么做（摘要，详见 `docs/handover/CLAUDE_HANDOVER.md`）
 
 - **新增工具**：Python 侧先有同名工具 → schema 由 `tools/golden/gen_golden.py` 生成（不手写；Python 没有的 Java 新工具才手工追加 schema，并在 `ToolSchemasTest` 注明）→ 在 `core/tool/` 新建类（公司类继承 `CompanyTool`）→ 需要新数据先加 `core/port` 再在 `data/adapter` 实现 → 在 `AssistantConfig.toolRegistry` 按 Python 顺序注册 → 补 skill 工具规则与测试。
-- **新增迁移**：新建 `data/src/main/resources/db/migration/sqlite/V13__xxx.sql`，**不改已发布的 V1–V12**。
+- **新增迁移**：新建 `data/src/main/resources/db/migration/sqlite/V14__xxx.sql`，**不改已发布的 V1–V13**。
 - **改 SSE**：`core/service/AskService` 构造事件 → 同步改 `frontend/app.js` 解析分支与 `docs/handover/API_AND_INTERFACE.md` → `AskServiceTest` 断言事件顺序。
 - **工作方式**：TDD（先写失败测试）、小步提交（`feat(area): …` / `fix(area): …`）、改完 `./mvnw verify` + `spotless:check` 双绿；代码注释以中文为主，讲「为什么」；有分歧的决策记在本地台账 `.superpowers/sdd/<plan>/progress.md`（git 忽略）。
 

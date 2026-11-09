@@ -117,7 +117,7 @@ TokenAuthFilter.doFilterInternal                     app/security/TokenAuthFilte
 
 | 机制 | 位置 | 行为 |
 | --- | --- | --- |
-| 框架压缩 | `AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(80_000))` | 超过阈值由 HarnessAgent 压缩 |
+| 框架压缩 | `AgentEngine.buildAgent` 的 `CompactionConfig(triggerTokens(properties.compactionTokens()))`（默认 55_000，交易 120_000） | 超过阈值由 HarnessAgent 压缩 |
 | 占用估算 | `ContextMeter.usage(cid, draftTokens)` | 固定成本（system.md + tool-schemas.json）+ 消息文本 + 每消息开销 + 草稿；预算 55k、硬上限 80k |
 | 推送 | `AskService` 的 `listener` | 初始一次；文本每 ≥400ms；`discard`/`tool` 后归零 |
 | 会话状态 | `JsonFileAgentStateStore(dataDir/sessions)` | 按 `sessionId=conversationId` 持久化 |
@@ -152,3 +152,12 @@ TokenAuthFilter.doFilterInternal                     app/security/TokenAuthFilte
 | 前端 | 401 → 弹令牌输入；SSE `error` → 在气泡里展示「研究失败：…」并允许打开运行详情 |
 
 **不会发生**：错误被静默丢弃后回答成功——`error` 事件与 `error` 消息至少有一条落地（`AskServiceTest` 覆盖）。
+
+## Q11. 模拟交易 Agent 在哪里、怎么跑？
+
+1. **入口**：`app/.../trading/TradingScheduler` 的 `@Scheduled` 方法——盘前 `0 25,30,35,40,45 9 * * MON-FRI`、午盘 `0 35 11 * * MON-FRI`、收盘 `0 5 15 * * MON-FRI`、盘中 `fixedDelayString = poll-seconds`（默认 10s）。
+2. **交易日门禁**：`core/trading/TradingDayGate.status(date)` 用 `QuotePort.quotes(...)` 的 `quoteDate` 是否为今天判定；上游失败/日期不符 → `UNCONFIRMED`，09:45 仍未确认按休市处理，绝不按旧价下单。
+3. **阶段**：`TradingService.runPhase(date, phase, listener)` → 独立 `tradingEngine`（`prompts/trading.md`）→ 模型调用工具（`get_trading_state` / `save_trade_plan` / `save_trading_journal`）→ 计划、复盘、阶段记录、run 原文落库。
+4. **盘中成交**：`TradingExecutor.tick(date, now)` 取计划内代码的实时报价（不缓存），按 `TradingRules` 判定限价/止损/止盈，`TradingRepository.claim` 条件更新保证只成交一次；tick 最多 60s 落一次库。
+5. **页面/接口**：`TradingView` 组装只读快照（不探测上游）→ `TradingController` 的 `/api/trading/state|dates|equity|phases/{id}|stream` → `frontend/app.js` 的 `openTrading/connectTradingStream`。
+6. **持久化**：`data/persistence/TradingRepositoryImpl` + `V13__trading.sql` 九张表。

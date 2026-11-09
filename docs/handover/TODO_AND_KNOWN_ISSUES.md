@@ -6,7 +6,7 @@
 
 | # | 问题 | 状态 | 证据 | 建议 |
 | --- | --- | --- | --- | --- |
-| 1 | 上下文压缩只配了 `triggerTokens(80_000)`，没有 Python 的 55k 软阈值摘要与裁剪 | 已确认（有意简化） | `AgentEngine`、`ContextMeter`；README「已知差异」 | 若要追平，需要事件映射到摘要步骤；成本高，先不动 |
+| 1 | 上下文压缩只配了 `triggerTokens`（聊天默认 55_000、交易 120_000），没有 Python 的 55k 软阈值摘要与裁剪 | 已确认（有意简化）；阈值已按 harness 估算偏差调到 55k，压缩丢 sources 导致 `[?]` 的问题已由会话级 `sources.json` 补偿（2026-11-09） | `AgentEngine`、`ContextMeter`；README「已知差异」 | 若要追平，需要事件映射到摘要步骤；成本高，先不动 |
 | 2 | 运行记录缺 `stream`、`message_count`、`input_chars`、`system_share`、`tool_share`、`system_prompt_hash`、`tools_hash`；`prompts`/`skills`/`calls` 恒为空数组 | 已确认 | `RunRecorder`；README 已知差异 | 详情页因此显示「消息 0 条 · system 0%」，需要时补字段 |
 | 3 | `fin_disclosure` 表没有任何写入者，披露触发的财报刷新不会生效 | 已确认 | `FinanceAdapter.java:46` 注释 | 要么接 `stock/disclosure_service.py`，要么删掉这段逻辑 |
 | 4 | `XQ_TOKEN` / 雪球数据未接入 | 已确认 | 全仓无代码读取；仅 `.env.example`/`compose.yaml`/README | 明确从范围内移除或补实现 |
@@ -15,6 +15,25 @@
 | 7 | 金标准覆盖不完整：`get_research_notes` 仅 2 家；`601318` 缺 8 张缓存表；`600600`/`601606` 缺回购；`600600`/`601318` 缺解禁；`601606` 缺内部人 | 已确认 | README；`golden/tools` 文件清单 | 换公司回放会「缺数据」，不是 bug |
 | 8 | MySQL 方言迁移、Testcontainers、Redis/RabbitMQ 实际接入 | 计划实现（阶段 4） | 迁移设计「阶段 4」；无代码 | 见 §5 |
 | 9 | 应用日志 JSON、指标、Tracing、OTLP | 部分实现（阶段 4） | `/api/**` 审计日志已写 `var/logs/audit.log`（JSON Lines）；指标走 Micrometer/`/api/metrics`；OTel traces 按需经 OTLP/HTTP 导出（`TracingConfig` + AgentScope `OtelTracingMiddleware`，需 `OTEL_EXPORTER_OTLP_ENDPOINT`）；应用日志仍非 JSON，日志里没有 traceId | 见 §5 |
+
+### 1.1 会话数据观察（2026-11-09）
+
+| # | 问题 | 状态 | 证据 | 影响 |
+| --- | --- | --- | --- | --- |
+| S1 | 旧会话里已落库的 `[?]` 无法回溯修复 | 已确认 | 引用在落库前就被 `CitationValidator` 替换，原始 id 没有存储 | 修复只对 2026-11-09 之后的新回答生效；旧回答要重跑 |
+| S2 | 32 条用户消息只对应 30 条运行记录，conv5/conv7 各有一条无回复的用户消息 | 待确认 | `var/app.db`（62 条消息）、`var/runs`（30 个 JSON）、审计日志 37 次 `POST /api/ask`；前端已有 `busy` 防重 | 可能是客户端中断或进程异常；需要保留现场日志才能定位，先不加并发锁 |
+| S3 | `append_research_record` 18 次失败中，5 次是空参数、4 次引用了不存在的 F/H 编号、7 次 `status` 取值非法 | 部分修复 | `var/runs/*.json`；schema 已补 `status` 枚举（2026-11-09） | 空参数与陈旧编号仍要靠模型重试，错误信息只能提示 |
+
+### 1.2 模拟交易（2026-11-07）| # | 问题 | 状态 | 证据 | 影响 |
+| --- | --- | --- | --- | --- |
+| T1 | 成交按报价直接全成/全不成，无滑点、无部分成交、无盘口深度 | 已确认（模拟盘设计） | `TradingExecutor` | 收益偏乐观；只适合看流程与策略纪律 |
+| T2 | 盘前候选依赖基本面工具与模型判断，可能一天都不出计划（「今天不交易」也是合法结论） | 已确认 | `TradingService`；`save_trade_plan` 允许空 items | 空计划日没有成交，不是故障 |
+| T3 | 交易日判定依赖新浪报价日期；周末不探测，页面显示「交易日未确认」而非「休市」 | 已确认 | `TradingDayGate`、`TradingScheduler` 的 MON-FRI cron | 行为等价（不运行），只是文案 |
+| T4 | 9:30 前拿到的报价可能是昨收/集合竞价，报价日期刷新时点取决于上游 | 待确认 | 需真实交易日观察 | 极端情况下门禁要多等几个 5 分钟窗口 |
+| T5 | 阶段超时只中断线程，若引擎不响应中断仍可能残留半成品（阶段已标 ERROR） | 已确认 | `TradingScheduler.runPhase` | 唯一副作用是可能多一次上游调用 |
+| T6 | 交易页无自动化测试；SSE/思考流只能人工看 | 已确认 | Task 14 手测记录 | 前端回归靠人工 |
+| T7 | 交易无手续费之外的税费/融资成本，T+1 只按「今日买入」数量扣减可用 | 已确认（模拟盘简化） | `TradingRules` | 与真实券商略有差异 |
+| T8 | 多实例部署时会重复调度 | 已确认（单实例前提） | `TradingScheduler` 无分布式锁 | 与迁移设计「单实例前提」一致 |
 
 ## 2. 已知缺陷与技术债
 
@@ -73,7 +92,7 @@
 | 2 | README 说 `spring-boot:run` 工作目录是 `app/`，实际被 `spring-boot-maven-plugin.workingDirectory` 设成仓库根（已实测：DB 落在 `./var/app.db`、`/` 200）；README 的 `APP_SKILLS_DIR=../skills`、`static-locations=../frontend` 写法过时 | `app/pom.xml:73-75` vs `README.md:36-40`；**已确认** |
 | 3 | `ConversationController` 注释仍说 `RunStore`/`AssistantEngine` bean「Task 20 之后才有」，实际一直存在 | `ConversationController.java:35-36` |
 | 4 | `ApiConfig` 注释提到「Phase 1」与 10 分钟流式 | `ApiConfig.java:10-13` |
-| 5 | 迁移设计说 33 个工具、15 个 skill；README 说 33 个工具 | 差异来自 `load_skill`：schema 有 34 条（另含 Java 新增 `web_search`），Java 注册 33 个，`load_skill` 由框架提供 |
+| 5 | 迁移设计说 33 个工具、15 个 skill；README 说 33 个工具 | 差异来自 `load_skill`：schema 有 38 条（另含 Java 新增 `web_search` 与 4 个交易工具），聊天注册 33 个、交易注册 37 个，`load_skill` 由框架提供 |
 | 6 | 迁移设计写 `data/app.db`，实际默认 `./var/app.db` | `application.yml` 以代码为准 |
 
 ## 5. 阶段 4 / 5 待办（来自迁移设计，均未开始）
@@ -96,6 +115,6 @@
 
 ## 6. 交接后第一件该做的事
 
-1. 先跑 `./mvnw verify` + `./mvnw spotless:check`，确认与本文记录一致（core 130 / data 134 / app 81）。若数字变了，先看 `git log` 有没有新提交。
+1. 先跑 `./mvnw verify` + `./mvnw spotless:check`，确认与本文记录一致（core 229 / data 152 / app 107；跑前 `unset DEEPSEEK_API_KEY`、`export APP_SKILLS_DIR=../skills`，否则 app 测试会尝试装配真实交易引擎或找不到 skills 目录）。若数字变了，先看 `git log` 有没有新提交。
 2. 用真实 `DEEPSEEK_API_KEY` + 真实网络跑一次完整问答（离线环境无法代跑），重点看：引用 id 是否出现、运行详情是否有模型/工具阶段、刷新后能否回放。
 3. 再决定是否动 §2 的技术债；**不要**在没有实跑基线前重构 `AgentEngine` 或适配器。

@@ -23,7 +23,7 @@ graph TD
         D2["persistence: MyBatis-Plus Mapper/Entity、会话仓库、缓存库"]
         D3["upstream: RestClientUpstreamClient"]
         D4["sync: StockMasterSync"]
-        D5["db/migration/sqlite: Flyway V1–V12"]
+        D5["db/migration/sqlite: Flyway V1–V13"]
     end
     A1 --> C1
     A1 --> C2
@@ -95,6 +95,9 @@ graph LR
 | Mapper 扫描 | `data.config.MybatisPlusConfig` | `@MapperScan("com.investmentresearch.data.persistence")` |
 | `MemoryImportRunner` | `app.config` | `ApplicationRunner`，按 `APP_MEMORY_IMPORT` 导入旧档案 |
 | `StockMasterSync.refresh` | `data.sync` | `@Scheduled(cron="0 0 6 * * *")` 每日 06:00 刷新股票主表 |
+| `tradingContext` / `tradingToolRegistry` / `tradingEngine` | `TradingConfig` | 交易 Agent 的提示词上下文、聊天 33 个工具 + 4 个交易工具、独立引擎（同为 `UnavailableEngine` 回落） |
+| `tradingService` / `tradingExecutor` / `tradingScheduler` | `TradingConfig` | 阶段编排、盘中按计划成交、定时与补跑 |
+| `tradingDayGate` / `quoteCache` / `tradingView` / `tradingBroadcaster` / `tradingExperience` | `TradingConfig` | 交易日门禁、盘中报价缓存、只读页面视图、交易 SSE、Agent 维护的长期经验文档（`var/trading/experience.md`） |
 
 ## 4. 核心业务调用序列（一次提问）
 
@@ -154,6 +157,43 @@ sequenceDiagram
     SW-->>B: data: {...} × N，连接结束
 ```
 
+### 4.1 后台交易 Agent（阶段 + 盘中轮询）
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant SC as TradingScheduler
+    participant G as TradingDayGate
+    participant TS as TradingService
+    participant AE as tradingEngine
+    participant TE as TradingExecutor
+    participant QP as QuotePort
+    participant R as TradingRepository
+    participant BR as TradingBroadcaster
+
+    SC->>G: status(today)（行情日期 == today 才算交易日）
+    alt 非交易日 / 未确认
+        G-->>SC: HOLIDAY / UNCONFIRMED
+    else TRADING
+        SC->>TS: runPhase(date, PRE_MARKET, listener)
+        TS->>AE: ask(上下文 + 阶段要求)
+        AE-->>TS: 调用工具（含 save_trade_plan / save_trading_journal）
+        TS->>R: 阶段记录、计划、复盘、run 记录
+        TS-->>SC: PhaseRecord
+        SC->>BR: phase started / finished
+        loop 连续竞价，每 poll-seconds
+            SC->>TE: tick(date, now)
+            TE->>QP: quotes(计划内代码，不缓存)
+            TE->>R: 触发则 claim 计划项 → 账户/持仓/成交（PERSIST_INTERVAL_MS=60s 落 tick）
+            TE-->>SC: TickResult
+            SC->>BR: monitor 事件
+        end
+    end
+```
+
+阶段串行：单线程 daemon executor + `AtomicBoolean`，午盘/收盘不复跑，盘前失败在 09:45 重试一次。
+阶段超时 `app.trading.phase-timeout-minutes`（默认 15）会把阶段写成 `ERROR` 并保留已有元数据。
+
 ## 5. 关键数据流
 
 ### 5.1 工具结果 → 引用 → 回答
@@ -163,7 +203,7 @@ flowchart LR
     U["上游 JSON/HTML"] --> P["适配器解析"]
     P --> R["ToolResult{ok,company,as_of,sources,data}"]
     R --> C["ToolCallCache（同参数复用）"]
-    R --> S["RunState: sources 注册表 + TraceStep + raw"]
+    R --> S["RunState.sources + TraceStep + raw；会话级 sources.json"]
     S --> RR["RunRecorder.toolStage → run JSON"]
     S --> SSE["SSE tool 事件"]
     R --> M["模型消息（toMessageJson）"]
@@ -177,7 +217,7 @@ flowchart LR
 
 ### 5.2 上下文占用
 
-`ContextMeter.usage` = `FIXED_TOKENS`（system.md + tool-schemas.json 的固定成本）+ 消息文本估算 + 每消息 4 tokens 开销 ×（消息数+2）+ 当前草稿估算。预算 `BUDGET_TOKENS=55_000`，硬上限 `HARD_TOKENS=80_000`（只上报，实际由 harness `triggerTokens(80_000)` 触发压缩）。SSE 的 `meter` 事件按 ≥400ms 节流。
+`ContextMeter.usage` = `FIXED_TOKENS`（system.md + tool-schemas.json 的固定成本）+ 消息文本估算 + 每消息 4 tokens 开销 ×（消息数+2）+ 当前草稿估算。预算 `BUDGET_TOKENS=55_000`，硬上限 `HARD_TOKENS=80_000`（只上报，实际由 harness `triggerTokens(properties.compactionTokens())` 触发压缩；聊天默认 55_000，交易引擎 120_000）。SSE 的 `meter` 事件按 ≥400ms 节流。
 
 ### 5.3 会话切换
 
@@ -195,7 +235,7 @@ flowchart LR
 | 持久化 | `data/persistence/**`：MyBatis-Plus Mapper 做 CRUD，JdbcTemplate/TransactionTemplate 做 upsert、动态 SQL、多语句事务 |
 | 进程内缓存 | 各适配器的 `ConcurrentHashMap` 短 TTL；`ToolCallCache` 按会话缓存工具结果（17 个时效性工具除外），有容量与 30 分钟 TTL 上限 |
 | 文件 | `var/runs/*.json`（运行原文）、`var/sessions/**`（AgentScope 状态）、`var/workspace/`（harness 工作区） |
-| 数据库 | `var/app.db`（Flyway V1–V12） |
+| 数据库 | `var/app.db`（Flyway V1–V13） |
 
 ## 7. 架构问题与技术债（代码可见）
 

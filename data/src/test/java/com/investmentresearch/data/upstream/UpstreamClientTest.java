@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
+import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
@@ -22,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPOutputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -166,6 +168,25 @@ class UpstreamClientTest {
 
         assertThat(client.get(WIREMOCK.baseUrl() + "/utf8", Map.of()))
                 .isEqualTo("{\"name\":\"东鹏饮料\"}");
+    }
+
+    @Test
+    void decompresses_gzip_response() throws Exception {
+        String json = "{\"name\":\"东鹏饮料\"}";
+        ByteArrayOutputStream compressed = new ByteArrayOutputStream();
+        try (GZIPOutputStream gzip = new GZIPOutputStream(compressed)) {
+            gzip.write(json.getBytes(StandardCharsets.UTF_8));
+        }
+        // 东财接口会无视请求头直接 gzip；不解压就会把 0x1f 0x8b 当成 JSON 正文
+        WIREMOCK.stubFor(
+                get(urlPathEqualTo("/gzip"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Encoding", "gzip")
+                                        .withBody(compressed.toByteArray())));
+
+        assertThat(client.get(WIREMOCK.baseUrl() + "/gzip", Map.of())).isEqualTo(json);
     }
 
     private static String stackTrace(Throwable error) {

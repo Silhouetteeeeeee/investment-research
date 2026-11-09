@@ -201,6 +201,72 @@ class AgentEngineTest {
     }
 
     @Test
+    void second_ask_resolves_citations_from_an_earlier_turn() {
+        // 续聊时模型会继续引用上一轮工具结果里的 source id；注册表若只覆盖本轮就会变成 [?]
+        ScriptedModel model =
+                new ScriptedModel(
+                        ScriptedModel.toolCall("get_company_profile", Map.of()),
+                        ScriptedModel.text("营收 1 亿[[profile:605499]]。"),
+                        ScriptedModel.text("上一轮说的营收[[profile:605499]]。"));
+        AgentEngine engine = engine(model, new FakeProfileTool());
+
+        engine.ask(1, "605499", "东鹏饮料", "第一个问题", new RecordingListener());
+        AskResult second =
+                engine.ask(1, "605499", "东鹏饮料", "第二个问题", new RecordingListener());
+
+        assertThat(second.text()).isEqualTo("上一轮说的营收[[profile:605499]]。");
+        assertThat(second.issues()).doesNotContain("unknown_citation");
+        assertThat(second.sources()).extracting(Source::id).containsExactly("profile:605499");
+    }
+
+    @Test
+    void citation_registry_outlives_compacted_history_and_restart() throws IOException {
+        AgentEngine first = engine(
+                new ScriptedModel(
+                        ScriptedModel.toolCall("get_company_profile", Map.of()),
+                        ScriptedModel.text("营收 1 亿[[profile:605499]]。")),
+                new FakeProfileTool());
+        first.ask(1, "605499", "东鹏饮料", "第一个问题", new RecordingListener());
+
+        Path sessionDir = dataDir.resolve("sessions").resolve("default").resolve("1");
+        assertThat(sessionDir.resolve("sources.json")).exists();
+        // 压缩会把历史里的工具结果换成摘要；这里只留注册表，模拟压缩后再重启
+        Files.delete(sessionDir.resolve("agent_state.json"));
+
+        AgentEngine restarted =
+                engine(
+                        new ScriptedModel(ScriptedModel.text("营收仍是 1 亿[[profile:605499]]。")),
+                        new FakeProfileTool());
+        AskResult second =
+                restarted.ask(1, "605499", "东鹏饮料", "第二个问题", new RecordingListener());
+
+        assertThat(second.text()).isEqualTo("营收仍是 1 亿[[profile:605499]]。");
+        assertThat(second.issues()).doesNotContain("unknown_citation");
+    }
+
+    @Test
+    void old_conversation_without_registry_file_resolves_from_history() throws IOException {
+        // 升级前的会话没有 sources.json；第一次续聊仍要能从历史里的工具结果恢复引用
+        engine(
+                        new ScriptedModel(
+                                ScriptedModel.toolCall("get_company_profile", Map.of()),
+                                ScriptedModel.text("营收 1 亿[[profile:605499]]。")),
+                        new FakeProfileTool())
+                .ask(1, "605499", "东鹏饮料", "第一个问题", new RecordingListener());
+        Files.delete(dataDir.resolve("sessions").resolve("default").resolve("1").resolve("sources.json"));
+
+        AgentEngine restarted =
+                engine(
+                        new ScriptedModel(ScriptedModel.text("营收仍是 1 亿[[profile:605499]]。")),
+                        new FakeProfileTool());
+        AskResult second =
+                restarted.ask(1, "605499", "东鹏饮料", "第二个问题", new RecordingListener());
+
+        assertThat(second.text()).isEqualTo("营收仍是 1 亿[[profile:605499]]。");
+        assertThat(second.issues()).doesNotContain("unknown_citation");
+    }
+
+    @Test
     void identical_tool_call_in_same_conversation_is_cached() {
         ScriptedModel model =
                 new ScriptedModel(
@@ -358,6 +424,44 @@ class AgentEngineTest {
     }
 
     @Test
+    void full_trace_records_prompt_calls_and_thinking() {
+        ScriptedModel model =
+                new ScriptedModel(
+                        ScriptedModel.thinkingThenText("先想想", "回答[[profile:605499]]。"));
+        RecordingListener listener = new RecordingListener();
+
+        AskResult result =
+                engine(10, true, model, new FakeProfileTool())
+                        .ask(1, "605499", "东鹏饮料", "靠什么赚钱", listener);
+
+        Map<String, Object> payload = result.run().payload();
+        assertThat((List<?>) payload.get("prompts")).isNotEmpty();
+        assertThat((List<?>) payload.get("calls")).isNotEmpty();
+        assertThat(payload.get("thinking")).isEqualTo("先想想");
+        assertThat(listener.thinking.toString()).isEqualTo("先想想");
+    }
+
+    @Test
+    void engine_failure_keeps_the_thinking_so_far() {
+        // 失败也要把已经产生的思考写进运行记录，否则交易页的「完整过程」会丢掉失败前的推理
+        ScriptedModel model =
+                new ScriptedModel(
+                        ScriptedModel.thinkingThenToolCall(
+                                "先看档案", "get_company_profile", Map.of()));
+        EngineFailure failure = null;
+
+        try {
+            engine(model, new FakeProfileTool())
+                    .ask(1, "605499", "东鹏饮料", "靠什么赚钱", new RecordingListener());
+        } catch (EngineFailure error) {
+            failure = error;
+        }
+
+        assertThat(failure).isNotNull();
+        assertThat(failure.run().payload().get("thinking")).isEqualTo("先看档案");
+    }
+
+    @Test
     void engine_failure_still_carries_a_finished_error_run() {
         // 第一次模型调用先取数，第二次调用没有脚本可用 -> 运行中途抛错
         ScriptedModel model =
@@ -379,16 +483,24 @@ class AgentEngineTest {
         List<Map<String, Object>> stages =
                 (List<Map<String, Object>>) payload.get("stages");
         assertThat(stages).isNotEmpty();
+        assertThat(failure.raw()).isNotEmpty();
+        assertThat(failure.trace()).isNotEmpty();
+        assertThat(failure.sources()).extracting(Source::id).containsExactly("profile:605499");
     }
 
     private AgentEngine engine(Model model, ResearchTool... tools) {
-        return engine(10, model, tools);
+        return engine(10, false, model, tools);
     }
 
     private AgentEngine engine(int maxTurns, Model model, ResearchTool... tools) {
+        return engine(maxTurns, false, model, tools);
+    }
+
+    private AgentEngine engine(int maxTurns, boolean fullTrace, Model model, ResearchTool... tools) {
         return new AgentEngine(
                 new ToolRegistry(List.of(tools)),
-                new AgentProperties("scripted", skillsDir, dataDir, maxTurns),
+                new AgentProperties(
+                        "scripted", skillsDir, dataDir, maxTurns, "/prompts/system.md", fullTrace),
                 () -> model);
     }
 
@@ -427,6 +539,12 @@ class AgentEngineTest {
         private final List<String> events = new ArrayList<>();
         private final List<ToolEvent> tools = new ArrayList<>();
         private final StringBuilder text = new StringBuilder();
+        private final StringBuilder thinking = new StringBuilder();
+
+        @Override
+        public void thinking(String delta) {
+            thinking.append(delta);
+        }
 
         @Override
         public void text(String delta) {

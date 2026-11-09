@@ -825,7 +825,20 @@
               "type": "string"
             },
             "status": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "待验证",
+                "部分支持",
+                "已证实",
+                "已证伪",
+                "有效",
+                "已推翻",
+                "待处理",
+                "调查中",
+                "已解决",
+                "暂时无法解决"
+              ],
+              "description": "hypotheses：待验证/部分支持/已证实/已证伪；conclusions：有效/已推翻；questions：待处理/调查中/已解决/暂时无法解决"
             },
             "next_review_date": {
               "type": "string"
@@ -929,7 +942,18 @@
               "type": "string"
             },
             "status": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "待验证",
+                "部分支持",
+                "已证实",
+                "已证伪",
+                "待处理",
+                "调查中",
+                "已解决",
+                "暂时无法解决"
+              ],
+              "description": "hypotheses：待验证/部分支持/已证实/已证伪；questions：待处理/调查中/已解决/暂时无法解决"
             },
             "confidence": {
               "type": "string",
@@ -1073,6 +1097,258 @@
       "required": [
         "query"
       ],
+      "additionalProperties": false
+    }
+  },
+  "get_trading_state": {
+    "name": "get_trading_state",
+    "description": "读取模拟盘权威状态：账户现金与权益、持仓（含 T+1 可用股数）、当日 ACTIVE 计划、成交、复盘和交易规则。每次思考前先调用；金额同时给「分」和「元」。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "交易日 YYYY-MM-DD；省略时用当前交易日"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "save_trade_plan": {
+    "name": "save_trade_plan",
+    "description": "提交当日交易计划（先暂存，阶段成功后才落库）。盘前必须恰好调用一次；午盘只在需要改未成交项或止损止盈时调用，生成新版本，不能新增早盘没有的 BUY 代码。BUY 必须给 trigger_price、stop_loss、take_profit 且 stop_loss < trigger_price < take_profit。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "trade_date": {
+          "type": "string",
+          "description": "交易日 YYYY-MM-DD，必须与当前交易日一致"
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "pre_market",
+            "midday"
+          ],
+          "description": "当前阶段；收盘不产生计划"
+        },
+        "notes": {
+          "type": "string",
+          "description": "计划摘要"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^\\d{6}$",
+                "description": "6 位股票代码"
+              },
+              "name": {
+                "type": "string",
+                "description": "股票名称，可省略"
+              },
+              "side": {
+                "type": "string",
+                "enum": [
+                  "BUY",
+                  "SELL"
+                ]
+              },
+              "shares": {
+                "type": "integer",
+                "minimum": 100,
+                "multipleOf": 100,
+                "description": "股数，100 的整数倍"
+              },
+              "trigger_price": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "BUY 限价，单位分；现价不高于它才成交"
+              },
+              "stop_loss": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "止损价，单位分"
+              },
+              "take_profit": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "止盈价，单位分"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "description": "「好公司 + 好价格」的理由，必填"
+              }
+            },
+            "required": [
+              "code",
+              "side",
+              "shares",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "trade_date",
+        "phase",
+        "items"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "save_trading_journal": {
+    "name": "save_trading_journal",
+    "description": "写一篇阶段复盘。午盘和收盘必须调用，盘前禁止。至少写：今日盈亏、每笔成交的理由是否成立、计划哪里错了、明天要注意什么。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "复盘正文，可含 [[source_id]] 引用"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "save_trading_experience": {
+    "name": "save_trading_experience",
+    "description": "维护长期交易经验文档（整篇覆盖写）。只在收盘阶段可用：把今天可复用的教训合并进现有文档，先去重，同一教训只留一条，过时结论改写而不是追加；不要把复盘原文照抄进来。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000,
+          "description": "完整 Markdown 全文：保留仍有效的旧条目，补充或改写入今日教训"
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "screen_stocks": {
+    "name": "screen_stocks",
+    "description": "按 Agent 给定的条件筛选全市场 A 股：条件之间是 AND 硬过滤，缺数据的股票视为不满足。只传与问题相关的条件，不要为了凑条件而加；不传 filters 时退回量化筛选（成交额候选池 + 量价打分），结果带 mode=quant。ROE 与增速为报告期累计值（非年化，不同公司报告期可能不同）；负 PE/PB 视为缺失（亏损股不会因 pe 上限入选）；行情为上一交易日收盘的快照，as_of 会标明日期。结果只是候选名单，不是买入信号。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "filters": {
+          "type": "array",
+          "maxItems": 10,
+          "description": "AND 条件，最多 10 条；缺该指标的股票视为不满足。boards 只支持 in，值为板块名或板块名数组。",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "enum": [
+                  "pe",
+                  "pb",
+                  "market_cap",
+                  "price",
+                  "chg_pct",
+                  "turnover",
+                  "amount",
+                  "ps",
+                  "roe",
+                  "gross_margin",
+                  "net_margin",
+                  "revenue_growth",
+                  "profit_growth",
+                  "ocf_per_share",
+                  "ocf_to_profit",
+                  "ocf_positive_years",
+                  "boards"
+                ]
+              },
+              "op": {
+                "type": "string",
+                "enum": [
+                  ">",
+                  ">=",
+                  "<",
+                  "<=",
+                  "=",
+                  "in"
+                ],
+                "description": "数值字段用 > >= < <= =；boards 只用 in"
+              },
+              "value": {
+                "description": "比较值：数值字段为数字；boards 为板块名或板块名数组（沪市主板/深市主板/创业板/科创板/其他）"
+              }
+            },
+            "required": [
+              "field",
+              "op",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "sort": {
+          "type": "array",
+          "maxItems": 3,
+          "description": "按数组顺序逐级排序，最多 3 条；order 缺省 desc；缺该指标的股票排在最后。",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "enum": [
+                  "pe",
+                  "pb",
+                  "market_cap",
+                  "price",
+                  "chg_pct",
+                  "turnover",
+                  "amount",
+                  "ps",
+                  "roe",
+                  "gross_margin",
+                  "net_margin",
+                  "revenue_growth",
+                  "profit_growth",
+                  "ocf_per_share",
+                  "ocf_to_profit",
+                  "ocf_positive_years"
+                ]
+              },
+              "order": {
+                "type": "string",
+                "enum": [
+                  "asc",
+                  "desc"
+                ],
+                "default": "desc"
+              }
+            },
+            "required": [
+              "field"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "最多返回条数"
+        }
+      },
       "additionalProperties": false
     }
   }
