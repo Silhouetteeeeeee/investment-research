@@ -34,6 +34,7 @@ public final class StockScreen {
     public static final List<String> SORT_FIELDS =
             FILTER_FIELDS.stream().filter(field -> !"boards".equals(field)).toList();
     public static final List<String> OPS = List.of(">", ">=", "<", "<=", "=");
+    public static final List<String> BOARDS = List.of("沪市主板", "深市主板", "创业板", "科创板", "其他");
     public static final List<String> NOTES = List.of("缺少的指标按不满足处理", "ROE 与增速为报告期累计值");
 
     private static final List<String> FINANCE_FIELDS =
@@ -84,10 +85,12 @@ public final class StockScreen {
 
         Map<String, Integer> excluded = new LinkedHashMap<>();
         List<Row> matched = new ArrayList<>();
+        int scanned = 0;
         for (ScreenQuote quote : rows) {
-            if (quote == null || quote.code() == null) {
+            if (quote == null || quote.code() == null || quote.code().isBlank()) {
                 continue;
             }
+            scanned++;
             String reason = exclusionReason(quote);
             if (reason != null) {
                 excluded.merge(reason, 1, Integer::sum);
@@ -124,27 +127,22 @@ public final class StockScreen {
             candidates.add(row.candidate());
             String code = row.quote().code();
             String name = row.quote().name() == null ? code : row.quote().name();
-            sources.add(
-                    new Source(
-                            "quote:" + code + ":" + row.quote().tradeDate(),
-                            "行情快照",
-                            name + " 行情",
-                            row.quote().tradeDate(),
-                            fetchedAt == null ? "" : fetchedAt));
+            String fetched = fetchedAt == null ? "" : fetchedAt;
+            String tradeDate = row.quote().tradeDate();
+            if (tradeDate != null && !tradeDate.isBlank()) {
+                sources.add(new Source("quote:" + code + ":" + tradeDate, "行情快照", name + " 行情", tradeDate, fetched));
+            }
             String reportDate = text(row.candidate().get("report_date"));
             if (!reportDate.isEmpty()) {
                 sources.add(
                         new Source(
-                                "finance:" + code + ":" + reportDate,
-                                "财务报告",
-                                name + " 财报 " + reportDate,
-                                reportDate,
-                                fetchedAt == null ? "" : fetchedAt));
+                                "finance:" + code + ":" + reportDate, "财务报告", name + " 财报 " + reportDate, reportDate,
+                                fetched));
             }
         }
 
         Map<String, Object> universe = new LinkedHashMap<>();
-        universe.put("scanned", rows.size());
+        universe.put("scanned", scanned);
         universe.put("excluded", excluded);
         universe.put("after_filters", matched.size());
 
@@ -188,8 +186,14 @@ public final class StockScreen {
                 if (!"in".equals(filter.op())) {
                     return "筛选失败：字段 boards 只支持操作符 in；合法操作符：in";
                 }
-                if (boardValues(filter.value()) == null) {
+                List<String> values = boardValues(filter.value());
+                if (values == null) {
                     return "筛选失败：字段 boards 的值必须是板块名或板块名列表";
+                }
+                for (String value : values) {
+                    if (!BOARDS.contains(value)) {
+                        return "筛选失败：字段 boards 的值 " + value + " 非法；合法值：" + String.join(", ", BOARDS);
+                    }
                 }
             } else {
                 if (!OPS.contains(filter.op())) {
@@ -272,19 +276,28 @@ public final class StockScreen {
                 && quote.totalCapYi() != null
                 && annual.get(0).revenue() != null
                 && annual.get(0).revenue() > 0) {
-            ps = round(quote.totalCapYi() * 1e8 / annual.get(0).revenue());
+            ps = quote.totalCapYi() * 1e8 / annual.get(0).revenue();
         }
         Double netMargin = null;
         if (latest != null
                 && latest.revenue() != null
                 && latest.revenue() > 0
                 && latest.netProfit() != null) {
-            netMargin = round(latest.netProfit() / latest.revenue() * 100);
+            netMargin = latest.netProfit() / latest.revenue() * 100;
         }
         Double ocfToProfit = null;
         if (latest != null && latest.eps() != null && latest.eps() > 0 && latest.ocfPerShare() != null) {
-            ocfToProfit = round(latest.ocfPerShare() / latest.eps());
+            ocfToProfit = latest.ocfPerShare() / latest.eps();
         }
+
+        // 负 PE/PB 视为缺失（亏损股不因 pe_max 入选），其余指标 0 是真实值
+        Double pe = quote.pe() != null && quote.pe() > 0 ? quote.pe() : null;
+        Double pb = quote.pb() != null && quote.pb() > 0 ? quote.pb() : null;
+        Double roe = latest == null ? null : latest.roe();
+        Double grossMargin = latest == null ? null : latest.grossMargin();
+        Double revenueGrowth = latest == null ? null : latest.revenueYoy();
+        Double profitGrowth = latest == null ? null : latest.profitYoy();
+        Double ocfPerShare = latest == null ? null : latest.ocfPerShare();
 
         Map<String, Object> candidate = new LinkedHashMap<>();
         candidate.put("code", quote.code());
@@ -293,31 +306,38 @@ public final class StockScreen {
         candidate.put("industry", quote.industry());
         candidate.put("price", quote.price());
         candidate.put("market_cap", quote.totalCapYi());
-        candidate.put("pe", quote.pe());
-        candidate.put("pb", quote.pb());
-        candidate.put("ps", ps);
-        candidate.put("roe", latest == null ? null : latest.roe());
-        candidate.put("gross_margin", latest == null ? null : latest.grossMargin());
-        candidate.put("net_margin", netMargin);
-        candidate.put("revenue_growth", latest == null ? null : latest.revenueYoy());
-        candidate.put("profit_growth", latest == null ? null : latest.profitYoy());
-        candidate.put("ocf_per_share", latest == null ? null : latest.ocfPerShare());
-        candidate.put("ocf_to_profit", ocfToProfit);
+        candidate.put("pe", round(pe));
+        candidate.put("pb", round(pb));
+        candidate.put("ps", round(ps));
+        candidate.put("roe", round(roe));
+        candidate.put("gross_margin", round(grossMargin));
+        candidate.put("net_margin", round(netMargin));
+        candidate.put("revenue_growth", round(revenueGrowth));
+        candidate.put("profit_growth", round(profitGrowth));
+        candidate.put("ocf_per_share", round(ocfPerShare));
+        candidate.put("ocf_to_profit", round(ocfToProfit));
         candidate.put("ocf_positive_years", positiveYears);
         candidate.put("report_date", latest == null ? null : latest.reportDate());
 
+        // 过滤/排序用原始值，展示层才取整
         Map<String, Object> metrics = new LinkedHashMap<>();
         metrics.put("boards", candidate.get("board"));
-        metrics.put("pe", quote.pe());
-        metrics.put("pb", quote.pb());
+        metrics.put("pe", pe);
+        metrics.put("pb", pb);
         metrics.put("market_cap", quote.totalCapYi());
         metrics.put("price", quote.price());
         metrics.put("chg_pct", quote.chgPct());
         metrics.put("turnover", quote.turnover());
         metrics.put("amount", quote.amountYi());
-        for (String field : FINANCE_FIELDS) {
-            metrics.put(field, candidate.get(field));
-        }
+        metrics.put("ps", ps);
+        metrics.put("roe", roe);
+        metrics.put("gross_margin", grossMargin);
+        metrics.put("net_margin", netMargin);
+        metrics.put("revenue_growth", revenueGrowth);
+        metrics.put("profit_growth", profitGrowth);
+        metrics.put("ocf_per_share", ocfPerShare);
+        metrics.put("ocf_to_profit", ocfToProfit);
+        metrics.put("ocf_positive_years", positiveYears);
         return new Row(quote, candidate, metrics, annual.size());
     }
 
@@ -400,8 +420,8 @@ public final class StockScreen {
         return view;
     }
 
-    private static Double round(double value) {
-        return Math.round(value * 100.0) / 100.0;
+    private static Double round(Double value) {
+        return SectorRotation.round(value, 2);
     }
 
     private static String text(Object value) {

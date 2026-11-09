@@ -233,6 +233,114 @@ class StockScreenTest {
         assertThat(result.error()).contains("pe");
     }
 
+    @Test
+    void negative_or_zero_pe_pb_is_missing() {
+        ScreenQuote quote = new ScreenQuote(
+                "600001", "亏损股", "行业", 10.0, 1.0, 2.0, 3.0, -5.0, 0.0, 100.0, AS_OF);
+
+        ToolResult filtered =
+                screen(
+                        new StockScreenQuery(
+                                List.of(new ScreenFilter("pe", "<=", 10)), List.of(), 20),
+                        List.of(quote),
+                        List.of());
+        assertThat(filtered.ok()).isTrue();
+        assertThat(codes(filtered)).isEmpty();
+
+        ToolResult displayed =
+                screen(query("price", ">", 0), List.of(quote), List.of());
+        Map<String, Object> candidate = candidates(displayed).get(0);
+        assertThat(candidate.get("pe")).isNull();
+        assertThat(candidate.get("pb")).isNull();
+    }
+
+    @Test
+    void ratio_outputs_are_rounded_but_filtering_uses_raw_values() {
+        ScreenQuote quote = quote("600001", 10.0);
+        List<ScreenFinance> finances =
+                List.of(new ScreenFinance(
+                        "600001", "2025-12-31", 0.35, 5e9, 1e8, 8.0734, 33.3333, 1.2345, -2.3456, 1.2, "2026-01-01"));
+
+        ToolResult result =
+                screen(
+                        new StockScreenQuery(
+                                List.of(new ScreenFilter("roe", ">=", 8.0734)), List.of(), 20),
+                        List.of(quote),
+                        finances);
+
+        assertThat(codes(result)).containsExactly("600001");
+        Map<String, Object> candidate = candidates(result).get(0);
+        assertThat(candidate.get("roe")).isEqualTo(8.07);
+        assertThat(candidate.get("gross_margin")).isEqualTo(33.33);
+        assertThat(candidate.get("revenue_growth")).isEqualTo(1.23);
+        assertThat(candidate.get("profit_growth")).isEqualTo(-2.35);
+    }
+
+    @Test
+    void illegal_board_value_fails_and_lists_legal_values() {
+        ToolResult result =
+                screen(
+                        new StockScreenQuery(
+                                List.of(new ScreenFilter("boards", "in", List.of("北交所"))), List.of(), 20),
+                        List.of(quote("600001", 10.0)),
+                        List.of());
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.error()).contains("北交所").contains("创业板").contains("其他");
+    }
+
+    @Test
+    void sort_without_order_defaults_to_desc() {
+        List<ScreenQuote> quotes = List.of(quote("600001", 5.0), quote("600002", 10.0));
+
+        ToolResult result =
+                screen(
+                        new StockScreenQuery(
+                                List.of(), java.util.Arrays.asList(new ScreenSort("pe", null)), 20),
+                        quotes,
+                        List.of());
+
+        assertThat(codes(result)).containsExactly("600002", "600001");
+    }
+
+    @Test
+    void equals_operator_matches_exactly() {
+        List<ScreenQuote> quotes = List.of(quote("600001", 10.0), quote("600002", 10.5));
+
+        ToolResult result = screen(query("pe", "=", 10), quotes, List.of());
+
+        assertThat(codes(result)).containsExactly("600001");
+    }
+
+    @Test
+    void finance_filter_fails_for_quote_without_finance_row() {
+        List<ScreenQuote> quotes = List.of(quote("600001", 10.0), quote("600002", 10.0));
+        List<ScreenFinance> finances = List.of(finance("600001", "2025-12-31", 15.0, 1.0));
+
+        ToolResult result = screen(query("roe", ">=", 10), quotes, finances);
+
+        assertThat(result.ok()).isTrue();
+        assertThat(codes(result)).containsExactly("600001");
+    }
+
+    @Test
+    void scanned_counts_only_processable_rows() {
+        ScreenQuote st = new ScreenQuote("600002", "ST测试", "行业", 10.0, 1.0, 2.0, 3.0, 10.0, 1.0, 100.0, AS_OF);
+        ScreenQuote noQuote = new ScreenQuote("600003", "停牌", "行业", null, 1.0, 2.0, 3.0, 10.0, 1.0, 100.0, AS_OF);
+        List<ScreenQuote> quotes =
+                java.util.Arrays.asList(null, quote("", 10.0), st, noQuote, quote("600001", 10.0));
+
+        ToolResult result = screen(query("price", ">", 0), quotes, List.of());
+
+        assertThat(codes(result)).containsExactly("600001");
+        Map<String, Object> universe = universe(result);
+        assertThat(universe.get("scanned")).isEqualTo(3);
+        assertThat(universe.get("after_filters")).isEqualTo(1);
+        @SuppressWarnings("unchecked")
+        Map<String, Integer> excluded = (Map<String, Integer>) universe.get("excluded");
+        assertThat(excluded).containsEntry("ST/退市", 1).containsEntry("无报价", 1);
+    }
+
     private static StockScreenQuery query(String field, String op, Object value) {
         return new StockScreenQuery(List.of(new ScreenFilter(field, op, value)), List.of(), 20);
     }
