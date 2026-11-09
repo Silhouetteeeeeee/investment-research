@@ -95,6 +95,8 @@ public final class TradingScheduler {
                 status = probed;
             }
         }
+        // 探针只在 09:25–09:45 跑，留一行日志才能确认它真的在跑
+        LOG.info("交易日探测 {}：{}", today, status);
         if (status == TradingDayGate.Status.HOLIDAY) {
             return;
         }
